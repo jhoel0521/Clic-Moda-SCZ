@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ROUTES } from '@src/routes';
+import { HeroCarousel } from '@src/shared/ui/HeroCarousel'; // Importamos el carrusel!
 
 export const metadata: Metadata = {
   title: 'Clic Moda SCZ — Fast Fashion Santa Cruz',
-  description:
-    'Ropa trendy con tallas exactas y entrega coordinada por WhatsApp. Compra rápido, llegá con estilo.',
+  description: 'Ropa trendy con tallas exactas y entrega coordinada por WhatsApp.',
 };
 
 const CATEGORIAS = [
@@ -18,7 +18,7 @@ const PASOS = [
   {
     numero: '01',
     titulo: 'Explorá el catálogo',
-    descripcion: 'Filtrá por talla, color o categoría. Consultá las medidas exactas de cada prenda antes de comprar.',
+    descripcion: 'Filtrá por talla o categoría. Consultá las medidas exactas de cada prenda antes de comprar.',
   },
   {
     numero: '02',
@@ -34,64 +34,33 @@ const PASOS = [
 
 export default function LandingPage() {
   return (
-    <div className="flex flex-col w-full">
-      <section className="relative flex min-h-[calc(100vh-4rem)] w-full items-center justify-center overflow-hidden px-6 py-20 text-center">
-        <div className="absolute inset-0 -z-10 bg-[var(--gradient-hero)]" />
-        <div className="absolute left-1/2 top-1/2 -z-10 h-[34rem] w-[34rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--gradient-brand)] opacity-15 blur-3xl" />
+    <div className="flex flex-col w-full items-center bg-white">
 
-        <div className="relative z-10 mx-auto flex w-full max-w-3xl flex-col items-center">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--color-border-brand)] bg-[var(--color-brand-subtle)] px-4 py-1.5 text-sm font-medium text-[var(--color-brand)]">
-            <span className="inline-block h-2 w-2 animate-pulse-brand rounded-full bg-[var(--color-brand)]" />
-            Fast Fashion · Santa Cruz de la Sierra
-          </div>
+      {/* 1. Nuestro Nuevo Carrusel */}
+      <HeroCarousel />
 
-          <h1 className="mb-6 text-5xl font-extrabold tracking-tight text-[var(--color-text-primary)] sm:text-6xl lg:text-7xl">
-            Tu moda, <span className="gradient-text">un click</span> de distancia
-          </h1>
-
-          <p className="mx-auto mb-10 max-w-2xl text-lg leading-8 text-[var(--color-text-secondary)] sm:text-xl">
-            Ropa trendy con tallas exactas, pagos simples y entrega coordinada por WhatsApp.
-            Sin complicaciones, directo a tu puerta.
-          </p>
-
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link
-              href={ROUTES.CATALOG}
-              className="inline-flex h-14 items-center justify-center rounded-xl bg-[var(--gradient-brand)] px-8 text-lg font-semibold text-white shadow-[var(--shadow-brand)] transition-transform duration-200 hover:-translate-y-0.5 hover:opacity-95"
-            >
-              Explorar catálogo →
-            </Link>
-            <Link
-              href={ROUTES.LOGIN}
-              className="inline-flex h-14 items-center justify-center rounded-xl border border-[var(--color-border)] bg-white px-8 font-semibold text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-border-hover)] hover:text-[var(--color-text-primary)]"
-            >
-              Iniciar sesión
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="w-full bg-[var(--color-bg-secondary)] px-6 py-20">
-        <div className="mx-auto w-full max-w-6xl">
-          <h2 className="mb-2 text-center text-3xl font-bold text-[var(--color-text-primary)] sm:text-4xl">
+      {/* 2. Sección de Categorías */}
+      <section className="w-full bg-gray-50 px-6 py-20 flex flex-col items-center">
+        <div className="w-full max-w-6xl">
+          <h2 className="mb-2 text-center text-3xl font-bold text-gray-900 sm:text-4xl">
             Explora por categoría
           </h2>
-          <p className="mb-12 text-center text-[var(--color-text-secondary)]">
+          <p className="mb-12 text-center text-gray-500 text-lg">
             Encuentra exactamente lo que buscas
           </p>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
             {CATEGORIAS.map((cat) => (
               <Link
                 key={cat.nombre}
                 href={cat.href}
-                className="group flex flex-col items-center gap-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] px-6 py-8 text-center transition-all hover:-translate-y-1 hover:border-[var(--color-border-hover)] hover:shadow-[var(--shadow-md)]"
+                className="group flex flex-col items-center gap-4 rounded-2xl border border-gray-200 bg-white px-6 py-10 text-center shadow-sm transition-all hover:-translate-y-2 hover:border-pink-300 hover:shadow-xl"
               >
-                <span className="text-5xl">{cat.emoji}</span>
+                <span className="text-6xl transition-transform group-hover:scale-110">{cat.emoji}</span>
                 <div>
-                  <p className="text-lg font-semibold text-[var(--color-text-primary)] transition-colors group-hover:text-[var(--color-brand)]">
+                  <p className="text-xl font-bold text-gray-800 transition-colors group-hover:text-pink-600">
                     {cat.nombre}
                   </p>
-                  <p className="mt-1 text-sm text-[var(--color-text-muted)]">
+                  <p className="mt-2 text-sm text-gray-500">
                     {cat.descripcion}
                   </p>
                 </div>
@@ -101,50 +70,47 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── CÓMO FUNCIONA ──────────────────────────────────────── */}
-      <section className="w-full px-6 py-20">
-        <div className="mx-auto w-full max-w-6xl">
-          <h2 className="mb-2 text-center text-3xl font-bold text-[var(--color-text-primary)] sm:text-4xl">
+      {/* 3. Sección ¿Cómo Funciona? */}
+      <section className="w-full px-6 py-24 flex flex-col items-center bg-white">
+        <div className="w-full max-w-6xl">
+          <h2 className="mb-2 text-center text-3xl font-bold text-gray-900 sm:text-4xl">
             ¿Cómo funciona?
           </h2>
-          <p className="mb-12 text-center text-[var(--color-text-secondary)]">
+          <p className="mb-16 text-center text-gray-500 text-lg">
             Comprar en Clic Moda es así de simple
           </p>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             {PASOS.map((paso) => (
               <div
                 key={paso.numero}
-                className="flex flex-col gap-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-8 shadow-[var(--shadow-sm)]"
+                className="relative flex flex-col gap-4 rounded-3xl border border-gray-100 bg-white p-10 shadow-lg"
               >
-                <span className="gradient-text text-4xl font-black">
+                <span className="text-6xl font-black text-pink-100 absolute top-6 right-8 z-0">
                   {paso.numero}
                 </span>
-                <h3 className="text-xl font-semibold text-[var(--color-text-primary)]">{paso.titulo}</h3>
-                <p className="leading-7 text-[var(--color-text-secondary)]">{paso.descripcion}</p>
+                <div className="z-10 mt-8">
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">{paso.titulo}</h3>
+                  <p className="leading-relaxed text-gray-600">{paso.descripcion}</p>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="w-full bg-[var(--color-bg-secondary)] px-6 py-20">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="mb-4 text-3xl font-bold text-[var(--color-text-primary)] sm:text-4xl">
+      {/* 4. Sección Sobre Nosotros */}
+      <section className="w-full bg-pink-50 px-6 py-24 flex flex-col items-center">
+        <div className="w-full max-w-2xl text-center">
+          <h2 className="mb-6 text-3xl font-bold text-gray-900 sm:text-4xl">
             ¿Querés saber más sobre nosotros?
           </h2>
-          <p className="mb-8 text-[var(--color-text-secondary)] leading-7">
-            Conocé nuestra historia, misión y los valores que nos mueven como negocio local de Santa Cruz.
+          <p className="mb-10 text-gray-600 text-lg leading-relaxed">
+            Conocé nuestra historia, misión y los valores que nos mueven como negocio local de Santa Cruz. Moda accesible y rápida para todos.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
-              href={ROUTES.CATALOG}
-              className="inline-flex h-12 items-center justify-center rounded-xl bg-[var(--gradient-brand)] px-6 font-semibold text-white shadow-[var(--shadow-brand)] transition-transform hover:-translate-y-0.5"
-            >
-              Ver catálogo
-            </Link>
-            <Link
               href={ROUTES.ABOUT}
-              className="inline-flex h-12 items-center justify-center rounded-xl border border-[var(--color-border)] bg-white px-6 font-semibold text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-border-hover)] hover:text-[var(--color-text-primary)]"
+              className="inline-flex h-12 items-center justify-center rounded-xl bg-gray-900 px-8 font-bold text-white shadow-md transition-all hover:bg-gray-800 hover:-translate-y-1"
             >
               Sobre nosotros
             </Link>
