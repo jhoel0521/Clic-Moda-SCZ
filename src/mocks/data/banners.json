@@ -2,25 +2,25 @@
   {
     "id": "ban_001",
     "titulo": "Nueva Colección Verano 2026",
-    "url_pc": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1400",
-    "url_tablet": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900",
-    "url_movil": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600",
+    "url_pc": "https://picsum.photos/seed/clicmoda-banner-1/1400/800",
+    "url_tablet": "https://picsum.photos/seed/clicmoda-banner-1/900/700",
+    "url_movil": "https://picsum.photos/seed/clicmoda-banner-1/600/800",
     "activo": true
   },
   {
     "id": "ban_002",
     "titulo": "Ventas Flash — Hasta 30% OFF",
-    "url_pc": "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1400",
-    "url_tablet": "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=900",
-    "url_movil": "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600",
+    "url_pc": "https://picsum.photos/seed/clicmoda-banner-2/1400/800",
+    "url_tablet": "https://picsum.photos/seed/clicmoda-banner-2/900/700",
+    "url_movil": "https://picsum.photos/seed/clicmoda-banner-2/600/800",
     "activo": true
   },
   {
     "id": "ban_003",
     "titulo": "Accesorios Trendy",
-    "url_pc": "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=1400",
-    "url_tablet": "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=900",
-    "url_movil": "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600",
+    "url_pc": "https://picsum.photos/seed/clicmoda-banner-3/1400/800",
+    "url_tablet": "https://picsum.photos/seed/clicmoda-banner-3/900/700",
+    "url_movil": "https://picsum.photos/seed/clicmoda-banner-3/600/800",
     "activo": false
   }
 ]

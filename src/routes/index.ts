@@ -16,6 +16,10 @@ export const ROUTES = {
   CHECKOUT: '/checkout',
   CHECKOUT_CONFIRMATION: '/checkout/confirmacion',
 
+  // Páginas informativas
+  ABOUT: '/nosotros',
+  CONTACT: '/contacto',
+
   // Autenticación
   LOGIN: '/login',
 

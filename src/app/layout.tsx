@@ -30,7 +30,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={`${inter.variable} h-full`}>
+    <html lang="es" className={`${inter.variable} h-full`} data-scroll-behavior="smooth">
       <body className="min-h-full flex flex-col antialiased">
         <Providers>{children}</Providers>
       </body>

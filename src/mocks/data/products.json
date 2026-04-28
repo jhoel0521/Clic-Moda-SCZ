@@ -10,8 +10,8 @@
     "tipo_tela": "algodón",
     "category": "vestidos",
     "images": [
-      { "id": "img_001_1", "url": "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=600", "alt": "Vestido Floral Primavera - frente", "isPrimary": true },
-      { "id": "img_001_2", "url": "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=600", "alt": "Vestido Floral Primavera - detalle" }
+      { "id": "img_001_1", "url": "https://picsum.photos/seed/clicmoda-prod-001-a/600/800", "alt": "Vestido Floral Primavera - frente", "isPrimary": true },
+      { "id": "img_001_2", "url": "https://picsum.photos/seed/clicmoda-prod-001-b/600/800", "alt": "Vestido Floral Primavera - detalle" }
     ],
     "sizes": ["S", "M", "L", "XL"],
     "colors": ["rosa", "celeste", "blanco"],
@@ -39,8 +39,8 @@
     "tipo_tela": "tul bordado",
     "category": "blusas",
     "images": [
-      { "id": "img_002_1", "url": "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600", "alt": "Blusa Off-Shoulder Tule - frente", "isPrimary": true },
-      { "id": "img_002_2", "url": "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=600", "alt": "Blusa Off-Shoulder Tule - lateral" }
+      { "id": "img_002_1", "url": "https://picsum.photos/seed/clicmoda-prod-002-a/600/800", "alt": "Blusa Off-Shoulder Tule - frente", "isPrimary": true },
+      { "id": "img_002_2", "url": "https://picsum.photos/seed/clicmoda-prod-002-b/600/800", "alt": "Blusa Off-Shoulder Tule - lateral" }
     ],
     "sizes": ["XS", "S", "M", "L"],
     "colors": ["blanco", "negro", "beige"],
@@ -69,7 +69,7 @@
     "tipo_tela": "denim",
     "category": "pantalones",
     "images": [
-      { "id": "img_003_1", "url": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=600", "alt": "Jeans Mom Fit - frente", "isPrimary": true }
+      { "id": "img_003_1", "url": "https://picsum.photos/seed/clicmoda-prod-003-a/600/800", "alt": "Jeans Mom Fit - frente", "isPrimary": true }
     ],
     "sizes": ["S", "M", "L", "XL", "XXL"],
     "colors": ["azul claro", "azul oscuro", "negro"],
@@ -98,7 +98,7 @@
     "tipo_tela": "poliéster",
     "category": "conjuntos",
     "images": [
-      { "id": "img_004_1", "url": "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=600", "alt": "Conjunto Crop + Falda Plisada", "isPrimary": true }
+      { "id": "img_004_1", "url": "https://picsum.photos/seed/clicmoda-prod-004-a/600/800", "alt": "Conjunto Crop + Falda Plisada", "isPrimary": true }
     ],
     "sizes": ["S", "M", "L"],
     "colors": ["mostaza", "verde oliva", "terracota"],
@@ -126,7 +126,7 @@
     "tipo_tela": "denim",
     "category": "chaquetas",
     "images": [
-      { "id": "img_005_1", "url": "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600", "alt": "Chaqueta Denim Oversize - frente", "isPrimary": true }
+      { "id": "img_005_1", "url": "https://picsum.photos/seed/clicmoda-prod-005-a/600/800", "alt": "Chaqueta Denim Oversize - frente", "isPrimary": true }
     ],
     "sizes": ["S", "M", "L", "XL"],
     "colors": ["azul claro", "negro"],
@@ -154,7 +154,7 @@
     "tipo_tela": "poliéster",
     "category": "faldas",
     "images": [
-      { "id": "img_006_1", "url": "https://images.unsplash.com/photo-1583496661160-fb5886a13d9b?w=600", "alt": "Falda Mini Plisada - multicolor", "isPrimary": true }
+      { "id": "img_006_1", "url": "https://picsum.photos/seed/clicmoda-prod-006-a/600/800", "alt": "Falda Mini Plisada - multicolor", "isPrimary": true }
     ],
     "sizes": ["XS", "S", "M", "L"],
     "colors": ["rojo", "azul", "verde", "amarillo"],
@@ -182,7 +182,7 @@
     "tipo_tela": "satén",
     "category": "vestidos",
     "images": [
-      { "id": "img_007_1", "url": "https://images.unsplash.com/photo-1566479179817-b37e5e3b37c7?w=600", "alt": "Vestido Lencero Satinado", "isPrimary": true }
+      { "id": "img_007_1", "url": "https://picsum.photos/seed/clicmoda-prod-007-a/600/800", "alt": "Vestido Lencero Satinado", "isPrimary": true }
     ],
     "sizes": ["XS", "S", "M", "L"],
     "colors": ["champagne", "negro", "vino"],
@@ -210,7 +210,7 @@
     "tipo_tela": "piel sintética",
     "category": "accesorios",
     "images": [
-      { "id": "img_008_1", "url": "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600", "alt": "Bolso Bucket - piel sintética", "isPrimary": true }
+      { "id": "img_008_1", "url": "https://picsum.photos/seed/clicmoda-prod-008-a/600/800", "alt": "Bolso Bucket - piel sintética", "isPrimary": true }
     ],
     "sizes": ["ÚNICO"],
     "colors": ["camel", "negro", "blanco"],
