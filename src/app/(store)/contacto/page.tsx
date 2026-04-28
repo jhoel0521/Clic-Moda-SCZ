@@ -45,48 +45,42 @@ export default function ContactoPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-16 space-y-16">
-
-      {/* ── ENCABEZADO ───────────────────────────────────────────── */}
-      <div className="text-center space-y-4 animate-fade-in">
-        <h1 className="text-4xl font-bold">
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-16 px-6 py-16">
+      <div className="space-y-4 text-center animate-fade-in">
+        <h1 className="text-4xl font-bold text-[var(--color-text-primary)] sm:text-5xl">
           Estamos para <span className="gradient-text">ayudarte</span>
         </h1>
-        <p className="text-lg max-w-xl mx-auto" style={{ color: 'var(--color-text-secondary)' }}>
+        <p className="mx-auto max-w-2xl text-lg text-[var(--color-text-secondary)]">
           Tenés dudas sobre un producto, un pedido o simplemente querés saludar.
           Escribinos y te respondemos rápido.
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-12">
-
-        {/* ── FORMULARIO ───────────────────────────────────────── */}
-        <div>
-          <h2 className="text-xl font-semibold mb-6">Envianos un mensaje</h2>
+      <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
+        <div className="mx-auto w-full max-w-2xl lg:max-w-none">
+          <h2 className="mb-6 text-xl font-semibold text-[var(--color-text-primary)]">Envianos un mensaje</h2>
 
           {formState === 'success' ? (
             <div
-              className="rounded-2xl border p-8 text-center space-y-4"
-              style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-surface)' }}
+              className="space-y-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-8 text-center shadow-[var(--shadow-sm)]"
             >
               <span className="text-5xl">✅</span>
-              <p className="font-semibold text-lg">¡Mensaje enviado!</p>
-              <p style={{ color: 'var(--color-text-secondary)' }}>
+              <p className="text-lg font-semibold text-[var(--color-text-primary)]">¡Mensaje enviado!</p>
+              <p className="text-[var(--color-text-secondary)]">
                 Te respondemos por email o WhatsApp en menos de 24 horas.
               </p>
               <button
                 onClick={() => setFormState('idle')}
-                className="text-sm underline"
-                style={{ color: 'var(--color-brand)' }}
+                className="text-sm font-medium text-[var(--color-brand)] hover:underline"
               >
                 Enviar otro mensaje
               </button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+            <form onSubmit={handleSubmit} className="space-y-5 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-8 shadow-[var(--shadow-sm)]" noValidate>
               <div className="space-y-1.5">
-                <label htmlFor="nombre" className="block text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>
-                  Nombre completo <span style={{ color: 'var(--color-danger)' }}>*</span>
+                <label htmlFor="nombre" className="block text-sm font-medium text-[var(--color-text-secondary)]">
+                  Nombre completo <span className="text-[var(--color-danger)]">*</span>
                 </label>
                 <input
                   id="nombre"
@@ -95,18 +89,13 @@ export default function ContactoPage() {
                   required
                   minLength={2}
                   placeholder="Tu nombre"
-                  className="w-full h-11 rounded-xl px-4 text-sm border outline-none transition-all focus:ring-2"
-                  style={{
-                    backgroundColor: 'var(--color-surface)',
-                    borderColor: 'var(--color-border)',
-                    color: 'var(--color-text-primary)',
-                  }}
+                  className="w-full rounded-xl border border-[var(--color-border)] bg-white px-4 py-3 text-sm text-[var(--color-text-primary)] outline-none transition-shadow focus:ring-2 focus:ring-[var(--color-brand)]/20"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label htmlFor="email" className="block text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>
-                  Email <span style={{ color: 'var(--color-danger)' }}>*</span>
+                <label htmlFor="email" className="block text-sm font-medium text-[var(--color-text-secondary)]">
+                  Email <span className="text-[var(--color-danger)]">*</span>
                 </label>
                 <input
                   id="email"
@@ -114,28 +103,18 @@ export default function ContactoPage() {
                   type="email"
                   required
                   placeholder="tu@email.com"
-                  className="w-full h-11 rounded-xl px-4 text-sm border outline-none transition-all focus:ring-2"
-                  style={{
-                    backgroundColor: 'var(--color-surface)',
-                    borderColor: 'var(--color-border)',
-                    color: 'var(--color-text-primary)',
-                  }}
+                  className="w-full rounded-xl border border-[var(--color-border)] bg-white px-4 py-3 text-sm text-[var(--color-text-primary)] outline-none transition-shadow focus:ring-2 focus:ring-[var(--color-brand)]/20"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label htmlFor="asunto" className="block text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>
+                <label htmlFor="asunto" className="block text-sm font-medium text-[var(--color-text-secondary)]">
                   Asunto
                 </label>
                 <select
                   id="asunto"
                   name="asunto"
-                  className="w-full h-11 rounded-xl px-4 text-sm border outline-none transition-all"
-                  style={{
-                    backgroundColor: 'var(--color-surface)',
-                    borderColor: 'var(--color-border)',
-                    color: 'var(--color-text-primary)',
-                  }}
+                  className="w-full rounded-xl border border-[var(--color-border)] bg-white px-4 py-3 text-sm text-[var(--color-text-primary)] outline-none transition-shadow focus:ring-2 focus:ring-[var(--color-brand)]/20"
                 >
                   <option value="consulta">Consulta sobre un producto</option>
                   <option value="pedido">Estado de mi pedido</option>
@@ -145,8 +124,8 @@ export default function ContactoPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label htmlFor="mensaje" className="block text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>
-                  Mensaje <span style={{ color: 'var(--color-danger)' }}>*</span>
+                <label htmlFor="mensaje" className="block text-sm font-medium text-[var(--color-text-secondary)]">
+                  Mensaje <span className="text-[var(--color-danger)]">*</span>
                 </label>
                 <textarea
                   id="mensaje"
@@ -155,20 +134,14 @@ export default function ContactoPage() {
                   minLength={10}
                   rows={5}
                   placeholder="Contanos en qué podemos ayudarte..."
-                  className="w-full rounded-xl px-4 py-3 text-sm border outline-none transition-all resize-none focus:ring-2"
-                  style={{
-                    backgroundColor: 'var(--color-surface)',
-                    borderColor: 'var(--color-border)',
-                    color: 'var(--color-text-primary)',
-                  }}
+                  className="w-full resize-none rounded-xl border border-[var(--color-border)] bg-white px-4 py-3 text-sm text-[var(--color-text-primary)] outline-none transition-shadow focus:ring-2 focus:ring-[var(--color-brand)]/20"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={formState === 'sending'}
-                className="w-full h-12 rounded-xl font-semibold text-white transition-all hover:opacity-90 disabled:opacity-60"
-                style={{ background: 'var(--gradient-brand)' }}
+                className="w-full rounded-xl bg-[var(--gradient-brand)] py-3.5 font-semibold text-white shadow-[var(--shadow-brand)] transition-transform hover:-translate-y-0.5 hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {formState === 'sending' ? 'Enviando...' : 'Enviar mensaje'}
               </button>
@@ -176,45 +149,43 @@ export default function ContactoPage() {
           )}
         </div>
 
-        {/* ── INFO DE CONTACTO ─────────────────────────────────── */}
-        <div className="space-y-8">
+        <div className="space-y-8 lg:pt-14">
           <div>
-            <h2 className="text-xl font-semibold mb-6">Contacto directo</h2>
+            <h2 className="mb-6 text-xl font-semibold text-[var(--color-text-primary)]">Contacto directo</h2>
 
             <a
               href={`https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MESSAGE}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-4 p-5 rounded-2xl border transition-all hover:border-green-500 group"
-              style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-border)' }}
+              className="group flex items-center gap-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 transition-all hover:-translate-y-0.5 hover:border-green-500 hover:shadow-[var(--shadow-md)]"
             >
               <div className="w-12 h-12 rounded-xl bg-green-500 flex items-center justify-center shrink-0">
                 <MessageCircle className="text-white" size={22} />
               </div>
               <div>
-                <p className="font-semibold group-hover:text-green-500 transition-colors">WhatsApp</p>
-                <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>+591 77 000-001 · Respuesta en minutos</p>
+                <p className="font-semibold text-[var(--color-text-primary)] transition-colors group-hover:text-green-600">WhatsApp</p>
+                <p className="text-sm text-[var(--color-text-muted)]">+591 77 000-001 · Respuesta en minutos</p>
               </div>
             </a>
           </div>
 
           <div className="space-y-3">
-            <div className="flex items-center gap-3 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-              <Mail size={16} style={{ color: 'var(--color-brand)' }} />
+            <div className="flex items-center gap-3 text-sm text-[var(--color-text-secondary)]">
+              <Mail size={16} className="text-[var(--color-brand)]" />
               <span>contacto@clicmodascz.bo</span>
             </div>
-            <div className="flex items-center gap-3 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-              <MapPin size={16} style={{ color: 'var(--color-brand)' }} />
+            <div className="flex items-center gap-3 text-sm text-[var(--color-text-secondary)]">
+              <MapPin size={16} className="text-[var(--color-brand)]" />
               <span>Santa Cruz de la Sierra, Bolivia</span>
             </div>
-            <div className="flex items-center gap-3 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-              <Clock size={16} style={{ color: 'var(--color-brand)' }} />
+            <div className="flex items-center gap-3 text-sm text-[var(--color-text-secondary)]">
+              <Clock size={16} className="text-[var(--color-brand)]" />
               <span>Lunes a Sábado · 8:00 – 20:00</span>
             </div>
           </div>
 
           <div>
-            <h3 className="font-semibold mb-4">Seguinos en redes</h3>
+            <h3 className="mb-4 font-semibold text-[var(--color-text-primary)]">Seguinos en redes</h3>
             <div className="space-y-3">
               {REDES.map((red) => {
                 const Icono = red.icono;
@@ -224,13 +195,12 @@ export default function ContactoPage() {
                     href={red.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-4 p-4 rounded-xl border transition-all hover:border-[var(--color-border-hover)]"
-                    style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-border)' }}
+                    className="flex items-center gap-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 transition-all hover:-translate-y-0.5 hover:border-[var(--color-border-hover)] hover:shadow-[var(--shadow-sm)]"
                   >
                     <Icono size={20} style={{ color: red.color }} />
                     <div>
-                      <p className="font-medium text-sm">{red.nombre}</p>
-                      <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{red.usuario}</p>
+                      <p className="text-sm font-medium text-[var(--color-text-primary)]">{red.nombre}</p>
+                      <p className="text-xs text-[var(--color-text-muted)]">{red.usuario}</p>
                     </div>
                   </a>
                 );
@@ -240,12 +210,10 @@ export default function ContactoPage() {
         </div>
       </div>
 
-      {/* ── CTA ──────────────────────────────────────────────────── */}
       <div className="text-center">
         <Link
           href={ROUTES.CATALOG}
-          className="inline-flex items-center gap-2 text-sm font-medium transition-colors"
-          style={{ color: 'var(--color-brand)' }}
+          className="inline-flex items-center gap-2 text-sm font-medium text-[var(--color-brand)] transition-colors hover:underline"
         >
           ← Volver al catálogo
         </Link>

@@ -15,58 +15,55 @@ const CATEGORIAS = [
 ];
 
 const PASOS = [
-  { numero: '01', titulo: 'Explorá el catálogo', descripcion: 'Filtrá por talla, color o categoría. Consultá las medidas exactas de cada prenda antes de comprar.' },
-  { numero: '02', titulo: 'Añadí al carrito', descripcion: 'Sin registro obligatorio. Completá tu pedido como invitado o con tu cuenta en segundos.' },
-  { numero: '03', titulo: 'Coordiná por WhatsApp', descripcion: 'Te enviamos un ticket con tu pedido y coordinamos la entrega directamente por chat.' },
+  {
+    numero: '01',
+    titulo: 'Explorá el catálogo',
+    descripcion: 'Filtrá por talla, color o categoría. Consultá las medidas exactas de cada prenda antes de comprar.',
+  },
+  {
+    numero: '02',
+    titulo: 'Añadí al carrito',
+    descripcion: 'Sin registro obligatorio. Completá tu pedido como invitado o con tu cuenta en segundos.',
+  },
+  {
+    numero: '03',
+    titulo: 'Coordiná por WhatsApp',
+    descripcion: 'Te enviamos un ticket con tu pedido y coordinamos la entrega directamente por chat.',
+  },
 ];
 
 export default function LandingPage() {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
+      <section className="relative flex min-h-[calc(100vh-4rem)] w-full items-center justify-center overflow-hidden px-6 py-20 text-center">
+        <div className="absolute inset-0 -z-10 bg-[var(--gradient-hero)]" />
+        <div className="absolute left-1/2 top-1/2 -z-10 h-[34rem] w-[34rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--gradient-brand)] opacity-15 blur-3xl" />
 
-      {/* ── HERO ─────────────────────────────────────────────────────── */}
-      <section className="relative flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] text-center px-6 py-20 overflow-hidden">
-        <div
-          className="absolute inset-0 -z-10"
-          style={{ background: 'var(--gradient-hero)' }}
-        />
-        <div
-          className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full -z-10 blur-3xl opacity-20"
-          style={{ background: 'var(--gradient-brand)' }}
-        />
-
-        <div className="animate-fade-in space-y-6 max-w-3xl">
-          <div
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border text-sm font-medium"
-            style={{ borderColor: 'var(--color-border-brand)', backgroundColor: 'var(--color-brand-subtle)', color: 'var(--color-brand)' }}
-          >
-            <span className="w-2 h-2 rounded-full animate-pulse-brand" style={{ backgroundColor: 'var(--color-brand)' }} />
+        <div className="relative z-10 mx-auto flex w-full max-w-3xl flex-col items-center">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--color-border-brand)] bg-[var(--color-brand-subtle)] px-4 py-1.5 text-sm font-medium text-[var(--color-brand)]">
+            <span className="inline-block h-2 w-2 animate-pulse-brand rounded-full bg-[var(--color-brand)]" />
             Fast Fashion · Santa Cruz de la Sierra
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-extrabold leading-tight tracking-tight">
-            Tu moda,{' '}
-            <span className="gradient-text">un click</span>{' '}
-            de distancia
+          <h1 className="mb-6 text-5xl font-extrabold tracking-tight text-[var(--color-text-primary)] sm:text-6xl lg:text-7xl">
+            Tu moda, <span className="gradient-text">un click</span> de distancia
           </h1>
 
-          <p className="text-xl max-w-xl mx-auto leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+          <p className="mx-auto mb-10 max-w-2xl text-lg leading-8 text-[var(--color-text-secondary)] sm:text-xl">
             Ropa trendy con tallas exactas, pagos simples y entrega coordinada por WhatsApp.
             Sin complicaciones, directo a tu puerta.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+          <div className="flex flex-wrap justify-center gap-4">
             <Link
               href={ROUTES.CATALOG}
-              className="inline-flex items-center justify-center h-14 px-8 rounded-xl font-semibold text-white text-lg transition-all hover:opacity-90 active:scale-95"
-              style={{ background: 'var(--gradient-brand)', boxShadow: 'var(--shadow-brand)' }}
+              className="inline-flex h-14 items-center justify-center rounded-xl bg-[var(--gradient-brand)] px-8 text-lg font-semibold text-white shadow-[var(--shadow-brand)] transition-transform duration-200 hover:-translate-y-0.5 hover:opacity-95"
             >
               Explorar catálogo →
             </Link>
             <Link
               href={ROUTES.LOGIN}
-              className="inline-flex items-center justify-center h-14 px-8 rounded-xl font-semibold border transition-all"
-              style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}
+              className="inline-flex h-14 items-center justify-center rounded-xl border border-[var(--color-border)] bg-white px-8 font-semibold text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-border-hover)] hover:text-[var(--color-text-primary)]"
             >
               Iniciar sesión
             </Link>
@@ -74,25 +71,29 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── CATEGORÍAS DESTACADAS ─────────────────────────────────────── */}
-      <section className="py-20 px-6" style={{ backgroundColor: 'var(--color-bg-secondary)' }}>
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-2">Explora por categoría</h2>
-          <p className="text-center mb-12" style={{ color: 'var(--color-text-secondary)' }}>
+      <section className="w-full bg-[var(--color-bg-secondary)] px-6 py-20">
+        <div className="mx-auto w-full max-w-6xl">
+          <h2 className="mb-2 text-center text-3xl font-bold text-[var(--color-text-primary)] sm:text-4xl">
+            Explora por categoría
+          </h2>
+          <p className="mb-12 text-center text-[var(--color-text-secondary)]">
             Encuentra exactamente lo que buscas
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
             {CATEGORIAS.map((cat) => (
               <Link
                 key={cat.nombre}
                 href={cat.href}
-                className="group flex flex-col items-center gap-4 p-8 rounded-2xl border transition-all"
-                style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-border)' }}
+                className="group flex flex-col items-center gap-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] px-6 py-8 text-center transition-all hover:-translate-y-1 hover:border-[var(--color-border-hover)] hover:shadow-[var(--shadow-md)]"
               >
                 <span className="text-5xl">{cat.emoji}</span>
-                <div className="text-center">
-                  <p className="font-semibold text-lg group-hover:text-[var(--color-brand)] transition-colors">{cat.nombre}</p>
-                  <p className="text-sm mt-1" style={{ color: 'var(--color-text-muted)' }}>{cat.descripcion}</p>
+                <div>
+                  <p className="text-lg font-semibold text-[var(--color-text-primary)] transition-colors group-hover:text-[var(--color-brand)]">
+                    {cat.nombre}
+                  </p>
+                  <p className="mt-1 text-sm text-[var(--color-text-muted)]">
+                    {cat.descripcion}
+                  </p>
                 </div>
               </Link>
             ))}
@@ -100,44 +101,50 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── CÓMO FUNCIONA ─────────────────────────────────────────────── */}
-      <section className="py-20 px-6">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-2">¿Cómo funciona?</h2>
-          <p className="text-center mb-12" style={{ color: 'var(--color-text-secondary)' }}>
+      {/* ── CÓMO FUNCIONA ──────────────────────────────────────── */}
+      <section className="w-full px-6 py-20">
+        <div className="mx-auto w-full max-w-6xl">
+          <h2 className="mb-2 text-center text-3xl font-bold text-[var(--color-text-primary)] sm:text-4xl">
+            ¿Cómo funciona?
+          </h2>
+          <p className="mb-12 text-center text-[var(--color-text-secondary)]">
             Comprar en Clic Moda es así de simple
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             {PASOS.map((paso) => (
-              <div key={paso.numero} className="flex flex-col gap-4">
-                <span className="text-5xl font-black gradient-text">{paso.numero}</span>
-                <h3 className="text-xl font-semibold">{paso.titulo}</h3>
-                <p style={{ color: 'var(--color-text-secondary)' }}>{paso.descripcion}</p>
+              <div
+                key={paso.numero}
+                className="flex flex-col gap-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-8 shadow-[var(--shadow-sm)]"
+              >
+                <span className="gradient-text text-4xl font-black">
+                  {paso.numero}
+                </span>
+                <h3 className="text-xl font-semibold text-[var(--color-text-primary)]">{paso.titulo}</h3>
+                <p className="leading-7 text-[var(--color-text-secondary)]">{paso.descripcion}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── CTA FINAL ─────────────────────────────────────────────────── */}
-      <section className="py-20 px-6" style={{ backgroundColor: 'var(--color-bg-secondary)' }}>
-        <div className="max-w-2xl mx-auto text-center space-y-6">
-          <h2 className="text-3xl font-bold">¿Querés saber más sobre nosotros?</h2>
-          <p style={{ color: 'var(--color-text-secondary)' }}>
+      <section className="w-full bg-[var(--color-bg-secondary)] px-6 py-20">
+        <div className="mx-auto max-w-2xl text-center">
+          <h2 className="mb-4 text-3xl font-bold text-[var(--color-text-primary)] sm:text-4xl">
+            ¿Querés saber más sobre nosotros?
+          </h2>
+          <p className="mb-8 text-[var(--color-text-secondary)] leading-7">
             Conocé nuestra historia, misión y los valores que nos mueven como negocio local de Santa Cruz.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-wrap justify-center gap-4">
             <Link
               href={ROUTES.CATALOG}
-              className="inline-flex items-center justify-center h-12 px-6 rounded-xl font-semibold text-white transition-all hover:opacity-90"
-              style={{ background: 'var(--gradient-brand)' }}
+              className="inline-flex h-12 items-center justify-center rounded-xl bg-[var(--gradient-brand)] px-6 font-semibold text-white shadow-[var(--shadow-brand)] transition-transform hover:-translate-y-0.5"
             >
               Ver catálogo
             </Link>
             <Link
-              href="/nosotros"
-              className="inline-flex items-center justify-center h-12 px-6 rounded-xl font-semibold border transition-all"
-              style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}
+              href={ROUTES.ABOUT}
+              className="inline-flex h-12 items-center justify-center rounded-xl border border-[var(--color-border)] bg-white px-6 font-semibold text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-border-hover)] hover:text-[var(--color-text-primary)]"
             >
               Sobre nosotros
             </Link>

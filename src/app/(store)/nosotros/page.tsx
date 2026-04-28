@@ -31,117 +31,108 @@ const VALORES = [
 ];
 
 const EQUIPO = [
-  { nombre: 'Ana García', rol: 'Fundadora y Gerente General', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=ana' },
-  { nombre: 'Carlos Méndez', rol: 'Logística y Despacho', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=carlos' },
-  { nombre: 'Laura Vargas', rol: 'Atención al Cliente', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=laura' },
+  { nombre: 'Ana García', rol: 'Fundadora y Gerente General' },
+  { nombre: 'Carlos Méndez', rol: 'Logística y Despacho' },
+  { nombre: 'Laura Vargas', rol: 'Atención al Cliente' },
 ];
+
+function Avatar({ nombre }: { nombre: string }) {
+  const initials = nombre
+    .split(' ')
+    .slice(0, 2)
+    .map((n) => n[0])
+    .join('');
+
+  return (
+    <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-[var(--gradient-brand)] text-2xl font-bold text-white shadow-[var(--shadow-brand)]">
+      {initials}
+    </div>
+  );
+}
 
 export default function NosotrosPage() {
   return (
-    <div className="max-w-5xl mx-auto px-6 py-16 space-y-20">
-
-      {/* ── HISTORIA ─────────────────────────────────────────────── */}
-      <section className="grid md:grid-cols-2 gap-12 items-center">
-        <div className="space-y-6 animate-fade-in">
-          <div
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium"
-            style={{ backgroundColor: 'var(--color-brand-subtle)', color: 'var(--color-brand)' }}
-          >
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-20 px-6 py-16">
+      <section className="grid items-center gap-12 lg:grid-cols-2">
+        <div className="space-y-6 text-center lg:text-left animate-fade-in">
+          <div className="inline-flex items-center gap-2 rounded-full bg-[var(--color-brand-subtle)] px-3 py-1 text-sm font-medium text-[var(--color-brand)]">
             Nuestra historia
           </div>
-          <h1 className="text-4xl font-bold leading-tight">
+          <h1 className="text-4xl font-bold leading-tight text-[var(--color-text-primary)] sm:text-5xl">
             Nació de una necesidad,<br />
             <span className="gradient-text">creció con pasión</span>
           </h1>
-          <p style={{ color: 'var(--color-text-secondary)', lineHeight: '1.8' }}>
+          <p className="leading-8 text-[var(--color-text-secondary)]">
             Clic Moda SCZ nació en 2024 con una idea simple: hacer que la moda trendy sea accesible
             para todas las cruceñas sin las complicaciones de un e-commerce tradicional.
           </p>
-          <p style={{ color: 'var(--color-text-secondary)', lineHeight: '1.8' }}>
+          <p className="leading-8 text-[var(--color-text-secondary)]">
             Empezamos vendiendo por TikTok e Instagram, coordinando entregas por WhatsApp.
             Hoy tenemos una plataforma propia que mantiene esa misma cercanía, pero con la comodidad
             de un catálogo digital con tallas exactas.
           </p>
         </div>
 
-        {/* Decoración visual */}
-        <div
-          className="aspect-square rounded-3xl flex items-center justify-center text-8xl"
-          style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)' }}
-        >
+        <div className="flex aspect-square items-center justify-center rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface)] text-8xl shadow-[var(--shadow-md)]">
           👗
         </div>
       </section>
 
-      {/* ── MISIÓN ───────────────────────────────────────────────── */}
       <section
-        className="rounded-3xl p-10 text-center"
-        style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border-brand)' }}
+        className="rounded-3xl border border-[var(--color-border-brand)] bg-[var(--color-surface)] p-8 text-center shadow-[var(--shadow-md)] sm:p-10"
       >
-        <p className="text-sm font-medium mb-4" style={{ color: 'var(--color-brand)' }}>Nuestra misión</p>
-        <blockquote className="text-2xl md:text-3xl font-semibold leading-relaxed max-w-3xl mx-auto">
+        <p className="mb-4 text-sm font-medium text-[var(--color-brand)]">Nuestra misión</p>
+        <blockquote className="mx-auto max-w-3xl text-2xl font-semibold leading-relaxed text-[var(--color-text-primary)] md:text-3xl">
           &ldquo;Ser el destino de moda favorito de Santa Cruz, donde cada compra es{' '}
           <span className="gradient-text">rápida, confiable y sin sorpresas</span>.&rdquo;
         </blockquote>
       </section>
 
-      {/* ── VALORES ──────────────────────────────────────────────── */}
       <section>
-        <h2 className="text-3xl font-bold text-center mb-12">Lo que nos define</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <h2 className="mb-12 text-center text-3xl font-bold text-[var(--color-text-primary)]">Lo que nos define</h2>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
           {VALORES.map((valor) => (
             <div
               key={valor.titulo}
-              className="flex gap-5 p-6 rounded-2xl border"
-              style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-border)' }}
+              className="flex gap-5 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-[var(--shadow-sm)]"
             >
               <span className="text-3xl shrink-0">{valor.emoji}</span>
               <div>
-                <h3 className="font-semibold text-lg mb-1">{valor.titulo}</h3>
-                <p style={{ color: 'var(--color-text-secondary)' }}>{valor.descripcion}</p>
+                <h3 className="mb-1 text-lg font-semibold text-[var(--color-text-primary)]">{valor.titulo}</h3>
+                <p className="text-[var(--color-text-secondary)]">{valor.descripcion}</p>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ── EQUIPO ───────────────────────────────────────────────── */}
       <section>
-        <h2 className="text-3xl font-bold text-center mb-12">El equipo</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+        <h2 className="mb-12 text-center text-3xl font-bold text-[var(--color-text-primary)]">El equipo</h2>
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
           {EQUIPO.map((persona) => (
-            <div key={persona.nombre} className="flex flex-col items-center gap-4 text-center">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={persona.avatar}
-                alt={persona.nombre}
-                className="w-24 h-24 rounded-full"
-                style={{ backgroundColor: 'var(--color-surface-raised)', border: '2px solid var(--color-border)' }}
-              />
+            <div key={persona.nombre} className="flex flex-col items-center gap-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 text-center shadow-[var(--shadow-sm)]">
+              <Avatar nombre={persona.nombre} />
               <div>
-                <p className="font-semibold">{persona.nombre}</p>
-                <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{persona.rol}</p>
+                <p className="font-semibold text-[var(--color-text-primary)]">{persona.nombre}</p>
+                <p className="text-sm text-[var(--color-text-muted)]">{persona.rol}</p>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ── CTA ──────────────────────────────────────────────────── */}
-      <section className="text-center space-y-6">
-        <h2 className="text-2xl font-bold">¿Lista para descubrir tu próximo look?</h2>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+      <section className="space-y-6 text-center">
+        <h2 className="text-2xl font-bold text-[var(--color-text-primary)]">¿Lista para descubrir tu próximo look?</h2>
+        <div className="flex flex-col justify-center gap-4 sm:flex-row">
           <Link
             href={ROUTES.CATALOG}
-            className="inline-flex items-center justify-center h-12 px-6 rounded-xl font-semibold text-white transition-all hover:opacity-90"
-            style={{ background: 'var(--gradient-brand)' }}
+            className="inline-flex h-12 items-center justify-center rounded-xl bg-[var(--gradient-brand)] px-6 font-semibold text-white shadow-[var(--shadow-brand)] transition-transform hover:-translate-y-0.5"
           >
             Ver catálogo →
           </Link>
           <Link
             href="/contacto"
-            className="inline-flex items-center justify-center h-12 px-6 rounded-xl font-semibold border transition-all"
-            style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}
+            className="inline-flex h-12 items-center justify-center rounded-xl border border-[var(--color-border)] bg-white px-6 font-semibold text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-border-hover)] hover:text-[var(--color-text-primary)]"
           >
             Contactanos
           </Link>
