@@ -5,6 +5,8 @@
  * AdminSidebar y AdminHeader se construyen en Sprint 4.
  * Por ahora expone la estructura base con verificación de rol.
  */
+import Link from 'next/link';
+
 export default function AdminLayout({
   children,
 }: {
@@ -28,14 +30,14 @@ export default function AdminLayout({
           { label: 'Pedidos', href: '/admin/pedidos', icon: '📦' },
           { label: 'Marketing', href: '/admin/marketing', icon: '🎯' },
         ].map((item) => (
-          <a
+          <Link
             key={item.href}
             href={item.href}
             className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text-primary)] transition-all"
           >
             <span>{item.icon}</span>
             {item.label}
-          </a>
+          </Link>
         ))}
       </aside>
 
@@ -46,12 +48,12 @@ export default function AdminLayout({
           className="h-16 border-b border-[var(--color-border)] flex items-center justify-between px-6 bg-[var(--color-surface)] shrink-0"
         >
           <span className="text-sm text-[var(--color-text-muted)]">Panel de Control</span>
-          <a
+          <Link
             href="/"
             className="text-xs text-[var(--color-text-muted)] hover:text-[var(--color-brand)] transition-colors"
           >
             ← Volver a la tienda
-          </a>
+          </Link>
         </header>
         <main className="flex-1 p-6">{children}</main>
       </div>
