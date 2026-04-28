@@ -6,6 +6,8 @@
     "description": "Vestido midi con estampado floral vibrante, perfecto para el verano cruceño. Tela liviana y fresca de algodón 100%.",
     "price": 280,
     "originalPrice": 350,
+    "estado": "activo",
+    "tipo_tela": "algodón",
     "category": "vestidos",
     "images": [
       { "id": "img_001_1", "url": "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=600", "alt": "Vestido Floral Primavera - frente", "isPrimary": true },
@@ -33,6 +35,8 @@
     "description": "Blusa elegante con hombros descubiertos y tela de tul bordado. Ideal para salidas y eventos especiales.",
     "price": 185,
     "originalPrice": null,
+    "estado": "activo",
+    "tipo_tela": "tul bordado",
     "category": "blusas",
     "images": [
       { "id": "img_002_1", "url": "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600", "alt": "Blusa Off-Shoulder Tule - frente", "isPrimary": true },
@@ -49,7 +53,7 @@
     },
     "tags": ["blusa", "elegante", "fiesta", "off-shoulder"],
     "isFlashSale": true,
-    "flashSaleEndsAt": "2025-12-31T23:59:59.000Z",
+    "flashSaleEndsAt": "2026-12-31T23:59:59.000Z",
     "rating": 4.5,
     "reviewCount": 11,
     "createdAt": "2025-03-05T00:00:00.000Z"
@@ -61,6 +65,8 @@
     "description": "Jean clásico de tiro alto con lavado vintage. Corte mom fit que favorece todas las figuras.",
     "price": 320,
     "originalPrice": null,
+    "estado": "activo",
+    "tipo_tela": "denim",
     "category": "pantalones",
     "images": [
       { "id": "img_003_1", "url": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=600", "alt": "Jeans Mom Fit - frente", "isPrimary": true }
@@ -88,6 +94,8 @@
     "description": "Conjunto de dos piezas con top crop y falda plisada midi. Un look completo y moderno para cualquier ocasión.",
     "price": 420,
     "originalPrice": 520,
+    "estado": "activo",
+    "tipo_tela": "poliéster",
     "category": "conjuntos",
     "images": [
       { "id": "img_004_1", "url": "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=600", "alt": "Conjunto Crop + Falda Plisada", "isPrimary": true }
@@ -102,7 +110,7 @@
     },
     "tags": ["conjunto", "crop top", "falda plisada", "tendencia"],
     "isFlashSale": true,
-    "flashSaleEndsAt": "2025-12-31T23:59:59.000Z",
+    "flashSaleEndsAt": "2026-12-31T23:59:59.000Z",
     "rating": 4.7,
     "reviewCount": 8,
     "createdAt": "2025-04-01T00:00:00.000Z"
@@ -114,6 +122,8 @@
     "description": "Chaqueta de jean oversize con parches bordados. El básico perfecto para elevar cualquier look casual.",
     "price": 390,
     "originalPrice": null,
+    "estado": "activo",
+    "tipo_tela": "denim",
     "category": "chaquetas",
     "images": [
       { "id": "img_005_1", "url": "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600", "alt": "Chaqueta Denim Oversize - frente", "isPrimary": true }
@@ -140,6 +150,8 @@
     "description": "Falda mini plisada en colores vibrantes. Ligera y cómoda para el calor de Santa Cruz.",
     "price": 145,
     "originalPrice": 180,
+    "estado": "activo",
+    "tipo_tela": "poliéster",
     "category": "faldas",
     "images": [
       { "id": "img_006_1", "url": "https://images.unsplash.com/photo-1583496661160-fb5886a13d9b?w=600", "alt": "Falda Mini Plisada - multicolor", "isPrimary": true }
@@ -166,6 +178,8 @@
     "description": "Vestido de corte lencero en tela satinada. Sensual y elegante, ideal para noches especiales.",
     "price": 340,
     "originalPrice": null,
+    "estado": "activo",
+    "tipo_tela": "satén",
     "category": "vestidos",
     "images": [
       { "id": "img_007_1", "url": "https://images.unsplash.com/photo-1566479179817-b37e5e3b37c7?w=600", "alt": "Vestido Lencero Satinado", "isPrimary": true }
@@ -192,6 +206,8 @@
     "description": "Bolso tipo bucket en piel sintética premium. Amplio, práctico y muy trendy.",
     "price": 210,
     "originalPrice": 260,
+    "estado": "activo",
+    "tipo_tela": "piel sintética",
     "category": "accesorios",
     "images": [
       { "id": "img_008_1", "url": "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600", "alt": "Bolso Bucket - piel sintética", "isPrimary": true }
