@@ -1,26 +1,158 @@
 @import "tailwindcss";
 
+/* ============================================================
+   DESIGN TOKENS — Clic Moda SCZ
+   Sistema de variables CSS para toda la aplicación.
+   El tema principal es DARK MODE con acentos vibrantes.
+   ============================================================ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* --- Paleta de marca --- */
+  --color-brand:         #e63f6e;   /* Rosa fuchsia: color principal CTA */
+  --color-brand-dark:    #c7305a;   /* Hover/active del brand */
+  --color-brand-light:   #ff6b96;   /* Versión clara para gradientes */
+  --color-brand-subtle:  rgba(230, 63, 110, 0.12); /* Background de badges brand */
+
+  /* --- Colores de fondo (Dark Mode) --- */
+  --color-bg:            #0d0d0f;   /* Fondo raíz (negro azulado casi puro) */
+  --color-bg-secondary:  #111115;   /* Fondo de secciones alternadas */
+
+  /* --- Superficies / Tarjetas --- */
+  --color-surface:       #18181d;   /* Tarjetas, inputs, modales */
+  --color-surface-raised:#1f1f26;   /* Tarjetas elevadas, dropdowns */
+  --color-surface-hover: #26262f;   /* Hover de elementos de superficie */
+
+  /* --- Bordes --- */
+  --color-border:        rgba(255, 255, 255, 0.08);
+  --color-border-hover:  rgba(255, 255, 255, 0.16);
+  --color-border-brand:  rgba(230, 63, 110, 0.4);
+
+  /* --- Texto --- */
+  --color-text-primary:  #f0f0f5;   /* Texto principal */
+  --color-text-secondary:#a0a0b0;   /* Texto secundario / subtítulos */
+  --color-text-muted:    #60607a;   /* Placeholders, hints */
+  --color-text-inverse:  #0d0d0f;   /* Texto sobre fondo claro */
+
+  /* --- Estados semánticos --- */
+  --color-success:       #22c55e;
+  --color-success-dark:  #16a34a;
+  --color-warning:       #f59e0b;
+  --color-danger:        #ef4444;
+  --color-danger-dark:   #dc2626;
+  --color-info:          #38bdf8;
+
+  /* --- Gradientes de la marca --- */
+  --gradient-brand: linear-gradient(135deg, #e63f6e 0%, #ff6b96 50%, #c026d3 100%);
+  --gradient-dark:  linear-gradient(180deg, #18181d 0%, #0d0d0f 100%);
+  --gradient-hero:  linear-gradient(135deg, #1a0a14 0%, #0d0d0f 40%, #0a0d1a 100%);
+
+  /* --- Sombras --- */
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.5);
+  --shadow-md:  0 4px 12px rgba(0,0,0,0.6);
+  --shadow-lg:  0 8px 32px rgba(0,0,0,0.7);
+  --shadow-brand: 0 4px 20px rgba(230, 63, 110, 0.35);
+
+  /* --- Tipografía --- */
+  --font-sans: var(--font-inter), 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  /* --- Radio de bordes --- */
+  --radius-sm:   6px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-xl:   24px;
+  --radius-full: 9999px;
+
+  /* --- Transiciones --- */
+  --transition-fast: 150ms ease-out;
+  --transition-base: 250ms ease-out;
+  --transition-slow: 400ms ease-out;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ============================================================
+   BASE STYLES
+   ============================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  color-scheme: dark;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
 }
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--color-surface-hover);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--color-border-hover); }
+
+/* Selección de texto */
+::selection {
+  background-color: var(--color-brand-subtle);
+  color: var(--color-brand-light);
+}
+
+/* Focus visible global */
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   UTILIDADES DE GRADIENTE (para usar en clases className)
+   ============================================================ */
+
+.gradient-text {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-border {
+  border: 1px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+}
+
+/* ============================================================
+   ANIMACIONES
+   ============================================================ */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse-brand {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(230, 63, 110, 0.4); }
+  50%       { box-shadow: 0 0 0 8px rgba(230, 63, 110, 0); }
+}
+
+.animate-fade-in   { animation: fadeIn 0.3s ease-out both; }
+.animate-slide-in  { animation: slideIn 0.3s ease-out both; }
+.animate-pulse-brand { animation: pulse-brand 2s ease-in-out infinite; }
