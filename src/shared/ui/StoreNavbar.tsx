@@ -1,145 +1,60 @@
-'use client';
-
-import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { ShoppingBag, User, Menu, X } from 'lucide-react';
 import { ROUTES } from '@src/routes';
-import { useCartStore } from '@src/core/store/useCartStore';
-import { useAuthStore } from '@src/core/store/useAuthStore';
-
-const NAV_LINKS = [
-  { label: 'Inicio', href: ROUTES.HOME },
-  { label: 'Catálogo', href: ROUTES.CATALOG },
-  { label: 'Nosotros', href: ROUTES.ABOUT },
-  { label: 'Contacto', href: ROUTES.CONTACT },
-] as const;
 
 export function StoreNavbar() {
-  const pathname = usePathname();
-  const itemCount = useCartStore((s) => s.itemCount);
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const isActive = (href: string) =>
-    href === '/' ? pathname === '/' : pathname.startsWith(href);
-
   return (
-    <header
-      className="sticky top-0 z-40 border-b"
-      style={{
-        backgroundColor: 'color-mix(in srgb, var(--color-bg) 80%, transparent)',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
-        borderColor: 'var(--color-border)',
-      }}
-    >
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-
-        {/* Logo */}
-        <Link
-          href={ROUTES.HOME}
-          className="gradient-text font-bold text-xl tracking-tight shrink-0"
-        >
-          Clic Moda SCZ
-        </Link>
-
-        {/* Desktop nav — oculto en mobile */}
-        <ul className="hidden md:flex items-center gap-1">
-          {NAV_LINKS.map((link) => (
-            <li key={link.href}>
-              <Link
-                href={link.href}
-                className="inline-flex items-center h-9 px-4 rounded-lg text-sm font-medium transition-colors"
-                style={{
-                  color: isActive(link.href)
-                    ? 'var(--color-brand)'
-                    : 'var(--color-text-secondary)',
-                  backgroundColor: isActive(link.href)
-                    ? 'var(--color-brand-subtle)'
-                    : 'transparent',
-                }}
-              >
-                {link.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-
-        {/* Acciones — carrito, login, hamburger */}
-        <div className="flex items-center gap-1 shrink-0">
-
-          {/* Carrito con badge */}
-          <Link
-            href={ROUTES.CART}
-            className="relative inline-flex items-center justify-center w-11 h-11 rounded-xl transition-colors"
-            style={{ color: 'var(--color-text-secondary)' }}
-            aria-label="Ver carrito"
-          >
-            <ShoppingBag size={22} />
-            {itemCount > 0 && (
-              <span
-                className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] flex items-center justify-center rounded-full text-[10px] font-bold text-white px-1"
-                style={{ background: 'var(--gradient-brand)' }}
-              >
-                {itemCount > 99 ? '99+' : itemCount}
-              </span>
-            )}
+    <header className="w-full bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
+      {/* Usamos un max-w-[1600px] para que no se estire de forma fea en pantallas gigantes, pero se mantenga centrado */}
+      <div className="mx-auto max-w-[1600px] w-full px-6 lg:px-12 h-20 flex items-center justify-between">
+        
+        {/* LOGO: Restaurado a CLIC MODA SCZ */}
+        <div className="flex-shrink-0">
+          <Link href={ROUTES.HOME} className="text-2xl lg:text-3xl font-black tracking-tighter text-gray-900">
+            CLIC MODA SCZ<span className="text-pink-600">.</span>
           </Link>
+        </div>
 
-          {/* Login / Perfil */}
-          <Link
-            href={isAuthenticated ? ROUTES.PROFILE : ROUTES.LOGIN}
-            className="inline-flex items-center justify-center w-11 h-11 rounded-xl transition-colors"
-            style={{ color: 'var(--color-text-secondary)' }}
-            aria-label={isAuthenticated ? 'Mi perfil' : 'Iniciar sesión'}
-          >
-            <User size={22} />
+        {/* MENÚ CENTRAL */}
+        <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-8 lg:gap-12">
+          <Link href={ROUTES.HOME} className="text-sm font-bold text-gray-500 hover:text-pink-600 transition-colors">
+            INICIO
           </Link>
+          <Link href={ROUTES.CATALOG} className="text-sm font-bold text-gray-500 hover:text-pink-600 transition-colors">
+            CATÁLOGO
+          </Link>
+          <Link href={ROUTES.ABOUT} className="text-sm font-bold text-gray-500 hover:text-pink-600 transition-colors">
+            NOSOTROS
+          </Link>
+          <Link href={ROUTES.CONTACT} className="hidden lg:block text-sm 2xl:text-base font-medium text-gray-500 hover:text-gray-900 transition-colors">
+            CONTACTO
+          </Link>
+        </nav>
 
-          {/* Hamburger — solo mobile */}
-          <button
-            type="button"
-            className="inline-flex items-center justify-center w-11 h-11 rounded-xl transition-colors md:hidden"
-            style={{ color: 'var(--color-text-secondary)' }}
-            onClick={() => setIsMenuOpen((prev) => !prev)}
-            aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
-            aria-expanded={isMenuOpen}
+        {/* DERECHA: LOGIN Y CARRITO */}
+        <div className="flex items-center gap-4 lg:gap-6">
+          {/* NUEVO BOTÓN DE LOGIN */}
+          <Link 
+            href="/login" 
+            className="hidden sm:flex items-center text-sm font-bold text-gray-600 hover:text-pink-600 transition-colors"
           >
-            {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
+            Iniciar sesión
+          </Link>
+          
+          <div className="hidden sm:block w-px h-6 bg-gray-200"></div> {/* Línea separadora */}
+          
+          <Link 
+            href={ROUTES.CART} 
+            className="flex items-center gap-2 bg-gray-900 text-white px-5 py-2.5 rounded-full hover:bg-pink-600 transition-all shadow-md font-medium text-sm hover:-translate-y-0.5"
+          >
+            <span>🛒</span>
+            <span className="hidden lg:inline">Carrito</span>
+            <span className="bg-white text-gray-900 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
+              0
+            </span>
+          </Link>
         </div>
-      </nav>
 
-      {/* Mobile menu */}
-      {isMenuOpen && (
-        <div
-          className="md:hidden border-t py-2"
-          style={{
-            borderColor: 'var(--color-border)',
-            backgroundColor: 'var(--color-bg)',
-          }}
-        >
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setIsMenuOpen(false)}
-              className="flex items-center h-12 px-6 text-sm font-medium transition-colors"
-              style={{
-                color: isActive(link.href)
-                  ? 'var(--color-brand)'
-                  : 'var(--color-text-secondary)',
-                backgroundColor: isActive(link.href)
-                  ? 'var(--color-brand-subtle)'
-                  : 'transparent',
-              }}
-            >
-              {link.label}
-            </Link>
-          ))}
-        </div>
-      )}
+      </div>
     </header>
   );
 }

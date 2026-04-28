@@ -31,7 +31,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className={`${inter.variable} h-full`} data-scroll-behavior="smooth">
-      <body className="min-h-full flex flex-col antialiased">
+      <body className="min-h-full flex flex-col antialiased mb-4">
         <Providers>{children}</Providers>
       </body>
     </html>
