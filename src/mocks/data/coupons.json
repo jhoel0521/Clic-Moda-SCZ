@@ -1,0 +1,34 @@
+[
+  {
+    "id": "cup_001",
+    "codigo": "BIENVENIDA10",
+    "porcentaje_descuento": 10,
+    "fecha_caducidad": "2026-12-31T23:59:59.000Z",
+    "limite_usos": 500,
+    "veces_usado": 47
+  },
+  {
+    "id": "cup_002",
+    "codigo": "FLASH20",
+    "porcentaje_descuento": 20,
+    "fecha_caducidad": "2026-06-30T23:59:59.000Z",
+    "limite_usos": 100,
+    "veces_usado": 38
+  },
+  {
+    "id": "cup_003",
+    "codigo": "VIP30",
+    "porcentaje_descuento": 30,
+    "fecha_caducidad": "2026-12-31T23:59:59.000Z",
+    "limite_usos": 50,
+    "veces_usado": 12
+  },
+  {
+    "id": "cup_004",
+    "codigo": "EXPIRADO",
+    "porcentaje_descuento": 15,
+    "fecha_caducidad": "2025-01-01T00:00:00.000Z",
+    "limite_usos": 200,
+    "veces_usado": 200
+  }
+]

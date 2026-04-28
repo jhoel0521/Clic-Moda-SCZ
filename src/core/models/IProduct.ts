@@ -19,6 +19,9 @@ export type CategoriaProducto =
   | 'conjuntos'
   | string;
 
+/** Estado del producto — PRODUCTO.estado */
+export type EstadoProducto = 'activo' | 'inactivo';
+
 /** Producto del catálogo */
 export interface IProduct {
   id: string;
@@ -27,6 +30,10 @@ export interface IProduct {
   description: string;
   price: number;
   originalPrice?: number; // precio antes del descuento
+  /** PRODUCTO.estado — controla visibilidad en el catálogo */
+  estado: EstadoProducto;
+  /** PRODUCTO.tipo_tela — material de la prenda */
+  tipo_tela?: string;
   category: CategoriaProducto;
   images: IImage[];
   sizes: Talla[];

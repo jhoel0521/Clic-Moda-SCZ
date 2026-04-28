@@ -1,0 +1,189 @@
+// ==========================================
+// USUARIOS, ROLES Y AUTENTICACIÓN
+// ==========================================
+
+Table USUARIO {
+  id int [pk, increment]
+  nombre varchar
+  email varchar [unique]
+  creado_en datetime
+}
+
+Table ROL {
+  id int [pk, increment]
+  nombre varchar
+}
+
+Table USUARIO_ROL {
+  usuario_id int
+  rol_id int
+  Indexes {
+    (usuario_id, rol_id) [pk]
+  }
+}
+
+Table CUENTA_AUTENTICACION {
+  id int [pk, increment]
+  usuario_id int
+  proveedor varchar
+  identificador_proveedor varchar
+  password_hash varchar
+  vinculado_en datetime
+}
+
+// ==========================================
+// CATÁLOGO Y PRODUCTOS
+// ==========================================
+
+Table PRODUCTO {
+  id int [pk, increment]
+  nombre varchar
+  precio decimal
+  stock int
+  estado varchar
+  tipo_tela varchar
+  medidas_dinamicas json
+  creado_en datetime
+}
+
+Table CATEGORIA {
+  id int [pk, increment]
+  nombre varchar
+}
+
+Table PRODUCTO_CATEGORIA {
+  producto_id int
+  categoria_id int
+  Indexes {
+    (producto_id, categoria_id) [pk]
+  }
+}
+
+Table ETIQUETA {
+  id int [pk, increment]
+  nombre varchar
+}
+
+Table PRODUCTO_ETIQUETA {
+  producto_id int
+  etiqueta_id int
+  Indexes {
+    (producto_id, etiqueta_id) [pk]
+  }
+}
+
+Table IMAGEN_PRODUCTO {
+  id int [pk, increment]
+  producto_id int
+  url_imagen varchar
+  es_principal boolean
+}
+
+// ==========================================
+// EXPERIENCIA DEL CLIENTE
+// ==========================================
+
+Table FAVORITO {
+  usuario_id int
+  producto_id int
+  agregado_en datetime
+  Indexes {
+    (usuario_id, producto_id) [pk]
+  }
+}
+
+Table RESENA {
+  id int [pk, increment]
+  producto_id int
+  usuario_id int
+  calificacion_estrellas int
+  comentario text
+  estado_moderacion varchar
+}
+
+Table IMAGEN_RESENA {
+  id int [pk, increment]
+  resena_id int
+  url_imagen varchar
+}
+
+// ==========================================
+// COMPRAS Y TICKETS (LOGICA DE CUPONES AQUÍ)
+// ==========================================
+
+Table PEDIDO {
+  id int [pk, increment]
+  usuario_id int
+  cupon_id int [null, note: 'Relación directa con el cupón usado']
+  codigo_ticket varchar [unique]
+  total_pagado decimal
+  estado_entrega varchar
+  fecha_compra datetime
+}
+
+Table ITEM_PEDIDO {
+  id int [pk, increment]
+  pedido_id int
+  producto_id int
+  cantidad int
+  talla_seleccionada varchar
+  precio_historico decimal
+}
+
+// ==========================================
+// MARKETING Y PROMOCIONES
+// ==========================================
+
+Table CUPON_DESCUENTO {
+  id int [pk, increment]
+  codigo varchar [unique]
+  porcentaje_descuento int
+  fecha_caducidad datetime
+  limite_usos int
+  veces_usado int [default: 0]
+}
+
+Table BANNER_PROMOCIONAL {
+  id int [pk, increment]
+  titulo varchar
+  url_pc varchar
+  url_tablet varchar
+  url_movil varchar
+  activo boolean
+}
+
+Table NOTIFICACION_EMAIL {
+  id int [pk, increment]
+  pedido_id int
+  estado_enviado varchar   // PENDIENTE | ENVIADO | ERROR
+  enviado_en datetime
+}
+
+// ==========================================
+// RELACIONES (FOREIGN KEYS)
+// ==========================================
+
+Ref: USUARIO.id < CUENTA_AUTENTICACION.usuario_id
+Ref: USUARIO.id < USUARIO_ROL.usuario_id
+Ref: ROL.id < USUARIO_ROL.rol_id
+
+Ref: USUARIO.id < FAVORITO.usuario_id
+Ref: PRODUCTO.id < FAVORITO.producto_id
+
+Ref: PRODUCTO.id < PRODUCTO_CATEGORIA.producto_id
+Ref: CATEGORIA.id < PRODUCTO_CATEGORIA.categoria_id
+
+Ref: PRODUCTO.id < PRODUCTO_ETIQUETA.producto_id
+Ref: ETIQUETA.id < PRODUCTO_ETIQUETA.etiqueta_id
+
+Ref: PRODUCTO.id < IMAGEN_PRODUCTO.producto_id
+
+Ref: USUARIO.id < PEDIDO.usuario_id
+Ref: CUPON_DESCUENTO.id < PEDIDO.cupon_id
+Ref: PEDIDO.id < ITEM_PEDIDO.pedido_id
+Ref: NOTIFICACION_EMAIL.pedido_id < PEDIDO.id
+Ref: PRODUCTO.id < ITEM_PEDIDO.producto_id
+
+Ref: USUARIO.id < RESENA.usuario_id
+Ref: PRODUCTO.id < RESENA.producto_id
+Ref: RESENA.id < IMAGEN_RESENA.resena_id

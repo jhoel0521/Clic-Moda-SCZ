@@ -35,6 +35,9 @@ export interface IOrder {
   subtotal: number;
   discount: number;
   total: number;
+  /** ID del cupón aplicado — PEDIDO.cupon_id */
+  couponId?: string;
+  /** Código legible del cupón (para mostrar en UI) */
   couponCode?: string;
   customerId?: string; // null si compró como invitado
   customerEmail?: string;

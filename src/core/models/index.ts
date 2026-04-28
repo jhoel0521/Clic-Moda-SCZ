@@ -20,3 +20,21 @@ export type {
   IShippingAddress,
   MetodoPago,
 } from './IOrder';
+
+export type {
+  ICuponDescuento,
+  IBannerPromocional,
+  INotificacionEmail,
+  IAplicacionCupon,
+} from './IMarketing';
+
+export type {
+  IResena,
+  IImagenResena,
+  ICreateResenaData,
+  EstadoModeracion,
+} from './IResena';
+
+export type { IFavorito } from './IFavorito';
+
+export type { EstadoProducto } from './IProduct';

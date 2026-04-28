@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useSyncExternalStore } from 'react';
 
 type Breakpoint = 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
@@ -22,16 +22,14 @@ const breakpoints: Record<Breakpoint, string> = {
  */
 export function useMediaQuery(query: Breakpoint | string): boolean {
   const rawQuery = breakpoints[query as Breakpoint] ?? query;
-  const [matches, setMatches] = useState(false);
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia(rawQuery);
-    setMatches(mediaQuery.matches);
-
-    const handler = (e: MediaQueryListEvent) => setMatches(e.matches);
-    mediaQuery.addEventListener('change', handler);
-    return () => mediaQuery.removeEventListener('change', handler);
-  }, [rawQuery]);
-
-  return matches;
+  return useSyncExternalStore(
+    (callback) => {
+      const mq = window.matchMedia(rawQuery);
+      mq.addEventListener('change', callback);
+      return () => mq.removeEventListener('change', callback);
+    },
+    () => window.matchMedia(rawQuery).matches,
+    () => false,
+  );
 }
