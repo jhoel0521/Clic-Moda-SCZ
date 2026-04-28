@@ -29,7 +29,7 @@ const CATEGORIAS = [
 
 export default function LandingPage() {
   return (
-    <div className="flex flex-col w-full items-center bg-white">
+    <>
 
       {/* 1. Carrusel */}
       <HeroCarousel />
@@ -111,6 +111,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-    </div>
+    </>
   );
 }

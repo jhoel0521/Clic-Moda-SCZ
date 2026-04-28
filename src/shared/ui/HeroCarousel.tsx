@@ -37,7 +37,7 @@ export function HeroCarousel() {
     }, []);
 
     return (
-        <section className="relative w-full h-[80vh] min-h-[500px] flex items-center justify-center overflow-hidden">
+        <section className="relative w-full h-[80vh] min-h-[500px] flex items-center justify-center overflow-hidden rounded-2xl mb-16">
             {/* Las imágenes de fondo */}
             {SLIDES.map((slide, index) => (
                 <div
@@ -70,12 +70,13 @@ export function HeroCarousel() {
                     {SLIDES[current].subtitle}
                 </p>
 
-                <div className="flex flex-wrap justify-center gap-4">
+                <div className="flex flex-wrap justify-center gap-4 w-full">
                     <Link
                         href={ROUTES.CATALOG}
-                        className="inline-flex h-14 items-center justify-center rounded-xl bg-pink-600 px-8 text-lg font-bold text-white shadow-lg transition-transform duration-200 hover:-translate-y-1 hover:bg-pink-700"
+                        className="inline-flex h-14 min-w-[280px] items-center justify-center gap-4 rounded-xl bg-pink-600 px-12 text-lg font-bold text-white shadow-lg transition-transform duration-200 hover:-translate-y-1 hover:bg-pink-700"
                     >
-                        Explorar catálogo →
+                        <span>Explorar catálogo</span>
+                        <span className="text-xl transition-transform group-hover:translate-x-2">&rarr;</span>
                     </Link>
                 </div>
             </div>

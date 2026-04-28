@@ -7,10 +7,9 @@ export default function StoreLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-gray-50 w-full justify-center items-center">
       <StoreNavbar />
-      {/* flex-grow asegura que el main ocupe el espacio, flex y flex-col aseguran que el contenido interno pueda alinearse */}
-      <main className="flex-grow flex flex-col w-full">
+      <main className="flex-grow flex flex-col w-full max-w-[1600px] mx-auto !px-6 !lg:px-12 !pt-8 !pb-16">
         {children}
       </main>
       <StoreFooter />
