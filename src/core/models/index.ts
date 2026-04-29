@@ -21,6 +21,7 @@ export type {
   MetodoPago,
   ICreateOrderInput,
 } from './IOrder';
+export type { OrderStatus } from '@src/core/constants/ORDER_STATUS';
 
 export type {
   ICuponDescuento,

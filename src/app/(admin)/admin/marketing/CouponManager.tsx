@@ -14,8 +14,8 @@ import type { ICuponDescuento } from '@src/core/models';
 
 const couponSchema = z.object({
   codigo: z.string().min(3, { message: 'Mínimo 3 caracteres' }),
-  porcentaje_descuento: z.coerce.number().int().min(1).max(100, { message: '1–100%' }),
-  limite_usos: z.coerce.number().int().min(1, { message: 'Mínimo 1' }),
+  porcentaje_descuento: z.number().int().min(1).max(100, { message: '1–100%' }),
+  limite_usos: z.number().int().min(1, { message: 'Mínimo 1' }),
   fecha_caducidad: z.string().min(1, { message: 'Fecha requerida' }),
 });
 type CouponFormData = z.infer<typeof couponSchema>;
@@ -124,8 +124,8 @@ export function CouponManager() {
       <Modal isOpen={showModal} onClose={() => { setShowModal(false); reset(); }} title="Nuevo cupón" size="sm">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <Input label="Código" placeholder="PROMO20" error={errors.codigo?.message} {...register('codigo')} />
-          <Input label="Descuento (%)" type="number" min="1" max="100" error={errors.porcentaje_descuento?.message} {...register('porcentaje_descuento')} />
-          <Input label="Límite de usos" type="number" min="1" error={errors.limite_usos?.message} {...register('limite_usos')} />
+          <Input label="Descuento (%)" type="number" min="1" max="100" error={errors.porcentaje_descuento?.message} {...register('porcentaje_descuento', { valueAsNumber: true })} />
+          <Input label="Límite de usos" type="number" min="1" error={errors.limite_usos?.message} {...register('limite_usos', { valueAsNumber: true })} />
           <Input label="Fecha de caducidad" type="date" error={errors.fecha_caducidad?.message} {...register('fecha_caducidad')} />
           <Button type="submit" variant="primary" fullWidth isLoading={isSubmitting}>
             Crear cupón

@@ -3,7 +3,7 @@ import { OrderService } from '@src/backend/services/OrderService';
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;

@@ -3,7 +3,7 @@ import { CouponService } from '@src/backend/services/CouponService';
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;

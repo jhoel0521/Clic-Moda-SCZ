@@ -17,10 +17,10 @@ const TALLAS_DISPONIBLES: Talla[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 const productSchema = z.object({
   name: z.string().min(2, { message: 'Nombre requerido' }),
   description: z.string().min(5, { message: 'Descripción requerida' }),
-  price: z.coerce.number().positive({ message: 'Precio inválido' }),
-  originalPrice: z.coerce.number().optional(),
+  price: z.number().positive({ message: 'Precio inválido' }),
+  originalPrice: z.number().optional(),
   category: z.string().min(1, { message: 'Categoría requerida' }),
-  stock: z.coerce.number().int().nonnegative({ message: 'Stock inválido' }),
+  stock: z.number().int().nonnegative({ message: 'Stock inválido' }),
   tipo_tela: z.string().optional(),
   estado: z.enum(['activo', 'inactivo']),
   colors: z.string().optional(),
@@ -119,9 +119,9 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
             </select>
             {errors.category && <p className="mt-1 text-xs text-[var(--color-danger)]">{errors.category.message}</p>}
           </div>
-          <Input label="Precio (Bs.)" type="number" step="0.01" error={errors.price?.message} {...register('price')} />
-          <Input label="Precio original (Bs., opcional)" type="number" step="0.01" {...register('originalPrice')} />
-          <Input label="Stock" type="number" error={errors.stock?.message} {...register('stock')} />
+          <Input label="Precio (Bs.)" type="number" step="0.01" error={errors.price?.message} {...register('price', { valueAsNumber: true })} />
+          <Input label="Precio original (Bs., opcional)" type="number" step="0.01" {...register('originalPrice', { valueAsNumber: true })} />
+          <Input label="Stock" type="number" error={errors.stock?.message} {...register('stock', { valueAsNumber: true })} />
           <Input label="Tipo de tela (opcional)" placeholder="Algodón, Poliéster..." {...register('tipo_tela')} />
           <Input label="Colores (separados por coma)" placeholder="Rosa, Negro, Blanco" {...register('colors')} />
           <div>
