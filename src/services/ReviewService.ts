@@ -1,6 +1,6 @@
 import { ServiceFactory } from '@src/infrastructure/ServiceFactory';
 import type { IReviewService } from '@src/core/contracts/IReviewService';
-import type { ICreateResenaData, EstadoModeracion } from '@src/core/models';
+import type { ICreateResenaData } from '@src/core/models';
 
 export const ReviewService: IReviewService = {
   async getReviewsByProduct(productoId: string) {

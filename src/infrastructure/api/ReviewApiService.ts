@@ -1,5 +1,5 @@
 import type { IReviewService } from '@src/core/contracts/IReviewService';
-import type { ICreateResenaData, EstadoModeracion, IResena } from '@src/core/models';
+import type { ICreateResenaData, IResena } from '@src/core/models';
 import { apiFetch } from '@src/services/api';
 
 export const ReviewApiService: IReviewService = {

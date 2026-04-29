@@ -1,6 +1,6 @@
 import { ServiceFactory } from '@src/infrastructure/ServiceFactory';
 import type { IOrderService } from '@src/core/contracts/IOrderService';
-import type { IOrder, ICreateOrderInput, OrderStatus } from '@src/core/models';
+import type { ICreateOrderInput, OrderStatus } from '@src/core/models';
 
 export const OrderService: IOrderService = {
   async createOrder(input: ICreateOrderInput) {
