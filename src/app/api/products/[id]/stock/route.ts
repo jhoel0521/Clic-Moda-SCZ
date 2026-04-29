@@ -1,0 +1,16 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { ProductService } from '@src/backend/services/ProductService';
+
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const { id } = await params;
+    const body = await req.json();
+    const success = await ProductService.decrementStock(id, body.decrement);
+    return NextResponse.json({ success });
+  } catch (err) {
+    return NextResponse.json({ error: (err as Error).message }, { status: 400 });
+  }
+}
