@@ -7,7 +7,7 @@ export const checkoutSchema = z.object({
   city: z.string().min(2, 'Ciudad requerida'),
   reference: z.string().optional(),
   paymentMethod: z.enum(['transferencia', 'qr_simple', 'efectivo_entrega', 'contra_entrega'], {
-    required_error: 'Seleccioná un método de pago',
+    message: 'Seleccioná un método de pago',
   }),
   notes: z.string().optional(),
 });

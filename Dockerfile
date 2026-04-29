@@ -17,14 +17,15 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 ENV PORT=3000
+ENV NEXT_TELEMETRY_DISABLED=1
 
 # Copiamos solo lo necesario para ejecutar en producción
 COPY --from=builder /app/package*.json ./
-RUN npm ci --production
+RUN npm ci --omit=dev
 
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/next.config.js ./
+COPY --from=builder /app/next.config.ts ./
 
 EXPOSE 3000
 

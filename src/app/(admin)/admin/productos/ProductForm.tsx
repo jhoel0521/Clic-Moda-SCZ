@@ -26,7 +26,8 @@ const productSchema = z.object({
   colors: z.string().optional(),
 });
 
-type ProductFormData = z.infer<typeof productSchema>;
+type ProductFormInput = z.input<typeof productSchema>;
+type ProductFormData = z.output<typeof productSchema>;
 
 interface MedidaRow { size: string; medidas: string }
 interface ImageRow { url: string; alt: string; isPrimary: boolean }
@@ -48,7 +49,7 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
     product?.images.map((img) => ({ url: img.url, alt: img.alt, isPrimary: img.isPrimary ?? false })) ?? []
   );
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<ProductFormData>({
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<ProductFormInput, unknown, ProductFormData>({
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: product?.name ?? '',
