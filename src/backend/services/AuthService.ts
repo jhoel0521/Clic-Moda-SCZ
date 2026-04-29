@@ -2,7 +2,7 @@ import type { IAuthService } from '@src/core/contracts/IAuthService';
 import type { IUser, ILoginCredentials, IRegisterData } from '@src/core/models';
 import { ROLES } from '@src/core/constants/ROLES';
 import { hashPassword, verifyPassword } from '../db/crypto';
-import { findAll, insert, findById, FullDatabase, IUserWithPassword } from '../db/db';
+import { findAll, insert, findById, IUserWithPassword } from '../db/db';
 import crypto from 'crypto';
 
 export const AuthService: IAuthService = {
@@ -14,7 +14,8 @@ export const AuthService: IAuthService = {
       throw new Error('Email o contraseña incorrectos.');
     }
 
-    const { password: _password, ...user } = found;
+    const user = { ...found } as Partial<IUserWithPassword>;
+    delete user.password;
     return user as IUser;
   },
 
@@ -39,7 +40,8 @@ export const AuthService: IAuthService = {
 
     insert('users', newUser);
 
-    const { password: _password, ...user } = newUser;
+    const user = { ...newUser } as Partial<IUserWithPassword>;
+    delete user.password;
     return user as IUser;
   },
 
@@ -51,7 +53,8 @@ export const AuthService: IAuthService = {
     const found = findById<IUserWithPassword>('users', userId);
     if (!found) return null;
 
-    const { password: _password, ...user } = found;
+    const user = { ...found } as Partial<IUserWithPassword>;
+    delete user.password;
     return user as IUser;
   },
 };

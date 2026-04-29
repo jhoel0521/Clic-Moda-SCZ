@@ -1,6 +1,6 @@
 import type { ICouponService } from '@src/core/contracts/ICouponService';
 import type { ICuponDescuento, IAplicacionCupon } from '@src/core/models';
-import { findAll, findById, insert, update, remove } from '../db/db';
+import { findAll, insert, update, remove } from '../db/db';
 import crypto from 'crypto';
 
 export const CouponService: ICouponService = {

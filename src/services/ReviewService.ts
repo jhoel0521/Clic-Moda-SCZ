@@ -1,8 +1,9 @@
 import type { IReviewService } from '@src/core/contracts/IReviewService';
+import type { ICreateResenaData, EstadoModeracion } from '@src/core/models';
 import { apiFetch } from './api';
 
 export const ReviewService: IReviewService = {
-  async getReviewsByProduct(productoId) {
+  async getReviewsByProduct(productoId: string) {
     return apiFetch(`/api/reviews?productId=${productoId}`);
   },
 
@@ -10,14 +11,14 @@ export const ReviewService: IReviewService = {
     return apiFetch('/api/reviews?pending=true');
   },
 
-  async createReview(data) {
+  async createReview(data: ICreateResenaData) {
     return apiFetch('/api/reviews', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   },
 
-  async moderateReview(reviewId, decision) {
+  async moderateReview(reviewId: string, decision: EstadoModeracion) {
     return apiFetch(`/api/reviews/${reviewId}/moderate`, {
       method: 'PATCH',
       body: JSON.stringify({ decision }),

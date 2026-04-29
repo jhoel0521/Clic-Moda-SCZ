@@ -74,7 +74,7 @@ export function findById<T extends { id: string }>(table: keyof FullDatabase, id
  */
 export function insert<T extends { id: string }>(table: keyof FullDatabase, item: T): T {
   const db = getDb();
-  (db[table] as any[]).push(item);
+  (db[table] as Array<{ id: string }>).push(item);
   saveDb(db);
   return item;
 }
@@ -84,7 +84,7 @@ export function insert<T extends { id: string }>(table: keyof FullDatabase, item
  */
 export function update<T extends { id: string }>(table: keyof FullDatabase, item: T): T {
   const db = getDb();
-  const list = db[table] as any[];
+  const list = db[table] as Array<{ id: string }>;
   const index = list.findIndex((i) => i.id === item.id);
   if (index !== -1) {
     list[index] = item;
@@ -98,7 +98,7 @@ export function update<T extends { id: string }>(table: keyof FullDatabase, item
  */
 export function remove(table: keyof FullDatabase, id: string): void {
   const db = getDb();
-  const list = db[table] as any[];
+  const list = db[table] as Array<{ id: string }>;
   const index = list.findIndex((i) => i.id === id);
   if (index !== -1) {
     list.splice(index, 1);

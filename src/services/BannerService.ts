@@ -10,7 +10,7 @@ export const BannerService: IBannerService = {
     return apiFetch('/api/banners');
   },
 
-  async toggleBanner(id) {
+  async toggleBanner(id: string) {
     return apiFetch(`/api/banners/${id}/toggle`, {
       method: 'PATCH',
     });

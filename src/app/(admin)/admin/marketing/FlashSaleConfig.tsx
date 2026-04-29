@@ -27,7 +27,7 @@ export function FlashSaleConfig() {
 
   useEffect(() => {
     ProductService.getProducts()
-      .then((all) => setProducts(all.filter((p) => p.estado === 'activo')))
+      .then((all: IProduct[]) => setProducts(all.filter((p) => p.estado === 'activo')))
       .finally(() => setIsLoading(false));
   }, []);
 
