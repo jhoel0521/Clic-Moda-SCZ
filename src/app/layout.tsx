@@ -14,14 +14,7 @@ export const metadata: Metadata = {
     default: 'Clic Moda SCZ — Fast Fashion Santa Cruz',
     template: '%s | Clic Moda SCZ',
   },
-  description:
-    'Ropa trendy con envío a Santa Cruz de la Sierra. Tallas exactas, pagos simples y coordinación por WhatsApp. ¡Comprá rápido, llegá con estilo!',
-  keywords: ['ropa', 'moda', 'Santa Cruz', 'fast fashion', 'Bolivia', 'tienda online'],
-  openGraph: {
-    siteName: 'Clic Moda SCZ',
-    locale: 'es_BO',
-    type: 'website',
-  },
+  description: 'Ropa trendy con envío a Santa Cruz de la Sierra. Tallas exactas y coordinación por WhatsApp.',
 };
 
 export default function RootLayout({
@@ -30,8 +23,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={`${inter.variable} h-full`} data-scroll-behavior="smooth">
-      <body className="min-h-full flex flex-col antialiased mb-4">
+    <html lang="es" className={inter.variable} data-scroll-behavior="smooth">
+      <body className="antialiased bg-gray-50 text-gray-900 h-[100dvh] overflow-hidden">
         <Providers>{children}</Providers>
       </body>
     </html>

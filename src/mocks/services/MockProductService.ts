@@ -103,4 +103,35 @@ export const MockProductService = {
     product.stock -= quantity;
     return true;
   },
+
+  async addProduct(product: IProduct): Promise<IProduct> {
+    await delay(200, 400);
+    mockProductsDB.push(product);
+    return product;
+  },
+
+  async updateProduct(updated: IProduct): Promise<IProduct | null> {
+    await delay(200, 400);
+    const idx = mockProductsDB.findIndex((p) => p.id === updated.id);
+    if (idx === -1) return null;
+    mockProductsDB[idx] = updated;
+    return updated;
+  },
+
+  async toggleProductEstado(productId: string): Promise<IProduct | null> {
+    await delay(100, 200);
+    const product = mockProductsDB.find((p) => p.id === productId);
+    if (!product) return null;
+    product.estado = product.estado === 'activo' ? 'inactivo' : 'activo';
+    return product;
+  },
+
+  async setFlashSale(productId: string, endsAt: string | null): Promise<IProduct | null> {
+    await delay(100, 200);
+    const product = mockProductsDB.find((p) => p.id === productId);
+    if (!product) return null;
+    product.isFlashSale = endsAt !== null;
+    product.flashSaleEndsAt = endsAt ?? undefined;
+    return product;
+  },
 };
