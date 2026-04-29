@@ -5,7 +5,7 @@ import { ROUTES } from '@src/routes';
 import { HeroCarousel } from '@src/shared/ui/HeroCarousel';
 import { ProductCard } from '@src/shared/ui/ProductCard';
 import { FlashSaleTimer } from '@src/shared/ui/FlashSaleTimer';
-import { ProductService } from '@src/backend/services/ProductService';
+import { ProductService } from '@src/services/ProductService';
 
 export const metadata: Metadata = {
   title: 'Clic Moda SCZ — Fast Fashion Santa Cruz',

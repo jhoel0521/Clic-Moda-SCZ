@@ -4,6 +4,7 @@ import { ProductService } from '@src/backend/services/ProductService';
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
+    const slug = searchParams.get('slug') || undefined;
     const filters = {
       search: searchParams.get('search') || undefined,
       category: searchParams.get('category') || undefined,
@@ -13,6 +14,11 @@ export async function GET(req: NextRequest) {
       colors: searchParams.getAll('colors'),
       onlyFlashSale: searchParams.get('onlyFlashSale') === 'true',
     };
+
+    if (slug) {
+      const product = await ProductService.getProductBySlug(slug);
+      return NextResponse.json(product ? [product] : []);
+    }
 
     const products = await ProductService.getProducts(filters);
     return NextResponse.json(products);

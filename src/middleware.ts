@@ -8,7 +8,7 @@ import type { NextRequest } from 'next/server';
  * - /admin/*  → requiere usuario autenticado con rol de admin
  * - /perfil   → requiere usuario autenticado (cualquier rol)
  *
- * En el Mock Backend, la sesión se verifica mediante la cookie
+ * En el Backend Simulado, la sesión se verifica mediante la cookie
  * 'clic-moda-auth' que persiste Zustand (localStorage → cookie en SSR).
  *
  * NOTA: localStorage no está disponible en el middleware (se ejecuta en Edge).

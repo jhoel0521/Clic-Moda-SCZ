@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { ProductService } from '@src/backend/services/ProductService';
-import { ReviewService } from '@src/backend/services/ReviewService';
+import { ProductService } from '@src/services/ProductService';
+import { ReviewService } from '@src/services/ReviewService';
 import { ProductDetailClient } from './ProductDetailClient';
 
 type ProductPageProps = {

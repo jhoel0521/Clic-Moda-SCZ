@@ -10,7 +10,7 @@ interface AuthState {
   isLoading: boolean;
   error: string | null;
 
-  /** Establece el usuario autenticado (llamado por MockAuthService tras login exitoso) */
+  /** Establece el usuario autenticado (llamado por AuthService tras login exitoso) */
   setUser: (user: IUser) => void;
 
   /** Limpia la sesión */
