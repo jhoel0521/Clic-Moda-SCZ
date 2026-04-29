@@ -1,33 +1,30 @@
+import { ServiceFactory } from '@src/infrastructure/ServiceFactory';
 import type { IOrderService } from '@src/core/contracts/IOrderService';
 import type { IOrder, ICreateOrderInput, OrderStatus } from '@src/core/models';
-import { apiFetch } from './api';
 
 export const OrderService: IOrderService = {
   async createOrder(input: ICreateOrderInput) {
-    return apiFetch('/api/orders', {
-      method: 'POST',
-      body: JSON.stringify(input),
-    });
+    const service = await ServiceFactory.getOrderService();
+    return service.createOrder(input);
   },
 
   async getOrders(userId?: string) {
-    const url = userId ? `/api/orders?userId=${userId}` : '/api/orders';
-    return apiFetch(url);
+    const service = await ServiceFactory.getOrderService();
+    return service.getOrders(userId);
   },
 
   async getOrderById(orderId: string) {
-    return apiFetch(`/api/orders/${orderId}`);
+    const service = await ServiceFactory.getOrderService();
+    return service.getOrderById(orderId);
   },
 
   async getOrderByTicketId(ticketId: string) {
-    const orders = await apiFetch<IOrder[]>('/api/orders');
-    return orders.find((o) => o.ticketId === ticketId) ?? null;
+    const service = await ServiceFactory.getOrderService();
+    return service.getOrderByTicketId(ticketId);
   },
 
   async updateOrderStatus(orderId: string, newStatus: OrderStatus) {
-    return apiFetch(`/api/orders/${orderId}/status`, {
-      method: 'PATCH',
-      body: JSON.stringify({ status: newStatus }),
-    });
+    const service = await ServiceFactory.getOrderService();
+    return service.updateOrderStatus(orderId, newStatus);
   },
 };

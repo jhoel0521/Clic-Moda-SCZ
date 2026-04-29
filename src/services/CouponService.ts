@@ -1,34 +1,30 @@
+import { ServiceFactory } from '@src/infrastructure/ServiceFactory';
 import type { ICouponService } from '@src/core/contracts/ICouponService';
 import type { ICuponDescuento } from '@src/core/models';
-import { apiFetch } from './api';
 
 export const CouponService: ICouponService = {
   async validateCoupon(codigo: string) {
-    const coupons = await apiFetch<ICuponDescuento[]>('/api/coupons');
-    return coupons.find((c) => c.codigo === codigo.toUpperCase()) ?? null;
+    const service = await ServiceFactory.getCouponService();
+    return service.validateCoupon(codigo);
   },
 
   async applyCoupon(codigo: string, subtotal: number) {
-    return apiFetch('/api/coupons/apply', {
-      method: 'POST',
-      body: JSON.stringify({ codigo, subtotal }),
-    });
+    const service = await ServiceFactory.getCouponService();
+    return service.applyCoupon(codigo, subtotal);
   },
 
   async getCoupons() {
-    return apiFetch('/api/coupons');
+    const service = await ServiceFactory.getCouponService();
+    return service.getCoupons();
   },
 
   async createCoupon(data: Omit<ICuponDescuento, 'id' | 'veces_usado'>) {
-    return apiFetch('/api/coupons', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
+    const service = await ServiceFactory.getCouponService();
+    return service.createCoupon(data);
   },
 
   async deleteCoupon(id: string) {
-    await apiFetch(`/api/coupons/${id}`, {
-      method: 'DELETE',
-    });
+    const service = await ServiceFactory.getCouponService();
+    return service.deleteCoupon(id);
   },
 };

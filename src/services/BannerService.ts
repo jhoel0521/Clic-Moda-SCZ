@@ -1,18 +1,19 @@
+import { ServiceFactory } from '@src/infrastructure/ServiceFactory';
 import type { IBannerService } from '@src/core/contracts/IBannerService';
-import { apiFetch } from './api';
 
 export const BannerService: IBannerService = {
   async getActiveBanners() {
-    return apiFetch('/api/banners?active=true');
+    const service = await ServiceFactory.getBannerService();
+    return service.getActiveBanners();
   },
 
   async getAllBanners() {
-    return apiFetch('/api/banners');
+    const service = await ServiceFactory.getBannerService();
+    return service.getAllBanners();
   },
 
   async toggleBanner(id: string) {
-    return apiFetch(`/api/banners/${id}/toggle`, {
-      method: 'PATCH',
-    });
+    const service = await ServiceFactory.getBannerService();
+    return service.toggleBanner(id);
   },
 };

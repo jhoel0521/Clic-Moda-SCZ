@@ -1,71 +1,59 @@
+import { ServiceFactory } from '@src/infrastructure/ServiceFactory';
 import type { IProductService } from '@src/core/contracts/IProductService';
 import type { IProduct, IProductFilters } from '@src/core/models';
-import { apiFetch } from './api';
 
+/**
+ * Fachada de ProductService que delega la ejecución a la implementación
+ * correcta inyectada por la SuperFactory.
+ */
 export const ProductService: IProductService = {
   async getProducts(filters?: IProductFilters) {
-    const params = new URLSearchParams();
-    if (filters?.search) params.append('search', filters.search);
-    if (filters?.category) params.append('category', filters.category);
-    if (filters?.minPrice !== undefined) params.append('minPrice', filters.minPrice.toString());
-    if (filters?.maxPrice !== undefined) params.append('maxPrice', filters.maxPrice.toString());
-    if (filters?.onlyFlashSale) params.append('onlyFlashSale', 'true');
-    filters?.sizes?.forEach((s: string) => params.append('sizes', s));
-    filters?.colors?.forEach((c: string) => params.append('colors', c));
-
-    return apiFetch(`/api/products?${params.toString()}`);
+    const service = await ServiceFactory.getProductService();
+    return service.getProducts(filters);
   },
 
   async getProductBySlug(slug: string) {
-    const products = await apiFetch<IProduct[]>(`/api/products?slug=${slug}`);
-    return products.find((p) => p.slug === slug) ?? null;
+    const service = await ServiceFactory.getProductService();
+    return service.getProductBySlug(slug);
   },
 
   async getProductById(id: string) {
-    return apiFetch(`/api/products/${id}`);
+    const service = await ServiceFactory.getProductService();
+    return service.getProductById(id);
   },
 
   async getFlashSaleProducts() {
-    return apiFetch('/api/products?onlyFlashSale=true');
+    const service = await ServiceFactory.getProductService();
+    return service.getFlashSaleProducts();
   },
 
   async getCategories() {
-    const products = await apiFetch<IProduct[]>('/api/products');
-    return [...new Set(products.map((p) => p.category))];
+    const service = await ServiceFactory.getProductService();
+    return service.getCategories();
   },
 
   async decrementStock(productId: string, quantity: number) {
-    const res = await apiFetch<{ success: boolean }>(`/api/products/${productId}/stock`, {
-      method: 'PATCH',
-      body: JSON.stringify({ decrement: quantity }),
-    });
-    return res.success;
+    const service = await ServiceFactory.getProductService();
+    return service.decrementStock(productId, quantity);
   },
 
   async addProduct(product: IProduct) {
-    return apiFetch('/api/products', {
-      method: 'POST',
-      body: JSON.stringify(product),
-    });
+    const service = await ServiceFactory.getProductService();
+    return service.addProduct(product);
   },
 
   async updateProduct(updated: IProduct) {
-    return apiFetch(`/api/products/${updated.id}`, {
-      method: 'PUT',
-      body: JSON.stringify(updated),
-    });
+    const service = await ServiceFactory.getProductService();
+    return service.updateProduct(updated);
   },
 
   async toggleProductEstado(productId: string) {
-    return apiFetch(`/api/products/${productId}`, {
-      method: 'PATCH',
-    });
+    const service = await ServiceFactory.getProductService();
+    return service.toggleProductEstado(productId);
   },
 
   async setFlashSale(productId: string, endsAt: string | null) {
-    return apiFetch(`/api/products/${productId}/flash-sale`, {
-      method: 'PUT',
-      body: JSON.stringify({ endsAt }),
-    });
+    const service = await ServiceFactory.getProductService();
+    return service.setFlashSale(productId, endsAt);
   },
 };
