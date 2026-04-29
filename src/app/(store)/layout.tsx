@@ -7,12 +7,27 @@ export default function StoreLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50 w-full justify-center items-center">
+    // h-full toma el 100% del body congelado.
+    <div className="flex flex-col h-full w-full bg-gray-50">
+
+      {/* 1. NAVBAR FIJO: Al estar fuera de la zona de scroll, jamás se moverá */}
       <StoreNavbar />
-      <main className="flex-grow flex flex-col w-full max-w-[1600px] mx-auto !px-6 !lg:px-12 !pt-8 !pb-16">
-        {children}
-      </main>
-      <StoreFooter />
+
+      {/* 2. ZONA DE SCROLL INTERNO (overflow-y-auto): 
+          Esta es la caja que generará la barra de desplazamiento. 
+      */}
+      <div className="flex-1 overflow-y-auto flex flex-col w-full">
+
+        {/* El MAIN empuja al Footer hacia abajo si la página es corta (flex-1) */}
+        <main className="flex-1 flex flex-col items-center w-full pt-8 pb-16">
+          {children}
+        </main>
+
+        {/* El FOOTER vive al final del scroll */}
+        <StoreFooter />
+
+      </div>
+
     </div>
   );
 }

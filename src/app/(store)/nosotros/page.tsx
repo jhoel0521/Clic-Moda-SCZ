@@ -52,7 +52,7 @@ function Avatar({ nombre }: { nombre: string }) {
 
 export default function NosotrosPage() {
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-20 px-6 py-16">
+    <>
       <section className="grid items-center gap-12 lg:grid-cols-2">
         <div className="space-y-6 text-center lg:text-left animate-fade-in">
           <div className="inline-flex items-center gap-2 rounded-full bg-[var(--color-brand-subtle)] px-3 py-1 text-sm font-medium text-[var(--color-brand)]">
@@ -139,6 +139,6 @@ export default function NosotrosPage() {
         </div>
       </section>
 
-    </div>
+    </>
   );
 }
