@@ -12,14 +12,14 @@ export const envConfig = {
   /** Número de WhatsApp para el checkout (formato internacional) */
   whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '59170000000',
 
-  /** ¿Usar mock backend? true durante desarrollo sin API real */
-  useMock: process.env.NEXT_PUBLIC_USE_MOCK !== 'false',
+  /** ¿Usar backend simulado? true durante desarrollo sin API real */
+  useSimulatedBackend: process.env.NEXT_PUBLIC_USE_SIMULATED_BACKEND !== 'false',
 
   /** Días que persiste el carrito en localStorage */
   cartPersistDays: 7,
 
-  /** Latencia artificial del mock backend (ms) */
-  mockDelay: {
+  /** Latencia artificial del backend simulado (ms) */
+  simulatedDelay: {
     min: 300,
     max: 800,
   },
