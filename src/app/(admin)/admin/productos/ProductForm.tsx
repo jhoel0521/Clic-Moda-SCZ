@@ -72,10 +72,10 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
     const slug = data.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
     const colors = data.colors ? data.colors.split(',').map((c) => c.trim()).filter(Boolean) : [];
     const medidas_dinamicas = Object.fromEntries(medidas.filter((m) => m.size).map((m) => [m.size, m.medidas]));
-    const productImages = images.map((img, i) => ({ id: `img_${Date.now()}_${i}`, ...img }));
+    const productImages = images.map((img) => ({ id: `img_${crypto.randomUUID()}`, ...img }));
 
     const saved: IProduct = {
-      id: product?.id ?? `prod_${Date.now()}`,
+      id: product?.id ?? `prod_${crypto.randomUUID()}`,
       slug: product?.slug ?? slug,
       name: data.name,
       description: data.description,

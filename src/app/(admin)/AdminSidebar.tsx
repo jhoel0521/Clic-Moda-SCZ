@@ -5,7 +5,6 @@ import { usePathname, useRouter } from 'next/navigation';
 import { LayoutDashboard, ShirtIcon, Package, Megaphone, LogOut, Store } from 'lucide-react';
 import { useAuthStore } from '@src/core/store/useAuthStore';
 import { MockAuthService } from '@src/mocks/services/MockAuthService';
-import { ROLES } from '@src/core/constants/ROLES';
 import { ROUTES } from '@src/routes';
 
 const ROLE_LABELS: Record<string, string> = {
