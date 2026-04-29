@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 
 /**
  * Retrasa la actualización de un valor hasta que el usuario deja de cambiar el input.
- * Útil para búsquedas en tiempo real sin saturar el mock service.
+ * Útil para búsquedas en tiempo real sin saturar el servicio.
  *
  * @example
  * const [search, setSearch] = useState('');
