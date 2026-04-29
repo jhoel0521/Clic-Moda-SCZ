@@ -15,7 +15,7 @@ import type { NextRequest } from 'next/server';
  * La implementación real en Sprint 3 leerá un JWT de cookie httpOnly.
  * Por ahora, se verifica la existencia de la cookie de sesión simulada.
  */
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Verificar si hay una cookie de sesión (Zustand la escribe en localStorage,
