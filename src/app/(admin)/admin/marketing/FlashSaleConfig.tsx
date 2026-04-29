@@ -5,7 +5,7 @@ import { Zap } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { MockProductService } from '@src/mocks/services/MockProductService';
+import { ProductService } from '@src/services/ProductService';
 import { Button } from '@src/shared/ui/Button';
 import { Spinner } from '@src/shared/ui/Spinner';
 import type { IProduct } from '@src/core/models';
@@ -26,13 +26,13 @@ export function FlashSaleConfig() {
   });
 
   useEffect(() => {
-    MockProductService.getProducts()
+    ProductService.getProducts()
       .then((all) => setProducts(all.filter((p) => p.estado === 'activo')))
       .finally(() => setIsLoading(false));
   }, []);
 
   async function onSubmit(data: FlashFormData) {
-    await MockProductService.setFlashSale(data.productId, new Date(data.endsAt).toISOString());
+    await ProductService.setFlashSale(data.productId, new Date(data.endsAt).toISOString());
     setSaved(true);
     reset();
     setTimeout(() => setSaved(false), 3000);

@@ -6,7 +6,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import Link from 'next/link';
-import { MockAuthService, MockAuthError } from '@src/mocks/services/MockAuthService';
+import { AuthService } from '@src/services/AuthService';
+import { ApiError } from '@src/services/api';
 import { useAuthStore } from '@src/core/store/useAuthStore';
 import { useCartStore } from '@src/core/store/useCartStore';
 import { Input } from '@src/shared/ui/Input';
@@ -51,10 +52,10 @@ function LoginPageContent() {
   async function onSubmit(data: LoginFormData) {
     setLoading(true);
     try {
-      const user = await MockAuthService.login(data);
+      const user = await AuthService.login(data);
       handleSuccess(user);
     } catch (err) {
-      if (err instanceof MockAuthError) {
+      if (err instanceof ApiError) {
         setError('password', { message: err.message });
       }
     } finally {

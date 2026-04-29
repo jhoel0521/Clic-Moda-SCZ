@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Plus, Pencil, ToggleLeft, ToggleRight } from 'lucide-react';
-import { MockProductService } from '@src/mocks/services/MockProductService';
+import { ProductService } from '@src/services/ProductService';
 import { AdminHeader } from '@src/app/(admin)/AdminHeader';
 import { Button } from '@src/shared/ui/Button';
 import { Spinner } from '@src/shared/ui/Spinner';
@@ -17,7 +17,7 @@ export default function AdminProductsPage() {
   const [editingProduct, setEditingProduct] = useState<IProduct | undefined>();
 
   useEffect(() => {
-    MockProductService.getProducts()
+    ProductService.getProducts()
       .then(setProducts)
       .finally(() => setIsLoading(false));
   }, []);
@@ -30,7 +30,7 @@ export default function AdminProductsPage() {
   }
 
   async function handleToggleEstado(product: IProduct) {
-    const updated = await MockProductService.toggleProductEstado(product.id);
+    const updated = await ProductService.toggleProductEstado(product.id);
     if (updated) {
       setProducts((prev) => prev.map((p) => p.id === updated.id ? updated : p));
     }

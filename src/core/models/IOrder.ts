@@ -46,6 +46,18 @@ export interface IOrder {
   updatedAt: string;
 }
 
+/** Input para crear un pedido */
+export interface ICreateOrderInput {
+  items: ICartItem[];
+  shippingAddress: IShippingAddress;
+  paymentMethod?: MetodoPago;
+  customerId?: string;
+  customerEmail?: string;
+  couponCode?: string;
+  discount?: number;
+  notes?: string;
+}
+
 /** Ítem del carrito de compras (pre-pedido) */
 export interface ICartItem {
   productId: string;

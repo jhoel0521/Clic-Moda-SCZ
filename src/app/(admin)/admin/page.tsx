@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { ShoppingBag, Package, ShirtIcon, AlertTriangle } from 'lucide-react';
-import { MockOrderService } from '@src/mocks/services/MockOrderService';
-import { MockProductService } from '@src/mocks/services/MockProductService';
+import { OrderService } from '@src/services/OrderService';
+import { ProductService } from '@src/services/ProductService';
 import { AdminHeader } from '@src/app/(admin)/AdminHeader';
 import { StockAlertFeed } from './StockAlertFeed';
 import { TopProductsTable } from './TopProductsTable';
@@ -16,7 +16,7 @@ export default function AdminDashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    Promise.all([MockOrderService.getOrders(), MockProductService.getProducts()])
+    Promise.all([OrderService.getOrders(), ProductService.getProducts()])
       .then(([ord, prod]) => { setOrders(ord); setProducts(prod); })
       .finally(() => setIsLoading(false));
   }, []);

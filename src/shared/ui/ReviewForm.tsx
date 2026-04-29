@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Star } from 'lucide-react';
 import { useAuthStore } from '@src/core/store/useAuthStore';
-import { MockReviewService } from '@src/mocks/services/MockReviewService';
+import { ReviewService } from '@src/services/ReviewService';
 import { Button } from '@src/shared/ui/Button';
 import type { IResena } from '@src/core/models';
 
@@ -47,7 +47,7 @@ export function ReviewForm({ productId, onSuccess }: ReviewFormProps) {
     setIsLoading(true);
     setError(null);
     try {
-      const review = await MockReviewService.createReview({
+      const review = await ReviewService.createReview({
         producto_id: productId,
         usuario_id: user!.id,
         calificacion_estrellas: selectedStar,

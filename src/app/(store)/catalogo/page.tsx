@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useTransition } from 'react';
 import { Search, SlidersHorizontal, X } from 'lucide-react';
-import { MockProductService } from '@src/mocks/services/MockProductService';
+import { ProductService } from '@src/services/ProductService';
 import { ProductCard } from '@src/shared/ui/ProductCard';
 import { Spinner } from '@src/shared/ui/Spinner';
 import { useDebounce } from '@src/shared/hooks/useDebounce';
@@ -143,7 +143,7 @@ export default function CatalogPage() {
       ...(filters.maxPrice && { maxPrice: Number(filters.maxPrice) }),
     };
     startTransition(async () => {
-      const all = await MockProductService.getProducts(serviceFilters);
+      const all = await ProductService.getProducts(serviceFilters);
       setProducts(all.filter((p) => p.estado === 'activo'));
     });
   }, [debouncedSearch, filters.category, filters.sizes, filters.minPrice, filters.maxPrice]);

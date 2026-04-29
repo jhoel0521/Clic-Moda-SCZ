@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { ToggleLeft, ToggleRight } from 'lucide-react';
-import { MockBannerService } from '@src/mocks/services/MockBannerService';
+import { BannerService } from '@src/services/BannerService';
 import { Spinner } from '@src/shared/ui/Spinner';
 import type { IBannerPromocional } from '@src/core/models';
 
@@ -12,14 +12,14 @@ export function BannerManager() {
   const [toggling, setToggling] = useState<string | null>(null);
 
   useEffect(() => {
-    MockBannerService.getAllBanners()
+    BannerService.getAllBanners()
       .then(setBanners)
       .finally(() => setIsLoading(false));
   }, []);
 
   async function handleToggle(id: string) {
     setToggling(id);
-    const updated = await MockBannerService.toggleBanner(id);
+    const updated = await BannerService.toggleBanner(id);
     if (updated) {
       setBanners((prev) => prev.map((b) => (b.id === id ? updated : b)));
     }

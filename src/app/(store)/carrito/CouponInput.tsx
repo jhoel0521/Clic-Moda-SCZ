@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Tag, CheckCircle } from 'lucide-react';
-import { MockCouponService } from '@src/mocks/services/MockCouponService';
+import { CouponService } from '@src/services/CouponService';
 import { Button } from '@src/shared/ui/Button';
 import type { IAplicacionCupon } from '@src/core/models';
 
@@ -23,7 +23,7 @@ export function CouponInput({ subtotal, onApply, appliedCoupon, onRemove }: Coup
     setIsLoading(true);
     setError(null);
     try {
-      const result = await MockCouponService.applyCoupon(code.trim(), subtotal);
+      const result = await CouponService.applyCoupon(code.trim(), subtotal);
       if (result.valid) {
         onApply(result);
         setCode('');

@@ -5,7 +5,7 @@ import { Plus, Trash2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { MockCouponService } from '@src/mocks/services/MockCouponService';
+import { CouponService } from '@src/services/CouponService';
 import { Modal } from '@src/shared/ui/Modal';
 import { Input } from '@src/shared/ui/Input';
 import { Button } from '@src/shared/ui/Button';
@@ -31,13 +31,13 @@ export function CouponManager() {
   });
 
   useEffect(() => {
-    MockCouponService.getCoupons()
+    CouponService.getCoupons()
       .then(setCoupons)
       .finally(() => setIsLoading(false));
   }, []);
 
   async function onSubmit(data: CouponFormData) {
-    const created = await MockCouponService.createCoupon(data);
+    const created = await CouponService.createCoupon(data);
     setCoupons((prev) => [...prev, created]);
     reset();
     setShowModal(false);
@@ -45,7 +45,7 @@ export function CouponManager() {
 
   async function handleDelete(id: string) {
     setDeleting(id);
-    await MockCouponService.deleteCoupon(id);
+    await CouponService.deleteCoupon(id);
     setCoupons((prev) => prev.filter((c) => c.id !== id));
     setDeleting(null);
   }

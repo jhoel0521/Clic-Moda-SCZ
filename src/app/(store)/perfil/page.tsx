@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { User, Package } from 'lucide-react';
 import { useAuthStore } from '@src/core/store/useAuthStore';
-import { MockOrderService } from '@src/mocks/services/MockOrderService';
+import { OrderService } from '@src/services/OrderService';
 import { Spinner } from '@src/shared/ui/Spinner';
 import { ROUTES } from '@src/routes';
 import { ProfileDataForm } from './ProfileDataForm';
@@ -23,7 +23,7 @@ export default function ProfilePage() {
       router.replace(`${ROUTES.LOGIN}?redirect=${ROUTES.PROFILE}`);
       return;
     }
-    MockOrderService.getOrders(user?.id)
+    OrderService.getOrders(user?.id)
       .then((data) => setOrders(data.sort((a, b) => b.createdAt.localeCompare(a.createdAt))))
       .finally(() => setIsLoading(false));
   }, [isAuthenticated, user?.id, router]);

@@ -8,7 +8,7 @@ import { Plus, Trash2 } from 'lucide-react';
 import { Modal } from '@src/shared/ui/Modal';
 import { Input } from '@src/shared/ui/Input';
 import { Button } from '@src/shared/ui/Button';
-import { MockProductService } from '@src/mocks/services/MockProductService';
+import { ProductService } from '@src/services/ProductService';
 import type { IProduct, Talla } from '@src/core/models';
 
 const CATEGORIAS = ['vestidos', 'blusas', 'pantalones', 'conjuntos', 'chaquetas', 'faldas', 'accesorios'];
@@ -98,9 +98,9 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
     };
 
     if (isEdit) {
-      await MockProductService.updateProduct(saved);
+      await ProductService.updateProduct(saved);
     } else {
-      await MockProductService.addProduct(saved);
+      await ProductService.addProduct(saved);
     }
     onSaved(saved);
     onClose();

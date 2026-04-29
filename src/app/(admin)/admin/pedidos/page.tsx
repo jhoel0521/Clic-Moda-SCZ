@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { List, LayoutGrid } from 'lucide-react';
-import { MockOrderService } from '@src/mocks/services/MockOrderService';
+import { OrderService } from '@src/services/OrderService';
 import { AdminHeader } from '@src/app/(admin)/AdminHeader';
 import { Spinner } from '@src/shared/ui/Spinner';
 import { getNextOrderStatus, ORDER_STATUS_LABELS, type OrderStatus } from '@src/core/constants/ORDER_STATUS';
@@ -23,7 +23,7 @@ export default function AdminOrdersPage() {
   const [viewMode, setViewMode] = useState<'list' | 'kanban'>('list');
 
   useEffect(() => {
-    MockOrderService.getOrders()
+    OrderService.getOrders()
       .then((data) => setOrders(data.sort((a, b) => b.createdAt.localeCompare(a.createdAt))))
       .finally(() => setIsLoading(false));
   }, []);
@@ -33,7 +33,7 @@ export default function AdminOrdersPage() {
     if (!order) return;
     const nextStatus = getNextOrderStatus(order.status);
     if (!nextStatus) return;
-    const updated = await MockOrderService.updateOrderStatus(orderId, nextStatus);
+    const updated = await OrderService.updateOrderStatus(orderId, nextStatus);
     if (updated) {
       setOrders((prev) => prev.map((o) => o.id === updated.id ? updated : o));
     }

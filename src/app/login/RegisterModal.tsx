@@ -6,7 +6,8 @@ import { z } from 'zod';
 import { Modal } from '@src/shared/ui/Modal';
 import { Input } from '@src/shared/ui/Input';
 import { Button } from '@src/shared/ui/Button';
-import { MockAuthService, MockAuthError } from '@src/mocks/services/MockAuthService';
+import { AuthService } from '@src/services/AuthService';
+import { ApiError } from '@src/services/api';
 import type { IUser } from '@src/core/models';
 
 const registerSchema = z
@@ -40,7 +41,7 @@ export function RegisterModal({ isOpen, onClose, onSuccess }: RegisterModalProps
 
   async function onSubmit(data: RegisterFormData) {
     try {
-      const user = await MockAuthService.register({
+      const user = await AuthService.register({
         name: data.name,
         email: data.email,
         password: data.password,
@@ -49,7 +50,7 @@ export function RegisterModal({ isOpen, onClose, onSuccess }: RegisterModalProps
       onSuccess(user);
       onClose();
     } catch (err) {
-      if (err instanceof MockAuthError) {
+      if (err instanceof ApiError) {
         setError('email', { message: err.message });
       }
     }

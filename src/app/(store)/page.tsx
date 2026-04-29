@@ -5,7 +5,7 @@ import { ROUTES } from '@src/routes';
 import { HeroCarousel } from '@src/shared/ui/HeroCarousel';
 import { ProductCard } from '@src/shared/ui/ProductCard';
 import { FlashSaleTimer } from '@src/shared/ui/FlashSaleTimer';
-import { MockProductService } from '@src/mocks/services/MockProductService';
+import { ProductService } from '@src/backend/services/ProductService';
 
 export const metadata: Metadata = {
   title: 'Clic Moda SCZ — Fast Fashion Santa Cruz',
@@ -31,7 +31,7 @@ const CATEGORIAS = [
 ];
 
 export default async function LandingPage() {
-  const flashProducts = await MockProductService.getFlashSaleProducts();
+  const flashProducts = await ProductService.getFlashSaleProducts();
 
   return (
     <>

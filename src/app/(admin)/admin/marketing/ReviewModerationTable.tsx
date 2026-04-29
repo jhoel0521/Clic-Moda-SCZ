@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Star, Check, X } from 'lucide-react';
-import { MockReviewService } from '@src/mocks/services/MockReviewService';
+import { ReviewService } from '@src/services/ReviewService';
 import { Spinner } from '@src/shared/ui/Spinner';
 import type { IResena } from '@src/core/models';
 
@@ -12,14 +12,14 @@ export function ReviewModerationTable() {
   const [processing, setProcessing] = useState<string | null>(null);
 
   useEffect(() => {
-    MockReviewService.getPendingReviews()
+    ReviewService.getPendingReviews()
       .then(setReviews)
       .finally(() => setIsLoading(false));
   }, []);
 
   async function handleModerate(id: string, decision: 'APROBADA' | 'RECHAZADA') {
     setProcessing(id);
-    await MockReviewService.moderateReview(id, decision);
+    await ReviewService.moderateReview(id, decision);
     setReviews((prev) => prev.filter((r) => r.id !== id));
     setProcessing(null);
   }

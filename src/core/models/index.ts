@@ -19,6 +19,7 @@ export type {
   ICartItem,
   IShippingAddress,
   MetodoPago,
+  ICreateOrderInput,
 } from './IOrder';
 
 export type {

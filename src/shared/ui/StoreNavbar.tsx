@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { ShoppingCart, User, LogOut } from 'lucide-react';
 import { useAuthStore } from '@src/core/store/useAuthStore';
 import { useCartStore } from '@src/core/store/useCartStore';
-import { MockAuthService } from '@src/mocks/services/MockAuthService';
+import { AuthService } from '@src/services/AuthService';
 import { ROUTES } from '@src/routes';
 
 export function StoreNavbar() {
@@ -14,7 +14,7 @@ export function StoreNavbar() {
   const itemCount = useCartStore((s) => s.itemCount);
 
   async function handleLogout() {
-    await MockAuthService.logout();
+    await AuthService.logout();
     logout();
   }
 

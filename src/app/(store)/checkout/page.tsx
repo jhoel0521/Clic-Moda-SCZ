@@ -8,8 +8,8 @@ import { Truck, CreditCard } from 'lucide-react';
 import { useCartStore } from '@src/core/store/useCartStore';
 import { useAuthStore } from '@src/core/store/useAuthStore';
 import { useCheckoutStore } from '@src/core/store/useCheckoutStore';
-import { MockOrderService } from '@src/mocks/services/MockOrderService';
-import { MockProductService } from '@src/mocks/services/MockProductService';
+import { OrderService } from '@src/services/OrderService';
+import { ProductService } from '@src/services/ProductService';
 import { Button } from '@src/shared/ui/Button';
 import { Input } from '@src/shared/ui/Input';
 import { ROUTES } from '@src/routes';
@@ -53,7 +53,7 @@ export default function CheckoutPage() {
   const total = Math.max(0, subtotal - discount);
 
   async function onSubmit(data: CheckoutFormData) {
-    const order = await MockOrderService.createOrder({
+    const order = await OrderService.createOrder({
       items,
       shippingAddress: {
         fullName: data.fullName,
@@ -72,7 +72,7 @@ export default function CheckoutPage() {
 
     // Decrementar stock (fire-and-forget)
     items.forEach((item) => {
-      MockProductService.decrementStock(item.productId, item.quantity);
+      ProductService.decrementStock(item.productId, item.quantity);
     });
 
     setLastOrder(order);

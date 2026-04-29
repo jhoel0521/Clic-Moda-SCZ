@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { MockProductService } from '@src/mocks/services/MockProductService';
-import { MockReviewService } from '@src/mocks/services/MockReviewService';
+import { ProductService } from '@src/backend/services/ProductService';
+import { ReviewService } from '@src/backend/services/ReviewService';
 import { ProductDetailClient } from './ProductDetailClient';
 
 type ProductPageProps = {
@@ -10,7 +10,7 @@ type ProductPageProps = {
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const product = await MockProductService.getProductBySlug(slug);
+  const product = await ProductService.getProductBySlug(slug);
 
   if (!product) {
     return { title: 'Producto no encontrado — Clic Moda SCZ' };
@@ -24,13 +24,13 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params;
-  const product = await MockProductService.getProductBySlug(slug);
+  const product = await ProductService.getProductBySlug(slug);
 
   if (!product) {
     notFound();
   }
 
-  const reviews = await MockReviewService.getReviewsByProduct(product.id);
+  const reviews = await ReviewService.getReviewsByProduct(product.id);
 
   return <ProductDetailClient product={product} reviews={reviews} />;
 }

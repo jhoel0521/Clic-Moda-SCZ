@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { LayoutDashboard, ShirtIcon, Package, Megaphone, LogOut, Store } from 'lucide-react';
 import { useAuthStore } from '@src/core/store/useAuthStore';
-import { MockAuthService } from '@src/mocks/services/MockAuthService';
+import { AuthService } from '@src/services/AuthService';
 import { ROUTES } from '@src/routes';
 
 const ROLE_LABELS: Record<string, string> = {
@@ -28,7 +28,7 @@ export function AdminSidebar() {
   const logout = useAuthStore((s) => s.logout);
 
   async function handleLogout() {
-    await MockAuthService.logout();
+    await AuthService.logout();
     logout();
     router.push(ROUTES.LOGIN);
   }
