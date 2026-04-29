@@ -43,4 +43,22 @@ export const MockCouponService = {
     await delay(100, 300);
     return [...mockCouponsDB];
   },
+
+  async createCoupon(data: Omit<ICuponDescuento, 'id' | 'veces_usado'>): Promise<ICuponDescuento> {
+    await delay(200, 400);
+    const newCoupon: ICuponDescuento = {
+      id: `cup_${Date.now()}`,
+      veces_usado: 0,
+      ...data,
+      codigo: data.codigo.toUpperCase(),
+    };
+    mockCouponsDB.push(newCoupon);
+    return newCoupon;
+  },
+
+  async deleteCoupon(id: string): Promise<void> {
+    await delay(100, 200);
+    const idx = mockCouponsDB.findIndex((c) => c.id === id);
+    if (idx !== -1) mockCouponsDB.splice(idx, 1);
+  },
 };

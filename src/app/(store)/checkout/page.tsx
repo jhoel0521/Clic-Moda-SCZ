@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Truck, CreditCard } from 'lucide-react';
 import { useCartStore } from '@src/core/store/useCartStore';
@@ -38,7 +38,7 @@ export default function CheckoutPage() {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<CheckoutFormData>({
     resolver: zodResolver(checkoutSchema),
@@ -48,7 +48,7 @@ export default function CheckoutPage() {
     },
   });
 
-  const selectedPayment = watch('paymentMethod');
+  const selectedPayment = useWatch({ control, name: 'paymentMethod' });
   const discount = appliedCoupon?.discount ?? 0;
   const total = Math.max(0, subtotal - discount);
 
