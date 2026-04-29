@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ROUTES } from '@src/routes';
 
 const SLIDES = [
@@ -47,10 +48,13 @@ export function HeroCarousel() {
                 >
                     {/* Capa oscura para que el texto se lea bien */}
                     <div className="absolute inset-0 bg-black/50 z-10" />
-                    <img
+                    <Image
                         src={slide.image}
                         alt={slide.title}
-                        className="absolute inset-0 w-full h-full object-cover"
+                        fill
+                        className="object-cover"
+                        sizes="100vw"
+                        priority={index === 0}
                     />
                 </div>
             ))}

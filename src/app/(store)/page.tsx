@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ROUTES } from '@src/routes';
 import { HeroCarousel } from '@src/shared/ui/HeroCarousel';
 import { ProductCard } from '@src/shared/ui/ProductCard';
@@ -82,10 +83,12 @@ export default async function LandingPage() {
                 href={cat.href}
                 className="group relative h-96 w-full overflow-hidden rounded-2xl bg-gray-100"
               >
-                <img
+                <Image
                   src={cat.img}
                   alt={cat.nombre}
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  sizes="(min-width: 640px) 33vw, 100vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                 <div className="absolute bottom-0 left-0 p-8">

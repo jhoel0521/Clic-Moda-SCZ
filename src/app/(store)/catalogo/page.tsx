@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { Search, SlidersHorizontal, X } from 'lucide-react';
 import { MockProductService } from '@src/mocks/services/MockProductService';
 import { ProductCard } from '@src/shared/ui/ProductCard';
@@ -25,51 +25,23 @@ function hasActiveFilters(f: Filters) {
   return f.search || f.category || f.sizes.length > 0 || f.minPrice || f.maxPrice;
 }
 
-export default function CatalogPage() {
-  const [filters, setFilters] = useState<Filters>(EMPTY_FILTERS);
-  const [products, setProducts] = useState<IProduct[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [showMobileFilters, setShowMobileFilters] = useState(false);
+interface FilterPanelProps {
+  filters: Filters;
+  onReset: () => void;
+  onToggleCategory: (cat: string) => void;
+  onToggleSize: (size: Talla) => void;
+  onPriceChange: (field: 'minPrice' | 'maxPrice', value: string) => void;
+}
 
-  const debouncedSearch = useDebounce(filters.search, 350);
-
-  useEffect(() => {
-    setIsLoading(true);
-    const serviceFilters: IProductFilters = {
-      ...(debouncedSearch && { search: debouncedSearch }),
-      ...(filters.category && { category: filters.category }),
-      ...(filters.sizes.length > 0 && { sizes: filters.sizes }),
-      ...(filters.minPrice && { minPrice: Number(filters.minPrice) }),
-      ...(filters.maxPrice && { maxPrice: Number(filters.maxPrice) }),
-    };
-    MockProductService.getProducts(serviceFilters)
-      .then((all) => setProducts(all.filter((p) => p.estado === 'activo')))
-      .finally(() => setIsLoading(false));
-  }, [debouncedSearch, filters.category, filters.sizes, filters.minPrice, filters.maxPrice]);
-
-  function toggleSize(size: Talla) {
-    setFilters((prev) => ({
-      ...prev,
-      sizes: prev.sizes.includes(size) ? prev.sizes.filter((s) => s !== size) : [...prev.sizes, size],
-    }));
-  }
-
-  function toggleCategory(cat: string) {
-    setFilters((prev) => ({ ...prev, category: prev.category === cat ? '' : cat }));
-  }
-
-  function resetFilters() {
-    setFilters(EMPTY_FILTERS);
-  }
-
-  const FilterPanel = () => (
+function FilterPanel({ filters, onReset, onToggleCategory, onToggleSize, onPriceChange }: FilterPanelProps) {
+  return (
     <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-[var(--shadow-sm)]">
       <div className="flex items-center justify-between mb-5">
         <p className="text-sm font-semibold text-[var(--color-text-primary)]">Filtros</p>
         {hasActiveFilters(filters) && (
           <button
             type="button"
-            onClick={resetFilters}
+            onClick={onReset}
             className="text-xs text-[var(--color-brand)] font-medium hover:underline"
           >
             Limpiar todo
@@ -91,7 +63,7 @@ export default function CatalogPage() {
               <input
                 type="checkbox"
                 checked={filters.category === cat}
-                onChange={() => toggleCategory(cat)}
+                onChange={() => onToggleCategory(cat)}
                 className="h-4 w-4 rounded border-[var(--color-border)] accent-[var(--color-brand)]"
               />
               {cat}
@@ -112,7 +84,7 @@ export default function CatalogPage() {
             <button
               key={size}
               type="button"
-              onClick={() => toggleSize(size)}
+              onClick={() => onToggleSize(size)}
               className={[
                 'rounded-lg border px-3 py-1.5 text-xs font-medium transition-all duration-150',
                 filters.sizes.includes(size)
@@ -138,20 +110,70 @@ export default function CatalogPage() {
             type="number"
             placeholder="Mín"
             value={filters.minPrice}
-            onChange={(e) => setFilters((f) => ({ ...f, minPrice: e.target.value }))}
+            onChange={(e) => onPriceChange('minPrice', e.target.value)}
             className="w-full rounded-lg border border-[var(--color-border)] bg-white px-3 py-2 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]"
           />
           <input
             type="number"
             placeholder="Máx"
             value={filters.maxPrice}
-            onChange={(e) => setFilters((f) => ({ ...f, maxPrice: e.target.value }))}
+            onChange={(e) => onPriceChange('maxPrice', e.target.value)}
             className="w-full rounded-lg border border-[var(--color-border)] bg-white px-3 py-2 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]"
           />
         </div>
       </div>
     </div>
   );
+}
+
+export default function CatalogPage() {
+  const [filters, setFilters] = useState<Filters>(EMPTY_FILTERS);
+  const [products, setProducts] = useState<IProduct[]>([]);
+  const [isPending, startTransition] = useTransition();
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
+
+  const debouncedSearch = useDebounce(filters.search, 350);
+
+  useEffect(() => {
+    const serviceFilters: IProductFilters = {
+      ...(debouncedSearch && { search: debouncedSearch }),
+      ...(filters.category && { category: filters.category }),
+      ...(filters.sizes.length > 0 && { sizes: filters.sizes }),
+      ...(filters.minPrice && { minPrice: Number(filters.minPrice) }),
+      ...(filters.maxPrice && { maxPrice: Number(filters.maxPrice) }),
+    };
+    startTransition(async () => {
+      const all = await MockProductService.getProducts(serviceFilters);
+      setProducts(all.filter((p) => p.estado === 'activo'));
+    });
+  }, [debouncedSearch, filters.category, filters.sizes, filters.minPrice, filters.maxPrice]);
+
+  function toggleSize(size: Talla) {
+    setFilters((prev) => ({
+      ...prev,
+      sizes: prev.sizes.includes(size) ? prev.sizes.filter((s) => s !== size) : [...prev.sizes, size],
+    }));
+  }
+
+  function toggleCategory(cat: string) {
+    setFilters((prev) => ({ ...prev, category: prev.category === cat ? '' : cat }));
+  }
+
+  function resetFilters() {
+    setFilters(EMPTY_FILTERS);
+  }
+
+  function handlePriceChange(field: 'minPrice' | 'maxPrice', value: string) {
+    setFilters((f) => ({ ...f, [field]: value }));
+  }
+
+  const filterPanelProps: FilterPanelProps = {
+    filters,
+    onReset: resetFilters,
+    onToggleCategory: toggleCategory,
+    onToggleSize: toggleSize,
+    onPriceChange: handlePriceChange,
+  };
 
   return (
     <>
@@ -163,7 +185,7 @@ export default function CatalogPage() {
           Encontrá prendas que sí te quedan
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-[var(--color-text-secondary)] sm:text-lg">
-          {isLoading ? 'Cargando...' : `${products.length} productos disponibles`}
+          {isPending ? 'Cargando...' : `${products.length} productos disponibles`}
           , con fotos claras, tallas exactas y navegación simple.
         </p>
       </header>
@@ -206,7 +228,7 @@ export default function CatalogPage() {
                 <X size={20} className="text-[var(--color-text-muted)]" />
               </button>
             </div>
-            <FilterPanel />
+            <FilterPanel {...filterPanelProps} />
           </div>
         </div>
       )}
@@ -214,12 +236,12 @@ export default function CatalogPage() {
       <div className="grid gap-8 lg:grid-cols-[18rem_minmax(0,1fr)] lg:items-start">
         <aside className="hidden lg:block">
           <div className="sticky top-24">
-            <FilterPanel />
+            <FilterPanel {...filterPanelProps} />
           </div>
         </aside>
 
         <section className="min-w-0">
-          {isLoading ? (
+          {isPending ? (
             <div className="flex justify-center py-24">
               <Spinner size="lg" />
             </div>
