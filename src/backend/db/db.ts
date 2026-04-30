@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import type { IUser, IProduct, IOrder, ICuponDescuento, IResena, IBannerPromocional } from '@src/core/models';
+import { hashPassword } from './crypto';
 
 export interface Database {
   users: IUser[];
@@ -38,7 +39,19 @@ export function getDb(): FullDatabase {
     };
   }
   const data = fs.readFileSync(DB_PATH, 'utf-8');
-  return JSON.parse(data);
+  const db: FullDatabase = JSON.parse(data);
+
+  // Auto-hash passwords stored as "NEEDS_HASH:<plaintext>" — runs once on first load
+  let needsSave = false;
+  for (const user of db.users) {
+    if (user.password.startsWith('NEEDS_HASH:')) {
+      user.password = hashPassword(user.password.slice('NEEDS_HASH:'.length));
+      needsSave = true;
+    }
+  }
+  if (needsSave) saveDb(db);
+
+  return db;
 }
 
 /**

@@ -8,7 +8,7 @@ export class ApiError extends Error {
 export async function apiFetch<T>(url: string, init?: RequestInit): Promise<T> {
   // En Next.js, fetch en Server Components requiere URLs absolutas si no se usa un proxy.
   // Para el demo, asumiremos localhost si no hay variable de entorno.
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || (typeof window === 'undefined' ? 'http://localhost:3000' : '');
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_API_URL || (typeof window === 'undefined' ? 'http://localhost:3000' : '');
   const fullUrl = url.startsWith('http') ? url : `${baseUrl}${url}`;
 
   const response = await fetch(fullUrl, {

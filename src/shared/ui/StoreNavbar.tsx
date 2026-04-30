@@ -1,11 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { ShoppingCart, User, LogOut } from 'lucide-react';
+import { ShoppingCart, User, LogOut, LayoutDashboard } from 'lucide-react';
 import { useAuthStore } from '@src/core/store/useAuthStore';
 import { useCartStore } from '@src/core/store/useCartStore';
 import { AuthService } from '@src/services/AuthService';
 import { ROUTES } from '@src/routes';
+import { ADMIN_ROLES } from '@src/core/constants/ROLES';
 
 export function StoreNavbar() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
@@ -49,6 +50,16 @@ export function StoreNavbar() {
         <div className="flex items-center gap-3 lg:gap-5">
           {isAuthenticated && user ? (
             <div className="hidden sm:flex items-center gap-3">
+              {ADMIN_ROLES.includes(user.role as typeof ADMIN_ROLES[number]) && (
+                <Link
+                  href={ROUTES.ADMIN.DASHBOARD}
+                  className="flex items-center gap-1.5 text-sm font-bold text-pink-600 hover:text-pink-700 transition-colors"
+                  title="Panel de administración"
+                >
+                  <LayoutDashboard size={16} />
+                  <span className="hidden lg:inline">Admin</span>
+                </Link>
+              )}
               <Link
                 href={ROUTES.PROFILE}
                 className="flex items-center gap-2 text-sm font-bold text-gray-600 hover:text-pink-600 transition-colors"

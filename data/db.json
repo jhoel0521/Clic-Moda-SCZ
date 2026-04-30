@@ -4,7 +4,7 @@
       "id": "usr_001",
       "name": "Ana Gerente",
       "email": "gerente@clicmoda.bo",
-      "password": "static_salt_for_demo:7a12e1048157e154621387000a55be7164510d9a843342278ed34ffae811adf48d2cb0b1409adb42b7d698e6859f112010f5ba9deef52aec3e7aacf604406e36",
+      "password": "048943a96f02cefc0222a2271943cffb:2a59633dcfc7b5de7baf75222918fdb11d5d3ed8bb725506a2611269dadcff988208f927901fda5cf5d62eebecdd8457ae5866fc181e68dc071e11a6520ea11c",
       "role": "GERENTE",
       "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=ana",
       "phone": "591 7 700-0001",
@@ -14,7 +14,7 @@
       "id": "usr_002",
       "name": "Carlos Despacho",
       "email": "despacho@clicmoda.bo",
-      "password": "static_salt_for_demo:7a12e1048157e154621387000a55be7164510d9a843342278ed34ffae811adf48d2cb0b1409adb42b7d698e6859f112010f5ba9deef52aec3e7aacf604406e36",
+      "password": "b05e7a324a1a0d03f34fec8f7defea0c:fccc59c2dc00b052ade66dcafa3fd9f27f18e57923b5716b5a220ceef7ce06fbcf5e2ff136084d54397f53982479cf244c8c386b81ce95495a2898501dde6b14",
       "role": "DESPACHO",
       "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=carlos",
       "phone": "591 7 700-0002",
@@ -24,7 +24,7 @@
       "id": "usr_003",
       "name": "Laura Atención",
       "email": "atencion@clicmoda.bo",
-      "password": "static_salt_for_demo:7a12e1048157e154621387000a55be7164510d9a843342278ed34ffae811adf48d2cb0b1409adb42b7d698e6859f112010f5ba9deef52aec3e7aacf604406e36",
+      "password": "ef4ee814c13174ab0a786c8a3f8c8a8d:911bea4cedb1d2aa8a72e6683cbcf5c3efa3b7255c2db4fece3aedc36dea1c8162041e5a8aa6b3e4db912bb0ad4f96b3995baf54e5d5c18d944fe10017cad341",
       "role": "ATENCION_CLIENTE",
       "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=laura",
       "phone": "591 7 700-0003",
@@ -34,7 +34,7 @@
       "id": "usr_004",
       "name": "María Cliente",
       "email": "maria@example.com",
-      "password": "static_salt_for_demo:7a12e1048157e154621387000a55be7164510d9a843342278ed34ffae811adf48d2cb0b1409adb42b7d698e6859f112010f5ba9deef52aec3e7aacf604406e36",
+      "password": "e97574e478ca4690e766fc7fdc1cf36f:ce08faba86db1222694a5f8d4dd0c70a063ffdefbd32f7f180e1058645ba9caf2a6a44dc99fe7650b854517eb30f4994f1c0a315649eaf457a4db77996f06d26",
       "role": "CLIENTE",
       "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=maria",
       "phone": "591 7 700-0004",
@@ -53,19 +53,42 @@
       "tipo_tela": "algodón",
       "category": "vestidos",
       "images": [
-        { "id": "img_001_1", "url": "https://picsum.photos/seed/clicmoda-prod-001-a/600/800", "alt": "Vestido Floral Primavera - frente", "isPrimary": true },
-        { "id": "img_001_2", "url": "https://picsum.photos/seed/clicmoda-prod-001-b/600/800", "alt": "Vestido Floral Primavera - detalle" }
+        {
+          "id": "img_001_1",
+          "url": "https://picsum.photos/seed/clicmoda-prod-001-a/600/800",
+          "alt": "Vestido Floral Primavera - frente",
+          "isPrimary": true
+        },
+        {
+          "id": "img_001_2",
+          "url": "https://picsum.photos/seed/clicmoda-prod-001-b/600/800",
+          "alt": "Vestido Floral Primavera - detalle"
+        }
       ],
-      "sizes": ["S", "M", "L", "XL"],
-      "colors": ["rosa", "celeste", "blanco"],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "colors": [
+        "rosa",
+        "celeste",
+        "blanco"
+      ],
       "stock": 15,
       "medidas_dinamicas": {
-        "S":  "Largo: 105cm | Busto: 82cm | Cintura: 66cm",
-        "M":  "Largo: 107cm | Busto: 88cm | Cintura: 72cm",
-        "L":  "Largo: 109cm | Busto: 94cm | Cintura: 78cm",
+        "S": "Largo: 105cm | Busto: 82cm | Cintura: 66cm",
+        "M": "Largo: 107cm | Busto: 88cm | Cintura: 72cm",
+        "L": "Largo: 109cm | Busto: 94cm | Cintura: 78cm",
         "XL": "Largo: 111cm | Busto: 100cm | Cintura: 84cm"
       },
-      "tags": ["vestido", "floral", "verano", "midi"],
+      "tags": [
+        "vestido",
+        "floral",
+        "verano",
+        "midi"
+      ],
       "isFlashSale": false,
       "rating": 4.8,
       "reviewCount": 23,
@@ -82,19 +105,42 @@
       "tipo_tela": "tul bordado",
       "category": "blusas",
       "images": [
-        { "id": "img_002_1", "url": "https://picsum.photos/seed/clicmoda-prod-002-a/600/800", "alt": "Blusa Off-Shoulder Tule - frente", "isPrimary": true },
-        { "id": "img_002_2", "url": "https://picsum.photos/seed/clicmoda-prod-002-b/600/800", "alt": "Blusa Off-Shoulder Tule - lateral" }
+        {
+          "id": "img_002_1",
+          "url": "https://picsum.photos/seed/clicmoda-prod-002-a/600/800",
+          "alt": "Blusa Off-Shoulder Tule - frente",
+          "isPrimary": true
+        },
+        {
+          "id": "img_002_2",
+          "url": "https://picsum.photos/seed/clicmoda-prod-002-b/600/800",
+          "alt": "Blusa Off-Shoulder Tule - lateral"
+        }
       ],
-      "sizes": ["XS", "S", "M", "L"],
-      "colors": ["blanco", "negro", "beige"],
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L"
+      ],
+      "colors": [
+        "blanco",
+        "negro",
+        "beige"
+      ],
       "stock": 8,
       "medidas_dinamicas": {
         "XS": "Busto: 76cm | Hombros: 34cm | Largo: 52cm",
-        "S":  "Busto: 82cm | Hombros: 36cm | Largo: 54cm",
-        "M":  "Busto: 88cm | Hombros: 38cm | Largo: 56cm",
-        "L":  "Busto: 94cm | Hombros: 40cm | Largo: 58cm"
+        "S": "Busto: 82cm | Hombros: 36cm | Largo: 54cm",
+        "M": "Busto: 88cm | Hombros: 38cm | Largo: 56cm",
+        "L": "Busto: 94cm | Hombros: 40cm | Largo: 58cm"
       },
-      "tags": ["blusa", "elegante", "fiesta", "off-shoulder"],
+      "tags": [
+        "blusa",
+        "elegante",
+        "fiesta",
+        "off-shoulder"
+      ],
       "isFlashSale": true,
       "flashSaleEndsAt": "2026-12-31T23:59:59.000Z",
       "rating": 4.5,
@@ -112,19 +158,39 @@
       "tipo_tela": "denim",
       "category": "pantalones",
       "images": [
-        { "id": "img_003_1", "url": "https://picsum.photos/seed/clicmoda-prod-003-a/600/800", "alt": "Jeans Mom Fit - frente", "isPrimary": true }
+        {
+          "id": "img_003_1",
+          "url": "https://picsum.photos/seed/clicmoda-prod-003-a/600/800",
+          "alt": "Jeans Mom Fit - frente",
+          "isPrimary": true
+        }
       ],
-      "sizes": ["S", "M", "L", "XL", "XXL"],
-      "colors": ["azul claro", "azul oscuro", "negro"],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "colors": [
+        "azul claro",
+        "azul oscuro",
+        "negro"
+      ],
       "stock": 22,
       "medidas_dinamicas": {
-        "S":  "Cintura: 68cm | Cadera: 92cm | Largo: 98cm | Tiro: 28cm",
-        "M":  "Cintura: 74cm | Cadera: 98cm | Largo: 99cm | Tiro: 29cm",
-        "L":  "Cintura: 80cm | Cadera: 104cm | Largo: 100cm | Tiro: 30cm",
+        "S": "Cintura: 68cm | Cadera: 92cm | Largo: 98cm | Tiro: 28cm",
+        "M": "Cintura: 74cm | Cadera: 98cm | Largo: 99cm | Tiro: 29cm",
+        "L": "Cintura: 80cm | Cadera: 104cm | Largo: 100cm | Tiro: 30cm",
         "XL": "Cintura: 86cm | Cadera: 110cm | Largo: 101cm | Tiro: 31cm",
-        "XXL":"Cintura: 92cm | Cadera: 116cm | Largo: 102cm | Tiro: 32cm"
+        "XXL": "Cintura: 92cm | Cadera: 116cm | Largo: 102cm | Tiro: 32cm"
       },
-      "tags": ["jeans", "mom fit", "vintage", "casual"],
+      "tags": [
+        "jeans",
+        "mom fit",
+        "vintage",
+        "casual"
+      ],
       "isFlashSale": false,
       "rating": 4.9,
       "reviewCount": 45,
@@ -141,17 +207,35 @@
       "tipo_tela": "poliéster",
       "category": "conjuntos",
       "images": [
-        { "id": "img_004_1", "url": "https://picsum.photos/seed/clicmoda-prod-004-a/600/800", "alt": "Conjunto Crop + Falda Plisada", "isPrimary": true }
+        {
+          "id": "img_004_1",
+          "url": "https://picsum.photos/seed/clicmoda-prod-004-a/600/800",
+          "alt": "Conjunto Crop + Falda Plisada",
+          "isPrimary": true
+        }
       ],
-      "sizes": ["S", "M", "L"],
-      "colors": ["mostaza", "verde oliva", "terracota"],
+      "sizes": [
+        "S",
+        "M",
+        "L"
+      ],
+      "colors": [
+        "mostaza",
+        "verde oliva",
+        "terracota"
+      ],
       "stock": 5,
       "medidas_dinamicas": {
         "S": "Falda largo: 80cm | Cintura falda: 64cm | Crop largo: 35cm | Busto crop: 82cm",
         "M": "Falda largo: 82cm | Cintura falda: 70cm | Crop largo: 36cm | Busto crop: 88cm",
         "L": "Falda largo: 84cm | Cintura falda: 76cm | Crop largo: 37cm | Busto crop: 94cm"
       },
-      "tags": ["conjunto", "crop top", "falda plisada", "tendencia"],
+      "tags": [
+        "conjunto",
+        "crop top",
+        "falda plisada",
+        "tendencia"
+      ],
       "isFlashSale": true,
       "flashSaleEndsAt": "2026-12-31T23:59:59.000Z",
       "rating": 4.7,
@@ -169,18 +253,36 @@
       "tipo_tela": "denim",
       "category": "chaquetas",
       "images": [
-        { "id": "img_005_1", "url": "https://picsum.photos/seed/clicmoda-prod-005-a/600/800", "alt": "Chaqueta Denim Oversize - frente", "isPrimary": true }
+        {
+          "id": "img_005_1",
+          "url": "https://picsum.photos/seed/clicmoda-prod-005-a/600/800",
+          "alt": "Chaqueta Denim Oversize - frente",
+          "isPrimary": true
+        }
       ],
-      "sizes": ["S", "M", "L", "XL"],
-      "colors": ["azul claro", "negro"],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "colors": [
+        "azul claro",
+        "negro"
+      ],
       "stock": 12,
       "medidas_dinamicas": {
-        "S":  "Largo: 68cm | Hombros: 48cm | Pecho: 102cm | Manga: 60cm",
-        "M":  "Largo: 70cm | Hombros: 50cm | Pecho: 108cm | Manga: 61cm",
-        "L":  "Largo: 72cm | Hombros: 52cm | Pecho: 114cm | Manga: 62cm",
+        "S": "Largo: 68cm | Hombros: 48cm | Pecho: 102cm | Manga: 60cm",
+        "M": "Largo: 70cm | Hombros: 50cm | Pecho: 108cm | Manga: 61cm",
+        "L": "Largo: 72cm | Hombros: 52cm | Pecho: 114cm | Manga: 62cm",
         "XL": "Largo: 74cm | Hombros: 54cm | Pecho: 120cm | Manga: 63cm"
       },
-      "tags": ["chaqueta", "denim", "oversize", "casual"],
+      "tags": [
+        "chaqueta",
+        "denim",
+        "oversize",
+        "casual"
+      ],
       "isFlashSale": false,
       "rating": 4.6,
       "reviewCount": 19,
@@ -197,18 +299,39 @@
       "tipo_tela": "poliéster",
       "category": "faldas",
       "images": [
-        { "id": "img_006_1", "url": "https://picsum.photos/seed/clicmoda-prod-006-a/600/800", "alt": "Falda Mini Plisada - multicolor", "isPrimary": true }
+        {
+          "id": "img_006_1",
+          "url": "https://picsum.photos/seed/clicmoda-prod-006-a/600/800",
+          "alt": "Falda Mini Plisada - multicolor",
+          "isPrimary": true
+        }
       ],
-      "sizes": ["XS", "S", "M", "L"],
-      "colors": ["rojo", "azul", "verde", "amarillo"],
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L"
+      ],
+      "colors": [
+        "rojo",
+        "azul",
+        "verde",
+        "amarillo"
+      ],
       "stock": 30,
       "medidas_dinamicas": {
         "XS": "Largo: 38cm | Cintura: 58-62cm",
-        "S":  "Largo: 38cm | Cintura: 63-68cm",
-        "M":  "Largo: 38cm | Cintura: 69-74cm",
-        "L":  "Largo: 38cm | Cintura: 75-82cm"
+        "S": "Largo: 38cm | Cintura: 63-68cm",
+        "M": "Largo: 38cm | Cintura: 69-74cm",
+        "L": "Largo: 38cm | Cintura: 75-82cm"
       },
-      "tags": ["falda", "mini", "plisada", "colorida", "verano"],
+      "tags": [
+        "falda",
+        "mini",
+        "plisada",
+        "colorida",
+        "verano"
+      ],
       "isFlashSale": false,
       "rating": 4.4,
       "reviewCount": 37,
@@ -225,20 +348,40 @@
       "tipo_tela": "satén",
       "category": "vestidos",
       "images": [
-        { "id": "img_007_1", "url": "https://picsum.photos/seed/clicmoda-prod-007-a/600/800", "alt": "Vestido Lencero Satinado", "isPrimary": true }
+        {
+          "id": "img_007_1",
+          "url": "https://picsum.photos/seed/clicmoda-prod-007-a/600/800",
+          "alt": "Vestido Lencero Satinado",
+          "isPrimary": true
+        }
       ],
-      "sizes": ["XS", "S", "M", "L"],
-      "colors": ["champagne", "negro", "vino"],
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L"
+      ],
+      "colors": [
+        "champagne",
+        "negro",
+        "vino"
+      ],
       "stock": 7,
       "medidas_dinamicas": {
         "XS": "Largo: 115cm | Busto: 76cm | Cintura: 60cm | Cadera: 84cm",
-        "S":  "Largo: 117cm | Busto: 82cm | Cintura: 66cm | Cadera: 90cm",
-        "M":  "Largo: 119cm | Busto: 88cm | Cintura: 72cm | Cadera: 96cm",
-        "L":  "Largo: 121cm | Busto: 94cm | Cintura: 78cm | Cadera: 102cm"
+        "S": "Largo: 117cm | Busto: 82cm | Cintura: 66cm | Cadera: 90cm",
+        "M": "Largo: 119cm | Busto: 88cm | Cintura: 72cm | Cadera: 96cm",
+        "L": "Largo: 121cm | Busto: 94cm | Cintura: 78cm | Cadera: 102cm"
       },
-      "tags": ["vestido", "satinado", "elegante", "noche", "fiesta"],
+      "tags": [
+        "vestido",
+        "satinado",
+        "elegante",
+        "noche",
+        "fiesta"
+      ],
       "isFlashSale": false,
-      "rating": 5.0,
+      "rating": 5,
       "reviewCount": 6,
       "createdAt": "2025-04-10T00:00:00.000Z"
     },
@@ -253,15 +396,31 @@
       "tipo_tela": "piel sintética",
       "category": "accesorios",
       "images": [
-        { "id": "img_008_1", "url": "https://picsum.photos/seed/clicmoda-prod-008-a/600/800", "alt": "Bolso Bucket - piel sintética", "isPrimary": true }
+        {
+          "id": "img_008_1",
+          "url": "https://picsum.photos/seed/clicmoda-prod-008-a/600/800",
+          "alt": "Bolso Bucket - piel sintética",
+          "isPrimary": true
+        }
       ],
-      "sizes": ["ÚNICO"],
-      "colors": ["camel", "negro", "blanco"],
+      "sizes": [
+        "ÚNICO"
+      ],
+      "colors": [
+        "camel",
+        "negro",
+        "blanco"
+      ],
       "stock": 18,
       "medidas_dinamicas": {
         "ÚNICO": "Alto: 28cm | Ancho: 22cm | Fondo: 15cm | Asa larga: 55cm"
       },
-      "tags": ["bolso", "bucket", "accesorio", "trendy"],
+      "tags": [
+        "bolso",
+        "bucket",
+        "accesorio",
+        "trendy"
+      ],
       "isFlashSale": false,
       "rating": 4.3,
       "reviewCount": 14,
