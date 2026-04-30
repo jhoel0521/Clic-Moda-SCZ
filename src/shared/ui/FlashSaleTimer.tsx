@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 interface FlashSaleTimerProps {
   endsAt: string;
+  variant?: 'default' | 'inline';
 }
 
 function getTimeLeft(endsAt: string) {
@@ -21,7 +22,7 @@ function pad(n: number) {
   return String(n).padStart(2, '0');
 }
 
-export function FlashSaleTimer({ endsAt }: FlashSaleTimerProps) {
+export function FlashSaleTimer({ endsAt, variant = 'default' }: FlashSaleTimerProps) {
   const [time, setTime] = useState(() => getTimeLeft(endsAt));
 
   useEffect(() => {
@@ -36,8 +37,19 @@ export function FlashSaleTimer({ endsAt }: FlashSaleTimerProps) {
 
   if (time.expired) {
     return (
-      <span className="inline-flex items-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-4 py-1.5 text-sm font-semibold text-[var(--color-text-muted)]">
-        Oferta finalizada
+      <span className={variant === 'inline'
+        ? 'font-mono bg-black/20 px-3 py-1.5 rounded-lg font-bold tracking-widest ml-2 text-white'
+        : 'inline-flex items-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-4 py-1.5 text-sm font-semibold text-[var(--color-text-muted)]'
+      }>
+        Finalizada
+      </span>
+    );
+  }
+
+  if (variant === 'inline') {
+    return (
+      <span className="font-mono bg-black/20 px-3 py-1.5 rounded-lg font-bold tracking-widest ml-2 text-white">
+        {pad(time.h)}:{pad(time.m)}:{pad(time.s)}
       </span>
     );
   }
