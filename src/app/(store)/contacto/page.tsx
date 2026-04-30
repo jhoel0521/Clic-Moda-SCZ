@@ -1,148 +1,199 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
-import { Share2, Globe, MessageCircle, Mail, MapPin, Clock, CheckCircle2 } from 'lucide-react';
-import { ROUTES } from '@src/routes';
+import { MessageCircle, Mail, MapPin, Clock, CheckCircle2 } from 'lucide-react';
 
-const WHATSAPP_NUMBER = '59177000001';
-const WHATSAPP_MESSAGE = encodeURIComponent('Hola! Quiero consultar sobre sus productos 👗');
-
-const REDES = [
-  { nombre: 'Instagram', usuario: '@clicmodascz', icono: Share2, href: 'https://instagram.com/clicmodascz', color: '#E1306C' },
-  { nombre: 'TikTok', usuario: '@clicmodascz', icono: MessageCircle, href: 'https://tiktok.com/@clicmodascz', color: '#010101' },
-  { nombre: 'Facebook', usuario: 'Clic Moda SCZ', icono: Globe, href: 'https://facebook.com/clicmodascz', color: '#1877F2' },
-];
+const WA_NUMBER = '59177000001';
+const WA_MSG = encodeURIComponent('Hola! Quiero consultar sobre sus productos 👗');
 
 export default function ContactoPage() {
-  const [formState, setFormState] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [formState, setFormState] = useState<'idle' | 'sending' | 'success'>('idle');
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setFormState('sending');
     setTimeout(() => setFormState('success'), 1500);
-  };
+  }
 
   return (
-    // EL CONTENEDOR MÁXIMO (1200px) centrado (mx-auto) con gap masivo para separar secciones
-    <div className="w-full max-w-[1200px] mx-auto px-6 lg:px-12 flex flex-col gap-16 py-8 animate-fade-in">
+    <div className="bg-gray-50 min-h-screen pb-20 md:pb-0">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
 
-      {/* 1. CABECERA */}
-      <div className="w-full flex flex-col items-center text-center gap-6">
-        <h1 className="text-4xl sm:text-5xl font-black text-gray-900 tracking-tight">
-          Estamos para <span className="text-pink-600">ayudarte</span>
-        </h1>
-        <p className="text-lg text-gray-500 max-w-2xl leading-relaxed">
-          ¿Tenés dudas sobre un producto, un pedido o simplemente querés saludar?
-          Escribinos y te responderemos a la brevedad.
-        </p>
-      </div>
-
-      {/* 2. GRID PRINCIPAL (2 columnas) */}
-      <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-
-        {/* COLUMNA IZQ: FORMULARIO */}
-        <div className="w-full flex flex-col gap-8">
-          <h2 className="text-2xl font-bold text-gray-900">Envíanos un mensaje</h2>
-
-          {formState === 'success' ? (
-            <div className="flex flex-col items-center text-center gap-6 rounded-3xl border border-gray-200 bg-white p-12 shadow-xl">
-              <CheckCircle2 size={64} className="text-green-500" />
-              <p className="text-2xl font-bold text-gray-900">¡Mensaje enviado!</p>
-              <p className="text-gray-500 text-lg">Te responderemos en menos de 24 horas.</p>
-              <button onClick={() => setFormState('idle')} className="text-pink-600 font-bold hover:underline">
-                Enviar otro mensaje
-              </button>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="flex flex-col gap-6 rounded-3xl border border-gray-100 bg-white p-8 sm:p-10 shadow-xl">
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-bold text-gray-700">Nombre completo <span className="text-pink-600">*</span></label>
-                <input required placeholder="Ej: María Pérez" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-5 py-4 text-sm outline-none focus:border-pink-500 focus:bg-white" />
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-bold text-gray-700">Email <span className="text-pink-600">*</span></label>
-                <input required type="email" placeholder="tu@email.com" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-5 py-4 text-sm outline-none focus:border-pink-500 focus:bg-white" />
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-bold text-gray-700">Asunto</label>
-                <select className="w-full rounded-xl border border-gray-200 bg-gray-50 px-5 py-4 text-sm outline-none focus:border-pink-500 focus:bg-white cursor-pointer">
-                  <option>Consulta sobre un producto</option>
-                  <option>Estado de mi pedido</option>
-                  <option>Devolución o cambio</option>
-                </select>
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-bold text-gray-700">Mensaje <span className="text-pink-600">*</span></label>
-                <textarea required rows={5} placeholder="Contanos en qué podemos ayudarte..." className="w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-5 py-4 text-sm outline-none focus:border-pink-500 focus:bg-white" />
-              </div>
-
-              <button type="submit" disabled={formState === 'sending'} className="mt-2 w-full rounded-xl bg-pink-600 py-4 text-lg font-bold text-white shadow-lg shadow-pink-600/30 hover:bg-pink-700 disabled:opacity-60 transition-all">
-                {formState === 'sending' ? 'Enviando...' : 'Enviar mensaje'}
-              </button>
-            </form>
-          )}
+        {/* Header */}
+        <div className="text-center mb-10">
+          <h1 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight mb-3">
+            Estamos para <span className="text-pink-600">ayudarte</span>
+          </h1>
+          <p className="text-gray-500 text-lg max-w-2xl mx-auto leading-relaxed">
+            ¿Tenés dudas sobre un producto, un pedido o simplemente querés saludar?
+            Escribinos y te responderemos a la brevedad.
+          </p>
         </div>
 
-        {/* COLUMNA DER: INFO */}
-        <div className="w-full flex flex-col gap-12 lg:pt-4">
+        {/* Grid 2 columnas */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
 
-          <div className="flex flex-col gap-6">
-            <h2 className="text-2xl font-bold text-gray-900">Contacto directo</h2>
-            <a href={`https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MESSAGE}`} target="_blank" rel="noreferrer" className="flex items-center gap-6 rounded-3xl border border-gray-200 bg-white p-6 hover:border-green-500 hover:shadow-xl transition-all">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-green-500 shadow-md">
-                <MessageCircle className="text-white" size={32} />
+          {/* LEFT — Formulario */}
+          <div>
+            <h2 className="text-2xl font-black text-gray-900 mb-6">Envíanos un mensaje</h2>
+
+            {formState === 'success' ? (
+              <div className="flex flex-col items-center text-center gap-5 bg-white rounded-3xl border border-gray-100 p-12 shadow-sm">
+                <CheckCircle2 size={56} className="text-green-500" />
+                <p className="text-2xl font-black text-gray-900">¡Mensaje enviado!</p>
+                <p className="text-gray-500">Te responderemos en menos de 24 horas.</p>
+                <button
+                  type="button"
+                  onClick={() => setFormState('idle')}
+                  className="text-pink-600 font-bold hover:underline"
+                >
+                  Enviar otro mensaje
+                </button>
               </div>
-              <div className="flex flex-col gap-1">
-                <p className="text-xl font-bold text-gray-900">Chat por WhatsApp</p>
-                <p className="text-sm font-medium text-gray-500">+591 77 000-001 · Respuesta rápida</p>
+            ) : (
+              <form
+                onSubmit={handleSubmit}
+                className="flex flex-col gap-5 bg-white rounded-3xl border border-gray-100 p-8 shadow-sm"
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="flex flex-col gap-2">
+                    <label className="text-sm font-bold text-gray-700">
+                      Nombre completo <span className="text-pink-600">*</span>
+                    </label>
+                    <input
+                      required
+                      placeholder="Ej: María Pérez"
+                      className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none focus:border-pink-500 focus:bg-white transition-colors"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <label className="text-sm font-bold text-gray-700">
+                      Email <span className="text-pink-600">*</span>
+                    </label>
+                    <input
+                      required
+                      type="email"
+                      placeholder="tu@email.com"
+                      className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none focus:border-pink-500 focus:bg-white transition-colors"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label className="text-sm font-bold text-gray-700">Asunto</label>
+                  <select className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none focus:border-pink-500 focus:bg-white cursor-pointer transition-colors">
+                    <option>Consulta sobre un producto</option>
+                    <option>Estado de mi pedido</option>
+                    <option>Devolución o cambio</option>
+                    <option>Otro</option>
+                  </select>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label className="text-sm font-bold text-gray-700">
+                    Mensaje <span className="text-pink-600">*</span>
+                  </label>
+                  <textarea
+                    required
+                    rows={4}
+                    placeholder="Contanos en qué podemos ayudarte..."
+                    className="resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none focus:border-pink-500 focus:bg-white transition-colors"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={formState === 'sending'}
+                  className="w-full bg-gray-900 hover:bg-pink-600 text-white font-black py-4 rounded-xl transition-colors shadow-md disabled:opacity-60"
+                >
+                  {formState === 'sending' ? 'Enviando...' : 'Enviar mensaje'}
+                </button>
+              </form>
+            )}
+          </div>
+
+          {/* RIGHT — Info de contacto */}
+          <div className="flex flex-col gap-8">
+
+            {/* WhatsApp CTA */}
+            <div>
+              <h2 className="text-2xl font-black text-gray-900 mb-4">Contacto directo</h2>
+              <a
+                href={`https://wa.me/${WA_NUMBER}?text=${WA_MSG}`}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-5 bg-white rounded-2xl border border-gray-100 p-5 hover:border-green-400 hover:shadow-md transition-all shadow-sm"
+              >
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-green-500 shadow-md shrink-0">
+                  <MessageCircle className="text-white" size={28} />
+                </div>
+                <div>
+                  <p className="text-lg font-black text-gray-900">Chat por WhatsApp</p>
+                  <p className="text-sm text-gray-500">+591 77 000-001 · Respuesta rápida</p>
+                </div>
+              </a>
+            </div>
+
+            {/* Info cards */}
+            <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm space-y-5">
+              {[
+                { Icon: Mail, label: 'Correo Electrónico', value: 'contacto@clicmodascz.bo' },
+                { Icon: MapPin, label: 'Ubicación', value: 'Santa Cruz de la Sierra, Bolivia' },
+                { Icon: Clock, label: 'Horario', value: 'Lun a Sáb · 8:00 – 20:00' },
+              ].map(({ Icon, label, value }) => (
+                <div key={label} className="flex items-center gap-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-pink-50 shrink-0">
+                    <Icon size={18} className="text-pink-600" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">{label}</p>
+                    <p className="text-sm font-medium text-gray-900">{value}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Redes sociales */}
+            <div>
+              <h3 className="text-lg font-black text-gray-900 mb-4">Síguenos en redes</h3>
+              <div className="grid grid-cols-2 gap-3">
+                <a
+                  href="https://instagram.com/clicmodascz"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-3 bg-white rounded-2xl border border-gray-100 p-4 hover:shadow-md transition-all"
+                  style={{ borderBottomColor: '#E1306C', borderBottomWidth: '3px' }}
+                >
+                  <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="#E1306C">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                  </svg>
+                  <div>
+                    <p className="text-sm font-bold text-gray-900">Instagram</p>
+                    <p className="text-xs text-gray-500">@clicmodascz</p>
+                  </div>
+                </a>
+                <a
+                  href="https://facebook.com/clicmodascz"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-3 bg-white rounded-2xl border border-gray-100 p-4 hover:shadow-md transition-all"
+                  style={{ borderBottomColor: '#1877F2', borderBottomWidth: '3px' }}
+                >
+                  <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="#1877F2">
+                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                  </svg>
+                  <div>
+                    <p className="text-sm font-bold text-gray-900">Facebook</p>
+                    <p className="text-xs text-gray-500">Clic Moda SCZ</p>
+                  </div>
+                </a>
               </div>
-            </a>
-          </div>
+            </div>
 
-          <div className="flex flex-col gap-6 rounded-3xl border border-gray-100 bg-gray-50 p-8">
-            <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-sm"><Mail size={20} className="text-pink-600" /></div>
-              <div className="flex flex-col"><p className="text-sm font-bold text-gray-900">Correo Electrónico</p><p className="text-sm text-gray-600">contacto@clicmodascz.bo</p></div>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-sm"><MapPin size={20} className="text-pink-600" /></div>
-              <div className="flex flex-col"><p className="text-sm font-bold text-gray-900">Ubicación</p><p className="text-sm text-gray-600">Santa Cruz de la Sierra, Bolivia</p></div>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-sm"><Clock size={20} className="text-pink-600" /></div>
-              <div className="flex flex-col"><p className="text-sm font-bold text-gray-900">Horario</p><p className="text-sm text-gray-600">Lun a Sáb · 8:00 – 20:00</p></div>
-            </div>
           </div>
-
-          <div className="flex flex-col gap-6">
-            <h3 className="text-xl font-bold text-gray-900">Síguenos en redes</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {REDES.map((red) => {
-                const Icono = red.icono;
-                return (
-                  <a key={red.nombre} href={red.href} target="_blank" rel="noreferrer" className="flex items-center gap-4 rounded-2xl border border-gray-200 bg-white p-4 hover:shadow-md transition-all" style={{ borderBottomColor: red.color, borderBottomWidth: '3px' }}>
-                    <Icono size={24} style={{ color: red.color }} />
-                    <div className="flex flex-col"><p className="text-sm font-bold text-gray-900">{red.nombre}</p><p className="text-xs text-gray-500">{red.usuario}</p></div>
-                  </a>
-                );
-              })}
-            </div>
-          </div>
-
         </div>
-      </div>
 
-      {/* 3. BOTÓN VOLVER */}
-      <div className="w-full flex justify-center border-t border-gray-200">
-        <Link href={ROUTES.CATALOG} className="inline-flex items-center justify-center h-12 px-8 rounded-full bg-gray-100 text-sm font-bold text-gray-600 hover:bg-gray-200 hover:text-gray-900 transition-colors">
-          &larr; Volver al catálogo de productos
-        </Link>
       </div>
-
     </div>
   );
 }
