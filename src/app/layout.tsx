@@ -23,8 +23,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={inter.variable} data-scroll-behavior="smooth">
-      <body className="antialiased bg-gray-50 text-gray-900 h-[100dvh] overflow-hidden">
+    <html lang="es" className={inter.variable}>
+      <body className="antialiased min-h-screen bg-gray-50 text-gray-900">
         <Providers>{children}</Providers>
       </body>
     </html>
