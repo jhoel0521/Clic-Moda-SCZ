@@ -27,7 +27,7 @@ export function StoreFooter() {
       </div>
 
       {/* SECCIÓN 2: ENLACES PRINCIPALES (Ahora con extra espacio 'py-20' y 'gap-16') */}
-      <div className="mx-auto max-w-[1600px] w-full px-6 lg:px-12 py-20">
+      <div className="mx-auto max-w-[1600px] w-full px-6 lg:px-12 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-12">
 
           {/* Columna 1: Marca */}

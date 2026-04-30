@@ -21,7 +21,7 @@ export function StoreNavbar() {
 
   return (
     <header className="w-full bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
-      <div className="mx-auto max-w-[1600px] w-full px-6 lg:px-12 h-20 flex items-center justify-between">
+      <div className="mx-auto max-w-[1600px] w-full px-6 lg:px-12 h-20 grid grid-cols-[auto_1fr_auto] items-center gap-4">
 
         {/* LOGO */}
         <div className="flex-shrink-0">
@@ -31,7 +31,7 @@ export function StoreNavbar() {
         </div>
 
         {/* MENÚ CENTRAL */}
-        <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-8 lg:gap-12">
+        <nav className="hidden md:flex justify-center items-center gap-8 lg:gap-12">
           <Link href={ROUTES.HOME} className="text-sm font-bold text-gray-500 hover:text-pink-600 transition-colors">
             INICIO
           </Link>

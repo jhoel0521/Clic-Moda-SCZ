@@ -235,19 +235,30 @@ export default function CatalogPage() {
 
       <div className="grid gap-8 lg:grid-cols-[18rem_minmax(0,1fr)] lg:items-start">
         <aside className="hidden lg:block">
-          <div className="sticky top-24">
+          <div className="sticky top-20">
             <FilterPanel {...filterPanelProps} />
           </div>
         </aside>
 
         <section className="min-w-0">
           {isPending ? (
-            <div className="flex justify-center py-24">
-              <Spinner size="lg" />
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] animate-pulse">
+                  <div className="aspect-[3/4] bg-[var(--color-surface-raised)]" />
+                  <div className="p-5 space-y-3">
+                    <div className="h-3.5 rounded-full bg-[var(--color-surface-raised)] w-3/4" />
+                    <div className="h-3.5 rounded-full bg-[var(--color-surface-raised)] w-1/2" />
+                    <div className="h-4 rounded-full bg-[var(--color-surface-raised)] w-1/3 mt-2" />
+                  </div>
+                </div>
+              ))}
             </div>
           ) : products.length === 0 ? (
             <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] px-6 py-16 text-center shadow-[var(--shadow-sm)]">
-              <p className="text-[var(--color-text-muted)] mb-3">No se encontraron productos.</p>
+              <p className="text-4xl mb-4">🔍</p>
+              <p className="font-semibold text-[var(--color-text-primary)] mb-2">Sin resultados</p>
+              <p className="text-sm text-[var(--color-text-muted)] mb-5">No encontramos productos con esos filtros.</p>
               {hasActiveFilters(filters) && (
                 <button
                   type="button"

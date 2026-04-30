@@ -5,6 +5,8 @@ import { ROUTES } from '@src/routes';
 import { HeroCarousel } from '@src/shared/ui/HeroCarousel';
 import { ProductCard } from '@src/shared/ui/ProductCard';
 import { FlashSaleTimer } from '@src/shared/ui/FlashSaleTimer';
+import { Section } from '@src/shared/ui/layout/Section';
+import { Container } from '@src/shared/ui/layout/Container';
 import { ProductService } from '@src/services/ProductService';
 
 export const metadata: Metadata = {
@@ -40,9 +42,9 @@ export default async function LandingPage() {
 
       {/* 2. Ventas Flash */}
       {flashProducts.length > 0 && (
-        <section className="w-full bg-[var(--color-bg-secondary)] px-6 py-16 flex flex-col items-center">
-          <div className="w-full max-w-[1400px]">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        <Section size="md" className="bg-[var(--color-bg-secondary)]">
+          <Container>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-10">
               <div>
                 <h2 className="text-3xl font-black text-[var(--color-text-primary)] tracking-tight">
                   ⚡ Ventas Flash
@@ -59,13 +61,13 @@ export default async function LandingPage() {
                 </div>
               ))}
             </div>
-          </div>
-        </section>
+          </Container>
+        </Section>
       )}
 
       {/* 3. Colecciones */}
-      <section className="w-full bg-white px-6 py-24 flex flex-col items-center">
-        <div className="w-full max-w-[1400px]">
+      <Section size="lg" className="bg-white">
+        <Container>
           <div className="flex justify-between items-end mb-10">
             <div>
               <h2 className="text-3xl font-black text-gray-900 tracking-tight sm:text-4xl">Colecciones</h2>
@@ -100,43 +102,40 @@ export default async function LandingPage() {
               </Link>
             ))}
           </div>
+
           <Link href={ROUTES.CATALOG} className="mt-8 block text-center sm:hidden text-[var(--color-brand)] font-bold hover:underline">
             Ver todo el catálogo →
           </Link>
-        </div>
-      </section>
+        </Container>
+      </Section>
 
       {/* 4. ¿Cómo Funciona? */}
-      <section className="w-full bg-gray-50 px-6 py-24 flex flex-col items-center">
-        <div className="w-full max-w-[1200px]">
+      <Section size="lg" className="bg-gray-50">
+        <Container size="md">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-black text-gray-900 sm:text-4xl">Comprar nunca fue tan fácil</h2>
+            <p className="mt-3 text-gray-500">Tres pasos y tu ropa llega donde estás.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 rounded-full bg-pink-100 flex items-center justify-center mb-6">
-                <span className="text-2xl">🛍️</span>
+            {[
+              { step: '1', icon: '🛍️', title: 'Elige tu ropa', desc: 'Revisá las medidas exactas en centímetros. Añadí al carrito sin necesidad de registrarte.' },
+              { step: '2', icon: '📝', title: 'Llenás tus datos', desc: 'Proporcioná tu dirección de envío en Santa Cruz de forma rápida y segura.' },
+              { step: '3', icon: '📲', title: 'Coordinás por WhatsApp', desc: 'Generá tu ticket y chateá directamente con nosotros para coordinar el pago y la entrega.' },
+            ].map(({ step, icon, title, desc }) => (
+              <div key={step} className="flex flex-col items-center text-center">
+                <div className="relative w-16 h-16 rounded-full bg-pink-100 flex items-center justify-center mb-6">
+                  <span className="text-2xl">{icon}</span>
+                  <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-pink-600 text-[10px] font-black text-white">
+                    {step}
+                  </span>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">{title}</h3>
+                <p className="text-gray-600 leading-relaxed">{desc}</p>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">1. Elige tu ropa</h3>
-              <p className="text-gray-600">Revisa las medidas exactas en centímetros. Añade al carrito sin necesidad de registrarte.</p>
-            </div>
-            <div className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 rounded-full bg-pink-100 flex items-center justify-center mb-6">
-                <span className="text-2xl">📝</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">2. Llena tus datos</h3>
-              <p className="text-gray-600">Proporciona tu dirección de envío en Santa Cruz de forma rápida y segura.</p>
-            </div>
-            <div className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 rounded-full bg-pink-100 flex items-center justify-center mb-6">
-                <span className="text-2xl">📲</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">3. Coordina por WhatsApp</h3>
-              <p className="text-gray-600">Genera tu ticket y chatea directamente con nosotros para coordinar el pago y la entrega.</p>
-            </div>
+            ))}
           </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
     </>
   );
 }

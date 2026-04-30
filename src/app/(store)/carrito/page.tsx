@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ShoppingCart } from 'lucide-react';
 import { useCartStore } from '@src/core/store/useCartStore';
 import { Button } from '@src/shared/ui/Button';
+import { EmptyState } from '@src/shared/ui/feedback/EmptyState';
 import { ROUTES } from '@src/routes';
 import { CartItemRow } from './CartItemRow';
 import { CouponInput } from './CouponInput';
@@ -20,16 +21,16 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <>
-        <div className="mb-6 text-7xl">🛒</div>
-        <h1 className="mb-3 text-2xl font-bold text-[var(--color-text-primary)]">Tu carrito está vacío</h1>
-        <p className="mb-8 text-[var(--color-text-muted)]">
-          Explorá el catálogo y encontrá tu prenda ideal.
-        </p>
-        <Link href={ROUTES.CATALOG}>
-          <Button variant="primary" size="lg">Ver catálogo</Button>
-        </Link>
-      </>
+      <EmptyState
+        icon={<ShoppingCart size={56} />}
+        title="Tu carrito está vacío"
+        description="Explorá el catálogo y encontrá tu prenda ideal."
+        action={
+          <Link href={ROUTES.CATALOG}>
+            <Button variant="primary" size="lg">Ver catálogo</Button>
+          </Link>
+        }
+      />
     );
   }
 
@@ -83,7 +84,7 @@ export default function CartPage() {
         </div>
 
         {/* Resumen */}
-        <div className="lg:sticky lg:top-24">
+        <div className="lg:sticky lg:top-20">
           <OrderSummary subtotal={subtotal} appliedCoupon={appliedCoupon} />
         </div>
       </div>

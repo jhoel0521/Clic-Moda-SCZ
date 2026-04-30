@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ShoppingCart, MessageCircle, Minus, Plus } from 'lucide-react';
 import { useCartStore } from '@src/core/store/useCartStore';
+import { toast } from '@src/core/store/useToastStore';
 import { Button } from '@src/shared/ui/Button';
 import type { IProduct, Talla } from '@src/core/models';
 
@@ -17,8 +18,6 @@ export function AddToCartPanel({ product }: AddToCartPanelProps) {
   const [selectedSize, setSelectedSize] = useState<Talla | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [qty, setQty] = useState(1);
-  const [added, setAdded] = useState(false);
-
   const primaryImage = product.images.find((img) => img.isPrimary) ?? product.images[0];
   const canAdd = selectedSize !== null && selectedColor !== null;
 
@@ -34,8 +33,7 @@ export function AddToCartPanel({ product }: AddToCartPanelProps) {
       selectedSize: selectedSize!,
       selectedColor: selectedColor!,
     });
-    setAdded(true);
-    setTimeout(() => setAdded(false), 2000);
+    toast.success(`¡${product.name} agregado al carrito!`);
   }
 
   const waMsg = encodeURIComponent(
@@ -144,7 +142,7 @@ export function AddToCartPanel({ product }: AddToCartPanelProps) {
           onClick={handleAddToCart}
           leftIcon={<ShoppingCart size={18} />}
         >
-          {added ? '¡Añadido!' : 'Añadir al carrito'}
+          Añadir al carrito
         </Button>
         <a
           href={`https://wa.me/${WA_NUMBER}?text=${waMsg}`}

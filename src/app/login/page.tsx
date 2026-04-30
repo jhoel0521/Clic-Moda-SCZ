@@ -39,7 +39,7 @@ function LoginPageContent() {
     handleSubmit,
     setError,
     formState: { errors, isSubmitting },
-  } = useForm<LoginFormData>({ resolver: zodResolver(loginSchema) });
+  } = useForm<LoginFormData>({ resolver: zodResolver(loginSchema), mode: 'onBlur' });
 
   function handleSuccess(user: IUser) {
     const guestItems = [...cartItems];
@@ -98,23 +98,23 @@ function LoginPageContent() {
             <p className="mt-1 text-sm text-[var(--color-text-muted)]">Iniciá sesión para continuar</p>
           </div>
 
-          {/* OAuth */}
-          <div className="mb-5 space-y-3">
+          {/* OAuth — secundarios (Hick's Law: menor prominencia) */}
+          <div className="mb-5 grid grid-cols-2 gap-2">
             <button
               type="button"
               onClick={() => setShowOAuthModal(true)}
-              className="flex w-full items-center justify-center gap-3 rounded-xl border border-[var(--color-border)] bg-white px-4 py-3 text-sm font-semibold text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] transition-colors"
+              className="flex items-center justify-center gap-2 rounded-xl border border-[var(--color-border)] bg-white px-3 py-2.5 text-sm font-medium text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] transition-colors"
             >
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M17.64 9.2a10.1 10.1 0 0 0-.16-1.76H9v3.33h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.55Z" fill="#4285F4"/><path d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.27c-.8.54-1.83.86-3.04.86-2.34 0-4.32-1.58-5.03-3.71H.96v2.34A9 9 0 0 0 9 18Z" fill="#34A853"/><path d="M3.97 10.7A5.41 5.41 0 0 1 3.68 9c0-.59.1-1.17.29-1.71V4.95H.96A9 9 0 0 0 0 9c0 1.45.35 2.82.96 4.04l3-2.34Z" fill="#FBBC05"/><path d="M9 3.58c1.32 0 2.51.45 3.44 1.35l2.58-2.58C13.46.89 11.43 0 9 0A9 9 0 0 0 .96 4.95l3 2.34C4.68 5.16 6.66 3.58 9 3.58Z" fill="#EA4335"/></svg>
-              Continuar con Google
+              <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M17.64 9.2a10.1 10.1 0 0 0-.16-1.76H9v3.33h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.55Z" fill="#4285F4"/><path d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.27c-.8.54-1.83.86-3.04.86-2.34 0-4.32-1.58-5.03-3.71H.96v2.34A9 9 0 0 0 9 18Z" fill="#34A853"/><path d="M3.97 10.7A5.41 5.41 0 0 1 3.68 9c0-.59.1-1.17.29-1.71V4.95H.96A9 9 0 0 0 0 9c0 1.45.35 2.82.96 4.04l3-2.34Z" fill="#FBBC05"/><path d="M9 3.58c1.32 0 2.51.45 3.44 1.35l2.58-2.58C13.46.89 11.43 0 9 0A9 9 0 0 0 .96 4.95l3 2.34C4.68 5.16 6.66 3.58 9 3.58Z" fill="#EA4335"/></svg>
+              Google
             </button>
             <button
               type="button"
               onClick={() => setShowOAuthModal(true)}
-              className="flex w-full items-center justify-center gap-3 rounded-xl border border-[var(--color-border)] bg-[#1877F2] px-4 py-3 text-sm font-semibold text-white hover:bg-[#166fe5] transition-colors"
+              className="flex items-center justify-center gap-2 rounded-xl border border-[#1877F2]/30 bg-[#1877F2]/5 px-3 py-2.5 text-sm font-medium text-[#1877F2] hover:bg-[#1877F2]/10 transition-colors"
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.413c0-3.027 1.792-4.697 4.533-4.697 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.93-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
-              Continuar con Facebook
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.413c0-3.027 1.792-4.697 4.533-4.697 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.93-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+              Facebook
             </button>
           </div>
 

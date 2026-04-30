@@ -1,22 +1,42 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { MessageCircle, Download, CheckCircle } from 'lucide-react';
+import { MessageCircle, Download } from 'lucide-react';
 import { useCheckoutStore } from '@src/core/store/useCheckoutStore';
 import { Button } from '@src/shared/ui/Button';
+import { SuccessState } from '@src/shared/ui/feedback/SuccessState';
 import { ROUTES } from '@src/routes';
+import type { IOrder } from '@src/core/models';
 
+const LS_KEY = 'clic-moda-last-order';
 const WA_NUMBER = '59177000001';
 
 const PAYMENT_LABELS: Record<string, string> = {
-  transferencia: 'Transferencia bancaria',
-  qr_simple: 'QR Simple',
+  transferencia:    'Transferencia bancaria',
+  qr_simple:        'QR Simple',
   efectivo_entrega: 'Efectivo en entrega',
-  contra_entrega: 'Contra entrega',
+  contra_entrega:   'Contra entrega',
 };
 
 export default function ConfirmationPage() {
-  const order = useCheckoutStore((s) => s.lastOrder);
+  const storeOrder = useCheckoutStore((s) => s.lastOrder);
+  const [order, setOrder] = useState<IOrder | null>(storeOrder);
+
+  /* Persistir en localStorage al llegar con pedido; recuperar si se recarga */
+  useEffect(() => {
+    if (storeOrder) {
+      localStorage.setItem(LS_KEY, JSON.stringify(storeOrder));
+      setOrder(storeOrder);
+    } else {
+      try {
+        const saved = localStorage.getItem(LS_KEY);
+        if (saved) setOrder(JSON.parse(saved) as IOrder);
+      } catch {
+        /* ignore parse errors */
+      }
+    }
+  }, [storeOrder]);
 
   if (!order) {
     return (
@@ -74,15 +94,11 @@ export default function ConfirmationPage() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-2xl px-6 py-14">
-      {/* Encabezado */}
-      <div className="mb-10 text-center">
-        <CheckCircle size={64} className="mx-auto mb-4 text-green-500" />
-        <h1 className="text-3xl font-bold text-[var(--color-text-primary)]">¡Pedido confirmado!</h1>
-        <p className="mt-2 text-[var(--color-text-muted)]">
-          Coordiná la entrega enviando tu ticket por WhatsApp.
-        </p>
-      </div>
+    <div className="mx-auto w-full max-w-2xl px-4 sm:px-6 py-14">
+      <SuccessState
+        title="¡Pedido confirmado!"
+        description="Coordiná la entrega enviando tu ticket por WhatsApp."
+      />
 
       {/* Ticket */}
       <div className="mb-6 rounded-2xl border-2 border-dashed border-[var(--color-border-brand)] bg-[var(--color-brand-subtle)] p-6 text-center">
@@ -141,7 +157,7 @@ export default function ConfirmationPage() {
         </div>
       </div>
 
-      {/* Acciones */}
+      {/* Acciones — WhatsApp primero (Peak-End Rule) */}
       <div className="flex flex-col gap-3 sm:flex-row">
         <a
           href={`https://wa.me/${WA_NUMBER}?text=${waMsg}`}
