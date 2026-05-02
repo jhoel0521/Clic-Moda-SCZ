@@ -30,30 +30,30 @@ export function TopProductsTable({ orders }: TopProductsTableProps) {
 
   if (top10.length === 0) {
     return (
-      <p className="text-sm text-[var(--color-text-muted)] text-center py-6">
+      <p className="text-sm text-text-muted text-center py-6">
         Aún no hay pedidos para mostrar el ranking.
       </p>
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-[var(--color-border)]">
+    <div className="overflow-hidden rounded-xl border border-border">
       <table className="w-full text-sm">
         <thead>
-          <tr className="bg-[var(--color-bg-secondary)] border-b border-[var(--color-border)]">
-            <th className="px-4 py-2.5 text-left font-semibold text-[var(--color-text-muted)] w-8">#</th>
-            <th className="px-4 py-2.5 text-left font-semibold text-[var(--color-text-primary)]">Producto</th>
-            <th className="px-4 py-2.5 text-right font-semibold text-[var(--color-text-primary)]">Unidades</th>
-            <th className="hidden sm:table-cell px-4 py-2.5 text-right font-semibold text-[var(--color-text-primary)]">Ingresos</th>
+          <tr className="bg-bg-secondary border-b border-border">
+            <th className="px-4 py-2.5 text-left font-semibold text-text-muted w-8">#</th>
+            <th className="px-4 py-2.5 text-left font-semibold text-text-primary">Producto</th>
+            <th className="px-4 py-2.5 text-right font-semibold text-text-primary">Unidades</th>
+            <th className="hidden sm:table-cell px-4 py-2.5 text-right font-semibold text-text-primary">Ingresos</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-[var(--color-border)] bg-white">
+        <tbody className="divide-y divide-border bg-white">
           {top10.map((product, idx) => (
-            <tr key={product.name} className="hover:bg-[var(--color-surface-hover)]">
-              <td className="px-4 py-2.5 font-bold text-[var(--color-text-muted)]">{idx + 1}</td>
-              <td className="px-4 py-2.5 font-medium text-[var(--color-text-primary)] line-clamp-1">{product.name}</td>
-              <td className="px-4 py-2.5 text-right font-semibold text-[var(--color-brand)]">{product.units}</td>
-              <td className="hidden sm:table-cell px-4 py-2.5 text-right text-[var(--color-text-secondary)]">
+            <tr key={product.name} className="hover:bg-surface-hover">
+              <td className="px-4 py-2.5 font-bold text-text-muted">{idx + 1}</td>
+              <td className="px-4 py-2.5 font-medium text-text-primary line-clamp-1">{product.name}</td>
+              <td className="px-4 py-2.5 text-right font-semibold text-brand">{product.units}</td>
+              <td className="hidden sm:table-cell px-4 py-2.5 text-right text-text-secondary">
                 Bs. {product.revenue.toFixed(0)}
               </td>
             </tr>

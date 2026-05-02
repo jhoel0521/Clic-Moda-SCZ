@@ -31,30 +31,25 @@ function pad(n: number) {
 }
 
 export function FlashSaleTimer({ endsAt, variant = 'default' }: FlashSaleTimerProps) {
-  const [mounted, setMounted] = useState(false);
   const [time, setTime] = useState(() => getTimeLeft(endsAt));
 
   useEffect(() => {
-    setMounted(true);
     if (time.expired) return;
 
     const id = setInterval(() => {
-      const next = getTimeLeft(endsAt);
-      setTime(next);
-      if (next.expired) clearInterval(id);
+      const current = getTimeLeft(endsAt);
+      setTime(current);
+      if (current.expired) clearInterval(id);
     }, 1000);
 
     return () => clearInterval(id);
   }, [endsAt, time.expired]);
 
-  // Evita errores visuales y de hidratación en el primer renderizado (SSR/SSG)
-  if (!mounted) return null;
-
   if (time.expired) {
     return (
       <span className={variant === 'inline'
         ? 'font-mono bg-black/20 px-3 py-1.5 rounded-lg font-bold tracking-widest ml-2 text-white'
-        : 'inline-flex items-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-4 py-1.5 text-sm font-semibold text-[var(--color-text-muted)]'
+        : 'inline-flex items-center rounded-full border border-border bg-surface-raised px-4 py-1.5 text-sm font-semibold text-text-muted'
       }>
         Finalizada
       </span>
@@ -90,12 +85,12 @@ export function FlashSaleTimer({ endsAt, variant = 'default' }: FlashSaleTimerPr
 
   // Renderizado para la variante "default"
   return (
-    <div className="inline-flex items-center gap-1 rounded-full border border-[var(--color-border-brand)] bg-[var(--color-brand-subtle)] px-4 py-1.5">
+    <div className="inline-flex items-center gap-1 rounded-full border border-brand bg-brand-subtle px-4 py-1.5">
       {timeUnits.map(({ value, label }, i) => (
         <span key={label} className="flex items-baseline gap-0.5">
-          {i > 0 && <span className="mx-0.5 font-bold text-[var(--color-brand)]">:</span>}
-          <span className="font-mono text-lg font-bold text-[var(--color-brand)]">{pad(value)}</span>
-          <span className="text-[10px] font-semibold uppercase text-[var(--color-brand)] opacity-70">{label}</span>
+          {i > 0 && <span className="mx-0.5 font-bold text-brand">:</span>}
+          <span className="font-mono text-lg font-bold text-brand">{pad(value)}</span>
+          <span className="text-[10px] font-semibold uppercase text-brand opacity-70">{label}</span>
         </span>
       ))}
     </div>

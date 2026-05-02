@@ -44,19 +44,19 @@ export default function AdminOrdersPage() {
       <AdminHeader title="Gestión de Pedidos" />
 
       <div className="flex items-center justify-between">
-        <p className="text-sm text-[var(--color-text-muted)]">{orders.length} pedidos totales</p>
-        <div className="flex gap-1 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-1">
+        <p className="text-sm text-text-muted">{orders.length} pedidos totales</p>
+        <div className="flex gap-1 rounded-xl border border-border bg-surface p-1">
           <button
             type="button"
             onClick={() => setViewMode('list')}
-            className={['flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all', viewMode === 'list' ? 'bg-[var(--color-brand-subtle)] text-[var(--color-brand)]' : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'].join(' ')}
+            className={['flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all', viewMode === 'list' ? 'bg-brand-subtle text-brand' : 'text-text-muted hover:text-text-primary'].join(' ')}
           >
             <List size={14} /> Lista
           </button>
           <button
             type="button"
             onClick={() => setViewMode('kanban')}
-            className={['flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all', viewMode === 'kanban' ? 'bg-[var(--color-brand-subtle)] text-[var(--color-brand)]' : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'].join(' ')}
+            className={['flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all', viewMode === 'kanban' ? 'bg-brand-subtle text-brand' : 'text-text-muted hover:text-text-primary'].join(' ')}
           >
             <LayoutGrid size={14} /> Kanban
           </button>
@@ -68,35 +68,35 @@ export default function AdminOrdersPage() {
       ) : viewMode === 'kanban' ? (
         <OrderKanbanBoard orders={orders} onAdvance={handleAdvance} />
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-[var(--shadow-sm)]">
+        <div className="overflow-hidden rounded-2xl border border-border shadow-sm">
           {orders.length === 0 ? (
-            <div className="py-16 text-center text-[var(--color-text-muted)]">
+            <div className="py-16 text-center text-text-muted">
               <p className="text-4xl mb-3">📦</p>
               <p>Aún no hay pedidos registrados.</p>
             </div>
           ) : (
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-[var(--color-bg-secondary)] border-b border-[var(--color-border)]">
-                  <th className="px-5 py-3 text-left font-semibold text-[var(--color-text-primary)]">Ticket</th>
-                  <th className="hidden md:table-cell px-5 py-3 text-left font-semibold text-[var(--color-text-primary)]">Cliente</th>
-                  <th className="hidden sm:table-cell px-5 py-3 text-left font-semibold text-[var(--color-text-primary)]">Fecha</th>
-                  <th className="px-5 py-3 text-right font-semibold text-[var(--color-text-primary)]">Total</th>
-                  <th className="px-5 py-3 text-center font-semibold text-[var(--color-text-primary)]">Estado</th>
-                  <th className="px-5 py-3 text-center font-semibold text-[var(--color-text-primary)]">Acción</th>
+                <tr className="bg-bg-secondary border-b border-border">
+                  <th className="px-5 py-3 text-left font-semibold text-text-primary">Ticket</th>
+                  <th className="hidden md:table-cell px-5 py-3 text-left font-semibold text-text-primary">Cliente</th>
+                  <th className="hidden sm:table-cell px-5 py-3 text-left font-semibold text-text-primary">Fecha</th>
+                  <th className="px-5 py-3 text-right font-semibold text-text-primary">Total</th>
+                  <th className="px-5 py-3 text-center font-semibold text-text-primary">Estado</th>
+                  <th className="px-5 py-3 text-center font-semibold text-text-primary">Acción</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[var(--color-border)] bg-white">
+              <tbody className="divide-y divide-border bg-white">
                 {orders.map((order) => {
                   const next = getNextOrderStatus(order.status);
                   return (
-                    <tr key={order.id} className="hover:bg-[var(--color-surface-hover)]">
-                      <td className="px-5 py-3 font-mono font-bold text-[var(--color-brand)]">{order.ticketId}</td>
-                      <td className="hidden md:table-cell px-5 py-3 text-[var(--color-text-secondary)]">{order.shippingAddress.fullName}</td>
-                      <td className="hidden sm:table-cell px-5 py-3 text-[var(--color-text-muted)]">
+                    <tr key={order.id} className="hover:bg-surface-hover">
+                      <td className="px-5 py-3 font-mono font-bold text-brand">{order.ticketId}</td>
+                      <td className="hidden md:table-cell px-5 py-3 text-text-secondary">{order.shippingAddress.fullName}</td>
+                      <td className="hidden sm:table-cell px-5 py-3 text-text-muted">
                         {new Date(order.createdAt).toLocaleDateString('es-BO')}
                       </td>
-                      <td className="px-5 py-3 text-right font-semibold text-[var(--color-text-primary)]">
+                      <td className="px-5 py-3 text-right font-semibold text-text-primary">
                         Bs. {order.total.toFixed(2)}
                       </td>
                       <td className="px-5 py-3 text-center">
@@ -109,12 +109,12 @@ export default function AdminOrdersPage() {
                           <button
                             type="button"
                             onClick={() => handleAdvance(order.id)}
-                            className="rounded-lg bg-[var(--color-brand-subtle)] px-3 py-1.5 text-xs font-bold text-[var(--color-brand)] hover:bg-[var(--color-brand)] hover:text-white transition-colors"
+                            className="rounded-lg bg-brand-subtle px-3 py-1.5 text-xs font-bold text-brand hover:bg-brand hover:text-white transition-colors"
                           >
                             → {ORDER_STATUS_LABELS[next]}
                           </button>
                         ) : (
-                          <span className="text-xs text-[var(--color-text-muted)]">Finalizado</span>
+                          <span className="text-xs text-text-muted">Finalizado</span>
                         )}
                       </td>
                     </tr>

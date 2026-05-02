@@ -14,8 +14,8 @@ function AdminGuard({ children }: { children: React.ReactNode }) {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="text-4xl mb-4">🚫</p>
-          <h1 className="text-xl font-bold text-[var(--color-text-primary)] mb-2">Acceso denegado</h1>
-          <p className="text-[var(--color-text-muted)]">No tenés permisos para acceder al panel de administración.</p>
+          <h1 className="text-xl font-bold text-text-primary mb-2">Acceso denegado</h1>
+          <p className="text-text-muted">No tenés permisos para acceder al panel de administración.</p>
         </div>
       </div>
     );
@@ -28,7 +28,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <RequireAuth redirectTo="/login?redirect=/admin">
       <AdminGuard>
-        <div className="flex min-h-screen bg-[var(--color-bg-secondary)]">
+        <div className="flex min-h-screen bg-bg-secondary">
           <AdminSidebar />
           <div className="flex-1 flex flex-col min-w-0">
             <main className="flex-1 p-6 overflow-auto">{children}</main>

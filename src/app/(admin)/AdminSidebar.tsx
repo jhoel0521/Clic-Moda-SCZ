@@ -34,11 +34,11 @@ export function AdminSidebar() {
   }
 
   return (
-    <aside className="w-64 border-r border-[var(--color-border)] bg-[var(--color-surface)] flex flex-col shrink-0">
+    <aside className="w-64 border-r border-border bg-surface flex flex-col shrink-0">
       {/* Marca */}
-      <div className="px-5 py-5 border-b border-[var(--color-border)]">
-        <p className="font-black text-lg tracking-tight text-[var(--color-brand)]">Clic Moda SCZ</p>
-        <p className="text-xs text-[var(--color-text-muted)] mt-0.5">Panel de administración</p>
+      <div className="px-5 py-5 border-b border-border">
+        <p className="font-black text-lg tracking-tight text-brand">Clic Moda SCZ</p>
+        <p className="text-xs text-text-muted mt-0.5">Panel de administración</p>
       </div>
 
       {/* Navegación */}
@@ -52,8 +52,8 @@ export function AdminSidebar() {
               className={[
                 'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150',
                 isActive
-                  ? 'bg-[var(--color-brand-subtle)] text-[var(--color-brand)]'
-                  : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text-primary)]',
+                  ? 'bg-brand-subtle text-brand'
+                  : 'text-text-secondary hover:bg-surface-hover hover:text-text-primary',
               ].join(' ')}
             >
               <Icon size={17} />
@@ -64,10 +64,10 @@ export function AdminSidebar() {
       </nav>
 
       {/* Footer con usuario */}
-      <div className="p-4 border-t border-[var(--color-border)] space-y-3">
+      <div className="p-4 border-t border-border space-y-3">
         <Link
           href={ROUTES.HOME}
-          className="flex items-center gap-2 px-3 py-2 text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors"
+          className="flex items-center gap-2 px-3 py-2 text-sm text-text-muted hover:text-text-primary transition-colors"
         >
           <Store size={15} />
           Ver tienda
@@ -75,15 +75,15 @@ export function AdminSidebar() {
         {user && (
           <div className="flex items-center justify-between gap-2 px-3">
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-[var(--color-text-primary)] truncate">{user.name}</p>
-              <p className="text-xs text-[var(--color-brand)] font-medium">
+              <p className="text-sm font-semibold text-text-primary truncate">{user.name}</p>
+              <p className="text-xs text-brand font-medium">
                 {ROLE_LABELS[user.role] ?? user.role}
               </p>
             </div>
             <button
               type="button"
               onClick={handleLogout}
-              className="shrink-0 text-[var(--color-text-muted)] hover:text-[var(--color-danger)] transition-colors"
+              className="shrink-0 text-text-muted hover:text-danger transition-colors"
               aria-label="Cerrar sesión"
             >
               <LogOut size={16} />

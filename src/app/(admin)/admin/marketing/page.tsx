@@ -24,7 +24,7 @@ export default function MarketingPage() {
       <AdminHeader title="Marketing" />
 
       {/* Tabs */}
-      <div className="border-b border-[var(--color-border)]">
+      <div className="border-b border-border">
         <nav className="-mb-px flex gap-1">
           {TABS.map((tab) => (
             <button
@@ -34,8 +34,8 @@ export default function MarketingPage() {
               className={[
                 'rounded-t-lg border-b-2 px-5 py-2.5 text-sm font-medium transition-colors',
                 activeTab === tab.id
-                  ? 'border-[var(--color-brand)] text-[var(--color-brand)]'
-                  : 'border-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]',
+                  ? 'border-brand text-brand'
+                  : 'border-transparent text-text-muted hover:text-text-primary',
               ].join(' ')}
             >
               {tab.label}

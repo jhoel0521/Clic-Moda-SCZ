@@ -51,7 +51,7 @@ export default function AdminProductsPage() {
       <AdminHeader title="Gestión de Productos" />
 
       <div className="flex items-center justify-between">
-        <p className="text-sm text-[var(--color-text-muted)]">
+        <p className="text-sm text-text-muted">
           {products.length} productos en total
         </p>
         <Button variant="primary" size="sm" leftIcon={<Plus size={16} />} onClick={openNew}>
@@ -62,38 +62,38 @@ export default function AdminProductsPage() {
       {isLoading ? (
         <div className="flex justify-center py-20"><Spinner size="lg" /></div>
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-[var(--shadow-sm)]">
+        <div className="overflow-hidden rounded-2xl border border-border shadow-sm">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-[var(--color-bg-secondary)] border-b border-[var(--color-border)]">
-                <th className="px-5 py-3 text-left font-semibold text-[var(--color-text-primary)]">Producto</th>
-                <th className="hidden sm:table-cell px-5 py-3 text-left font-semibold text-[var(--color-text-primary)]">Categoría</th>
-                <th className="px-5 py-3 text-right font-semibold text-[var(--color-text-primary)]">Stock</th>
-                <th className="px-5 py-3 text-right font-semibold text-[var(--color-text-primary)]">Precio</th>
-                <th className="px-5 py-3 text-center font-semibold text-[var(--color-text-primary)]">Estado</th>
-                <th className="px-5 py-3 text-center font-semibold text-[var(--color-text-primary)]">Acciones</th>
+              <tr className="bg-bg-secondary border-b border-border">
+                <th className="px-5 py-3 text-left font-semibold text-text-primary">Producto</th>
+                <th className="hidden sm:table-cell px-5 py-3 text-left font-semibold text-text-primary">Categoría</th>
+                <th className="px-5 py-3 text-right font-semibold text-text-primary">Stock</th>
+                <th className="px-5 py-3 text-right font-semibold text-text-primary">Precio</th>
+                <th className="px-5 py-3 text-center font-semibold text-text-primary">Estado</th>
+                <th className="px-5 py-3 text-center font-semibold text-text-primary">Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--color-border)] bg-white">
+            <tbody className="divide-y divide-border bg-white">
               {products.map((product) => {
                 const img = product.images.find((i) => i.isPrimary) ?? product.images[0];
                 return (
-                  <tr key={product.id} className="hover:bg-[var(--color-surface-hover)]">
+                  <tr key={product.id} className="hover:bg-surface-hover">
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-3">
-                        <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-[var(--color-surface-raised)]">
+                        <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-surface-raised">
                           {img ? <Image src={img.url} alt={img.alt} fill className="object-cover" sizes="40px" /> : <span className="flex h-full w-full items-center justify-center text-lg">👗</span>}
                         </div>
-                        <p className="font-medium text-[var(--color-text-primary)] line-clamp-1">{product.name}</p>
+                        <p className="font-medium text-text-primary line-clamp-1">{product.name}</p>
                       </div>
                     </td>
-                    <td className="hidden sm:table-cell px-5 py-3 text-[var(--color-text-muted)] capitalize">{product.category}</td>
+                    <td className="hidden sm:table-cell px-5 py-3 text-text-muted capitalize">{product.category}</td>
                     <td className="px-5 py-3 text-right">
-                      <span className={product.stock <= 5 ? 'font-bold text-[var(--color-warning)]' : 'text-[var(--color-text-primary)]'}>
+                      <span className={product.stock <= 5 ? 'font-bold text-warning' : 'text-text-primary'}>
                         {product.stock}
                       </span>
                     </td>
-                    <td className="px-5 py-3 text-right font-semibold text-[var(--color-text-primary)]">Bs. {product.price}</td>
+                    <td className="px-5 py-3 text-right font-semibold text-text-primary">Bs. {product.price}</td>
                     <td className="px-5 py-3 text-center">
                       <span className={['inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold', product.estado === 'activo' ? 'bg-green-50 border-green-200 text-green-700' : 'bg-gray-50 border-gray-200 text-gray-500'].join(' ')}>
                         {product.estado}
@@ -101,10 +101,10 @@ export default function AdminProductsPage() {
                     </td>
                     <td className="px-5 py-3">
                       <div className="flex items-center justify-center gap-2">
-                        <button type="button" onClick={() => openEdit(product)} className="p-1.5 rounded-lg text-[var(--color-text-muted)] hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-brand)] transition-colors" title="Editar">
+                        <button type="button" onClick={() => openEdit(product)} className="p-1.5 rounded-lg text-text-muted hover:bg-surface-hover hover:text-brand transition-colors" title="Editar">
                           <Pencil size={15} />
                         </button>
-                        <button type="button" onClick={() => handleToggleEstado(product)} className="p-1.5 rounded-lg text-[var(--color-text-muted)] hover:bg-[var(--color-surface-hover)] transition-colors" title="Cambiar estado">
+                        <button type="button" onClick={() => handleToggleEstado(product)} className="p-1.5 rounded-lg text-text-muted hover:bg-surface-hover transition-colors" title="Cambiar estado">
                           {product.estado === 'activo' ? <ToggleRight size={16} className="text-green-600" /> : <ToggleLeft size={16} />}
                         </button>
                       </div>

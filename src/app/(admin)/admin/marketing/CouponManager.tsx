@@ -69,29 +69,29 @@ export function CouponManager() {
         </Button>
       </div>
 
-      <div className="overflow-x-auto rounded-2xl border border-[var(--color-border)] bg-white shadow-[var(--shadow-sm)]">
+      <div className="overflow-x-auto rounded-2xl border border-border bg-white shadow-sm">
         <table className="w-full text-sm">
-          <thead className="border-b border-[var(--color-border)] bg-[var(--color-surface)]">
+          <thead className="border-b border-border bg-surface">
             <tr>
               {['Código', 'Descuento', 'Usos', 'Caduca', 'Estado', ''].map((h) => (
-                <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
+                <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-text-muted">
                   {h}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-[var(--color-border)]">
+          <tbody className="divide-y divide-border">
             {coupons.map((c) => {
               const expired = isExpired(c.fecha_caducidad);
               const exhausted = c.veces_usado >= c.limite_usos;
               return (
-                <tr key={c.id} className="hover:bg-[var(--color-surface)]">
-                  <td className="px-4 py-3 font-mono font-semibold text-[var(--color-text-primary)]">{c.codigo}</td>
-                  <td className="px-4 py-3 text-[var(--color-text-secondary)]">{c.porcentaje_descuento}%</td>
-                  <td className="px-4 py-3 text-[var(--color-text-secondary)]">
+                <tr key={c.id} className="hover:bg-surface">
+                  <td className="px-4 py-3 font-mono font-semibold text-text-primary">{c.codigo}</td>
+                  <td className="px-4 py-3 text-text-secondary">{c.porcentaje_descuento}%</td>
+                  <td className="px-4 py-3 text-text-secondary">
                     {c.veces_usado} / {c.limite_usos}
                   </td>
-                  <td className="px-4 py-3 text-[var(--color-text-secondary)]">
+                  <td className="px-4 py-3 text-text-secondary">
                     {new Date(c.fecha_caducidad).toLocaleDateString('es-BO')}
                   </td>
                   <td className="px-4 py-3">
@@ -109,7 +109,7 @@ export function CouponManager() {
                       type="button"
                       disabled={deleting === c.id}
                       onClick={() => handleDelete(c.id)}
-                      className="text-[var(--color-text-muted)] hover:text-[var(--color-danger)] disabled:opacity-40"
+                      className="text-text-muted hover:text-danger disabled:opacity-40"
                     >
                       <Trash2 size={15} />
                     </button>

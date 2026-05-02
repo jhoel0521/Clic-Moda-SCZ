@@ -29,10 +29,10 @@ export default function AdminDashboardPage() {
   const lowStockCount = products.filter((p) => p.stock <= 5 && p.stock > 0).length;
 
   const stats = [
-    { label: 'Ventas hoy', value: `Bs. ${dailySales.toFixed(0)}`, icon: ShoppingBag, color: 'var(--color-success)' },
-    { label: 'Pedidos nuevos', value: String(newOrders), icon: Package, color: 'var(--color-info)' },
-    { label: 'Productos activos', value: String(activeProducts), icon: ShirtIcon, color: 'var(--color-brand)' },
-    { label: 'Stock crítico', value: String(lowStockCount), icon: AlertTriangle, color: 'var(--color-warning)' },
+    { label: 'Ventas hoy', value: `Bs. ${dailySales.toFixed(0)}`, icon: ShoppingBag, tone: 'text-success' },
+    { label: 'Pedidos nuevos', value: String(newOrders), icon: Package, tone: 'text-info' },
+    { label: 'Productos activos', value: String(activeProducts), icon: ShirtIcon, tone: 'text-brand' },
+    { label: 'Stock crítico', value: String(lowStockCount), icon: AlertTriangle, tone: 'text-warning' },
   ];
 
   return (
@@ -45,13 +45,13 @@ export default function AdminDashboardPage() {
         <>
           {/* Stats */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {stats.map(({ label, value, icon: Icon, color }) => (
-              <div key={label} className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-[var(--shadow-sm)]">
+            {stats.map(({ label, value, icon: Icon, tone }) => (
+              <div key={label} className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-sm text-[var(--color-text-muted)]">{label}</span>
-                  <Icon size={18} style={{ color }} />
+                  <span className="text-sm text-text-muted">{label}</span>
+                  <Icon size={18} className={tone} />
                 </div>
-                <p className="text-2xl font-bold" style={{ color }}>{value}</p>
+                <p className={`text-2xl font-bold ${tone}`}>{value}</p>
               </div>
             ))}
           </div>
@@ -59,8 +59,8 @@ export default function AdminDashboardPage() {
           {/* Grid principal */}
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
             {/* Top productos */}
-            <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-[var(--shadow-sm)]">
-              <h3 className="font-bold text-sm text-[var(--color-text-primary)] mb-4">Top 10 Productos Vendidos</h3>
+            <div className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
+              <h3 className="font-bold text-sm text-text-primary mb-4">Top 10 Productos Vendidos</h3>
               <TopProductsTable orders={orders} />
             </div>
 

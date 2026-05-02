@@ -36,8 +36,8 @@ export function BannerManager() {
 
   if (banners.length === 0) {
     return (
-      <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] px-6 py-14 text-center">
-        <p className="text-[var(--color-text-muted)]">No hay banners configurados.</p>
+      <div className="rounded-2xl border border-border bg-surface px-6 py-14 text-center">
+        <p className="text-text-muted">No hay banners configurados.</p>
       </div>
     );
   }
@@ -47,11 +47,11 @@ export function BannerManager() {
       {banners.map((banner) => (
         <div
           key={banner.id}
-          className="flex items-center justify-between gap-4 rounded-2xl border border-[var(--color-border)] bg-white p-4 shadow-[var(--shadow-sm)]"
+          className="flex items-center justify-between gap-4 rounded-2xl border border-border bg-white p-4 shadow-sm"
         >
           <div className="min-w-0 flex-1">
-            <p className="truncate font-semibold text-[var(--color-text-primary)]">{banner.titulo}</p>
-            <p className="mt-0.5 truncate text-xs text-[var(--color-text-muted)]">{banner.url_pc}</p>
+            <p className="truncate font-semibold text-text-primary">{banner.titulo}</p>
+            <p className="mt-0.5 truncate text-xs text-text-muted">{banner.url_pc}</p>
           </div>
 
           <div className="flex shrink-0 items-center gap-3">
@@ -65,11 +65,11 @@ export function BannerManager() {
               type="button"
               disabled={toggling === banner.id}
               onClick={() => handleToggle(banner.id)}
-              className="text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-brand)] disabled:opacity-40"
+              className="text-text-muted transition-colors hover:text-brand disabled:opacity-40"
               title={banner.activo ? 'Desactivar' : 'Activar'}
             >
               {banner.activo
-                ? <ToggleRight size={24} className="text-[var(--color-brand)]" />
+                ? <ToggleRight size={24} className="text-brand" />
                 : <ToggleLeft size={24} />
               }
             </button>

@@ -48,19 +48,19 @@ export function FlashSaleConfig() {
 
   return (
     <div className="mx-auto max-w-md">
-      <div className="rounded-2xl border border-[var(--color-border)] bg-white p-6 shadow-[var(--shadow-sm)]">
+      <div className="rounded-2xl border border-border bg-white p-6 shadow-sm">
         <div className="mb-5 flex items-center gap-2">
           <Zap size={18} className="text-amber-500" />
-          <p className="font-semibold text-[var(--color-text-primary)]">Configurar Flash Sale</p>
+          <p className="font-semibold text-text-primary">Configurar Flash Sale</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-[var(--color-text-primary)]">
+            <label className="mb-1.5 block text-sm font-medium text-text-primary">
               Producto
             </label>
             <select
-              className="h-10 w-full rounded-xl border border-[var(--color-border)] bg-white px-3 text-sm text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]"
+              className="h-10 w-full rounded-xl border border-border bg-white px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-brand"
               {...register('productId')}
             >
               <option value="">Seleccionar producto...</option>
@@ -71,21 +71,21 @@ export function FlashSaleConfig() {
               ))}
             </select>
             {errors.productId && (
-              <p className="mt-1 text-xs text-[var(--color-danger)]">{errors.productId.message}</p>
+              <p className="mt-1 text-xs text-danger">{errors.productId.message}</p>
             )}
           </div>
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-[var(--color-text-primary)]">
+            <label className="mb-1.5 block text-sm font-medium text-text-primary">
               Fin de la oferta
             </label>
             <input
               type="datetime-local"
-              className="h-10 w-full rounded-xl border border-[var(--color-border)] bg-white px-3 text-sm text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]"
+              className="h-10 w-full rounded-xl border border-border bg-white px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-brand"
               {...register('endsAt')}
             />
             {errors.endsAt && (
-              <p className="mt-1 text-xs text-[var(--color-danger)]">{errors.endsAt.message}</p>
+              <p className="mt-1 text-xs text-danger">{errors.endsAt.message}</p>
             )}
           </div>
 

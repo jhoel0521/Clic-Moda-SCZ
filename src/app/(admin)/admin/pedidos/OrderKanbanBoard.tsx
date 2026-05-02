@@ -42,14 +42,14 @@ export function OrderKanbanBoard({ orders, onAdvance }: OrderKanbanBoardProps) {
           <div className={`min-h-32 rounded-b-xl border-x border-b p-2 space-y-2 ${STATUS_COLORS[status]}`}>
             {columnOrders.map((order) => (
               <div key={order.id} className="rounded-lg bg-white border border-white/80 p-3 shadow-sm text-xs space-y-1.5">
-                <p className="font-mono font-bold text-[var(--color-brand)]">{order.ticketId}</p>
-                <p className="text-[var(--color-text-muted)] truncate">{order.shippingAddress.fullName}</p>
-                <p className="font-semibold text-[var(--color-text-primary)]">Bs. {order.total.toFixed(0)}</p>
+                <p className="font-mono font-bold text-brand">{order.ticketId}</p>
+                <p className="text-text-muted truncate">{order.shippingAddress.fullName}</p>
+                <p className="font-semibold text-text-primary">Bs. {order.total.toFixed(0)}</p>
                 {!isLast(status) && (
                   <button
                     type="button"
                     onClick={() => onAdvance(order.id)}
-                    className="w-full rounded-lg bg-[var(--color-brand-subtle)] py-1 text-[10px] font-bold text-[var(--color-brand)] hover:bg-[var(--color-brand)] hover:text-white transition-colors"
+                    className="w-full rounded-lg bg-brand-subtle py-1 text-[10px] font-bold text-brand hover:bg-brand hover:text-white transition-colors"
                   >
                     Avanzar →
                   </button>
@@ -57,7 +57,7 @@ export function OrderKanbanBoard({ orders, onAdvance }: OrderKanbanBoardProps) {
               </div>
             ))}
             {columnOrders.length === 0 && (
-              <p className="text-center text-[var(--color-text-muted)] text-xs py-4">Vacío</p>
+              <p className="text-center text-text-muted text-xs py-4">Vacío</p>
             )}
           </div>
         </div>
