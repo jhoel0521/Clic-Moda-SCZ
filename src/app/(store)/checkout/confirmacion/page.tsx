@@ -21,20 +21,21 @@ const PAYMENT_LABELS: Record<string, string> = {
 
 export default function ConfirmationPage() {
   const storeOrder = useCheckoutStore((s) => s.lastOrder);
-  const [order, setOrder] = useState<IOrder | null>(storeOrder);
+  const [cachedOrder] = useState<IOrder | null>(() => {
+    if (typeof window === 'undefined') return null;
+    try {
+      const saved = localStorage.getItem(LS_KEY);
+      return saved ? (JSON.parse(saved) as IOrder) : null;
+    } catch {
+      return null;
+    }
+  });
+  const order = storeOrder ?? cachedOrder;
 
-  /* Persistir en localStorage al llegar con pedido; recuperar si se recarga */
+  /* Persistir en localStorage al llegar con pedido */
   useEffect(() => {
     if (storeOrder) {
       localStorage.setItem(LS_KEY, JSON.stringify(storeOrder));
-      setOrder(storeOrder);
-    } else {
-      try {
-        const saved = localStorage.getItem(LS_KEY);
-        if (saved) setOrder(JSON.parse(saved) as IOrder);
-      } catch {
-        /* ignore parse errors */
-      }
     }
   }, [storeOrder]);
 

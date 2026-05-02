@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowLeft, Star, Minus, Plus, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Minus, Plus, MessageCircle } from 'lucide-react';
 import { ROUTES } from '@src/routes';
 import { useCartStore } from '@src/core/store/useCartStore';
 import { toast } from '@src/core/store/useToastStore';

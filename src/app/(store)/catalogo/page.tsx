@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useTransition } from 'react';
-import { Search, Filter, X, SlidersHorizontal } from 'lucide-react';
+import { Search, X, SlidersHorizontal } from 'lucide-react';
 import { ProductService } from '@src/services/ProductService';
 import { ProductCard } from '@src/shared/ui/ProductCard';
 import { useDebounce } from '@src/shared/hooks/useDebounce';

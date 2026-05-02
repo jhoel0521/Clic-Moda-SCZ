@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Truck, CreditCard, ChevronRight, ChevronLeft } from 'lucide-react';
 import { useCartStore } from '@src/core/store/useCartStore';
@@ -77,7 +77,7 @@ export default function CheckoutPage() {
     register,
     handleSubmit,
     trigger,
-    watch,
+    control,
     setValue,
     formState: { errors, isSubmitting },
   } = useForm<CheckoutFormData>({
@@ -90,7 +90,7 @@ export default function CheckoutPage() {
     },
   });
 
-  const selectedPayment = watch('paymentMethod');
+  const selectedPayment = useWatch({ control, name: 'paymentMethod' });
   const discount = appliedCoupon?.discount ?? 0;
   const total = Math.max(0, subtotal - discount);
 
