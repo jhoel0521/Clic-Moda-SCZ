@@ -21,14 +21,15 @@ export function RequireAuth({ children, redirectTo = ROUTES.LOGIN }: RequireAuth
   const router = useRouter();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const isLoading = useAuthStore((s) => s.isLoading);
+  const hasHydrated = useAuthStore((s) => s._hasHydrated);
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
+    if (hasHydrated && !isLoading && !isAuthenticated) {
       router.replace(redirectTo);
     }
-  }, [isAuthenticated, isLoading, redirectTo, router]);
+  }, [hasHydrated, isAuthenticated, isLoading, redirectTo, router]);
 
-  if (isLoading || !isAuthenticated) {
+  if (!hasHydrated || isLoading || !isAuthenticated) {
     return <PageSpinner label="Verificando sesión..." />;
   }
 

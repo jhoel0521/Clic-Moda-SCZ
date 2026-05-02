@@ -9,18 +9,13 @@ interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
+  _hasHydrated: boolean;
 
-  /** Establece el usuario autenticado (llamado por AuthService tras login exitoso) */
   setUser: (user: IUser) => void;
-
-  /** Limpia la sesión */
   logout: () => void;
-
-  /** Guarda credenciales temporales mientras se resuelve el login */
   setLoading: (loading: boolean) => void;
-
-  /** Guarda un mensaje de error de autenticación */
   setError: (error: string | null) => void;
+  setHasHydrated: (v: boolean) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -30,6 +25,7 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
       isLoading: false,
       error: null,
+      _hasHydrated: false,
 
       setUser: (user) =>
         set({ user, isAuthenticated: true, error: null, isLoading: false }),
@@ -40,15 +36,19 @@ export const useAuthStore = create<AuthState>()(
       setLoading: (isLoading) => set({ isLoading }),
 
       setError: (error) => set({ error, isLoading: false }),
+
+      setHasHydrated: (v) => set({ _hasHydrated: v }),
     }),
     {
       name: 'clic-moda-auth',
       storage: createJSONStorage(() => localStorage),
-      // Solo persistir datos mínimos, no el estado de loading/error
       partialize: (state) => ({
         user: state.user,
         isAuthenticated: state.isAuthenticated,
       }),
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
     },
   ),
 );
