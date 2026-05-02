@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Filter, Star, Clock } from 'lucide-react';
+import { Filter, Star } from 'lucide-react';
 import { ROUTES } from '@src/routes';
 import { HeroCarousel } from '@src/shared/ui/HeroCarousel';
 import { ProductCard } from '@src/shared/ui/ProductCard';
-import { FlashSaleTimer } from '@src/shared/ui/FlashSaleTimer';
 import { ProductService } from '@src/services/ProductService';
+import { FlashSaleBanner } from '@src/shared/ui/FlashSaleBanner';
 
 export const metadata: Metadata = {
   title: 'Clic Moda SCZ — Fast Fashion Santa Cruz',
@@ -40,7 +40,7 @@ export default async function LandingPage() {
   return (
     <div className="w-full bg-gray-50 gap-8 flex flex-col justify-start items-center">
       {/* ++++++++++++++++++ HERO CENTRADO ++++++++++++++++++ */}
-      <div className="w-full max-w-[1200px] mx-auto mt-6 md:mt-8 !mt-4">
+      <div className="w-full max-w-[1200px] mx-auto mt-6 md:mt-8 mt-4">
         <HeroCarousel />
       </div>
 
@@ -48,38 +48,7 @@ export default async function LandingPage() {
       <main className="w-full max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mt-8 md:mt-12 flex flex-col gap-12 md:gap-20">
 
         {/* 2. Banner ventas flash */}
-        {flashProducts.length > 0 && (
-          <section className="w-full bg-gradient-to-r from-pink-500 to-rose-500 rounded-3xl p-6 md:p-10 text-white shadow-xl flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 relative overflow-hidden">
-            <div className="relative z-10 flex flex-col items-start gap-4 w-full">
-
-              <div className="flex items-center gap-2 font-bold uppercase tracking-widest text-xs md:text-sm bg-white/20 px-4 py-2 rounded-full backdrop-blur-sm">
-                <Clock className="w-4 h-4 animate-pulse" />
-                Ventas Flash Online
-              </div>
-
-              <h2 className="text-4xl md:text-5xl font-black drop-shadow-md">
-                Colección Verano
-              </h2>
-
-              <div className="flex flex-col sm:flex-row sm:items-center gap-4 bg-black/20 p-4 rounded-2xl border border-white/10 w-full sm:w-auto">
-                <span className="font-medium text-sm md:text-base">Oferta termina en:</span>
-                <div className="font-mono font-bold text-lg">
-                  <FlashSaleTimer endsAt={flashProducts[0].flashSaleEndsAt!} variant="inline" />
-                </div>
-              </div>
-
-              <Link
-                href={ROUTES.CATALOG}
-                className="mt-2 inline-flex items-center justify-center bg-white text-pink-600 font-black px-8 py-4 rounded-full text-sm md:text-base shadow-lg hover:bg-pink-50 hover:scale-105 transition-all w-full sm:w-auto"
-              >
-                APROVECHAR OFERTAS
-              </Link>
-            </div>
-
-            {/* Ícono decorativo de fondo */}
-            <Clock className="absolute -right-10 -bottom-10 w-64 h-64 text-white opacity-10 pointer-events-none hidden md:block" />
-          </section>
-        )}
+        {flashProducts.length > 0 && <FlashSaleBanner products={flashProducts} />}
 
         {/* 3. Categorías + Tendencias (Grid 2 columnas) */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 w-full">
