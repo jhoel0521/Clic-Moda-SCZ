@@ -18,22 +18,18 @@ export function MobileBottomNav() {
   const itemCount = useCartStore((s) => s.itemCount);
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden h-[4.5rem] bg-white/90 backdrop-blur-md border-t border-gray-200 shadow-[0_-4px_12px_-4px_rgba(0,0,0,0.05)]">
+    <nav className="fixed right-0 bottom-0 left-0 z-50 h-[4.5rem] border-t border-gray-200 bg-white/90 shadow-[0_-4px_12px_-4px_rgba(0,0,0,0.05)] backdrop-blur-md md:hidden">
       <div className="flex h-full items-center justify-around px-2">
         {TABS.map(({ label, href, icon: Icon }) => {
           const isCart = href === ROUTES.CART;
-          const isActive =
-            pathname === href ||
-            (href !== ROUTES.HOME && pathname.startsWith(href));
+          const isActive = pathname === href || (href !== ROUTES.HOME && pathname.startsWith(href));
 
           return (
             <Link
               key={href}
               href={href}
-              className={`flex-1 flex flex-col items-center justify-center gap-1 py-1 transition-colors ${
-                isActive
-                  ? 'text-pink-600'
-                  : 'text-gray-500 hover:text-gray-800'
+              className={`flex flex-1 flex-col items-center justify-center gap-1 py-1 transition-colors ${
+                isActive ? 'text-pink-600' : 'text-gray-500 hover:text-gray-800'
               }`}
             >
               <div className="relative">
@@ -43,14 +39,12 @@ export function MobileBottomNav() {
                   strokeWidth={isActive ? 2.5 : 1.8}
                 />
                 {isCart && itemCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-pink-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-md">
+                  <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-pink-500 text-[10px] font-bold text-white shadow-md">
                     {itemCount > 9 ? '9+' : itemCount}
                   </span>
                 )}
               </div>
-              <span className="text-[11px] font-semibold leading-none">
-                {label}
-              </span>
+              <span className="text-[11px] leading-none font-semibold">{label}</span>
             </Link>
           );
         })}

@@ -21,15 +21,13 @@ export function SuccessState({ title, description, children }: SuccessStateProps
     <div className="text-center">
       <div
         className={`mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-green-100 ring-8 ring-green-50 transition-all duration-500 ${
-          visible ? 'opacity-100 scale-100' : 'opacity-0 scale-50'
+          visible ? 'scale-100 opacity-100' : 'scale-50 opacity-0'
         }`}
       >
         <CheckCircle size={48} className="text-green-500" />
       </div>
-      <h1 className="text-3xl font-bold text-text-primary mb-3">{title}</h1>
-      {description && (
-        <p className="text-text-muted mb-8 max-w-md mx-auto">{description}</p>
-      )}
+      <h1 className="text-text-primary mb-3 text-3xl font-bold">{title}</h1>
+      {description && <p className="text-text-muted mx-auto mb-8 max-w-md">{description}</p>}
       {children}
     </div>
   );

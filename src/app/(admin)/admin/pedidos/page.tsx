@@ -5,7 +5,11 @@ import { List, LayoutGrid } from 'lucide-react';
 import { OrderService } from '@src/services/OrderService';
 import { AdminHeader } from '@src/app/(admin)/AdminHeader';
 import { Spinner } from '@src/shared/ui/Spinner';
-import { getNextOrderStatus, ORDER_STATUS_LABELS, type OrderStatus } from '@src/core/constants/ORDER_STATUS';
+import {
+  getNextOrderStatus,
+  ORDER_STATUS_LABELS,
+  type OrderStatus,
+} from '@src/core/constants/ORDER_STATUS';
 import { OrderKanbanBoard } from './OrderKanbanBoard';
 import type { IOrder } from '@src/core/models';
 
@@ -35,7 +39,7 @@ export default function AdminOrdersPage() {
     if (!nextStatus) return;
     const updated = await OrderService.updateOrderStatus(orderId, nextStatus);
     if (updated) {
-      setOrders((prev) => prev.map((o) => o.id === updated.id ? updated : o));
+      setOrders((prev) => prev.map((o) => (o.id === updated.id ? updated : o)));
     }
   }
 
@@ -44,19 +48,29 @@ export default function AdminOrdersPage() {
       <AdminHeader title="Gestión de Pedidos" />
 
       <div className="flex items-center justify-between">
-        <p className="text-sm text-text-muted">{orders.length} pedidos totales</p>
-        <div className="flex gap-1 rounded-xl border border-border bg-surface p-1">
+        <p className="text-text-muted text-sm">{orders.length} pedidos totales</p>
+        <div className="border-border bg-surface flex gap-1 rounded-xl border p-1">
           <button
             type="button"
             onClick={() => setViewMode('list')}
-            className={['flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all', viewMode === 'list' ? 'bg-brand-subtle text-brand' : 'text-text-muted hover:text-text-primary'].join(' ')}
+            className={[
+              'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all',
+              viewMode === 'list'
+                ? 'bg-brand-subtle text-brand'
+                : 'text-text-muted hover:text-text-primary',
+            ].join(' ')}
           >
             <List size={14} /> Lista
           </button>
           <button
             type="button"
             onClick={() => setViewMode('kanban')}
-            className={['flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all', viewMode === 'kanban' ? 'bg-brand-subtle text-brand' : 'text-text-muted hover:text-text-primary'].join(' ')}
+            className={[
+              'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all',
+              viewMode === 'kanban'
+                ? 'bg-brand-subtle text-brand'
+                : 'text-text-muted hover:text-text-primary',
+            ].join(' ')}
           >
             <LayoutGrid size={14} /> Kanban
           </button>
@@ -64,43 +78,53 @@ export default function AdminOrdersPage() {
       </div>
 
       {isLoading ? (
-        <div className="flex justify-center py-20"><Spinner size="lg" /></div>
+        <div className="flex justify-center py-20">
+          <Spinner size="lg" />
+        </div>
       ) : viewMode === 'kanban' ? (
         <OrderKanbanBoard orders={orders} onAdvance={handleAdvance} />
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-border shadow-sm">
+        <div className="border-border overflow-hidden rounded-2xl border shadow-sm">
           {orders.length === 0 ? (
-            <div className="py-16 text-center text-text-muted">
-              <p className="text-4xl mb-3">📦</p>
+            <div className="text-text-muted py-16 text-center">
+              <p className="mb-3 text-4xl">📦</p>
               <p>Aún no hay pedidos registrados.</p>
             </div>
           ) : (
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-bg-secondary border-b border-border">
-                  <th className="px-5 py-3 text-left font-semibold text-text-primary">Ticket</th>
-                  <th className="hidden md:table-cell px-5 py-3 text-left font-semibold text-text-primary">Cliente</th>
-                  <th className="hidden sm:table-cell px-5 py-3 text-left font-semibold text-text-primary">Fecha</th>
-                  <th className="px-5 py-3 text-right font-semibold text-text-primary">Total</th>
-                  <th className="px-5 py-3 text-center font-semibold text-text-primary">Estado</th>
-                  <th className="px-5 py-3 text-center font-semibold text-text-primary">Acción</th>
+                <tr className="bg-bg-secondary border-border border-b">
+                  <th className="text-text-primary px-5 py-3 text-left font-semibold">Ticket</th>
+                  <th className="text-text-primary hidden px-5 py-3 text-left font-semibold md:table-cell">
+                    Cliente
+                  </th>
+                  <th className="text-text-primary hidden px-5 py-3 text-left font-semibold sm:table-cell">
+                    Fecha
+                  </th>
+                  <th className="text-text-primary px-5 py-3 text-right font-semibold">Total</th>
+                  <th className="text-text-primary px-5 py-3 text-center font-semibold">Estado</th>
+                  <th className="text-text-primary px-5 py-3 text-center font-semibold">Acción</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border bg-white">
+              <tbody className="divide-border divide-y bg-white">
                 {orders.map((order) => {
                   const next = getNextOrderStatus(order.status);
                   return (
                     <tr key={order.id} className="hover:bg-surface-hover">
-                      <td className="px-5 py-3 font-mono font-bold text-brand">{order.ticketId}</td>
-                      <td className="hidden md:table-cell px-5 py-3 text-text-secondary">{order.shippingAddress.fullName}</td>
-                      <td className="hidden sm:table-cell px-5 py-3 text-text-muted">
+                      <td className="text-brand px-5 py-3 font-mono font-bold">{order.ticketId}</td>
+                      <td className="text-text-secondary hidden px-5 py-3 md:table-cell">
+                        {order.shippingAddress.fullName}
+                      </td>
+                      <td className="text-text-muted hidden px-5 py-3 sm:table-cell">
                         {new Date(order.createdAt).toLocaleDateString('es-BO')}
                       </td>
-                      <td className="px-5 py-3 text-right font-semibold text-text-primary">
+                      <td className="text-text-primary px-5 py-3 text-right font-semibold">
                         Bs. {order.total.toFixed(2)}
                       </td>
                       <td className="px-5 py-3 text-center">
-                        <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${STATUS_STYLES[order.status]}`}>
+                        <span
+                          className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${STATUS_STYLES[order.status]}`}
+                        >
                           {ORDER_STATUS_LABELS[order.status]}
                         </span>
                       </td>
@@ -109,12 +133,12 @@ export default function AdminOrdersPage() {
                           <button
                             type="button"
                             onClick={() => handleAdvance(order.id)}
-                            className="rounded-lg bg-brand-subtle px-3 py-1.5 text-xs font-bold text-brand hover:bg-brand hover:text-white transition-colors"
+                            className="bg-brand-subtle text-brand hover:bg-brand rounded-lg px-3 py-1.5 text-xs font-bold transition-colors hover:text-white"
                           >
                             → {ORDER_STATUS_LABELS[next]}
                           </button>
                         ) : (
-                          <span className="text-xs text-text-muted">Finalizado</span>
+                          <span className="text-text-muted text-xs">Finalizado</span>
                         )}
                       </td>
                     </tr>

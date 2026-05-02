@@ -21,10 +21,10 @@ interface OrderHistoryTableProps {
 export function OrderHistoryTable({ orders }: OrderHistoryTableProps) {
   if (orders.length === 0) {
     return (
-      <div className="rounded-2xl border border-border bg-surface px-6 py-12 text-center shadow-sm">
-        <p className="text-4xl mb-3">📦</p>
-        <p className="font-semibold text-text-primary mb-1">Aún no tenés pedidos</p>
-        <p className="text-sm text-text-muted">
+      <div className="border-border bg-surface rounded-2xl border px-6 py-12 text-center shadow-sm">
+        <p className="mb-3 text-4xl">📦</p>
+        <p className="text-text-primary mb-1 font-semibold">Aún no tenés pedidos</p>
+        <p className="text-text-muted text-sm">
           Cuando realices una compra, aparecerá acá tu historial.
         </p>
       </div>
@@ -32,31 +32,35 @@ export function OrderHistoryTable({ orders }: OrderHistoryTableProps) {
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-border shadow-sm">
+    <div className="border-border overflow-hidden rounded-2xl border shadow-sm">
       <table className="w-full text-sm">
         <thead>
-          <tr className="bg-bg-secondary border-b border-border">
-            <th className="px-5 py-3 text-left font-semibold text-text-primary">Ticket</th>
-            <th className="hidden sm:table-cell px-5 py-3 text-left font-semibold text-text-primary">Fecha</th>
-            <th className="px-5 py-3 text-left font-semibold text-text-primary">Total</th>
-            <th className="px-5 py-3 text-left font-semibold text-text-primary">Estado</th>
-            <th className="px-5 py-3 text-left font-semibold text-text-primary">Acción</th>
+          <tr className="bg-bg-secondary border-border border-b">
+            <th className="text-text-primary px-5 py-3 text-left font-semibold">Ticket</th>
+            <th className="text-text-primary hidden px-5 py-3 text-left font-semibold sm:table-cell">
+              Fecha
+            </th>
+            <th className="text-text-primary px-5 py-3 text-left font-semibold">Total</th>
+            <th className="text-text-primary px-5 py-3 text-left font-semibold">Estado</th>
+            <th className="text-text-primary px-5 py-3 text-left font-semibold">Acción</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-border bg-white">
+        <tbody className="divide-border divide-y bg-white">
           {orders.map((order) => {
             const waMsg = encodeURIComponent(`Hola! Consulto por mi pedido *${order.ticketId}*`);
             return (
               <tr key={order.id} className="hover:bg-surface-hover">
-                <td className="px-5 py-4 font-mono font-bold text-brand">{order.ticketId}</td>
-                <td className="hidden sm:table-cell px-5 py-4 text-text-muted">
+                <td className="text-brand px-5 py-4 font-mono font-bold">{order.ticketId}</td>
+                <td className="text-text-muted hidden px-5 py-4 sm:table-cell">
                   {new Date(order.createdAt).toLocaleDateString('es-BO')}
                 </td>
-                <td className="px-5 py-4 font-semibold text-text-primary">
+                <td className="text-text-primary px-5 py-4 font-semibold">
                   Bs. {order.total.toFixed(2)}
                 </td>
                 <td className="px-5 py-4">
-                  <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${STATUS_STYLES[order.status]}`}>
+                  <span
+                    className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${STATUS_STYLES[order.status]}`}
+                  >
                     {ORDER_STATUS_LABELS[order.status]}
                   </span>
                 </td>

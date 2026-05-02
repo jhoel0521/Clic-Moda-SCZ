@@ -1,10 +1,7 @@
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
-  content: [
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/shared/**/*.{js,ts,jsx,tsx,mdx}',
-  ],
+  content: ['./src/app/**/*.{js,ts,jsx,tsx,mdx}', './src/shared/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
     extend: {
       colors: {
@@ -53,7 +50,7 @@ const config: Config = {
         info: '#0284c7',
       },
 
-boxShadow: {
+      boxShadow: {
         sm: '0 1px 2px rgba(42, 24, 34, 0.05)',
         md: '0 6px 20px rgba(42, 24, 34, 0.08)',
         lg: '0 18px 40px rgba(42, 24, 34, 0.12)',

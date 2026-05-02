@@ -7,7 +7,15 @@ import { ProductCard } from '@src/shared/ui/ProductCard';
 import { useDebounce } from '@src/shared/hooks/useDebounce';
 import type { IProduct, IProductFilters, Talla } from '@src/core/models';
 
-const CATEGORIAS = ['vestidos', 'blusas', 'pantalones', 'conjuntos', 'chaquetas', 'faldas', 'accesorios'];
+const CATEGORIAS = [
+  'vestidos',
+  'blusas',
+  'pantalones',
+  'conjuntos',
+  'chaquetas',
+  'faldas',
+  'accesorios',
+];
 const TALLAS: Talla[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
 interface Filters {
@@ -38,11 +46,15 @@ function FilterPanel({
   onPrice: (field: 'minPrice' | 'maxPrice', v: string) => void;
 }) {
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-      <div className="flex items-center justify-between mb-5">
+    <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+      <div className="mb-5 flex items-center justify-between">
         <p className="font-bold text-gray-900">Filtros</p>
         {hasActive(filters) && (
-          <button type="button" onClick={onReset} className="text-xs text-pink-600 font-medium hover:underline">
+          <button
+            type="button"
+            onClick={onReset}
+            className="text-xs font-medium text-pink-600 hover:underline"
+          >
             Limpiar todo
           </button>
         )}
@@ -50,10 +62,15 @@ function FilterPanel({
 
       {/* Categoría */}
       <div className="mb-6">
-        <p className="mb-3 text-[11px] font-bold uppercase tracking-widest text-gray-400">Categoría</p>
+        <p className="mb-3 text-[11px] font-bold tracking-widest text-gray-400 uppercase">
+          Categoría
+        </p>
         <div className="space-y-2">
           {CATEGORIAS.map((cat) => (
-            <label key={cat} className="flex cursor-pointer items-center gap-2.5 text-sm capitalize text-gray-600 hover:text-gray-900">
+            <label
+              key={cat}
+              className="flex cursor-pointer items-center gap-2.5 text-sm text-gray-600 capitalize hover:text-gray-900"
+            >
               <input
                 type="checkbox"
                 checked={filters.category === cat}
@@ -66,11 +83,11 @@ function FilterPanel({
         </div>
       </div>
 
-      <div className="h-px bg-gray-100 mb-6" />
+      <div className="mb-6 h-px bg-gray-100" />
 
       {/* Tallas */}
       <div className="mb-6">
-        <p className="mb-3 text-[11px] font-bold uppercase tracking-widest text-gray-400">Talla</p>
+        <p className="mb-3 text-[11px] font-bold tracking-widest text-gray-400 uppercase">Talla</p>
         <div className="flex flex-wrap gap-2">
           {TALLAS.map((size) => (
             <button
@@ -89,11 +106,13 @@ function FilterPanel({
         </div>
       </div>
 
-      <div className="h-px bg-gray-100 mb-6" />
+      <div className="mb-6 h-px bg-gray-100" />
 
       {/* Precio */}
       <div>
-        <p className="mb-3 text-[11px] font-bold uppercase tracking-widest text-gray-400">Precio (Bs.)</p>
+        <p className="mb-3 text-[11px] font-bold tracking-widest text-gray-400 uppercase">
+          Precio (Bs.)
+        </p>
         <div className="flex gap-2">
           <input
             type="number"
@@ -152,14 +171,13 @@ export default function CatalogPage() {
   };
 
   return (
-    <div className="bg-gray-50 pb-20 md:pb-0 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-8">
-
+    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0">
+      <div className="mx-auto max-w-7xl px-4 py-6 md:px-8 md:py-8">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-gray-200 pb-4 mb-6 gap-4">
+        <div className="mb-6 flex flex-col justify-between gap-4 border-b border-gray-200 pb-4 md:flex-row md:items-center">
           <div>
-            <h1 className="font-black text-2xl md:text-3xl text-gray-900">Catálogo Completo</h1>
-            <p className="text-gray-500 text-sm mt-1">
+            <h1 className="text-2xl font-black text-gray-900 md:text-3xl">Catálogo Completo</h1>
+            <p className="mt-1 text-sm text-gray-500">
               {isPending ? 'Buscando...' : `${products.length} productos disponibles`}
             </p>
           </div>
@@ -167,13 +185,16 @@ export default function CatalogPage() {
           <div className="flex gap-3">
             {/* Search */}
             <div className="relative flex-1 md:w-64 md:flex-none">
-              <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+              <Search
+                size={15}
+                className="absolute top-1/2 left-3.5 -translate-y-1/2 text-gray-400"
+              />
               <input
                 type="search"
                 placeholder="Buscar..."
                 value={filters.search}
                 onChange={(e) => setFilters((f) => ({ ...f, search: e.target.value }))}
-                className="h-10 w-full rounded-lg border border-gray-200 bg-white pl-9 pr-3 text-sm outline-none focus:border-pink-500 shadow-sm"
+                className="h-10 w-full rounded-lg border border-gray-200 bg-white pr-3 pl-9 text-sm shadow-sm outline-none focus:border-pink-500"
               />
             </div>
 
@@ -181,12 +202,14 @@ export default function CatalogPage() {
             <button
               type="button"
               onClick={() => setDrawerOpen(true)}
-              className="lg:hidden inline-flex items-center gap-2 h-10 bg-white border border-gray-200 px-4 rounded-lg text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+              className="inline-flex h-10 items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 lg:hidden"
             >
               <SlidersHorizontal size={15} />
               Filtros
               {hasActive(filters) && (
-                <span className="w-4 h-4 rounded-full bg-pink-600 text-white text-[9px] font-bold flex items-center justify-center">!</span>
+                <span className="flex h-4 w-4 items-center justify-center rounded-full bg-pink-600 text-[9px] font-bold text-white">
+                  !
+                </span>
               )}
             </button>
           </div>
@@ -196,8 +219,8 @@ export default function CatalogPage() {
         {drawerOpen && (
           <div className="fixed inset-0 z-50 lg:hidden">
             <div className="absolute inset-0 bg-black/40" onClick={() => setDrawerOpen(false)} />
-            <div className="absolute bottom-0 left-0 right-0 max-h-[85vh] overflow-y-auto rounded-t-2xl bg-gray-50 p-4">
-              <div className="flex items-center justify-between mb-4">
+            <div className="absolute right-0 bottom-0 left-0 max-h-[85vh] overflow-y-auto rounded-t-2xl bg-gray-50 p-4">
+              <div className="mb-4 flex items-center justify-between">
                 <p className="font-bold text-gray-900">Filtros</p>
                 <button type="button" onClick={() => setDrawerOpen(false)}>
                   <X size={20} className="text-gray-500" />
@@ -207,7 +230,7 @@ export default function CatalogPage() {
               <button
                 type="button"
                 onClick={() => setDrawerOpen(false)}
-                className="mt-4 w-full bg-gray-900 text-white font-bold py-3 rounded-xl"
+                className="mt-4 w-full rounded-xl bg-gray-900 py-3 font-bold text-white"
               >
                 Ver {products.length} resultados
               </button>
@@ -216,32 +239,37 @@ export default function CatalogPage() {
         )}
 
         {/* Main grid + sidebar */}
-        <div className="flex gap-8 items-start">
+        <div className="flex items-start gap-8">
           {/* Sidebar desktop */}
-          <aside className="hidden lg:block w-64 shrink-0 sticky top-20">
+          <aside className="sticky top-20 hidden w-64 shrink-0 lg:block">
             <FilterPanel {...filterProps} />
           </aside>
 
           {/* Product grid */}
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0 flex-1">
             {isPending ? (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+              <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
                 {Array.from({ length: 8 }).map((_, i) => (
-                  <div key={i} className="bg-white rounded-2xl overflow-hidden border border-gray-100 animate-pulse">
+                  <div
+                    key={i}
+                    className="animate-pulse overflow-hidden rounded-2xl border border-gray-100 bg-white"
+                  >
                     <div className="aspect-[3/4] bg-gray-200" />
-                    <div className="p-4 space-y-2">
-                      <div className="h-3 bg-gray-200 rounded-full w-1/2" />
-                      <div className="h-3.5 bg-gray-200 rounded-full w-3/4" />
-                      <div className="h-4 bg-gray-200 rounded-full w-1/3 mt-2" />
+                    <div className="space-y-2 p-4">
+                      <div className="h-3 w-1/2 rounded-full bg-gray-200" />
+                      <div className="h-3.5 w-3/4 rounded-full bg-gray-200" />
+                      <div className="mt-2 h-4 w-1/3 rounded-full bg-gray-200" />
                     </div>
                   </div>
                 ))}
               </div>
             ) : products.length === 0 ? (
-              <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-gray-300">
-                <p className="text-4xl mb-4">🔍</p>
-                <p className="font-bold text-gray-900 mb-2">Sin resultados</p>
-                <p className="text-sm text-gray-500 mb-5">No encontramos productos con esos filtros.</p>
+              <div className="rounded-2xl border border-dashed border-gray-300 bg-white py-20 text-center">
+                <p className="mb-4 text-4xl">🔍</p>
+                <p className="mb-2 font-bold text-gray-900">Sin resultados</p>
+                <p className="mb-5 text-sm text-gray-500">
+                  No encontramos productos con esos filtros.
+                </p>
                 {hasActive(filters) && (
                   <button
                     type="button"
@@ -253,7 +281,7 @@ export default function CatalogPage() {
                 )}
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+              <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
                 {products.map((product, i) => (
                   <ProductCard key={product.id} product={product} priority={i === 0} />
                 ))}
@@ -261,7 +289,6 @@ export default function CatalogPage() {
             )}
           </div>
         </div>
-
       </div>
     </div>
   );

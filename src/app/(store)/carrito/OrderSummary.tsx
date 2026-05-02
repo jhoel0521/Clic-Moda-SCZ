@@ -24,13 +24,13 @@ export function OrderSummary({ subtotal, appliedCoupon }: OrderSummaryProps) {
   }
 
   return (
-    <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm space-y-4">
-      <h2 className="font-bold text-text-primary">Resumen del pedido</h2>
+    <div className="border-border bg-surface space-y-4 rounded-2xl border p-6 shadow-sm">
+      <h2 className="text-text-primary font-bold">Resumen del pedido</h2>
 
       <div className="space-y-3 text-sm">
-        <div className="flex justify-between text-text-secondary">
+        <div className="text-text-secondary flex justify-between">
           <span>Subtotal</span>
-          <span className="font-medium text-text-primary">Bs. {subtotal.toFixed(2)}</span>
+          <span className="text-text-primary font-medium">Bs. {subtotal.toFixed(2)}</span>
         </div>
 
         {appliedCoupon?.valid && (
@@ -41,17 +41,17 @@ export function OrderSummary({ subtotal, appliedCoupon }: OrderSummaryProps) {
         )}
 
         {/* Línea obligatoria de envío */}
-        <div className="flex items-center justify-between rounded-xl bg-amber-50 px-3 py-2.5 border border-amber-200">
-          <span className="flex items-center gap-2 text-amber-700 font-medium">
+        <div className="flex items-center justify-between rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5">
+          <span className="flex items-center gap-2 font-medium text-amber-700">
             <Truck size={14} />
             Envío
           </span>
           <span className="font-bold text-amber-700">Por cobrar</span>
         </div>
 
-        <div className="h-px bg-border" />
+        <div className="bg-border h-px" />
 
-        <div className="flex justify-between text-base font-bold text-text-primary">
+        <div className="text-text-primary flex justify-between text-base font-bold">
           <span>Total estimado</span>
           <span>Bs. {total.toFixed(2)}</span>
         </div>
@@ -67,7 +67,7 @@ export function OrderSummary({ subtotal, appliedCoupon }: OrderSummaryProps) {
         Ir al Checkout
       </Button>
 
-      <p className="text-center text-xs text-text-muted">
+      <p className="text-text-muted text-center text-xs">
         El costo de envío se coordinará por WhatsApp
       </p>
     </div>

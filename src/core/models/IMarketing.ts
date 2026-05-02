@@ -3,7 +3,7 @@ export interface ICuponDescuento {
   id: string;
   codigo: string;
   porcentaje_descuento: number; // 0-100
-  fecha_caducidad: string;       // ISO date string
+  fecha_caducidad: string; // ISO date string
   limite_usos: number;
   veces_usado: number;
 }
@@ -32,6 +32,6 @@ export interface IAplicacionCupon {
   couponId?: string;
   codigo?: string;
   porcentaje?: number;
-  discount: number;       // monto descontado en BOB
+  discount: number; // monto descontado en BOB
   errorMessage?: string;
 }

@@ -50,11 +50,7 @@ export function Badge({
         .filter(Boolean)
         .join(' ')}
     >
-      {dot && (
-        <span
-          className={`w-1.5 h-1.5 rounded-full shrink-0 ${dotClasses[variant]}`}
-        />
-      )}
+      {dot && <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${dotClasses[variant]}`} />}
       {label ?? children}
     </span>
   );
@@ -78,11 +74,7 @@ export function OrderStatusBadge({
   size?: BadgeSize;
 }) {
   return (
-    <Badge
-      variant={orderStatusVariantMap[status]}
-      size={size}
-      dot
-    >
+    <Badge variant={orderStatusVariantMap[status]} size={size} dot>
       {ORDER_STATUS_LABELS[status]}
     </Badge>
   );

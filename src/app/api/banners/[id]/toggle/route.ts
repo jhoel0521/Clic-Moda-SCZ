@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { BannerService } from '@src/backend/services/BannerService';
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const banner = await BannerService.toggleBanner(id);

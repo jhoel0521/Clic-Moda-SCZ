@@ -37,25 +37,27 @@ export function AddToCartPanel({ product }: AddToCartPanelProps) {
   }
 
   const waMsg = encodeURIComponent(
-    `Hola! Me interesa "${product.name}"${selectedSize ? `, talla ${selectedSize}` : ''}${selectedColor ? `, color ${selectedColor}` : ''}. ¿Está disponible?`,
+    `Hola! Me interesa "${product.name}"${selectedSize ? `, talla ${selectedSize}` : ''}${selectedColor ? `, color ${selectedColor}` : ''}. ¿Está disponible?`
   );
 
   return (
     <div className="space-y-6">
       {/* Precio */}
       <div className="flex items-baseline gap-3">
-        <span className="text-4xl font-bold text-text-primary">Bs. {product.price}</span>
+        <span className="text-text-primary text-4xl font-bold">Bs. {product.price}</span>
         {product.originalPrice && product.originalPrice > product.price && (
-          <span className="text-xl line-through text-text-muted">Bs. {product.originalPrice}</span>
+          <span className="text-text-muted text-xl line-through">Bs. {product.originalPrice}</span>
         )}
         {product.isFlashSale && (
-          <span className="rounded-full bg-gradient-brand px-2 py-0.5 text-xs font-bold text-white">FLASH</span>
+          <span className="bg-gradient-brand rounded-full px-2 py-0.5 text-xs font-bold text-white">
+            FLASH
+          </span>
         )}
       </div>
 
       {/* Tallas */}
       <div>
-        <p className="mb-3 text-sm font-semibold text-text-primary">
+        <p className="text-text-primary mb-3 text-sm font-semibold">
           Talla {selectedSize && <span className="text-brand">— {selectedSize}</span>}
         </p>
         <div className="flex flex-wrap gap-2">
@@ -68,7 +70,7 @@ export function AddToCartPanel({ product }: AddToCartPanelProps) {
                 'rounded-xl border-2 px-4 py-2 text-sm font-semibold transition-all duration-150',
                 selectedSize === size
                   ? 'border-brand bg-brand-subtle text-brand'
-                  : 'border-border bg-white text-text-secondary hover:border-border-hover',
+                  : 'border-border text-text-secondary hover:border-border-hover bg-white',
               ].join(' ')}
             >
               {size}
@@ -80,7 +82,7 @@ export function AddToCartPanel({ product }: AddToCartPanelProps) {
       {/* Colores */}
       {product.colors.length > 0 && (
         <div>
-          <p className="mb-3 text-sm font-semibold text-text-primary">
+          <p className="text-text-primary mb-3 text-sm font-semibold">
             Color {selectedColor && <span className="text-brand">— {selectedColor}</span>}
           </p>
           <div className="flex flex-wrap gap-2">
@@ -93,7 +95,7 @@ export function AddToCartPanel({ product }: AddToCartPanelProps) {
                   'rounded-xl border-2 px-4 py-2 text-sm font-semibold transition-all duration-150',
                   selectedColor === color
                     ? 'border-brand bg-brand-subtle text-brand'
-                    : 'border-border bg-white text-text-secondary hover:border-border-hover',
+                    : 'border-border text-text-secondary hover:border-border-hover bg-white',
                 ].join(' ')}
               >
                 {color}
@@ -105,31 +107,29 @@ export function AddToCartPanel({ product }: AddToCartPanelProps) {
 
       {/* Cantidad */}
       <div>
-        <p className="mb-3 text-sm font-semibold text-text-primary">Cantidad</p>
-        <div className="inline-flex items-center gap-3 rounded-xl border border-border bg-white p-1">
+        <p className="text-text-primary mb-3 text-sm font-semibold">Cantidad</p>
+        <div className="border-border inline-flex items-center gap-3 rounded-xl border bg-white p-1">
           <button
             type="button"
             onClick={() => setQty((q) => Math.max(1, q - 1))}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-text-secondary hover:bg-surface-hover transition-colors"
+            className="text-text-secondary hover:bg-surface-hover flex h-8 w-8 items-center justify-center rounded-lg transition-colors"
           >
             <Minus size={16} />
           </button>
-          <span className="w-8 text-center font-bold text-text-primary">{qty}</span>
+          <span className="text-text-primary w-8 text-center font-bold">{qty}</span>
           <button
             type="button"
             onClick={() => setQty((q) => Math.min(product.stock, q + 1))}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-text-secondary hover:bg-surface-hover transition-colors"
+            className="text-text-secondary hover:bg-surface-hover flex h-8 w-8 items-center justify-center rounded-lg transition-colors"
           >
             <Plus size={16} />
           </button>
         </div>
-        <span className="ml-3 text-xs text-text-muted">{product.stock} disponibles</span>
+        <span className="text-text-muted ml-3 text-xs">{product.stock} disponibles</span>
       </div>
 
       {!canAdd && (
-        <p className="text-xs text-warning font-medium">
-          Selecciona talla y color para continuar
-        </p>
+        <p className="text-warning text-xs font-medium">Selecciona talla y color para continuar</p>
       )}
 
       {/* Acciones */}
@@ -148,7 +148,7 @@ export function AddToCartPanel({ product }: AddToCartPanelProps) {
           href={`https://wa.me/${WA_NUMBER}?text=${waMsg}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-xl border-2 border-border bg-white px-5 text-sm font-semibold text-text-secondary transition-colors hover:border-border-hover hover:text-text-primary"
+          className="border-border text-text-secondary hover:border-border-hover hover:text-text-primary inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-xl border-2 bg-white px-5 text-sm font-semibold transition-colors"
         >
           <MessageCircle size={18} />
           Consultar por WhatsApp

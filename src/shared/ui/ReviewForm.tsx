@@ -24,8 +24,8 @@ export function ReviewForm({ productId, onSuccess }: ReviewFormProps) {
 
   if (!isAuthenticated || !user) {
     return (
-      <div className="rounded-2xl border border-border bg-bg-secondary px-5 py-4 text-sm text-text-muted">
-        <a href="/login" className="font-semibold text-brand hover:underline">
+      <div className="border-border bg-bg-secondary text-text-muted rounded-2xl border px-5 py-4 text-sm">
+        <a href="/login" className="text-brand font-semibold hover:underline">
           Iniciá sesión
         </a>{' '}
         para dejar una reseña en este producto.
@@ -42,8 +42,14 @@ export function ReviewForm({ productId, onSuccess }: ReviewFormProps) {
   }
 
   async function handleSubmit() {
-    if (selectedStar === 0) { setError('Seleccioná una calificación'); return; }
-    if (comment.trim().length < 10) { setError('El comentario debe tener al menos 10 caracteres'); return; }
+    if (selectedStar === 0) {
+      setError('Seleccioná una calificación');
+      return;
+    }
+    if (comment.trim().length < 10) {
+      setError('El comentario debe tener al menos 10 caracteres');
+      return;
+    }
     setIsLoading(true);
     setError(null);
     try {
@@ -66,8 +72,8 @@ export function ReviewForm({ productId, onSuccess }: ReviewFormProps) {
   const activeStar = hoveredStar || selectedStar;
 
   return (
-    <div className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
-      <p className="mb-4 font-semibold text-text-primary">Dejá tu reseña</p>
+    <div className="border-border bg-surface rounded-2xl border p-5 shadow-sm">
+      <p className="text-text-primary mb-4 font-semibold">Dejá tu reseña</p>
 
       {/* Estrellas */}
       <div className="mb-4 flex gap-1">
@@ -77,17 +83,24 @@ export function ReviewForm({ productId, onSuccess }: ReviewFormProps) {
             type="button"
             onMouseEnter={() => setHoveredStar(star)}
             onMouseLeave={() => setHoveredStar(0)}
-            onClick={() => { setSelectedStar(star); setError(null); }}
+            onClick={() => {
+              setSelectedStar(star);
+              setError(null);
+            }}
             className="transition-transform hover:scale-110"
           >
             <Star
               size={28}
-              className={star <= activeStar ? 'fill-yellow-400 text-yellow-400' : 'fill-gray-200 text-gray-200'}
+              className={
+                star <= activeStar
+                  ? 'fill-yellow-400 text-yellow-400'
+                  : 'fill-gray-200 text-gray-200'
+              }
             />
           </button>
         ))}
         {selectedStar > 0 && (
-          <span className="ml-2 self-center text-sm text-text-muted">
+          <span className="text-text-muted ml-2 self-center text-sm">
             {['', 'Muy malo', 'Malo', 'Regular', 'Bueno', 'Excelente'][selectedStar]}
           </span>
         )}
@@ -97,12 +110,15 @@ export function ReviewForm({ productId, onSuccess }: ReviewFormProps) {
       <textarea
         rows={3}
         value={comment}
-        onChange={(e) => { setComment(e.target.value); setError(null); }}
+        onChange={(e) => {
+          setComment(e.target.value);
+          setError(null);
+        }}
         placeholder="Contá tu experiencia con este producto..."
-        className="mb-3 w-full rounded-xl border border-border bg-white px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-brand"
+        className="border-border text-text-primary placeholder:text-text-muted focus:ring-brand mb-3 w-full rounded-xl border bg-white px-4 py-2.5 text-sm focus:ring-2 focus:outline-none"
       />
 
-      {error && <p className="mb-3 text-xs text-danger font-medium">{error}</p>}
+      {error && <p className="text-danger mb-3 text-xs font-medium">{error}</p>}
 
       <Button variant="primary" size="sm" isLoading={isLoading} onClick={handleSubmit}>
         Publicar reseña

@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@config "../../tailwind.config.ts";
+@import 'tailwindcss';
+@config '../../tailwind.config.ts';
 
 @theme {
   --background-image-gradient-brand: linear-gradient(135deg, #e63f6e 0%, #ff6b96 50%, #c026d3 100%);

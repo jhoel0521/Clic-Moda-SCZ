@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { OrderService } from '@src/backend/services/OrderService';
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const body = await req.json();

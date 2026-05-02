@@ -38,26 +38,24 @@ export default async function LandingPage() {
   const flashProducts = await ProductService.getFlashSaleProducts();
 
   return (
-    <div className="w-full bg-gray-50 gap-8 flex flex-col justify-start items-center">
+    <div className="flex w-full flex-col items-center justify-start gap-8 bg-gray-50">
       {/* ++++++++++++++++++ HERO CENTRADO ++++++++++++++++++ */}
-      <div className="w-full max-w-[1200px] mx-auto mt-6 md:mt-8 mt-4">
+      <div className="mx-auto mt-4 mt-6 w-full max-w-[1200px] md:mt-8">
         <HeroCarousel />
       </div>
 
       {/* ++++++++++++++++++ CONTENIDO PRINCIPAL ++++++++++++++++++ */}
-      <main className="w-full max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mt-8 md:mt-12 flex flex-col gap-12 md:gap-20">
-
+      <main className="mx-auto mt-8 flex w-full max-w-[1200px] flex-col gap-12 px-4 sm:px-6 md:mt-12 md:gap-20 lg:px-8">
         {/* 2. Banner ventas flash */}
         {flashProducts.length > 0 && <FlashSaleBanner products={flashProducts} />}
 
         {/* 3. Categorías + Tendencias (Grid 2 columnas) */}
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 w-full">
-
+        <section className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8">
           {/* Categorías */}
-          <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col gap-6">
-            <h2 className="font-black text-2xl flex items-center gap-3 text-gray-900">
-              <span className="bg-pink-100 p-2.5 rounded-xl text-pink-600">
-                <Filter className="w-6 h-6" />
+          <div className="flex flex-col gap-6 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm md:p-8">
+            <h2 className="flex items-center gap-3 text-2xl font-black text-gray-900">
+              <span className="rounded-xl bg-pink-100 p-2.5 text-pink-600">
+                <Filter className="h-6 w-6" />
               </span>
               Categorías
             </h2>
@@ -66,7 +64,7 @@ export default async function LandingPage() {
                 <Link
                   key={cat}
                   href={`${ROUTES.CATALOG}?categoria=${cat.toLowerCase()}`}
-                  className="inline-block bg-gray-50 border border-gray-200 text-gray-700 hover:bg-pink-50 hover:border-pink-300 hover:text-pink-600 px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm"
+                  className="inline-block rounded-xl border border-gray-200 bg-gray-50 px-5 py-2.5 text-sm font-bold text-gray-700 shadow-sm transition-all hover:border-pink-300 hover:bg-pink-50 hover:text-pink-600"
                 >
                   {cat}
                 </Link>
@@ -75,10 +73,10 @@ export default async function LandingPage() {
           </div>
 
           {/* Tendencias */}
-          <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col gap-6">
-            <h2 className="font-black text-2xl flex items-center gap-3 text-gray-900">
-              <span className="bg-pink-100 p-2.5 rounded-xl text-pink-600">
-                <Star className="w-6 h-6 fill-current" />
+          <div className="flex flex-col gap-6 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm md:p-8">
+            <h2 className="flex items-center gap-3 text-2xl font-black text-gray-900">
+              <span className="rounded-xl bg-pink-100 p-2.5 text-pink-600">
+                <Star className="h-6 w-6 fill-current" />
               </span>
               Tendencias
             </h2>
@@ -87,7 +85,7 @@ export default async function LandingPage() {
                 <Link
                   key={et}
                   href={`${ROUTES.CATALOG}?search=${encodeURIComponent(et)}`}
-                  className="inline-block bg-gray-900 text-white hover:bg-pink-600 px-5 py-2.5 rounded-full font-bold text-sm transition-all shadow-md hover:-translate-y-0.5"
+                  className="inline-block rounded-full bg-gray-900 px-5 py-2.5 text-sm font-bold text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-pink-600"
                 >
                   #{et}
                 </Link>
@@ -99,22 +97,27 @@ export default async function LandingPage() {
         {/* 4. Productos flash */}
         {flashProducts.length > 0 && (
           <section className="w-full">
-            <div className="flex items-end justify-between mb-6 border-b border-gray-200 pb-4">
+            <div className="mb-6 flex items-end justify-between border-b border-gray-200 pb-4">
               <div>
-                <h2 className="font-black text-2xl md:text-3xl text-gray-900 flex items-center gap-2">
+                <h2 className="flex items-center gap-2 text-2xl font-black text-gray-900 md:text-3xl">
                   <span className="text-yellow-500">⚡</span> Ofertas del momento
                 </h2>
-                <p className="text-gray-500 mt-1 text-sm md:text-base">Aprovecha antes de que se agoten.</p>
+                <p className="mt-1 text-sm text-gray-500 md:text-base">
+                  Aprovecha antes de que se agoten.
+                </p>
               </div>
-              <Link href={ROUTES.CATALOG} className="hidden sm:inline-block text-pink-600 font-bold hover:underline">
+              <Link
+                href={ROUTES.CATALOG}
+                className="hidden font-bold text-pink-600 hover:underline sm:inline-block"
+              >
                 Ver todo →
               </Link>
             </div>
 
             {/* Contenedor de las cards */}
-            <div className="flex gap-4 md:gap-6 overflow-x-auto pb-6 snap-x snap-mandatory md:grid md:grid-cols-4 md:overflow-visible md:snap-none scrollbar-hide">
+            <div className="scrollbar-hide flex snap-x snap-mandatory gap-4 overflow-x-auto pb-6 md:grid md:snap-none md:grid-cols-4 md:gap-6 md:overflow-visible">
               {flashProducts.slice(0, 4).map((product, i) => (
-                <div key={product.id} className="snap-start shrink-0 w-[260px] md:w-auto">
+                <div key={product.id} className="w-[260px] shrink-0 snap-start md:w-auto">
                   <ProductCard product={product} priority={i === 0} />
                 </div>
               ))}
@@ -124,22 +127,25 @@ export default async function LandingPage() {
 
         {/* 5. Colecciones */}
         <section className="w-full">
-          <div className="flex justify-between items-end mb-6 border-b border-gray-200 pb-4">
+          <div className="mb-6 flex items-end justify-between border-b border-gray-200 pb-4">
             <div>
-              <h2 className="font-black text-2xl md:text-3xl text-gray-900">Colecciones</h2>
-              <p className="mt-1 text-gray-500 text-sm md:text-base">Encuentra tu estilo ideal.</p>
+              <h2 className="text-2xl font-black text-gray-900 md:text-3xl">Colecciones</h2>
+              <p className="mt-1 text-sm text-gray-500 md:text-base">Encuentra tu estilo ideal.</p>
             </div>
-            <Link href={ROUTES.CATALOG} className="hidden sm:inline-block text-pink-600 font-bold hover:underline">
+            <Link
+              href={ROUTES.CATALOG}
+              className="hidden font-bold text-pink-600 hover:underline sm:inline-block"
+            >
               Explorar →
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {COLECCIONES.map((cat) => (
               <Link
                 key={cat.nombre}
                 href={cat.href}
-                className="group relative h-72 md:h-80 w-full overflow-hidden rounded-3xl bg-gray-200 block shadow-sm hover:shadow-lg transition-shadow"
+                className="group relative block h-72 w-full overflow-hidden rounded-3xl bg-gray-200 shadow-sm transition-shadow hover:shadow-lg md:h-80"
               >
                 <Image
                   src={cat.img}
@@ -150,8 +156,8 @@ export default async function LandingPage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                 <div className="absolute bottom-0 left-0 w-full p-6">
-                  <h3 className="text-2xl font-black text-white mb-1">{cat.nombre}</h3>
-                  <p className="text-sm font-bold text-pink-400 flex items-center gap-2 opacity-90 group-hover:opacity-100 transition-opacity">
+                  <h3 className="mb-1 text-2xl font-black text-white">{cat.nombre}</h3>
+                  <p className="flex items-center gap-2 text-sm font-bold text-pink-400 opacity-90 transition-opacity group-hover:opacity-100">
                     Ver más <span className="text-lg leading-none">→</span>
                   </p>
                 </div>
@@ -159,33 +165,53 @@ export default async function LandingPage() {
             ))}
           </div>
 
-          <Link href={ROUTES.CATALOG} className="mt-6 block sm:hidden text-center bg-gray-900 text-white font-bold py-4 rounded-xl">
+          <Link
+            href={ROUTES.CATALOG}
+            className="mt-6 block rounded-xl bg-gray-900 py-4 text-center font-bold text-white sm:hidden"
+          >
             Ver catálogo completo
           </Link>
         </section>
 
         {/* 6. Cómo funciona */}
-        <section className="w-full bg-white rounded-3xl border border-gray-100 shadow-sm p-8 md:p-12 mb-10">
-          <div className="text-center mb-10">
-            <h2 className="font-black text-2xl md:text-3xl text-gray-900 mb-2">Comprar nunca fue tan fácil</h2>
+        <section className="mb-10 w-full rounded-3xl border border-gray-100 bg-white p-8 shadow-sm md:p-12">
+          <div className="mb-10 text-center">
+            <h2 className="mb-2 text-2xl font-black text-gray-900 md:text-3xl">
+              Comprar nunca fue tan fácil
+            </h2>
             <p className="text-gray-500">Tres pasos y tu ropa llega donde estás.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
             {[
-              { step: '1', icon: '🛍️', title: 'Elegís tu ropa', desc: 'Revisá las medidas exactas. Añadí al carrito sin registrarte.' },
-              { step: '2', icon: '📝', title: 'Llenás tus datos', desc: 'Proporcioná tu dirección de envío en Santa Cruz de forma segura.' },
-              { step: '3', icon: '📲', title: 'Coordinás por WhatsApp', desc: 'Generá tu ticket y chateá con nosotros para la entrega.' },
+              {
+                step: '1',
+                icon: '🛍️',
+                title: 'Elegís tu ropa',
+                desc: 'Revisá las medidas exactas. Añadí al carrito sin registrarte.',
+              },
+              {
+                step: '2',
+                icon: '📝',
+                title: 'Llenás tus datos',
+                desc: 'Proporcioná tu dirección de envío en Santa Cruz de forma segura.',
+              },
+              {
+                step: '3',
+                icon: '📲',
+                title: 'Coordinás por WhatsApp',
+                desc: 'Generá tu ticket y chateá con nosotros para la entrega.',
+              },
             ].map(({ step, icon, title, desc }) => (
               <div key={step} className="flex flex-col items-center text-center">
-                <div className="relative w-20 h-20 rounded-full bg-pink-50 flex items-center justify-center mb-5 border border-pink-100">
+                <div className="relative mb-5 flex h-20 w-20 items-center justify-center rounded-full border border-pink-100 bg-pink-50">
                   <span className="text-3xl">{icon}</span>
-                  <span className="absolute -top-1 -right-1 w-7 h-7 rounded-full bg-gray-900 text-sm font-black text-white flex items-center justify-center shadow-md">
+                  <span className="absolute -top-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-gray-900 text-sm font-black text-white shadow-md">
                     {step}
                   </span>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">{desc}</p>
+                <h3 className="mb-2 text-xl font-bold text-gray-900">{title}</h3>
+                <p className="text-sm leading-relaxed text-gray-500">{desc}</p>
               </div>
             ))}
           </div>

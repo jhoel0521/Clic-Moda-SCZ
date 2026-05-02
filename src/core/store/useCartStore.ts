@@ -67,7 +67,7 @@ export const useCartStore = create<CartState>()(
       removeItem: (productId, size, color) => {
         const items = get().items.filter(
           (i) =>
-            !(i.productId === productId && i.selectedSize === size && i.selectedColor === color),
+            !(i.productId === productId && i.selectedSize === size && i.selectedColor === color)
         );
         set({ items, ...computeCartTotals(items) });
       },
@@ -80,7 +80,7 @@ export const useCartStore = create<CartState>()(
         const items = get().items.map((i) =>
           i.productId === productId && i.selectedSize === size && i.selectedColor === color
             ? { ...i, quantity }
-            : i,
+            : i
         );
         set({ items, ...computeCartTotals(items) });
       },
@@ -120,8 +120,8 @@ export const useCartStore = create<CartState>()(
           state.subtotal = totals.subtotal;
         }
       },
-    },
-  ),
+    }
+  )
 );
 
 // Helpers para acceso directo sin selector

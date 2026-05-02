@@ -17,7 +17,10 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     Promise.all([OrderService.getOrders(), ProductService.getProducts()])
-      .then(([ord, prod]) => { setOrders(ord); setProducts(prod); })
+      .then(([ord, prod]) => {
+        setOrders(ord);
+        setProducts(prod);
+      })
       .finally(() => setIsLoading(false));
   }, []);
 
@@ -29,10 +32,25 @@ export default function AdminDashboardPage() {
   const lowStockCount = products.filter((p) => p.stock <= 5 && p.stock > 0).length;
 
   const stats = [
-    { label: 'Ventas hoy', value: `Bs. ${dailySales.toFixed(0)}`, icon: ShoppingBag, tone: 'text-success' },
+    {
+      label: 'Ventas hoy',
+      value: `Bs. ${dailySales.toFixed(0)}`,
+      icon: ShoppingBag,
+      tone: 'text-success',
+    },
     { label: 'Pedidos nuevos', value: String(newOrders), icon: Package, tone: 'text-info' },
-    { label: 'Productos activos', value: String(activeProducts), icon: ShirtIcon, tone: 'text-brand' },
-    { label: 'Stock crítico', value: String(lowStockCount), icon: AlertTriangle, tone: 'text-warning' },
+    {
+      label: 'Productos activos',
+      value: String(activeProducts),
+      icon: ShirtIcon,
+      tone: 'text-brand',
+    },
+    {
+      label: 'Stock crítico',
+      value: String(lowStockCount),
+      icon: AlertTriangle,
+      tone: 'text-warning',
+    },
   ];
 
   return (
@@ -40,15 +58,20 @@ export default function AdminDashboardPage() {
       <AdminHeader title="Dashboard" />
 
       {isLoading ? (
-        <div className="flex justify-center py-20"><Spinner size="lg" /></div>
+        <div className="flex justify-center py-20">
+          <Spinner size="lg" />
+        </div>
       ) : (
         <>
           {/* Stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {stats.map(({ label, value, icon: Icon, tone }) => (
-              <div key={label} className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-sm text-text-muted">{label}</span>
+              <div
+                key={label}
+                className="border-border bg-surface rounded-2xl border p-5 shadow-sm"
+              >
+                <div className="mb-3 flex items-center justify-between">
+                  <span className="text-text-muted text-sm">{label}</span>
                   <Icon size={18} className={tone} />
                 </div>
                 <p className={`text-2xl font-bold ${tone}`}>{value}</p>
@@ -59,8 +82,10 @@ export default function AdminDashboardPage() {
           {/* Grid principal */}
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
             {/* Top productos */}
-            <div className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
-              <h3 className="font-bold text-sm text-text-primary mb-4">Top 10 Productos Vendidos</h3>
+            <div className="border-border bg-surface rounded-2xl border p-5 shadow-sm">
+              <h3 className="text-text-primary mb-4 text-sm font-bold">
+                Top 10 Productos Vendidos
+              </h3>
               <TopProductsTable orders={orders} />
             </div>
 

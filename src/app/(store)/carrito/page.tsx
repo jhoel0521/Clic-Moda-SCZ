@@ -40,14 +40,14 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="bg-gray-50 min-h-screen pb-20 md:pb-0">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 py-12">
-          <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-300 shadow-sm">
-            <ShoppingCart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-500 text-xl font-medium mb-6">Tu carrito está vacío</p>
+      <div className="min-h-screen bg-gray-50 pb-20 md:pb-0">
+        <div className="mx-auto max-w-7xl px-4 py-12 md:px-8">
+          <div className="rounded-3xl border border-dashed border-gray-300 bg-white py-20 text-center shadow-sm">
+            <ShoppingCart className="mx-auto mb-4 h-16 w-16 text-gray-300" />
+            <p className="mb-6 text-xl font-medium text-gray-500">Tu carrito está vacío</p>
             <Link
               href={ROUTES.CATALOG}
-              className="inline-block bg-pink-600 text-white px-8 py-3 rounded-xl font-bold shadow-md hover:bg-pink-700 transition-colors"
+              className="inline-block rounded-xl bg-pink-600 px-8 py-3 font-bold text-white shadow-md transition-colors hover:bg-pink-700"
             >
               Ir de compras
             </Link>
@@ -58,22 +58,20 @@ export default function CartPage() {
   }
 
   return (
-    <div className="bg-gray-50 min-h-screen pb-24 md:pb-0">
-      <div className="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-12">
-
+    <div className="min-h-screen bg-gray-50 pb-24 md:pb-0">
+      <div className="mx-auto max-w-7xl px-4 py-6 md:px-8 md:py-12">
         {/* Título */}
-        <h1 className="font-black text-3xl md:text-4xl mb-8 flex items-center gap-3 text-gray-900">
-          <ShoppingCart className="w-8 h-8 md:w-10 md:h-10 text-pink-500" />
+        <h1 className="mb-8 flex items-center gap-3 text-3xl font-black text-gray-900 md:text-4xl">
+          <ShoppingCart className="h-8 w-8 text-pink-500 md:h-10 md:w-10" />
           Tu Carrito
           <span className="text-lg font-normal text-gray-400">
             ({items.length} {items.length === 1 ? 'artículo' : 'artículos'})
           </span>
         </h1>
 
-        <div className="flex flex-col lg:flex-row gap-8">
-
+        <div className="flex flex-col gap-8 lg:flex-row">
           {/* LEFT — Lista de ítems (2/3) */}
-          <div className="w-full lg:w-2/3 space-y-4">
+          <div className="w-full space-y-4 lg:w-2/3">
             {items.map((item) => (
               <CartItemRow
                 key={`${item.productId}-${item.selectedSize}-${item.selectedColor}`}
@@ -90,8 +88,8 @@ export default function CartPage() {
             ))}
 
             {/* Cupón */}
-            <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
-              <p className="font-bold text-gray-900 mb-3 text-sm">¿Tenés un cupón?</p>
+            <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+              <p className="mb-3 text-sm font-bold text-gray-900">¿Tenés un cupón?</p>
               <CouponInput
                 subtotal={subtotal}
                 appliedCoupon={appliedCoupon}
@@ -102,7 +100,7 @@ export default function CartPage() {
 
             <Link
               href={ROUTES.CATALOG}
-              className="inline-flex items-center gap-1.5 text-sm text-pink-600 font-medium hover:underline"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-pink-600 hover:underline"
             >
               ← Seguir comprando
             </Link>
@@ -110,37 +108,38 @@ export default function CartPage() {
 
           {/* RIGHT — Resumen (1/3) */}
           <div className="w-full lg:w-1/3">
-            <div className="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 lg:sticky lg:top-20">
-              <h3 className="font-black text-2xl border-b border-gray-100 pb-4 mb-6 text-gray-900">
+            <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm md:p-8 lg:sticky lg:top-20">
+              <h3 className="mb-6 border-b border-gray-100 pb-4 text-2xl font-black text-gray-900">
                 Resumen
               </h3>
 
-              <div className="flex justify-between mb-4 text-gray-600 text-lg">
+              <div className="mb-4 flex justify-between text-lg text-gray-600">
                 <span>Subtotal</span>
                 <span className="font-bold text-gray-900">Bs. {subtotal.toFixed(2)}</span>
               </div>
 
               {appliedCoupon?.valid && (
-                <div className="flex justify-between mb-4 text-green-700">
+                <div className="mb-4 flex justify-between text-green-700">
                   <span>Descuento ({appliedCoupon.porcentaje}%)</span>
                   <span className="font-bold">−Bs. {discount.toFixed(2)}</span>
                 </div>
               )}
 
               {/* Shipping notice — ALWAYS visible */}
-              <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-xl mb-6 flex gap-3 items-start">
-                <Truck className="w-5 h-5 text-yellow-600 shrink-0 mt-0.5" />
+              <div className="mb-6 flex items-start gap-3 rounded-xl border border-yellow-200 bg-yellow-50 p-4">
+                <Truck className="mt-0.5 h-5 w-5 shrink-0 text-yellow-600" />
                 <div>
-                  <p className="font-bold text-yellow-800 text-sm">Envío: ¡Por cobrar!</p>
-                  <p className="text-xs text-yellow-700 mt-1">
-                    El costo de envío se paga al recibir el paquete (Uber/Terminal) dependiendo de tu zona.
+                  <p className="text-sm font-bold text-yellow-800">Envío: ¡Por cobrar!</p>
+                  <p className="mt-1 text-xs text-yellow-700">
+                    El costo de envío se paga al recibir el paquete (Uber/Terminal) dependiendo de
+                    tu zona.
                   </p>
                 </div>
               </div>
 
-              <div className="flex justify-between items-end border-t border-gray-100 pt-4 mb-8">
-                <span className="font-bold text-gray-600 text-lg">Total a Pagar</span>
-                <span className="font-black text-3xl md:text-4xl text-pink-600">
+              <div className="mb-8 flex items-end justify-between border-t border-gray-100 pt-4">
+                <span className="text-lg font-bold text-gray-600">Total a Pagar</span>
+                <span className="text-3xl font-black text-pink-600 md:text-4xl">
                   Bs. {total.toFixed(2)}
                 </span>
               </div>
@@ -149,24 +148,23 @@ export default function CartPage() {
               <button
                 type="button"
                 onClick={goToCheckout}
-                className="hidden md:flex w-full bg-gray-900 hover:bg-pink-600 text-white font-black py-4 rounded-xl text-lg shadow-xl transition-colors justify-center items-center gap-2 active:scale-95"
+                className="hidden w-full items-center justify-center gap-2 rounded-xl bg-gray-900 py-4 text-lg font-black text-white shadow-xl transition-colors hover:bg-pink-600 active:scale-95 md:flex"
               >
-                PROCEDER AL PAGO <ChevronRight className="w-5 h-5" />
+                PROCEDER AL PAGO <ChevronRight className="h-5 w-5" />
               </button>
             </div>
           </div>
         </div>
-
       </div>
 
       {/* CTA Flotante Mobile */}
-      <div className="md:hidden fixed bottom-16 left-0 right-0 bg-white border-t border-gray-200 p-3 z-40 shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.1)]">
+      <div className="fixed right-0 bottom-16 left-0 z-40 border-t border-gray-200 bg-white p-3 shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.1)] md:hidden">
         <button
           type="button"
           onClick={goToCheckout}
-          className="w-full bg-pink-600 hover:bg-pink-700 text-white font-black py-4 rounded-xl text-lg shadow-lg active:scale-95 transition-transform flex justify-center items-center gap-2"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-pink-600 py-4 text-lg font-black text-white shadow-lg transition-transform hover:bg-pink-700 active:scale-95"
         >
-          IR A PAGAR <ChevronRight className="w-5 h-5" />
+          IR A PAGAR <ChevronRight className="h-5 w-5" />
         </button>
       </div>
     </div>

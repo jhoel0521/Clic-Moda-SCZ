@@ -36,7 +36,7 @@ export function BannerManager() {
 
   if (banners.length === 0) {
     return (
-      <div className="rounded-2xl border border-border bg-surface px-6 py-14 text-center">
+      <div className="border-border bg-surface rounded-2xl border px-6 py-14 text-center">
         <p className="text-text-muted">No hay banners configurados.</p>
       </div>
     );
@@ -47,31 +47,34 @@ export function BannerManager() {
       {banners.map((banner) => (
         <div
           key={banner.id}
-          className="flex items-center justify-between gap-4 rounded-2xl border border-border bg-white p-4 shadow-sm"
+          className="border-border flex items-center justify-between gap-4 rounded-2xl border bg-white p-4 shadow-sm"
         >
           <div className="min-w-0 flex-1">
-            <p className="truncate font-semibold text-text-primary">{banner.titulo}</p>
-            <p className="mt-0.5 truncate text-xs text-text-muted">{banner.url_pc}</p>
+            <p className="text-text-primary truncate font-semibold">{banner.titulo}</p>
+            <p className="text-text-muted mt-0.5 truncate text-xs">{banner.url_pc}</p>
           </div>
 
           <div className="flex shrink-0 items-center gap-3">
-            <span className={[
-              'rounded-full px-2.5 py-0.5 text-xs font-semibold',
-              banner.activo ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-500',
-            ].join(' ')}>
+            <span
+              className={[
+                'rounded-full px-2.5 py-0.5 text-xs font-semibold',
+                banner.activo ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-500',
+              ].join(' ')}
+            >
               {banner.activo ? 'Activo' : 'Inactivo'}
             </span>
             <button
               type="button"
               disabled={toggling === banner.id}
               onClick={() => handleToggle(banner.id)}
-              className="text-text-muted transition-colors hover:text-brand disabled:opacity-40"
+              className="text-text-muted hover:text-brand transition-colors disabled:opacity-40"
               title={banner.activo ? 'Desactivar' : 'Activar'}
             >
-              {banner.activo
-                ? <ToggleRight size={24} className="text-brand" />
-                : <ToggleLeft size={24} />
-              }
+              {banner.activo ? (
+                <ToggleRight size={24} className="text-brand" />
+              ) : (
+                <ToggleLeft size={24} />
+              )}
             </button>
           </div>
         </div>

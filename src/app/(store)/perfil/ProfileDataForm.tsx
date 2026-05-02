@@ -38,11 +38,7 @@ export function ProfileDataForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
-        <Input
-          label="Nombre completo"
-          error={errors.name?.message}
-          {...register('name')}
-        />
+        <Input label="Nombre completo" error={errors.name?.message} {...register('name')} />
         <Input
           label="Email"
           type="email"

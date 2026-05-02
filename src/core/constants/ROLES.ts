@@ -15,8 +15,4 @@ export const ROLES = {
 export type UserRole = (typeof ROLES)[keyof typeof ROLES];
 
 /** Roles que tienen acceso al panel de administración */
-export const ADMIN_ROLES: UserRole[] = [
-  ROLES.GERENTE,
-  ROLES.DESPACHO,
-  ROLES.ATENCION_CLIENTE,
-];
+export const ADMIN_ROLES: UserRole[] = [ROLES.GERENTE, ROLES.DESPACHO, ROLES.ATENCION_CLIENTE];

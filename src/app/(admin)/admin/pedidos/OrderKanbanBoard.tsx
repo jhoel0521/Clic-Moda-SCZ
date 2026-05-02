@@ -30,26 +30,34 @@ export function OrderKanbanBoard({ orders, onAdvance }: OrderKanbanBoardProps) {
     orders: orders.filter((o) => o.status === status),
   }));
 
-  const isLast = (status: string) => status === ORDER_STATUS_SEQUENCE[ORDER_STATUS_SEQUENCE.length - 1];
+  const isLast = (status: string) =>
+    status === ORDER_STATUS_SEQUENCE[ORDER_STATUS_SEQUENCE.length - 1];
 
   return (
     <div className="flex gap-4 overflow-x-auto pb-4">
       {byStatus.map(({ status, orders: columnOrders }) => (
-        <div key={status} className="shrink-0 w-56">
-          <div className={`rounded-t-xl px-3 py-2 text-xs font-bold uppercase tracking-wide ${HEADER_COLORS[status]}`}>
+        <div key={status} className="w-56 shrink-0">
+          <div
+            className={`rounded-t-xl px-3 py-2 text-xs font-bold tracking-wide uppercase ${HEADER_COLORS[status]}`}
+          >
             {ORDER_STATUS_LABELS[status]} ({columnOrders.length})
           </div>
-          <div className={`min-h-32 rounded-b-xl border-x border-b p-2 space-y-2 ${STATUS_COLORS[status]}`}>
+          <div
+            className={`min-h-32 space-y-2 rounded-b-xl border-x border-b p-2 ${STATUS_COLORS[status]}`}
+          >
             {columnOrders.map((order) => (
-              <div key={order.id} className="rounded-lg bg-white border border-white/80 p-3 shadow-sm text-xs space-y-1.5">
-                <p className="font-mono font-bold text-brand">{order.ticketId}</p>
+              <div
+                key={order.id}
+                className="space-y-1.5 rounded-lg border border-white/80 bg-white p-3 text-xs shadow-sm"
+              >
+                <p className="text-brand font-mono font-bold">{order.ticketId}</p>
                 <p className="text-text-muted truncate">{order.shippingAddress.fullName}</p>
-                <p className="font-semibold text-text-primary">Bs. {order.total.toFixed(0)}</p>
+                <p className="text-text-primary font-semibold">Bs. {order.total.toFixed(0)}</p>
                 {!isLast(status) && (
                   <button
                     type="button"
                     onClick={() => onAdvance(order.id)}
-                    className="w-full rounded-lg bg-brand-subtle py-1 text-[10px] font-bold text-brand hover:bg-brand hover:text-white transition-colors"
+                    className="bg-brand-subtle text-brand hover:bg-brand w-full rounded-lg py-1 text-[10px] font-bold transition-colors hover:text-white"
                   >
                     Avanzar →
                   </button>
@@ -57,7 +65,7 @@ export function OrderKanbanBoard({ orders, onAdvance }: OrderKanbanBoardProps) {
               </div>
             ))}
             {columnOrders.length === 0 && (
-              <p className="text-center text-text-muted text-xs py-4">Vacío</p>
+              <p className="text-text-muted py-4 text-center text-xs">Vacío</p>
             )}
           </div>
         </div>

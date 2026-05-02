@@ -7,7 +7,7 @@ export const ReviewService: IReviewService = {
   async getReviewsByProduct(productoId: string): Promise<IResena[]> {
     const reviews = findAll('reviews');
     return reviews.filter(
-      (r) => r.producto_id === productoId && r.estado_moderacion === 'APROBADA',
+      (r) => r.producto_id === productoId && r.estado_moderacion === 'APROBADA'
     );
   },
 
@@ -34,7 +34,7 @@ export const ReviewService: IReviewService = {
 
   async moderateReview(
     reviewId: string,
-    decision: 'APROBADA' | 'RECHAZADA',
+    decision: 'APROBADA' | 'RECHAZADA'
   ): Promise<IResena | null> {
     const review = findById<IResena>('reviews', reviewId);
     if (!review) return null;
@@ -45,7 +45,7 @@ export const ReviewService: IReviewService = {
   async getProductRating(productoId: string): Promise<{ avg: number; count: number }> {
     const reviews = findAll('reviews');
     const approved = reviews.filter(
-      (r) => r.producto_id === productoId && r.estado_moderacion === 'APROBADA',
+      (r) => r.producto_id === productoId && r.estado_moderacion === 'APROBADA'
     );
     if (approved.length === 0) return { avg: 0, count: 0 };
     const avg = approved.reduce((sum, r) => sum + r.calificacion_estrellas, 0) / approved.length;

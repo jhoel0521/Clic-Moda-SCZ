@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ReviewService } from '@src/backend/services/ReviewService';
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const body = await req.json();

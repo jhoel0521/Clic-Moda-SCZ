@@ -30,30 +30,34 @@ export function TopProductsTable({ orders }: TopProductsTableProps) {
 
   if (top10.length === 0) {
     return (
-      <p className="text-sm text-text-muted text-center py-6">
+      <p className="text-text-muted py-6 text-center text-sm">
         Aún no hay pedidos para mostrar el ranking.
       </p>
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-border">
+    <div className="border-border overflow-hidden rounded-xl border">
       <table className="w-full text-sm">
         <thead>
-          <tr className="bg-bg-secondary border-b border-border">
-            <th className="px-4 py-2.5 text-left font-semibold text-text-muted w-8">#</th>
-            <th className="px-4 py-2.5 text-left font-semibold text-text-primary">Producto</th>
-            <th className="px-4 py-2.5 text-right font-semibold text-text-primary">Unidades</th>
-            <th className="hidden sm:table-cell px-4 py-2.5 text-right font-semibold text-text-primary">Ingresos</th>
+          <tr className="bg-bg-secondary border-border border-b">
+            <th className="text-text-muted w-8 px-4 py-2.5 text-left font-semibold">#</th>
+            <th className="text-text-primary px-4 py-2.5 text-left font-semibold">Producto</th>
+            <th className="text-text-primary px-4 py-2.5 text-right font-semibold">Unidades</th>
+            <th className="text-text-primary hidden px-4 py-2.5 text-right font-semibold sm:table-cell">
+              Ingresos
+            </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-border bg-white">
+        <tbody className="divide-border divide-y bg-white">
           {top10.map((product, idx) => (
             <tr key={product.name} className="hover:bg-surface-hover">
-              <td className="px-4 py-2.5 font-bold text-text-muted">{idx + 1}</td>
-              <td className="px-4 py-2.5 font-medium text-text-primary line-clamp-1">{product.name}</td>
-              <td className="px-4 py-2.5 text-right font-semibold text-brand">{product.units}</td>
-              <td className="hidden sm:table-cell px-4 py-2.5 text-right text-text-secondary">
+              <td className="text-text-muted px-4 py-2.5 font-bold">{idx + 1}</td>
+              <td className="text-text-primary line-clamp-1 px-4 py-2.5 font-medium">
+                {product.name}
+              </td>
+              <td className="text-brand px-4 py-2.5 text-right font-semibold">{product.units}</td>
+              <td className="text-text-secondary hidden px-4 py-2.5 text-right sm:table-cell">
                 Bs. {product.revenue.toFixed(0)}
               </td>
             </tr>

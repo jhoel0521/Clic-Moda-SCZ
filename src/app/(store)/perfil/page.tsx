@@ -33,16 +33,16 @@ export default function ProfilePage() {
   return (
     <div className="mx-auto w-full max-w-4xl px-6 py-14">
       <div className="mb-10">
-        <h1 className="text-3xl font-bold text-text-primary">Mi perfil</h1>
-        <p className="mt-1 text-text-muted">
-          Hola, <span className="font-semibold text-text-primary">{user.name}</span>
+        <h1 className="text-text-primary text-3xl font-bold">Mi perfil</h1>
+        <p className="text-text-muted mt-1">
+          Hola, <span className="text-text-primary font-semibold">{user.name}</span>
         </p>
       </div>
 
       <div className="space-y-10">
         {/* Datos personales */}
-        <section className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
-          <h2 className="mb-5 flex items-center gap-2 font-bold text-text-primary">
+        <section className="border-border bg-surface rounded-2xl border p-6 shadow-sm">
+          <h2 className="text-text-primary mb-5 flex items-center gap-2 font-bold">
             <User size={18} className="text-brand" />
             Mis datos
           </h2>
@@ -51,13 +51,11 @@ export default function ProfilePage() {
 
         {/* Historial de pedidos */}
         <section>
-          <h2 className="mb-5 flex items-center gap-2 font-bold text-text-primary">
+          <h2 className="text-text-primary mb-5 flex items-center gap-2 font-bold">
             <Package size={18} className="text-brand" />
             Mis pedidos
             {!isLoading && (
-              <span className="text-sm font-normal text-text-muted">
-                ({orders.length})
-              </span>
+              <span className="text-text-muted text-sm font-normal">({orders.length})</span>
             )}
           </h2>
           {isLoading ? (

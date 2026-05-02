@@ -26,7 +26,12 @@ export function CouponManager() {
   const [showModal, setShowModal] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
 
-  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<CouponFormData>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<CouponFormData>({
     resolver: zodResolver(couponSchema),
   });
 
@@ -69,38 +74,45 @@ export function CouponManager() {
         </Button>
       </div>
 
-      <div className="overflow-x-auto rounded-2xl border border-border bg-white shadow-sm">
+      <div className="border-border overflow-x-auto rounded-2xl border bg-white shadow-sm">
         <table className="w-full text-sm">
-          <thead className="border-b border-border bg-surface">
+          <thead className="border-border bg-surface border-b">
             <tr>
               {['Código', 'Descuento', 'Usos', 'Caduca', 'Estado', ''].map((h) => (
-                <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-text-muted">
+                <th
+                  key={h}
+                  className="text-text-muted px-4 py-3 text-left text-xs font-semibold tracking-wider uppercase"
+                >
                   {h}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-border">
+          <tbody className="divide-border divide-y">
             {coupons.map((c) => {
               const expired = isExpired(c.fecha_caducidad);
               const exhausted = c.veces_usado >= c.limite_usos;
               return (
                 <tr key={c.id} className="hover:bg-surface">
-                  <td className="px-4 py-3 font-mono font-semibold text-text-primary">{c.codigo}</td>
-                  <td className="px-4 py-3 text-text-secondary">{c.porcentaje_descuento}%</td>
-                  <td className="px-4 py-3 text-text-secondary">
+                  <td className="text-text-primary px-4 py-3 font-mono font-semibold">
+                    {c.codigo}
+                  </td>
+                  <td className="text-text-secondary px-4 py-3">{c.porcentaje_descuento}%</td>
+                  <td className="text-text-secondary px-4 py-3">
                     {c.veces_usado} / {c.limite_usos}
                   </td>
-                  <td className="px-4 py-3 text-text-secondary">
+                  <td className="text-text-secondary px-4 py-3">
                     {new Date(c.fecha_caducidad).toLocaleDateString('es-BO')}
                   </td>
                   <td className="px-4 py-3">
-                    <span className={[
-                      'inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold',
-                      expired || exhausted
-                        ? 'bg-red-50 text-red-700'
-                        : 'bg-emerald-50 text-emerald-700',
-                    ].join(' ')}>
+                    <span
+                      className={[
+                        'inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold',
+                        expired || exhausted
+                          ? 'bg-red-50 text-red-700'
+                          : 'bg-emerald-50 text-emerald-700',
+                      ].join(' ')}
+                    >
                       {expired ? 'Expirado' : exhausted ? 'Agotado' : 'Activo'}
                     </span>
                   </td>
@@ -121,12 +133,43 @@ export function CouponManager() {
         </table>
       </div>
 
-      <Modal isOpen={showModal} onClose={() => { setShowModal(false); reset(); }} title="Nuevo cupón" size="sm">
+      <Modal
+        isOpen={showModal}
+        onClose={() => {
+          setShowModal(false);
+          reset();
+        }}
+        title="Nuevo cupón"
+        size="sm"
+      >
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <Input label="Código" placeholder="PROMO20" error={errors.codigo?.message} {...register('codigo')} />
-          <Input label="Descuento (%)" type="number" min="1" max="100" error={errors.porcentaje_descuento?.message} {...register('porcentaje_descuento', { valueAsNumber: true })} />
-          <Input label="Límite de usos" type="number" min="1" error={errors.limite_usos?.message} {...register('limite_usos', { valueAsNumber: true })} />
-          <Input label="Fecha de caducidad" type="date" error={errors.fecha_caducidad?.message} {...register('fecha_caducidad')} />
+          <Input
+            label="Código"
+            placeholder="PROMO20"
+            error={errors.codigo?.message}
+            {...register('codigo')}
+          />
+          <Input
+            label="Descuento (%)"
+            type="number"
+            min="1"
+            max="100"
+            error={errors.porcentaje_descuento?.message}
+            {...register('porcentaje_descuento', { valueAsNumber: true })}
+          />
+          <Input
+            label="Límite de usos"
+            type="number"
+            min="1"
+            error={errors.limite_usos?.message}
+            {...register('limite_usos', { valueAsNumber: true })}
+          />
+          <Input
+            label="Fecha de caducidad"
+            type="date"
+            error={errors.fecha_caducidad?.message}
+            {...register('fecha_caducidad')}
+          />
           <Button type="submit" variant="primary" fullWidth isLoading={isSubmitting}>
             Crear cupón
           </Button>

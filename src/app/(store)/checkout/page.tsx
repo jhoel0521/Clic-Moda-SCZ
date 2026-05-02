@@ -17,39 +17,62 @@ import { ROUTES } from '@src/routes';
 import { checkoutSchema, type CheckoutFormData } from './checkout.schema';
 
 const PAYMENT_OPTIONS = [
-  { value: 'transferencia',    label: 'Transferencia bancaria', icon: '🏦', description: 'Datos bancarios por WhatsApp' },
-  { value: 'qr_simple',       label: 'QR Simple',              icon: '📱', description: 'Escaneá y pagá al instante' },
-  { value: 'efectivo_entrega', label: 'Efectivo en entrega',    icon: '💵', description: 'Pagás cuando recibís' },
-  { value: 'contra_entrega',   label: 'Contra entrega',         icon: '📦', description: 'Coordinamos por WhatsApp' },
+  {
+    value: 'transferencia',
+    label: 'Transferencia bancaria',
+    icon: '🏦',
+    description: 'Datos bancarios por WhatsApp',
+  },
+  { value: 'qr_simple', label: 'QR Simple', icon: '📱', description: 'Escaneá y pagá al instante' },
+  {
+    value: 'efectivo_entrega',
+    label: 'Efectivo en entrega',
+    icon: '💵',
+    description: 'Pagás cuando recibís',
+  },
+  {
+    value: 'contra_entrega',
+    label: 'Contra entrega',
+    icon: '📦',
+    description: 'Coordinamos por WhatsApp',
+  },
 ] as const;
 
 const STEPS = [
-  { id: 1, label: 'Entrega',  icon: Truck },
-  { id: 2, label: 'Pago',    icon: CreditCard },
+  { id: 1, label: 'Entrega', icon: Truck },
+  { id: 2, label: 'Pago', icon: CreditCard },
   { id: 3, label: 'Confirmar' },
 ];
 
 function StepIndicator({ current }: { current: number }) {
   return (
-    <div className="flex items-center gap-2 mb-10">
+    <div className="mb-10 flex items-center gap-2">
       {STEPS.map((step, idx) => {
         const done = current > step.id;
         const active = current === step.id;
         return (
-          <div key={step.id} className="flex items-center gap-2 flex-1 last:flex-none">
-            <div className={[
-              'flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold transition-colors',
-              done   ? 'bg-green-500 text-white'
-              : active ? 'bg-gray-900 text-white'
-              : 'bg-surface-raised text-text-muted',
-            ].join(' ')}>
+          <div key={step.id} className="flex flex-1 items-center gap-2 last:flex-none">
+            <div
+              className={[
+                'flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold transition-colors',
+                done
+                  ? 'bg-green-500 text-white'
+                  : active
+                    ? 'bg-gray-900 text-white'
+                    : 'bg-surface-raised text-text-muted',
+              ].join(' ')}
+            >
               {done ? '✓' : step.id}
             </div>
-            <span className={`text-sm font-medium hidden sm:block ${active ? 'text-text-primary' : 'text-text-muted'}`}>
+            <span
+              className={`hidden text-sm font-medium sm:block ${active ? 'text-text-primary' : 'text-text-muted'}`}
+            >
               {step.label}
             </span>
             {idx < STEPS.length - 1 && (
-              <div className={`flex-1 h-px transition-colors ${done ? 'bg-green-400' : 'bg-border'}`} />
+              <div
+                className={`h-px flex-1 transition-colors ${done ? 'bg-green-400' : 'bg-border'}`}
+              />
             )}
           </div>
         );
@@ -62,12 +85,12 @@ export default function CheckoutPage() {
   const router = useRouter();
   const [step, setStep] = useState(1);
 
-  const items      = useCartStore((s) => s.items);
-  const subtotal   = useCartStore((s) => s.subtotal);
-  const clearCart  = useCartStore((s) => s.clearCart);
-  const user       = useAuthStore((s) => s.user);
+  const items = useCartStore((s) => s.items);
+  const subtotal = useCartStore((s) => s.subtotal);
+  const clearCart = useCartStore((s) => s.clearCart);
+  const user = useAuthStore((s) => s.user);
   const appliedCoupon = useCheckoutStore((s) => s.appliedCoupon);
-  const setLastOrder  = useCheckoutStore((s) => s.setLastOrder);
+  const setLastOrder = useCheckoutStore((s) => s.setLastOrder);
 
   useEffect(() => {
     if (items.length === 0) router.replace(ROUTES.CART);
@@ -103,17 +126,17 @@ export default function CheckoutPage() {
     const order = await OrderService.createOrder({
       items,
       shippingAddress: {
-        fullName:  data.fullName,
-        phone:     data.phone,
-        address:   data.address,
-        city:      data.city,
+        fullName: data.fullName,
+        phone: data.phone,
+        address: data.address,
+        city: data.city,
         reference: data.reference,
       },
-      paymentMethod:  data.paymentMethod,
-      notes:          data.notes,
-      customerId:     user?.id,
-      customerEmail:  user?.email,
-      couponCode:     appliedCoupon?.codigo,
+      paymentMethod: data.paymentMethod,
+      notes: data.notes,
+      customerId: user?.id,
+      customerEmail: user?.email,
+      couponCode: appliedCoupon?.codigo,
       discount,
     });
 
@@ -130,23 +153,26 @@ export default function CheckoutPage() {
 
   /* ────────────────── ORDER SUMMARY (sidebar) ────────────────── */
   const OrderSidebar = (
-    <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
-      <h2 className="mb-4 font-bold text-text-primary">Tu pedido</h2>
+    <div className="border-border bg-surface rounded-2xl border p-6 shadow-sm">
+      <h2 className="text-text-primary mb-4 font-bold">Tu pedido</h2>
       <div className="space-y-3 text-sm">
         {items.map((item) => (
-          <div key={`${item.productId}-${item.selectedSize}`} className="flex justify-between gap-2">
+          <div
+            key={`${item.productId}-${item.selectedSize}`}
+            className="flex justify-between gap-2"
+          >
             <span className="text-text-secondary line-clamp-1">
               {item.name}
               <span className="text-text-muted"> × {item.quantity}</span>
             </span>
-            <span className="shrink-0 font-medium text-text-primary">
+            <span className="text-text-primary shrink-0 font-medium">
               Bs. {(item.price * item.quantity).toFixed(2)}
             </span>
           </div>
         ))}
       </div>
-      <div className="mt-4 space-y-2 border-t border-border pt-4 text-sm">
-        <div className="flex justify-between text-text-secondary">
+      <div className="border-border mt-4 space-y-2 border-t pt-4 text-sm">
+        <div className="text-text-secondary flex justify-between">
           <span>Subtotal</span>
           <span>Bs. {subtotal.toFixed(2)}</span>
         </div>
@@ -156,11 +182,11 @@ export default function CheckoutPage() {
             <span>−Bs. {discount.toFixed(2)}</span>
           </div>
         )}
-        <div className="flex items-center justify-between rounded-xl bg-amber-50 px-3 py-2 border border-amber-200">
+        <div className="flex items-center justify-between rounded-xl border border-amber-200 bg-amber-50 px-3 py-2">
           <span className="font-medium text-amber-700">Envío</span>
           <span className="font-bold text-amber-700">Por cobrar</span>
         </div>
-        <div className="flex justify-between font-bold text-base text-text-primary border-t border-border pt-2">
+        <div className="text-text-primary border-border flex justify-between border-t pt-2 text-base font-bold">
           <span>Total estimado</span>
           <span>Bs. {total.toFixed(2)}</span>
         </div>
@@ -169,10 +195,10 @@ export default function CheckoutPage() {
   );
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-4 sm:px-6 py-12">
+    <div className="mx-auto w-full max-w-5xl px-4 py-12 sm:px-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-text-primary">Finalizar pedido</h1>
-        <p className="mt-1 text-text-muted">Completá tus datos y elegí cómo pagar.</p>
+        <h1 className="text-text-primary text-3xl font-bold">Finalizar pedido</h1>
+        <p className="text-text-muted mt-1">Completá tus datos y elegí cómo pagar.</p>
       </div>
 
       <StepIndicator current={step} />
@@ -182,8 +208,8 @@ export default function CheckoutPage() {
           <div>
             {/* PASO 1: Datos de entrega */}
             {step === 1 && (
-              <section className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
-                <h2 className="mb-6 flex items-center gap-2 font-bold text-text-primary">
+              <section className="border-border bg-surface rounded-2xl border p-6 shadow-sm">
+                <h2 className="text-text-primary mb-6 flex items-center gap-2 font-bold">
                   <Truck size={18} className="text-brand" />
                   Datos de entrega
                 </h2>
@@ -221,19 +247,26 @@ export default function CheckoutPage() {
                     {...register('reference')}
                   />
                   <div className="sm:col-span-2">
-                    <label className="mb-1.5 block text-sm font-medium text-text-primary">
+                    <label className="text-text-primary mb-1.5 block text-sm font-medium">
                       Notas adicionales (opcional)
                     </label>
                     <textarea
                       rows={2}
                       placeholder="Instrucciones especiales para el envío..."
-                      className="w-full rounded-xl border border-border bg-white px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-brand"
+                      className="border-border text-text-primary placeholder:text-text-muted focus:ring-brand w-full rounded-xl border bg-white px-4 py-2.5 text-sm focus:ring-2 focus:outline-none"
                       {...register('notes')}
                     />
                   </div>
                 </div>
                 <div className="mt-8">
-                  <Button type="button" variant="primary" size="lg" fullWidth onClick={goToStep2} rightIcon={<ChevronRight size={18} />}>
+                  <Button
+                    type="button"
+                    variant="primary"
+                    size="lg"
+                    fullWidth
+                    onClick={goToStep2}
+                    rightIcon={<ChevronRight size={18} />}
+                  >
                     Continuar al pago
                   </Button>
                 </div>
@@ -242,8 +275,8 @@ export default function CheckoutPage() {
 
             {/* PASO 2: Método de pago */}
             {step === 2 && (
-              <section className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
-                <h2 className="mb-6 flex items-center gap-2 font-bold text-text-primary">
+              <section className="border-border bg-surface rounded-2xl border p-6 shadow-sm">
+                <h2 className="text-text-primary mb-6 flex items-center gap-2 font-bold">
                   <CreditCard size={18} className="text-brand" />
                   Método de pago
                 </h2>
@@ -256,18 +289,32 @@ export default function CheckoutPage() {
                       icon={icon}
                       description={description}
                       selected={selectedPayment === value}
-                      onChange={(v) => setValue('paymentMethod', v as CheckoutFormData['paymentMethod'])}
+                      onChange={(v) =>
+                        setValue('paymentMethod', v as CheckoutFormData['paymentMethod'])
+                      }
                     />
                   ))}
                 </div>
                 {errors.paymentMethod && (
-                  <p className="mt-2 text-xs text-danger">{errors.paymentMethod.message}</p>
+                  <p className="text-danger mt-2 text-xs">{errors.paymentMethod.message}</p>
                 )}
                 <div className="mt-8 flex gap-3">
-                  <Button type="button" variant="secondary" size="lg" onClick={() => setStep(1)} leftIcon={<ChevronLeft size={18} />}>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="lg"
+                    onClick={() => setStep(1)}
+                    leftIcon={<ChevronLeft size={18} />}
+                  >
                     Atrás
                   </Button>
-                  <Button type="submit" variant="primary" size="lg" fullWidth isLoading={isSubmitting}>
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    size="lg"
+                    fullWidth
+                    isLoading={isSubmitting}
+                  >
                     Confirmar pedido
                   </Button>
                 </div>
@@ -276,9 +323,7 @@ export default function CheckoutPage() {
           </div>
 
           {/* Sidebar resumen — sticky */}
-          <div className="lg:sticky lg:top-20">
-            {OrderSidebar}
-          </div>
+          <div className="lg:sticky lg:top-20">{OrderSidebar}</div>
         </div>
       </form>
     </div>

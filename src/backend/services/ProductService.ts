@@ -12,7 +12,7 @@ export const ProductService: IProductService = {
         (p) =>
           p.name.toLowerCase().includes(q) ||
           p.description.toLowerCase().includes(q) ||
-          p.tags.some((t) => t.includes(q)),
+          p.tags.some((t) => t.includes(q))
       );
     }
 
@@ -29,15 +29,11 @@ export const ProductService: IProductService = {
     }
 
     if (filters?.sizes?.length) {
-      results = results.filter((p) =>
-        filters.sizes!.some((size) => p.sizes.includes(size)),
-      );
+      results = results.filter((p) => filters.sizes!.some((size) => p.sizes.includes(size)));
     }
 
     if (filters?.colors?.length) {
-      results = results.filter((p) =>
-        filters.colors!.some((color) => p.colors.includes(color)),
-      );
+      results = results.filter((p) => filters.colors!.some((color) => p.colors.includes(color)));
     }
 
     if (filters?.onlyFlashSale) {
@@ -60,10 +56,7 @@ export const ProductService: IProductService = {
     const products = findAll('products');
     const now = new Date();
     return products.filter(
-      (p) =>
-        p.isFlashSale &&
-        p.flashSaleEndsAt &&
-        new Date(p.flashSaleEndsAt) > now,
+      (p) => p.isFlashSale && p.flashSaleEndsAt && new Date(p.flashSaleEndsAt) > now
     );
   },
 
@@ -75,7 +68,7 @@ export const ProductService: IProductService = {
   async decrementStock(productId: string, quantity: number): Promise<boolean> {
     const product = findById<IProduct>('products', productId);
     if (!product || product.stock < quantity) return false;
-    
+
     product.stock -= quantity;
     update('products', product);
     return true;

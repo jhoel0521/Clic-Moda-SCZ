@@ -34,7 +34,7 @@ export function ReviewModerationTable() {
 
   if (reviews.length === 0) {
     return (
-      <div className="rounded-2xl border border-border bg-surface px-6 py-14 text-center">
+      <div className="border-border bg-surface rounded-2xl border px-6 py-14 text-center">
         <p className="text-text-muted">No hay reseñas pendientes de moderación.</p>
       </div>
     );
@@ -43,17 +43,14 @@ export function ReviewModerationTable() {
   return (
     <div className="space-y-4">
       {reviews.map((review) => (
-        <div
-          key={review.id}
-          className="rounded-2xl border border-border bg-white p-5 shadow-sm"
-        >
+        <div key={review.id} className="border-border rounded-2xl border bg-white p-5 shadow-sm">
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0 flex-1">
               <div className="mb-1 flex items-center gap-2">
-                <span className="text-sm font-semibold text-text-primary">
+                <span className="text-text-primary text-sm font-semibold">
                   {review.autor_nombre ?? 'Usuario anónimo'}
                 </span>
-                <span className="text-xs text-text-muted">
+                <span className="text-text-muted text-xs">
                   {new Date(review.creado_en).toLocaleDateString('es-BO')}
                 </span>
               </div>
@@ -62,12 +59,16 @@ export function ReviewModerationTable() {
                   <Star
                     key={i}
                     size={14}
-                    className={i < review.calificacion_estrellas ? 'fill-amber-400 text-amber-400' : 'text-gray-200'}
+                    className={
+                      i < review.calificacion_estrellas
+                        ? 'fill-amber-400 text-amber-400'
+                        : 'text-gray-200'
+                    }
                   />
                 ))}
               </div>
-              <p className="text-sm leading-relaxed text-text-secondary">{review.comentario}</p>
-              <p className="mt-1 text-xs text-text-muted">Producto: {review.producto_id}</p>
+              <p className="text-text-secondary text-sm leading-relaxed">{review.comentario}</p>
+              <p className="text-text-muted mt-1 text-xs">Producto: {review.producto_id}</p>
             </div>
             <div className="flex shrink-0 gap-2">
               <button

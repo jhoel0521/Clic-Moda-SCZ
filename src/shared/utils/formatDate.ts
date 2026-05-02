@@ -2,10 +2,7 @@
  * Formatea una fecha en formato largo boliviano.
  * Ejemplo: formatDate("2025-04-28") → "28 de abril de 2025"
  */
-export function formatDate(
-  date: string | Date,
-  locale: string = 'es-BO',
-): string {
+export function formatDate(date: string | Date, locale: string = 'es-BO'): string {
   const d = typeof date === 'string' ? new Date(date) : date;
   return d.toLocaleDateString(locale, {
     day: 'numeric',
@@ -18,10 +15,7 @@ export function formatDate(
  * Formatea una fecha con hora.
  * Ejemplo: formatDateTime("2025-04-28T14:30:00") → "28 abr. 2025, 14:30"
  */
-export function formatDateTime(
-  date: string | Date,
-  locale: string = 'es-BO',
-): string {
+export function formatDateTime(date: string | Date, locale: string = 'es-BO'): string {
   const d = typeof date === 'string' ? new Date(date) : date;
   return d.toLocaleDateString(locale, {
     day: 'numeric',

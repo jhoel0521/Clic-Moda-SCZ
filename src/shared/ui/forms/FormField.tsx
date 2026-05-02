@@ -11,7 +11,7 @@ export const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
     const fieldId = id ?? label.toLowerCase().replace(/\s+/g, '-');
     return (
       <div className="space-y-1.5">
-        <label htmlFor={fieldId} className="block text-sm font-medium text-text-primary">
+        <label htmlFor={fieldId} className="text-text-primary block text-sm font-medium">
           {label}
         </label>
         <input
@@ -19,7 +19,7 @@ export const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
           id={fieldId}
           {...props}
           className={[
-            'w-full rounded-xl border bg-white px-4 py-3 text-sm text-text-primary placeholder:text-text-muted transition-all focus:outline-none focus:ring-2',
+            'text-text-primary placeholder:text-text-muted w-full rounded-xl border bg-white px-4 py-3 text-sm transition-all focus:ring-2 focus:outline-none',
             error
               ? 'border-red-400 focus:ring-red-200'
               : 'border-border focus:ring-brand focus:border-brand',
@@ -31,11 +31,9 @@ export const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
             <span aria-hidden="true">⚠</span> {error}
           </p>
         )}
-        {hint && !error && (
-          <p className="text-xs text-text-muted">{hint}</p>
-        )}
+        {hint && !error && <p className="text-text-muted text-xs">{hint}</p>}
       </div>
     );
-  },
+  }
 );
 FormField.displayName = 'FormField';

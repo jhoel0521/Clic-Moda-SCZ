@@ -47,10 +47,13 @@ export function FlashSaleTimer({ endsAt, variant = 'default' }: FlashSaleTimerPr
 
   if (time.expired) {
     return (
-      <span className={variant === 'inline'
-        ? 'font-mono bg-black/20 px-3 py-1.5 rounded-lg font-bold tracking-widest ml-2 text-white'
-        : 'inline-flex items-center rounded-full border border-border bg-surface-raised px-4 py-1.5 text-sm font-semibold text-text-muted'
-      }>
+      <span
+        className={
+          variant === 'inline'
+            ? 'ml-2 rounded-lg bg-black/20 px-3 py-1.5 font-mono font-bold tracking-widest text-white'
+            : 'border-border bg-surface-raised text-text-muted inline-flex items-center rounded-full border px-4 py-1.5 text-sm font-semibold'
+        }
+      >
         Finalizada
       </span>
     );
@@ -60,7 +63,8 @@ export function FlashSaleTimer({ endsAt, variant = 'default' }: FlashSaleTimerPr
   const timeUnits = [];
   if (time.Years > 0) timeUnits.push({ value: time.Years, label: 'a' });
   if (time.Years > 0 || time.Months > 0) timeUnits.push({ value: time.Months, label: 'mes' });
-  if (time.Years > 0 || time.Months > 0 || time.Days > 0) timeUnits.push({ value: time.Days, label: 'd' });
+  if (time.Years > 0 || time.Months > 0 || time.Days > 0)
+    timeUnits.push({ value: time.Days, label: 'd' });
 
   // Horas, minutos y segundos siempre se muestran
   timeUnits.push({ value: time.h, label: 'h' });
@@ -71,12 +75,14 @@ export function FlashSaleTimer({ endsAt, variant = 'default' }: FlashSaleTimerPr
   if (variant === 'inline') {
     const inlinePrefix = [
       time.Years > 0 ? `${time.Years}a` : null,
-      (time.Years > 0 || time.Months > 0) ? `${time.Months}m` : null,
-      (time.Years > 0 || time.Months > 0 || time.Days > 0) ? `${time.Days}d` : null,
-    ].filter(Boolean).join(' ');
+      time.Years > 0 || time.Months > 0 ? `${time.Months}m` : null,
+      time.Years > 0 || time.Months > 0 || time.Days > 0 ? `${time.Days}d` : null,
+    ]
+      .filter(Boolean)
+      .join(' ');
 
     return (
-      <span className="font-mono bg-black/20 px-3 py-1.5 rounded-lg font-bold tracking-widest ml-2 text-white">
+      <span className="ml-2 rounded-lg bg-black/20 px-3 py-1.5 font-mono font-bold tracking-widest text-white">
         {inlinePrefix && `${inlinePrefix} - `}
         {pad(time.h)}:{pad(time.m)}:{pad(time.s)}
       </span>
@@ -85,12 +91,12 @@ export function FlashSaleTimer({ endsAt, variant = 'default' }: FlashSaleTimerPr
 
   // Renderizado para la variante "default"
   return (
-    <div className="inline-flex items-center gap-1 rounded-full border border-brand bg-brand-subtle px-4 py-1.5">
+    <div className="border-brand bg-brand-subtle inline-flex items-center gap-1 rounded-full border px-4 py-1.5">
       {timeUnits.map(({ value, label }, i) => (
         <span key={label} className="flex items-baseline gap-0.5">
-          {i > 0 && <span className="mx-0.5 font-bold text-brand">:</span>}
-          <span className="font-mono text-lg font-bold text-brand">{pad(value)}</span>
-          <span className="text-[10px] font-semibold uppercase text-brand opacity-70">{label}</span>
+          {i > 0 && <span className="text-brand mx-0.5 font-bold">:</span>}
+          <span className="text-brand font-mono text-lg font-bold">{pad(value)}</span>
+          <span className="text-brand text-[10px] font-semibold uppercase opacity-70">{label}</span>
         </span>
       ))}
     </div>

@@ -11,9 +11,5 @@ const PADDING: Record<string, string> = {
 };
 
 export function Section({ children, className = '', size = 'md' }: SectionProps) {
-  return (
-    <section className={`w-full ${PADDING[size]} ${className}`}>
-      {children}
-    </section>
-  );
+  return <section className={`w-full ${PADDING[size]} ${className}`}>{children}</section>;
 }

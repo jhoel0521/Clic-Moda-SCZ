@@ -30,12 +30,7 @@ export type {
   IAplicacionCupon,
 } from './IMarketing';
 
-export type {
-  IResena,
-  IImagenResena,
-  ICreateResenaData,
-  EstadoModeracion,
-} from './IResena';
+export type { IResena, IImagenResena, ICreateResenaData, EstadoModeracion } from './IResena';
 
 export type { IFavorito } from './IFavorito';
 

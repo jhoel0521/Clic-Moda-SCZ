@@ -11,7 +11,15 @@ import { Button } from '@src/shared/ui/Button';
 import { ProductService } from '@src/services/ProductService';
 import type { IProduct, Talla } from '@src/core/models';
 
-const CATEGORIAS = ['vestidos', 'blusas', 'pantalones', 'conjuntos', 'chaquetas', 'faldas', 'accesorios'];
+const CATEGORIAS = [
+  'vestidos',
+  'blusas',
+  'pantalones',
+  'conjuntos',
+  'chaquetas',
+  'faldas',
+  'accesorios',
+];
 const TALLAS_DISPONIBLES: Talla[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
 const productSchema = z.object({
@@ -29,8 +37,16 @@ const productSchema = z.object({
 type ProductFormInput = z.input<typeof productSchema>;
 type ProductFormData = z.output<typeof productSchema>;
 
-interface MedidaRow { size: string; medidas: string }
-interface ImageRow { id?: string; url: string; alt: string; isPrimary: boolean }
+interface MedidaRow {
+  size: string;
+  medidas: string;
+}
+interface ImageRow {
+  id?: string;
+  url: string;
+  alt: string;
+  isPrimary: boolean;
+}
 
 interface ProductFormProps {
   isOpen: boolean;
@@ -43,13 +59,24 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
   const isEdit = Boolean(product);
   const [selectedSizes, setSelectedSizes] = useState<Talla[]>(product?.sizes ?? []);
   const [medidas, setMedidas] = useState<MedidaRow[]>(
-    product ? Object.entries(product.medidas_dinamicas).map(([size, m]) => ({ size, medidas: String(m) })) : []
+    product
+      ? Object.entries(product.medidas_dinamicas).map(([size, m]) => ({ size, medidas: String(m) }))
+      : []
   );
   const [images, setImages] = useState<ImageRow[]>(
-    product?.images.map((img) => ({ id: img.id, url: img.url, alt: img.alt, isPrimary: img.isPrimary ?? false })) ?? []
+    product?.images.map((img) => ({
+      id: img.id,
+      url: img.url,
+      alt: img.alt,
+      isPrimary: img.isPrimary ?? false,
+    })) ?? []
   );
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<ProductFormInput, unknown, ProductFormData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<ProductFormInput, unknown, ProductFormData>({
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: product?.name ?? '',
@@ -65,14 +92,29 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
   });
 
   function toggleSize(size: Talla) {
-    setSelectedSizes((prev) => prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size]);
+    setSelectedSizes((prev) =>
+      prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size]
+    );
   }
 
   async function onSubmit(data: ProductFormData) {
-    const slug = data.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-    const colors = data.colors ? data.colors.split(',').map((c) => c.trim()).filter(Boolean) : [];
-    const medidas_dinamicas = Object.fromEntries(medidas.filter((m) => m.size).map((m) => [m.size, m.medidas]));
-    const productImages = images.map((img) => ({ ...img, id: img.id ?? `img_${crypto.randomUUID()}` }));
+    const slug = data.name
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-]/g, '');
+    const colors = data.colors
+      ? data.colors
+          .split(',')
+          .map((c) => c.trim())
+          .filter(Boolean)
+      : [];
+    const medidas_dinamicas = Object.fromEntries(
+      medidas.filter((m) => m.size).map((m) => [m.size, m.medidas])
+    );
+    const productImages = images.map((img) => ({
+      ...img,
+      id: img.id ?? `img_${crypto.randomUUID()}`,
+    }));
 
     const saved: IProduct = {
       id: product?.id ?? `prod_${crypto.randomUUID()}`,
@@ -107,26 +149,67 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={isEdit ? 'Editar producto' : 'Nuevo producto'} size="lg">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={isEdit ? 'Editar producto' : 'Nuevo producto'}
+      size="lg"
+    >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <div className="grid gap-4 sm:grid-cols-2">
           <Input label="Nombre" error={errors.name?.message} {...register('name')} />
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-text-primary">Categoría</label>
-            <select className="h-10 w-full rounded-xl border border-border bg-white px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-brand" {...register('category')}>
+            <label className="text-text-primary mb-1.5 block text-sm font-medium">Categoría</label>
+            <select
+              className="border-border text-text-primary focus:ring-brand h-10 w-full rounded-xl border bg-white px-3 text-sm focus:ring-2 focus:outline-none"
+              {...register('category')}
+            >
               <option value="">Seleccionar...</option>
-              {CATEGORIAS.map((c) => <option key={c} value={c}>{c}</option>)}
+              {CATEGORIAS.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
             </select>
-            {errors.category && <p className="mt-1 text-xs text-danger">{errors.category.message}</p>}
+            {errors.category && (
+              <p className="text-danger mt-1 text-xs">{errors.category.message}</p>
+            )}
           </div>
-          <Input label="Precio (Bs.)" type="number" step="0.01" error={errors.price?.message} {...register('price', { valueAsNumber: true })} />
-          <Input label="Precio original (Bs., opcional)" type="number" step="0.01" {...register('originalPrice', { valueAsNumber: true })} />
-          <Input label="Stock" type="number" error={errors.stock?.message} {...register('stock', { valueAsNumber: true })} />
-          <Input label="Tipo de tela (opcional)" placeholder="Algodón, Poliéster..." {...register('tipo_tela')} />
-          <Input label="Colores (separados por coma)" placeholder="Rosa, Negro, Blanco" {...register('colors')} />
+          <Input
+            label="Precio (Bs.)"
+            type="number"
+            step="0.01"
+            error={errors.price?.message}
+            {...register('price', { valueAsNumber: true })}
+          />
+          <Input
+            label="Precio original (Bs., opcional)"
+            type="number"
+            step="0.01"
+            {...register('originalPrice', { valueAsNumber: true })}
+          />
+          <Input
+            label="Stock"
+            type="number"
+            error={errors.stock?.message}
+            {...register('stock', { valueAsNumber: true })}
+          />
+          <Input
+            label="Tipo de tela (opcional)"
+            placeholder="Algodón, Poliéster..."
+            {...register('tipo_tela')}
+          />
+          <Input
+            label="Colores (separados por coma)"
+            placeholder="Rosa, Negro, Blanco"
+            {...register('colors')}
+          />
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-text-primary">Estado</label>
-            <select className="h-10 w-full rounded-xl border border-border bg-white px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-brand" {...register('estado')}>
+            <label className="text-text-primary mb-1.5 block text-sm font-medium">Estado</label>
+            <select
+              className="border-border text-text-primary focus:ring-brand h-10 w-full rounded-xl border bg-white px-3 text-sm focus:ring-2 focus:outline-none"
+              {...register('estado')}
+            >
               <option value="activo">Activo</option>
               <option value="inactivo">Inactivo</option>
             </select>
@@ -134,18 +217,33 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
         </div>
 
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-text-primary">Descripción</label>
-          <textarea rows={2} className="w-full rounded-xl border border-border bg-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand" {...register('description')} />
-          {errors.description && <p className="mt-1 text-xs text-danger">{errors.description.message}</p>}
+          <label className="text-text-primary mb-1.5 block text-sm font-medium">Descripción</label>
+          <textarea
+            rows={2}
+            className="border-border focus:ring-brand w-full rounded-xl border bg-white px-4 py-2.5 text-sm focus:ring-2 focus:outline-none"
+            {...register('description')}
+          />
+          {errors.description && (
+            <p className="text-danger mt-1 text-xs">{errors.description.message}</p>
+          )}
         </div>
 
         {/* Tallas */}
         <div>
-          <p className="mb-2 text-sm font-medium text-text-primary">Tallas disponibles</p>
+          <p className="text-text-primary mb-2 text-sm font-medium">Tallas disponibles</p>
           <div className="flex flex-wrap gap-2">
             {TALLAS_DISPONIBLES.map((size) => (
-              <button key={size} type="button" onClick={() => toggleSize(size)}
-                className={['rounded-lg border px-3 py-1.5 text-xs font-medium transition-all', selectedSizes.includes(size) ? 'border-brand bg-brand-subtle text-brand' : 'border-border bg-white text-text-secondary'].join(' ')}>
+              <button
+                key={size}
+                type="button"
+                onClick={() => toggleSize(size)}
+                className={[
+                  'rounded-lg border px-3 py-1.5 text-xs font-medium transition-all',
+                  selectedSizes.includes(size)
+                    ? 'border-brand bg-brand-subtle text-brand'
+                    : 'border-border text-text-secondary bg-white',
+                ].join(' ')}
+              >
                 {size}
               </button>
             ))}
@@ -154,22 +252,44 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
 
         {/* Medidas dinámicas */}
         <div>
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-text-primary">Medidas por talla</p>
-            <button type="button" onClick={() => setMedidas((m) => [...m, { size: '', medidas: '' }])}
-              className="text-xs text-brand font-medium hover:underline flex items-center gap-1">
+          <div className="mb-2 flex items-center justify-between">
+            <p className="text-text-primary text-sm font-medium">Medidas por talla</p>
+            <button
+              type="button"
+              onClick={() => setMedidas((m) => [...m, { size: '', medidas: '' }])}
+              className="text-brand flex items-center gap-1 text-xs font-medium hover:underline"
+            >
               <Plus size={12} /> Agregar fila
             </button>
           </div>
           <div className="space-y-2">
             {medidas.map((row, i) => (
               <div key={i} className="flex gap-2">
-                <input placeholder="Talla (ej: S)" value={row.size} onChange={(e) => setMedidas((m) => m.map((r, j) => j === i ? { ...r, size: e.target.value } : r))}
-                  className="w-24 rounded-lg border border-border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-brand" />
-                <input placeholder="Medidas (ej: Largo: 90cm | Busto: 80cm)" value={row.medidas} onChange={(e) => setMedidas((m) => m.map((r, j) => j === i ? { ...r, medidas: e.target.value } : r))}
-                  className="flex-1 rounded-lg border border-border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-brand" />
-                <button type="button" onClick={() => setMedidas((m) => m.filter((_, j) => j !== i))}
-                  className="text-text-muted hover:text-danger">
+                <input
+                  placeholder="Talla (ej: S)"
+                  value={row.size}
+                  onChange={(e) =>
+                    setMedidas((m) =>
+                      m.map((r, j) => (j === i ? { ...r, size: e.target.value } : r))
+                    )
+                  }
+                  className="border-border focus:ring-brand w-24 rounded-lg border bg-white px-3 py-2 text-sm focus:ring-1 focus:outline-none"
+                />
+                <input
+                  placeholder="Medidas (ej: Largo: 90cm | Busto: 80cm)"
+                  value={row.medidas}
+                  onChange={(e) =>
+                    setMedidas((m) =>
+                      m.map((r, j) => (j === i ? { ...r, medidas: e.target.value } : r))
+                    )
+                  }
+                  className="border-border focus:ring-brand flex-1 rounded-lg border bg-white px-3 py-2 text-sm focus:ring-1 focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => setMedidas((m) => m.filter((_, j) => j !== i))}
+                  className="text-text-muted hover:text-danger"
+                >
                   <Trash2 size={15} />
                 </button>
               </div>
@@ -179,26 +299,56 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
 
         {/* Imágenes */}
         <div>
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-text-primary">Imágenes (URLs)</p>
-            <button type="button" onClick={() => setImages((imgs) => [...imgs, { url: '', alt: '', isPrimary: imgs.length === 0 }])}
-              className="text-xs text-brand font-medium hover:underline flex items-center gap-1">
+          <div className="mb-2 flex items-center justify-between">
+            <p className="text-text-primary text-sm font-medium">Imágenes (URLs)</p>
+            <button
+              type="button"
+              onClick={() =>
+                setImages((imgs) => [...imgs, { url: '', alt: '', isPrimary: imgs.length === 0 }])
+              }
+              className="text-brand flex items-center gap-1 text-xs font-medium hover:underline"
+            >
               <Plus size={12} /> Agregar
             </button>
           </div>
           <div className="space-y-2">
             {images.map((img, i) => (
-              <div key={i} className="flex gap-2 items-center">
-                <input placeholder="URL de imagen" value={img.url} onChange={(e) => setImages((imgs) => imgs.map((r, j) => j === i ? { ...r, url: e.target.value } : r))}
-                  className="flex-1 rounded-lg border border-border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-brand" />
-                <input placeholder="Alt" value={img.alt} onChange={(e) => setImages((imgs) => imgs.map((r, j) => j === i ? { ...r, alt: e.target.value } : r))}
-                  className="w-32 rounded-lg border border-border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-brand" />
-                <label className="flex items-center gap-1 text-xs text-text-muted shrink-0 cursor-pointer">
-                  <input type="checkbox" checked={img.isPrimary} onChange={() => setImages((imgs) => imgs.map((r, j) => ({ ...r, isPrimary: j === i })))} />
+              <div key={i} className="flex items-center gap-2">
+                <input
+                  placeholder="URL de imagen"
+                  value={img.url}
+                  onChange={(e) =>
+                    setImages((imgs) =>
+                      imgs.map((r, j) => (j === i ? { ...r, url: e.target.value } : r))
+                    )
+                  }
+                  className="border-border focus:ring-brand flex-1 rounded-lg border bg-white px-3 py-2 text-sm focus:ring-1 focus:outline-none"
+                />
+                <input
+                  placeholder="Alt"
+                  value={img.alt}
+                  onChange={(e) =>
+                    setImages((imgs) =>
+                      imgs.map((r, j) => (j === i ? { ...r, alt: e.target.value } : r))
+                    )
+                  }
+                  className="border-border focus:ring-brand w-32 rounded-lg border bg-white px-3 py-2 text-sm focus:ring-1 focus:outline-none"
+                />
+                <label className="text-text-muted flex shrink-0 cursor-pointer items-center gap-1 text-xs">
+                  <input
+                    type="checkbox"
+                    checked={img.isPrimary}
+                    onChange={() =>
+                      setImages((imgs) => imgs.map((r, j) => ({ ...r, isPrimary: j === i })))
+                    }
+                  />
                   Principal
                 </label>
-                <button type="button" onClick={() => setImages((imgs) => imgs.filter((_, j) => j !== i))}
-                  className="text-text-muted hover:text-danger">
+                <button
+                  type="button"
+                  onClick={() => setImages((imgs) => imgs.filter((_, j) => j !== i))}
+                  className="text-text-muted hover:text-danger"
+                >
                   <Trash2 size={15} />
                 </button>
               </div>

@@ -16,16 +16,11 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantClasses: Record<ButtonVariant, string> = {
-  primary:
-    'bg-brand text-white hover:bg-brand-dark active:scale-[0.98] shadow-sm',
-  secondary:
-    'bg-surface-raised text-text-primary hover:bg-surface-hover border border-border',
-  ghost:
-    'bg-transparent text-text-secondary hover:bg-surface-hover hover:text-text-primary',
-  danger:
-    'bg-danger text-white hover:bg-danger-dark active:scale-[0.98]',
-  outline:
-    'bg-transparent border-2 border-brand text-brand hover:bg-brand hover:text-white',
+  primary: 'bg-brand text-white hover:bg-brand-dark active:scale-[0.98] shadow-sm',
+  secondary: 'bg-surface-raised text-text-primary hover:bg-surface-hover border border-border',
+  ghost: 'bg-transparent text-text-secondary hover:bg-surface-hover hover:text-text-primary',
+  danger: 'bg-danger text-white hover:bg-danger-dark active:scale-[0.98]',
+  outline: 'bg-transparent border-2 border-brand text-brand hover:bg-brand hover:text-white',
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
@@ -48,7 +43,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       className = '',
       ...props
     },
-    ref,
+    ref
   ) => {
     const isDisabled = disabled || isLoading;
 
@@ -59,8 +54,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         className={[
           'inline-flex items-center justify-center rounded-xl font-semibold',
           'transition-all duration-150 ease-out',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2',
-          'disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100',
+          'focus-visible:ring-brand focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+          'disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100',
           variantClasses[variant],
           sizeClasses[size],
           fullWidth ? 'w-full' : '',
@@ -71,7 +66,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         {isLoading ? (
-          <Loader2 className="animate-spin shrink-0" size={size === 'sm' ? 14 : size === 'lg' ? 18 : 16} />
+          <Loader2
+            className="shrink-0 animate-spin"
+            size={size === 'sm' ? 14 : size === 'lg' ? 18 : 16}
+          />
         ) : (
           leftIcon && <span className="shrink-0">{leftIcon}</span>
         )}
@@ -79,7 +77,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {!isLoading && rightIcon && <span className="shrink-0">{rightIcon}</span>}
       </button>
     );
-  },
+  }
 );
 
 Button.displayName = 'Button';

@@ -22,7 +22,7 @@ function StarRating({ rating }: { rating: number }) {
 export function ReviewList({ reviews }: ReviewListProps) {
   if (reviews.length === 0) {
     return (
-      <p className="text-center text-text-muted py-8 text-sm">
+      <p className="text-text-muted py-8 text-center text-sm">
         Sé el primero en reseñar este producto.
       </p>
     );
@@ -33,14 +33,14 @@ export function ReviewList({ reviews }: ReviewListProps) {
       {reviews.map((review) => (
         <article
           key={review.id}
-          className="rounded-2xl border border-border bg-surface p-5 shadow-sm"
+          className="border-border bg-surface rounded-2xl border p-5 shadow-sm"
         >
-          <div className="flex items-start justify-between gap-4 mb-3">
+          <div className="mb-3 flex items-start justify-between gap-4">
             <div>
-              <p className="font-semibold text-text-primary text-sm">
+              <p className="text-text-primary text-sm font-semibold">
                 {review.autor_nombre ?? 'Cliente verificado'}
               </p>
-              <p className="text-xs text-text-muted mt-0.5">
+              <p className="text-text-muted mt-0.5 text-xs">
                 {new Date(review.creado_en).toLocaleDateString('es-BO', {
                   year: 'numeric',
                   month: 'long',
@@ -50,7 +50,7 @@ export function ReviewList({ reviews }: ReviewListProps) {
             </div>
             <StarRating rating={review.calificacion_estrellas} />
           </div>
-          <p className="text-sm text-text-secondary leading-relaxed">{review.comentario}</p>
+          <p className="text-text-secondary text-sm leading-relaxed">{review.comentario}</p>
         </article>
       ))}
     </div>

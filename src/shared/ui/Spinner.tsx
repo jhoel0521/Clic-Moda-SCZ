@@ -23,14 +23,8 @@ export function Spinner({ size = 'md', label, className = '' }: SpinnerProps) {
       aria-label={label ?? 'Cargando…'}
       className={`inline-flex flex-col items-center gap-3 ${className}`}
     >
-      <Loader2
-        size={sizeMap[size]}
-        className="animate-spin text-brand"
-        aria-hidden="true"
-      />
-      {label && (
-        <span className="text-sm text-text-muted">{label}</span>
-      )}
+      <Loader2 size={sizeMap[size]} className="text-brand animate-spin" aria-hidden="true" />
+      {label && <span className="text-text-muted text-sm">{label}</span>}
     </div>
   );
 }
@@ -38,7 +32,7 @@ export function Spinner({ size = 'md', label, className = '' }: SpinnerProps) {
 /** Spinner de pantalla completa para carga de páginas */
 export function PageSpinner({ label = 'Cargando…' }: { label?: string }) {
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="flex min-h-screen items-center justify-center">
       <Spinner size="xl" label={label} />
     </div>
   );

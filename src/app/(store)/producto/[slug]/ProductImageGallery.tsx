@@ -17,8 +17,8 @@ export function ProductImageGallery({ images }: ProductImageGalleryProps) {
 
   return (
     <div className="space-y-4">
-      <div className="overflow-hidden rounded-[28px] border border-border bg-surface shadow-lg">
-        <div className="relative aspect-[4/5] bg-surface-raised">
+      <div className="border-border bg-surface overflow-hidden rounded-[28px] border shadow-lg">
+        <div className="bg-surface-raised relative aspect-[4/5]">
           <Image
             src={selected.url}
             alt={selected.alt}
@@ -44,13 +44,7 @@ export function ProductImageGallery({ images }: ProductImageGalleryProps) {
                   : 'border-border hover:border-border-hover',
               ].join(' ')}
             >
-              <Image
-                src={image.url}
-                alt={image.alt}
-                fill
-                className="object-cover"
-                sizes="120px"
-              />
+              <Image src={image.url} alt={image.alt} fill className="object-cover" sizes="120px" />
             </button>
           ))}
         </div>

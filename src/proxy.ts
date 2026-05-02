@@ -47,8 +47,5 @@ export function proxy(request: NextRequest) {
 
 /** Matcher: aplica el middleware solo a las rutas relevantes */
 export const config = {
-  matcher: [
-    '/admin/:path*',
-    '/perfil/:path*',
-  ],
+  matcher: ['/admin/:path*', '/perfil/:path*'],
 };

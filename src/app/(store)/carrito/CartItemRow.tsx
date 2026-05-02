@@ -12,9 +12,9 @@ interface CartItemRowProps {
 
 export function CartItemRow({ item, onRemove, onUpdateQty }: CartItemRowProps) {
   return (
-    <div className="flex gap-4 rounded-2xl border border-border bg-surface p-4 shadow-sm">
+    <div className="border-border bg-surface flex gap-4 rounded-2xl border p-4 shadow-sm">
       {/* Imagen */}
-      <div className="relative h-24 w-20 shrink-0 overflow-hidden rounded-xl bg-surface-raised">
+      <div className="bg-surface-raised relative h-24 w-20 shrink-0 overflow-hidden rounded-xl">
         {item.imageUrl ? (
           <Image src={item.imageUrl} alt={item.name} fill className="object-cover" sizes="80px" />
         ) : (
@@ -23,45 +23,48 @@ export function CartItemRow({ item, onRemove, onUpdateQty }: CartItemRowProps) {
       </div>
 
       {/* Info */}
-      <div className="flex flex-1 flex-col justify-between min-w-0">
+      <div className="flex min-w-0 flex-1 flex-col justify-between">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <p className="font-semibold text-sm text-text-primary line-clamp-2">{item.name}</p>
-            <p className="text-xs text-text-muted mt-0.5">
+            <p className="text-text-primary line-clamp-2 text-sm font-semibold">{item.name}</p>
+            <p className="text-text-muted mt-0.5 text-xs">
               Talla: <span className="font-medium">{item.selectedSize}</span>
               {item.selectedColor && (
-                <> · Color: <span className="font-medium">{item.selectedColor}</span></>
+                <>
+                  {' '}
+                  · Color: <span className="font-medium">{item.selectedColor}</span>
+                </>
               )}
             </p>
           </div>
           <button
             type="button"
             onClick={onRemove}
-            className="shrink-0 rounded-lg p-1.5 text-text-muted transition-colors hover:bg-red-50 hover:text-danger"
+            className="text-text-muted hover:text-danger shrink-0 rounded-lg p-1.5 transition-colors hover:bg-red-50"
             aria-label="Eliminar ítem"
           >
             <Trash2 size={15} />
           </button>
         </div>
 
-        <div className="flex items-center justify-between mt-2">
+        <div className="mt-2 flex items-center justify-between">
           {/* Cantidad */}
-          <div className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-white p-0.5">
+          <div className="border-border inline-flex items-center gap-1.5 rounded-lg border bg-white p-0.5">
             <button
               type="button"
               onClick={() => onUpdateQty(item.quantity - 1)}
-              className="flex h-6 w-6 items-center justify-center rounded text-text-muted hover:bg-surface-hover transition-colors"
+              className="text-text-muted hover:bg-surface-hover flex h-6 w-6 items-center justify-center rounded transition-colors"
               aria-label="Reducir cantidad"
             >
               <Minus size={12} />
             </button>
-            <span className="w-6 text-center text-sm font-bold text-text-primary">
+            <span className="text-text-primary w-6 text-center text-sm font-bold">
               {item.quantity}
             </span>
             <button
               type="button"
               onClick={() => onUpdateQty(item.quantity + 1)}
-              className="flex h-6 w-6 items-center justify-center rounded text-text-muted hover:bg-surface-hover transition-colors"
+              className="text-text-muted hover:bg-surface-hover flex h-6 w-6 items-center justify-center rounded transition-colors"
               aria-label="Aumentar cantidad"
             >
               <Plus size={12} />
@@ -69,7 +72,7 @@ export function CartItemRow({ item, onRemove, onUpdateQty }: CartItemRowProps) {
           </div>
 
           {/* Precio total del ítem */}
-          <p className="font-bold text-text-primary">
+          <p className="text-text-primary font-bold">
             Bs. {(item.price * item.quantity).toFixed(2)}
           </p>
         </div>

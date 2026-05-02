@@ -1,6 +1,13 @@
 import fs from 'fs';
 import path from 'path';
-import type { IUser, IProduct, IOrder, ICuponDescuento, IResena, IBannerPromocional } from '@src/core/models';
+import type {
+  IUser,
+  IProduct,
+  IOrder,
+  ICuponDescuento,
+  IResena,
+  IBannerPromocional,
+} from '@src/core/models';
 import { hashPassword } from './crypto';
 
 export interface Database {
@@ -76,7 +83,10 @@ export function findAll<K extends keyof FullDatabase>(table: K): FullDatabase[K]
 /**
  * Busca un elemento por su ID en una tabla.
  */
-export function findById<T extends { id: string }>(table: keyof FullDatabase, id: string): T | null {
+export function findById<T extends { id: string }>(
+  table: keyof FullDatabase,
+  id: string
+): T | null {
   const db = getDb();
   const list = db[table] as unknown as T[];
   return list.find((item) => item.id === id) ?? null;

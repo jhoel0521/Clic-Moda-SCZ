@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ProductService } from '@src/backend/services/ProductService';
 
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const body = await req.json();

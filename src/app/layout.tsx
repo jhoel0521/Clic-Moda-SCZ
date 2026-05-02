@@ -14,7 +14,8 @@ export const metadata: Metadata = {
     default: 'Clic Moda SCZ — Fast Fashion Santa Cruz',
     template: '%s | Clic Moda SCZ',
   },
-  description: 'Ropa trendy con envío a Santa Cruz de la Sierra. Tallas exactas y coordinación por WhatsApp.',
+  description:
+    'Ropa trendy con envío a Santa Cruz de la Sierra. Tallas exactas y coordinación por WhatsApp.',
 };
 
 export default function RootLayout({

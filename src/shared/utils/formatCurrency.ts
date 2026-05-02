@@ -5,7 +5,7 @@
 export function formatCurrency(
   amount: number,
   currency: string = 'BOB',
-  locale: string = 'es-BO',
+  locale: string = 'es-BO'
 ): string {
   if (currency === 'BOB') {
     // Intl no soporta bien BOB en todos los entornos; usamos formato manual

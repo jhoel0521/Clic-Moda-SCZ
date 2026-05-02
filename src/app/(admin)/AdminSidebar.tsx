@@ -34,23 +34,24 @@ export function AdminSidebar() {
   }
 
   return (
-    <aside className="w-64 border-r border-border bg-surface flex flex-col shrink-0">
+    <aside className="border-border bg-surface flex w-64 shrink-0 flex-col border-r">
       {/* Marca */}
-      <div className="px-5 py-5 border-b border-border">
-        <p className="font-black text-lg tracking-tight text-brand">Clic Moda SCZ</p>
-        <p className="text-xs text-text-muted mt-0.5">Panel de administración</p>
+      <div className="border-border border-b px-5 py-5">
+        <p className="text-brand text-lg font-black tracking-tight">Clic Moda SCZ</p>
+        <p className="text-text-muted mt-0.5 text-xs">Panel de administración</p>
       </div>
 
       {/* Navegación */}
-      <nav className="flex-1 p-4 space-y-1">
+      <nav className="flex-1 space-y-1 p-4">
         {NAV_ITEMS.map(({ label, href, icon: Icon }) => {
-          const isActive = pathname === href || (href !== ROUTES.ADMIN.DASHBOARD && pathname.startsWith(href));
+          const isActive =
+            pathname === href || (href !== ROUTES.ADMIN.DASHBOARD && pathname.startsWith(href));
           return (
             <Link
               key={href}
               href={href}
               className={[
-                'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150',
+                'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150',
                 isActive
                   ? 'bg-brand-subtle text-brand'
                   : 'text-text-secondary hover:bg-surface-hover hover:text-text-primary',
@@ -64,10 +65,10 @@ export function AdminSidebar() {
       </nav>
 
       {/* Footer con usuario */}
-      <div className="p-4 border-t border-border space-y-3">
+      <div className="border-border space-y-3 border-t p-4">
         <Link
           href={ROUTES.HOME}
-          className="flex items-center gap-2 px-3 py-2 text-sm text-text-muted hover:text-text-primary transition-colors"
+          className="text-text-muted hover:text-text-primary flex items-center gap-2 px-3 py-2 text-sm transition-colors"
         >
           <Store size={15} />
           Ver tienda
@@ -75,15 +76,15 @@ export function AdminSidebar() {
         {user && (
           <div className="flex items-center justify-between gap-2 px-3">
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-text-primary truncate">{user.name}</p>
-              <p className="text-xs text-brand font-medium">
+              <p className="text-text-primary truncate text-sm font-semibold">{user.name}</p>
+              <p className="text-brand text-xs font-medium">
                 {ROLE_LABELS[user.role] ?? user.role}
               </p>
             </div>
             <button
               type="button"
               onClick={handleLogout}
-              className="shrink-0 text-text-muted hover:text-danger transition-colors"
+              className="text-text-muted hover:text-danger shrink-0 transition-colors"
               aria-label="Cerrar sesión"
             >
               <LogOut size={16} />

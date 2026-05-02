@@ -27,11 +27,9 @@ export const useAuthStore = create<AuthState>()(
       error: null,
       _hasHydrated: false,
 
-      setUser: (user) =>
-        set({ user, isAuthenticated: true, error: null, isLoading: false }),
+      setUser: (user) => set({ user, isAuthenticated: true, error: null, isLoading: false }),
 
-      logout: () =>
-        set({ user: null, isAuthenticated: false, error: null }),
+      logout: () => set({ user: null, isAuthenticated: false, error: null }),
 
       setLoading: (isLoading) => set({ isLoading }),
 
@@ -49,8 +47,8 @@ export const useAuthStore = create<AuthState>()(
       onRehydrateStorage: () => (state) => {
         state?.setHasHydrated(true);
       },
-    },
-  ),
+    }
+  )
 );
 
 // Tipo de credenciales re-exportado para conveniencia

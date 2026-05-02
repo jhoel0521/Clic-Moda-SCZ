@@ -21,7 +21,12 @@ export function FlashSaleConfig() {
   const [isLoading, setIsLoading] = useState(true);
   const [saved, setSaved] = useState(false);
 
-  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FlashFormData>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<FlashFormData>({
     resolver: zodResolver(flashSchema),
   });
 
@@ -48,19 +53,17 @@ export function FlashSaleConfig() {
 
   return (
     <div className="mx-auto max-w-md">
-      <div className="rounded-2xl border border-border bg-white p-6 shadow-sm">
+      <div className="border-border rounded-2xl border bg-white p-6 shadow-sm">
         <div className="mb-5 flex items-center gap-2">
           <Zap size={18} className="text-amber-500" />
-          <p className="font-semibold text-text-primary">Configurar Flash Sale</p>
+          <p className="text-text-primary font-semibold">Configurar Flash Sale</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-text-primary">
-              Producto
-            </label>
+            <label className="text-text-primary mb-1.5 block text-sm font-medium">Producto</label>
             <select
-              className="h-10 w-full rounded-xl border border-border bg-white px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-brand"
+              className="border-border text-text-primary focus:ring-brand h-10 w-full rounded-xl border bg-white px-3 text-sm focus:ring-2 focus:outline-none"
               {...register('productId')}
             >
               <option value="">Seleccionar producto...</option>
@@ -71,22 +74,20 @@ export function FlashSaleConfig() {
               ))}
             </select>
             {errors.productId && (
-              <p className="mt-1 text-xs text-danger">{errors.productId.message}</p>
+              <p className="text-danger mt-1 text-xs">{errors.productId.message}</p>
             )}
           </div>
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-text-primary">
+            <label className="text-text-primary mb-1.5 block text-sm font-medium">
               Fin de la oferta
             </label>
             <input
               type="datetime-local"
-              className="h-10 w-full rounded-xl border border-border bg-white px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-brand"
+              className="border-border text-text-primary focus:ring-brand h-10 w-full rounded-xl border bg-white px-3 text-sm focus:ring-2 focus:outline-none"
               {...register('endsAt')}
             />
-            {errors.endsAt && (
-              <p className="mt-1 text-xs text-danger">{errors.endsAt.message}</p>
-            )}
+            {errors.endsAt && <p className="text-danger mt-1 text-xs">{errors.endsAt.message}</p>}
           </div>
 
           <Button type="submit" variant="primary" fullWidth isLoading={isSubmitting}>

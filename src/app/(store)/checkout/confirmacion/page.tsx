@@ -13,10 +13,10 @@ const LS_KEY = 'clic-moda-last-order';
 const WA_NUMBER = '59177000001';
 
 const PAYMENT_LABELS: Record<string, string> = {
-  transferencia:    'Transferencia bancaria',
-  qr_simple:        'QR Simple',
+  transferencia: 'Transferencia bancaria',
+  qr_simple: 'QR Simple',
   efectivo_entrega: 'Efectivo en entrega',
-  contra_entrega:   'Contra entrega',
+  contra_entrega: 'Contra entrega',
 };
 
 export default function ConfirmationPage() {
@@ -42,8 +42,8 @@ export default function ConfirmationPage() {
   if (!order) {
     return (
       <div className="mx-auto max-w-xl px-6 py-24 text-center">
-        <p className="text-4xl mb-4">❓</p>
-        <h1 className="text-2xl font-bold text-text-primary mb-3">No hay pedido activo</h1>
+        <p className="mb-4 text-4xl">❓</p>
+        <h1 className="text-text-primary mb-3 text-2xl font-bold">No hay pedido activo</h1>
         <p className="text-text-muted mb-8">
           Para generar un ticket de pedido primero completá el proceso de compra.
         </p>
@@ -55,7 +55,7 @@ export default function ConfirmationPage() {
   }
 
   const waMsg = encodeURIComponent(
-    `Hola! Quiero coordinar mi pedido *${order.ticketId}*.\nTotal: Bs. ${order.total.toFixed(2)}\nMétodo de pago: ${PAYMENT_LABELS[order.paymentMethod] ?? order.paymentMethod}`,
+    `Hola! Quiero coordinar mi pedido *${order.ticketId}*.\nTotal: Bs. ${order.total.toFixed(2)}\nMétodo de pago: ${PAYMENT_LABELS[order.paymentMethod] ?? order.paymentMethod}`
   );
 
   function downloadTicket() {
@@ -67,7 +67,8 @@ export default function ConfirmationPage() {
       ``,
       `PRODUCTOS:`,
       ...order!.items.map(
-        (i) => `  • ${i.product.name} (${i.selectedSize} / ${i.selectedColor}) x${i.quantity}  Bs. ${(i.unitPrice * i.quantity).toFixed(2)}`,
+        (i) =>
+          `  • ${i.product.name} (${i.selectedSize} / ${i.selectedColor}) x${i.quantity}  Bs. ${(i.unitPrice * i.quantity).toFixed(2)}`
       ),
       ``,
       `Subtotal:  Bs. ${order!.subtotal.toFixed(2)}`,
@@ -95,40 +96,36 @@ export default function ConfirmationPage() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-2xl px-4 sm:px-6 py-14">
+    <div className="mx-auto w-full max-w-2xl px-4 py-14 sm:px-6">
       <SuccessState
         title="¡Pedido confirmado!"
         description="Coordiná la entrega enviando tu ticket por WhatsApp."
       />
 
       {/* Ticket */}
-      <div className="mb-6 rounded-2xl border-2 border-dashed border-border-brand bg-brand-subtle p-6 text-center">
-        <p className="text-xs font-semibold uppercase tracking-widest text-brand mb-1">
-          Tu ticket
-        </p>
-        <p className="font-mono text-3xl font-bold text-brand tracking-wider">
-          {order.ticketId}
-        </p>
-        <p className="mt-1 text-xs text-text-muted">
+      <div className="border-border-brand bg-brand-subtle mb-6 rounded-2xl border-2 border-dashed p-6 text-center">
+        <p className="text-brand mb-1 text-xs font-semibold tracking-widest uppercase">Tu ticket</p>
+        <p className="text-brand font-mono text-3xl font-bold tracking-wider">{order.ticketId}</p>
+        <p className="text-text-muted mt-1 text-xs">
           {new Date(order.createdAt).toLocaleString('es-BO')}
         </p>
       </div>
 
       {/* Ítems del pedido */}
-      <div className="mb-6 rounded-2xl border border-border bg-surface shadow-sm overflow-hidden">
-        <div className="px-5 py-4 bg-bg-secondary border-b border-border">
-          <p className="font-semibold text-sm text-text-primary">Productos</p>
+      <div className="border-border bg-surface mb-6 overflow-hidden rounded-2xl border shadow-sm">
+        <div className="bg-bg-secondary border-border border-b px-5 py-4">
+          <p className="text-text-primary text-sm font-semibold">Productos</p>
         </div>
-        <div className="divide-y divide-border">
+        <div className="divide-border divide-y">
           {order.items.map((item) => (
             <div key={item.id} className="flex items-center justify-between px-5 py-3 text-sm">
               <div>
-                <p className="font-medium text-text-primary">{item.product.name}</p>
-                <p className="text-xs text-text-muted">
+                <p className="text-text-primary font-medium">{item.product.name}</p>
+                <p className="text-text-muted text-xs">
                   {item.selectedSize} / {item.selectedColor} × {item.quantity}
                 </p>
               </div>
-              <p className="font-bold text-text-primary">
+              <p className="text-text-primary font-bold">
                 Bs. {(item.unitPrice * item.quantity).toFixed(2)}
               </p>
             </div>
@@ -136,8 +133,8 @@ export default function ConfirmationPage() {
         </div>
 
         {/* Totales */}
-        <div className="px-5 py-4 bg-bg-secondary border-t border-border space-y-2 text-sm">
-          <div className="flex justify-between text-text-secondary">
+        <div className="bg-bg-secondary border-border space-y-2 border-t px-5 py-4 text-sm">
+          <div className="text-text-secondary flex justify-between">
             <span>Subtotal</span>
             <span>Bs. {order.subtotal.toFixed(2)}</span>
           </div>
@@ -147,11 +144,11 @@ export default function ConfirmationPage() {
               <span>−Bs. {order.discount.toFixed(2)}</span>
             </div>
           )}
-          <div className="flex justify-between items-center rounded-lg bg-amber-50 px-3 py-1.5 border border-amber-200">
-            <span className="text-amber-700 font-medium">Envío</span>
+          <div className="flex items-center justify-between rounded-lg border border-amber-200 bg-amber-50 px-3 py-1.5">
+            <span className="font-medium text-amber-700">Envío</span>
             <span className="font-bold text-amber-700">Por cobrar</span>
           </div>
-          <div className="flex justify-between font-bold text-base text-text-primary border-t border-border pt-2">
+          <div className="text-text-primary border-border flex justify-between border-t pt-2 text-base font-bold">
             <span>Total</span>
             <span>Bs. {order.total.toFixed(2)}</span>
           </div>
@@ -181,7 +178,7 @@ export default function ConfirmationPage() {
       </div>
 
       <div className="mt-8 text-center">
-        <Link href={ROUTES.CATALOG} className="text-sm text-brand font-medium hover:underline">
+        <Link href={ROUTES.CATALOG} className="text-brand text-sm font-medium hover:underline">
           Seguir comprando →
         </Link>
       </div>

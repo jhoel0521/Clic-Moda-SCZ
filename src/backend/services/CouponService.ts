@@ -21,11 +21,15 @@ export const CouponService: ICouponService = {
     }
 
     if (coupon.veces_usado >= coupon.limite_usos) {
-      return { valid: false, discount: 0, errorMessage: 'El cupón ha alcanzado su límite de usos.' };
+      return {
+        valid: false,
+        discount: 0,
+        errorMessage: 'El cupón ha alcanzado su límite de usos.',
+      };
     }
 
     const discount = Math.round((subtotal * coupon.porcentaje_descuento) / 100);
-    
+
     // Incrementamos usos
     coupon.veces_usado += 1;
     update('coupons', coupon);

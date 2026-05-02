@@ -30,6 +30,6 @@ export function useMediaQuery(query: Breakpoint | string): boolean {
       return () => mq.removeEventListener('change', callback);
     },
     () => window.matchMedia(rawQuery).matches,
-    () => false,
+    () => false
   );
 }
