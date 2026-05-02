@@ -30,7 +30,7 @@ type ProductFormInput = z.input<typeof productSchema>;
 type ProductFormData = z.output<typeof productSchema>;
 
 interface MedidaRow { size: string; medidas: string }
-interface ImageRow { url: string; alt: string; isPrimary: boolean }
+interface ImageRow { id?: string; url: string; alt: string; isPrimary: boolean }
 
 interface ProductFormProps {
   isOpen: boolean;
@@ -46,7 +46,7 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
     product ? Object.entries(product.medidas_dinamicas).map(([size, m]) => ({ size, medidas: String(m) })) : []
   );
   const [images, setImages] = useState<ImageRow[]>(
-    product?.images.map((img) => ({ url: img.url, alt: img.alt, isPrimary: img.isPrimary ?? false })) ?? []
+    product?.images.map((img) => ({ id: img.id, url: img.url, alt: img.alt, isPrimary: img.isPrimary ?? false })) ?? []
   );
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<ProductFormInput, unknown, ProductFormData>({
@@ -72,7 +72,7 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
     const slug = data.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
     const colors = data.colors ? data.colors.split(',').map((c) => c.trim()).filter(Boolean) : [];
     const medidas_dinamicas = Object.fromEntries(medidas.filter((m) => m.size).map((m) => [m.size, m.medidas]));
-    const productImages = images.map((img) => ({ id: `img_${crypto.randomUUID()}`, ...img }));
+    const productImages = images.map((img) => ({ ...img, id: img.id ?? `img_${crypto.randomUUID()}` }));
 
     const saved: IProduct = {
       id: product?.id ?? `prod_${crypto.randomUUID()}`,

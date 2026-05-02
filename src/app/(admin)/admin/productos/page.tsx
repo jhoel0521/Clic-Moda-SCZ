@@ -118,6 +118,7 @@ export default function AdminProductsPage() {
       )}
 
       <ProductForm
+        key={editingProduct?.id ?? 'new'}
         isOpen={formOpen}
         onClose={() => { setFormOpen(false); setEditingProduct(undefined); }}
         product={editingProduct}
