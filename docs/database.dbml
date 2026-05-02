@@ -43,6 +43,8 @@ Table PRODUCTO {
   estado varchar
   tipo_tela varchar
   medidas_dinamicas json
+  etiqueta_ids json [note: 'Array de IDs de etiquetas (relación M:N embebida)']
+  tag_names json [note: 'Nombres de etiquetas denormalizados para búsqueda']
   creado_en datetime
 }
 
@@ -62,14 +64,8 @@ Table PRODUCTO_CATEGORIA {
 Table ETIQUETA {
   id int [pk, increment]
   nombre varchar
-}
-
-Table PRODUCTO_ETIQUETA {
-  producto_id int
-  etiqueta_id int
-  Indexes {
-    (producto_id, etiqueta_id) [pk]
-  }
+  slug varchar [unique]
+  note: 'Entidad independiente con CRUD propio. La relación M:N con PRODUCTO se maneja mediante el campo etiqueta_ids en PRODUCTO (embebido), no con tabla pivote.'
 }
 
 Table IMAGEN_PRODUCTO {
@@ -172,9 +168,6 @@ Ref: PRODUCTO.id < FAVORITO.producto_id
 
 Ref: PRODUCTO.id < PRODUCTO_CATEGORIA.producto_id
 Ref: CATEGORIA.id < PRODUCTO_CATEGORIA.categoria_id
-
-Ref: PRODUCTO.id < PRODUCTO_ETIQUETA.producto_id
-Ref: ETIQUETA.id < PRODUCTO_ETIQUETA.etiqueta_id
 
 Ref: PRODUCTO.id < IMAGEN_PRODUCTO.producto_id
 

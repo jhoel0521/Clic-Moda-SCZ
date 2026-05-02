@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Zap } from 'lucide-react';
+import { Zap, X } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -16,10 +16,17 @@ const flashSchema = z.object({
 });
 type FlashFormData = z.infer<typeof flashSchema>;
 
+function formatDate(iso: string | undefined) {
+  if (!iso) return '';
+  return new Date(iso).toLocaleString('es-BO', { dateStyle: 'short', timeStyle: 'short' });
+}
+
 export function FlashSaleConfig() {
   const [products, setProducts] = useState<IProduct[]>([]);
+  const [flashProducts, setFlashProducts] = useState<IProduct[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [saved, setSaved] = useState(false);
+  const [removing, setRemoving] = useState<string | null>(null);
 
   const {
     register,
@@ -32,15 +39,39 @@ export function FlashSaleConfig() {
 
   useEffect(() => {
     ProductService.getProducts()
-      .then((all: IProduct[]) => setProducts(all.filter((p) => p.estado === 'activo')))
+      .then((all: IProduct[]) => {
+        const now = new Date();
+        setProducts(all.filter((p) => p.estado === 'activo'));
+        setFlashProducts(
+          all.filter((p) => p.isFlashSale && p.flashSaleEndsAt && new Date(p.flashSaleEndsAt) > now)
+        );
+      })
       .finally(() => setIsLoading(false));
   }, []);
 
   async function onSubmit(data: FlashFormData) {
-    await ProductService.setFlashSale(data.productId, new Date(data.endsAt).toISOString());
+    const updated = await ProductService.setFlashSale(
+      data.productId,
+      new Date(data.endsAt).toISOString()
+    );
+    if (updated) {
+      setFlashProducts((prev) => {
+        const filtered = prev.filter((p) => p.id !== updated.id);
+        return updated.isFlashSale ? [...filtered, updated] : filtered;
+      });
+    }
     setSaved(true);
     reset();
     setTimeout(() => setSaved(false), 3000);
+  }
+
+  async function handleRemove(id: string) {
+    setRemoving(id);
+    const updated = await ProductService.setFlashSale(id, null);
+    if (updated) {
+      setFlashProducts((prev) => prev.filter((p) => p.id !== id));
+    }
+    setRemoving(null);
   }
 
   if (isLoading) {
@@ -52,7 +83,7 @@ export function FlashSaleConfig() {
   }
 
   return (
-    <div className="mx-auto max-w-md">
+    <div className="mx-auto max-w-md space-y-6">
       <div className="border-border rounded-2xl border bg-white p-6 shadow-sm">
         <div className="mb-5 flex items-center gap-2">
           <Zap size={18} className="text-amber-500" />
@@ -101,6 +132,39 @@ export function FlashSaleConfig() {
           )}
         </form>
       </div>
+
+      {flashProducts.length > 0 && (
+        <div className="border-border rounded-2xl border bg-white p-6 shadow-sm">
+          <div className="mb-4 flex items-center gap-2">
+            <Zap size={16} className="text-amber-500" />
+            <p className="text-text-primary font-semibold">En Flash Sale ahora</p>
+          </div>
+          <div className="space-y-3">
+            {flashProducts.map((p) => (
+              <div
+                key={p.id}
+                className="border-border flex items-center justify-between gap-3 rounded-xl border px-4 py-3"
+              >
+                <div className="min-w-0">
+                  <p className="text-text-primary truncate text-sm font-medium">{p.name}</p>
+                  <p className="text-text-muted mt-0.5 text-xs">
+                    Vence: {formatDate(p.flashSaleEndsAt)}
+                  </p>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  isLoading={removing === p.id}
+                  leftIcon={<X size={13} />}
+                  onClick={() => handleRemove(p.id)}
+                >
+                  Quitar
+                </Button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

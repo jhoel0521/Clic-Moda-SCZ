@@ -77,6 +77,19 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
             {product.name}
           </p>
 
+          {product.tagNames.length > 0 && (
+            <div className="flex flex-wrap gap-1">
+              {product.tagNames.slice(0, 3).map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-medium text-gray-500"
+                >
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          )}
+
           {product.rating != null && (
             <div className="text-text-muted flex items-center gap-1 text-xs">
               <Star size={11} className="fill-yellow-400 text-yellow-400" />

@@ -12,6 +12,7 @@ export async function GET(req: NextRequest) {
       maxPrice: searchParams.get('maxPrice') ? Number(searchParams.get('maxPrice')) : undefined,
       sizes: searchParams.getAll('sizes'),
       colors: searchParams.getAll('colors'),
+      etiquetaIds: searchParams.getAll('etiquetaIds'),
       onlyFlashSale: searchParams.get('onlyFlashSale') === 'true',
     };
 

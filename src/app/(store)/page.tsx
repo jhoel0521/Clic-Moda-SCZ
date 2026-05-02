@@ -7,6 +7,7 @@ import { HeroCarousel } from '@src/shared/ui/HeroCarousel';
 import { ProductCard } from '@src/shared/ui/ProductCard';
 import { ProductService } from '@src/services/ProductService';
 import { BannerService } from '@src/services/BannerService';
+import { EtiquetaService } from '@src/services/EtiquetaService';
 import { FlashSaleBanner } from '@src/shared/ui/FlashSaleBanner';
 
 export const metadata: Metadata = {
@@ -15,7 +16,6 @@ export const metadata: Metadata = {
 };
 
 const CATEGORIAS = ['Jeans', 'Blusas', 'Vestidos', 'Poleras', 'Accesorios'];
-const ETIQUETAS = ['Aesthetic', 'Oversize', 'Verano 2026', 'Y2K'];
 
 const COLECCIONES = [
   {
@@ -36,10 +36,12 @@ const COLECCIONES = [
 ];
 
 export default async function LandingPage() {
-  const [flashProducts, banners] = await Promise.all([
+  const [flashProducts, banners, topEtiquetas] = await Promise.all([
     ProductService.getFlashSaleProducts(),
     BannerService.getActiveBanners(),
+    EtiquetaService.getAll(),
   ]);
+  const ETIQUETAS = topEtiquetas.slice(0, 6);
 
   return (
     <div className="flex w-full flex-col items-center justify-start gap-8 bg-gray-50">
@@ -87,11 +89,11 @@ export default async function LandingPage() {
             <div className="flex flex-wrap gap-3">
               {ETIQUETAS.map((et) => (
                 <Link
-                  key={et}
-                  href={`${ROUTES.CATALOG}?search=${encodeURIComponent(et)}`}
+                  key={et.id}
+                  href={`${ROUTES.CATALOG}?etiquetaIds=${et.id}`}
                   className="inline-block rounded-full bg-gray-900 px-5 py-2.5 text-sm font-bold text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-pink-600"
                 >
-                  #{et}
+                  #{et.nombre}
                 </Link>
               ))}
             </div>

@@ -41,7 +41,8 @@ export interface IProduct {
   stock: number;
   /** Medidas de la prenda por talla: { S: "...", M: "..." } o { largo: "75cm", ... } */
   medidas_dinamicas: MedidasDinamicas;
-  tags: string[];
+  etiquetaIds: string[];
+  tagNames: string[];
   isFlashSale?: boolean;
   flashSaleEndsAt?: string; // ISO date string
   rating?: number;
@@ -57,6 +58,6 @@ export interface IProductFilters {
   maxPrice?: number;
   sizes?: Talla[];
   colors?: string[];
-  tags?: string[];
+  etiquetaIds?: string[];
   onlyFlashSale?: boolean;
 }

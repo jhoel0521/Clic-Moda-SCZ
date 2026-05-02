@@ -12,7 +12,7 @@ export const ProductService: IProductService = {
         (p) =>
           p.name.toLowerCase().includes(q) ||
           p.description.toLowerCase().includes(q) ||
-          p.tags.some((t) => t.includes(q))
+          p.tagNames.some((t) => t.toLowerCase().includes(q))
       );
     }
 
@@ -38,6 +38,12 @@ export const ProductService: IProductService = {
 
     if (filters?.onlyFlashSale) {
       results = results.filter((p) => p.isFlashSale);
+    }
+
+    if (filters?.etiquetaIds?.length) {
+      results = results.filter((p) =>
+        filters.etiquetaIds!.some((id) => p.etiquetaIds.includes(id))
+      );
     }
 
     return results;

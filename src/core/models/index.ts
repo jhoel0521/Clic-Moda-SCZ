@@ -34,4 +34,6 @@ export type { IResena, IImagenResena, ICreateResenaData, EstadoModeracion } from
 
 export type { IFavorito } from './IFavorito';
 
+export type { IEtiqueta } from './IEtiqueta';
+
 export type { EstadoProducto } from './IProduct';

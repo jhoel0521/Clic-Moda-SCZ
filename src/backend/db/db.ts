@@ -7,6 +7,7 @@ import type {
   ICuponDescuento,
   IResena,
   IBannerPromocional,
+  IEtiqueta,
 } from '@src/core/models';
 import { hashPassword } from './crypto';
 
@@ -17,6 +18,7 @@ export interface Database {
   coupons: ICuponDescuento[];
   reviews: IResena[];
   banners: IBannerPromocional[];
+  etiquetas: IEtiqueta[];
 }
 
 // Extendemos IUser para incluir el password en la base de datos
@@ -43,6 +45,7 @@ export function getDb(): FullDatabase {
       coupons: [],
       reviews: [],
       banners: [],
+      etiquetas: [],
     };
   }
   const data = fs.readFileSync(DB_PATH, 'utf-8');

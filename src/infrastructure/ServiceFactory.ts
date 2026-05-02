@@ -4,6 +4,7 @@ import { AuthApiService } from './api/AuthApiService';
 import { CouponApiService } from './api/CouponApiService';
 import { BannerApiService } from './api/BannerApiService';
 import { ReviewApiService } from './api/ReviewApiService';
+import { EtiquetaApiService } from './api/EtiquetaApiService';
 
 import type { IProductService } from '@src/core/contracts/IProductService';
 import type { IOrderService } from '@src/core/contracts/IOrderService';
@@ -11,6 +12,7 @@ import type { IAuthService } from '@src/core/contracts/IAuthService';
 import type { ICouponService } from '@src/core/contracts/ICouponService';
 import type { IBannerService } from '@src/core/contracts/IBannerService';
 import type { IReviewService } from '@src/core/contracts/IReviewService';
+import type { IEtiquetaService } from '@src/core/contracts/IEtiquetaService';
 
 /**
  * SuperFactory para inyección de dependencias.
@@ -63,5 +65,13 @@ export class ServiceFactory {
       return ReviewService;
     }
     return ReviewApiService;
+  }
+
+  static async getEtiquetaService(): Promise<IEtiquetaService> {
+    if (typeof window === 'undefined') {
+      const { EtiquetaService } = await import('@src/backend/services/EtiquetaService');
+      return EtiquetaService;
+    }
+    return EtiquetaApiService;
   }
 }

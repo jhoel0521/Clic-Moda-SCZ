@@ -12,6 +12,7 @@ export const ProductApiService: IProductService = {
     if (filters?.onlyFlashSale) params.append('onlyFlashSale', 'true');
     filters?.sizes?.forEach((s) => params.append('sizes', s));
     filters?.colors?.forEach((c) => params.append('colors', c));
+    filters?.etiquetaIds?.forEach((id) => params.append('etiquetaIds', id));
 
     return apiFetch<IProduct[]>(`/api/products?${params.toString()}`);
   },

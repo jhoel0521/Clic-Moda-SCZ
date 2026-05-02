@@ -6,14 +6,16 @@ import { ReviewModerationTable } from './ReviewModerationTable';
 import { CouponManager } from './CouponManager';
 import { BannerManager } from './BannerManager';
 import { FlashSaleConfig } from './FlashSaleConfig';
+import { EtiquetaManager } from './EtiquetaManager';
 
-type Tab = 'resenas' | 'cupones' | 'banners' | 'flash';
+type Tab = 'resenas' | 'cupones' | 'banners' | 'flash' | 'etiquetas';
 
 const TABS: { id: Tab; label: string }[] = [
   { id: 'resenas', label: 'Reseñas' },
   { id: 'cupones', label: 'Cupones' },
   { id: 'banners', label: 'Banners' },
   { id: 'flash', label: 'Flash Sale' },
+  { id: 'etiquetas', label: 'Etiquetas' },
 ];
 
 export default function MarketingPage() {
@@ -50,6 +52,7 @@ export default function MarketingPage() {
         {activeTab === 'cupones' && <CouponManager />}
         {activeTab === 'banners' && <BannerManager />}
         {activeTab === 'flash' && <FlashSaleConfig />}
+        {activeTab === 'etiquetas' && <EtiquetaManager />}
       </div>
     </div>
   );

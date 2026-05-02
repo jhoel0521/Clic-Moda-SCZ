@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -9,7 +9,8 @@ import { Modal } from '@src/shared/ui/Modal';
 import { Input } from '@src/shared/ui/Input';
 import { Button } from '@src/shared/ui/Button';
 import { ProductService } from '@src/services/ProductService';
-import type { IProduct, Talla } from '@src/core/models';
+import { EtiquetaService } from '@src/services/EtiquetaService';
+import type { IProduct, IEtiqueta, Talla } from '@src/core/models';
 
 const CATEGORIAS = [
   'vestidos',
@@ -71,6 +72,14 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
       isPrimary: img.isPrimary ?? false,
     })) ?? []
   );
+  const [selectedEtiquetaIds, setSelectedEtiquetaIds] = useState<string[]>(
+    product?.etiquetaIds ?? []
+  );
+  const [allEtiquetas, setAllEtiquetas] = useState<IEtiqueta[]>([]);
+
+  useEffect(() => {
+    EtiquetaService.getAll().then(setAllEtiquetas);
+  }, []);
 
   const {
     register,
@@ -131,7 +140,8 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
       colors,
       medidas_dinamicas,
       images: productImages,
-      tags: product?.tags ?? [],
+      etiquetaIds: selectedEtiquetaIds,
+      tagNames: allEtiquetas.filter((e) => selectedEtiquetaIds.includes(e.id)).map((e) => e.nombre),
       isFlashSale: product?.isFlashSale ?? false,
       flashSaleEndsAt: product?.flashSaleEndsAt,
       rating: product?.rating,
@@ -204,6 +214,38 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
             placeholder="Rosa, Negro, Blanco"
             {...register('colors')}
           />
+          <div className="sm:col-span-2">
+            <label className="text-text-primary mb-1.5 block text-sm font-medium">Etiquetas</label>
+            {allEtiquetas.length === 0 ? (
+              <p className="text-text-muted text-xs">
+                No hay etiquetas. Crea etiquetas en Marketing → Etiquetas.
+              </p>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {allEtiquetas.map((etiq) => (
+                  <button
+                    key={etiq.id}
+                    type="button"
+                    onClick={() =>
+                      setSelectedEtiquetaIds((prev) =>
+                        prev.includes(etiq.id)
+                          ? prev.filter((id) => id !== etiq.id)
+                          : [...prev, etiq.id]
+                      )
+                    }
+                    className={[
+                      'rounded-full border px-3 py-1.5 text-xs font-medium transition-all',
+                      selectedEtiquetaIds.includes(etiq.id)
+                        ? 'border-brand bg-brand-subtle text-brand'
+                        : 'border-border text-text-secondary hover:border-brand/40 bg-white',
+                    ].join(' ')}
+                  >
+                    {etiq.nombre}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
           <div>
             <label className="text-text-primary mb-1.5 block text-sm font-medium">Estado</label>
             <select

@@ -5,3 +5,4 @@ export * from './OrderService';
 export * from './CouponService';
 export * from './ReviewService';
 export * from './BannerService';
+export * from './EtiquetaService';

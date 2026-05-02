@@ -3,9 +3,10 @@
 import { useEffect, useState, useTransition } from 'react';
 import { Search, X, SlidersHorizontal } from 'lucide-react';
 import { ProductService } from '@src/services/ProductService';
+import { EtiquetaService } from '@src/services/EtiquetaService';
 import { ProductCard } from '@src/shared/ui/ProductCard';
 import { useDebounce } from '@src/shared/hooks/useDebounce';
-import type { IProduct, IProductFilters, Talla } from '@src/core/models';
+import type { IProduct, IProductFilters, IEtiqueta, Talla } from '@src/core/models';
 
 const CATEGORIAS = [
   'vestidos',
@@ -22,27 +23,46 @@ interface Filters {
   search: string;
   category: string;
   sizes: Talla[];
+  etiquetaIds: string[];
   minPrice: string;
   maxPrice: string;
 }
 
-const EMPTY: Filters = { search: '', category: '', sizes: [], minPrice: '', maxPrice: '' };
+const EMPTY: Filters = {
+  search: '',
+  category: '',
+  sizes: [],
+  etiquetaIds: [],
+  minPrice: '',
+  maxPrice: '',
+};
 
 function hasActive(f: Filters) {
-  return !!(f.search || f.category || f.sizes.length > 0 || f.minPrice || f.maxPrice);
+  return !!(
+    f.search ||
+    f.category ||
+    f.sizes.length > 0 ||
+    f.etiquetaIds.length > 0 ||
+    f.minPrice ||
+    f.maxPrice
+  );
 }
 
 function FilterPanel({
   filters,
+  availableEtiquetas,
   onReset,
   onToggleCategory,
   onToggleSize,
+  onToggleEtiqueta,
   onPrice,
 }: {
   filters: Filters;
+  availableEtiquetas: IEtiqueta[];
   onReset: () => void;
   onToggleCategory: (c: string) => void;
   onToggleSize: (s: Talla) => void;
+  onToggleEtiqueta: (id: string) => void;
   onPrice: (field: 'minPrice' | 'maxPrice', v: string) => void;
 }) {
   return (
@@ -108,6 +128,34 @@ function FilterPanel({
 
       <div className="mb-6 h-px bg-gray-100" />
 
+      {/* Etiquetas */}
+      {availableEtiquetas.length > 0 && (
+        <>
+          <div className="mb-6">
+            <p className="mb-3 text-[11px] font-bold tracking-widest text-gray-400 uppercase">
+              Etiquetas
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {availableEtiquetas.map((etiq) => (
+                <button
+                  key={etiq.id}
+                  type="button"
+                  onClick={() => onToggleEtiqueta(etiq.id)}
+                  className={`rounded-full border px-3 py-1 text-xs font-medium transition-all ${
+                    filters.etiquetaIds.includes(etiq.id)
+                      ? 'border-pink-600 bg-pink-600 text-white'
+                      : 'border-gray-200 text-gray-600 hover:border-pink-300 hover:text-pink-600'
+                  }`}
+                >
+                  #{etiq.nombre}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="mb-6 h-px bg-gray-100" />
+        </>
+      )}
+
       {/* Precio */}
       <div>
         <p className="mb-3 text-[11px] font-bold tracking-widest text-gray-400 uppercase">
@@ -137,16 +185,22 @@ function FilterPanel({
 export default function CatalogPage() {
   const [filters, setFilters] = useState<Filters>(EMPTY);
   const [products, setProducts] = useState<IProduct[]>([]);
+  const [availableEtiquetas, setAvailableEtiquetas] = useState<IEtiqueta[]>([]);
   const [isPending, startTransition] = useTransition();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const debouncedSearch = useDebounce(filters.search, 350);
 
   useEffect(() => {
+    EtiquetaService.getAll().then(setAvailableEtiquetas);
+  }, []);
+
+  useEffect(() => {
     const f: IProductFilters = {
       ...(debouncedSearch && { search: debouncedSearch }),
       ...(filters.category && { category: filters.category }),
       ...(filters.sizes.length > 0 && { sizes: filters.sizes }),
+      ...(filters.etiquetaIds.length > 0 && { etiquetaIds: filters.etiquetaIds }),
       ...(filters.minPrice && { minPrice: Number(filters.minPrice) }),
       ...(filters.maxPrice && { maxPrice: Number(filters.maxPrice) }),
     };
@@ -154,10 +208,18 @@ export default function CatalogPage() {
       const all = await ProductService.getProducts(f);
       setProducts(all.filter((p) => p.estado === 'activo'));
     });
-  }, [debouncedSearch, filters.category, filters.sizes, filters.minPrice, filters.maxPrice]);
+  }, [
+    debouncedSearch,
+    filters.category,
+    filters.sizes,
+    filters.etiquetaIds,
+    filters.minPrice,
+    filters.maxPrice,
+  ]);
 
   const filterProps = {
     filters,
+    availableEtiquetas,
     onReset: () => setFilters(EMPTY),
     onToggleCategory: (cat: string) =>
       setFilters((p) => ({ ...p, category: p.category === cat ? '' : cat })),
@@ -165,6 +227,13 @@ export default function CatalogPage() {
       setFilters((p) => ({
         ...p,
         sizes: p.sizes.includes(size) ? p.sizes.filter((s) => s !== size) : [...p.sizes, size],
+      })),
+    onToggleEtiqueta: (id: string) =>
+      setFilters((p) => ({
+        ...p,
+        etiquetaIds: p.etiquetaIds.includes(id)
+          ? p.etiquetaIds.filter((eid) => eid !== id)
+          : [...p.etiquetaIds, id],
       })),
     onPrice: (field: 'minPrice' | 'maxPrice', v: string) =>
       setFilters((p) => ({ ...p, [field]: v })),
