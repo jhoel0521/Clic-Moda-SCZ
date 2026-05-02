@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { ShoppingCart, MessageCircle, Minus, Plus } from 'lucide-react';
@@ -44,19 +44,19 @@ export function AddToCartPanel({ product }: AddToCartPanelProps) {
     <div className="space-y-6">
       {/* Precio */}
       <div className="flex items-baseline gap-3">
-        <span className="text-4xl font-bold text-[var(--color-text-primary)]">Bs. {product.price}</span>
+        <span className="text-4xl font-bold text-text-primary">Bs. {product.price}</span>
         {product.originalPrice && product.originalPrice > product.price && (
-          <span className="text-xl line-through text-[var(--color-text-muted)]">Bs. {product.originalPrice}</span>
+          <span className="text-xl line-through text-text-muted">Bs. {product.originalPrice}</span>
         )}
         {product.isFlashSale && (
-          <span className="rounded-full bg-[var(--gradient-brand)] px-2 py-0.5 text-xs font-bold text-white">FLASH</span>
+          <span className="rounded-full bg-gradient-brand px-2 py-0.5 text-xs font-bold text-white">FLASH</span>
         )}
       </div>
 
       {/* Tallas */}
       <div>
-        <p className="mb-3 text-sm font-semibold text-[var(--color-text-primary)]">
-          Talla {selectedSize && <span className="text-[var(--color-brand)]">— {selectedSize}</span>}
+        <p className="mb-3 text-sm font-semibold text-text-primary">
+          Talla {selectedSize && <span className="text-brand">— {selectedSize}</span>}
         </p>
         <div className="flex flex-wrap gap-2">
           {product.sizes.map((size) => (
@@ -67,8 +67,8 @@ export function AddToCartPanel({ product }: AddToCartPanelProps) {
               className={[
                 'rounded-xl border-2 px-4 py-2 text-sm font-semibold transition-all duration-150',
                 selectedSize === size
-                  ? 'border-[var(--color-brand)] bg-[var(--color-brand-subtle)] text-[var(--color-brand)]'
-                  : 'border-[var(--color-border)] bg-white text-[var(--color-text-secondary)] hover:border-[var(--color-border-hover)]',
+                  ? 'border-brand bg-brand-subtle text-brand'
+                  : 'border-border bg-white text-text-secondary hover:border-border-hover',
               ].join(' ')}
             >
               {size}
@@ -80,8 +80,8 @@ export function AddToCartPanel({ product }: AddToCartPanelProps) {
       {/* Colores */}
       {product.colors.length > 0 && (
         <div>
-          <p className="mb-3 text-sm font-semibold text-[var(--color-text-primary)]">
-            Color {selectedColor && <span className="text-[var(--color-brand)]">— {selectedColor}</span>}
+          <p className="mb-3 text-sm font-semibold text-text-primary">
+            Color {selectedColor && <span className="text-brand">— {selectedColor}</span>}
           </p>
           <div className="flex flex-wrap gap-2">
             {product.colors.map((color) => (
@@ -92,8 +92,8 @@ export function AddToCartPanel({ product }: AddToCartPanelProps) {
                 className={[
                   'rounded-xl border-2 px-4 py-2 text-sm font-semibold transition-all duration-150',
                   selectedColor === color
-                    ? 'border-[var(--color-brand)] bg-[var(--color-brand-subtle)] text-[var(--color-brand)]'
-                    : 'border-[var(--color-border)] bg-white text-[var(--color-text-secondary)] hover:border-[var(--color-border-hover)]',
+                    ? 'border-brand bg-brand-subtle text-brand'
+                    : 'border-border bg-white text-text-secondary hover:border-border-hover',
                 ].join(' ')}
               >
                 {color}
@@ -105,29 +105,29 @@ export function AddToCartPanel({ product }: AddToCartPanelProps) {
 
       {/* Cantidad */}
       <div>
-        <p className="mb-3 text-sm font-semibold text-[var(--color-text-primary)]">Cantidad</p>
-        <div className="inline-flex items-center gap-3 rounded-xl border border-[var(--color-border)] bg-white p-1">
+        <p className="mb-3 text-sm font-semibold text-text-primary">Cantidad</p>
+        <div className="inline-flex items-center gap-3 rounded-xl border border-border bg-white p-1">
           <button
             type="button"
             onClick={() => setQty((q) => Math.max(1, q - 1))}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] transition-colors"
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-text-secondary hover:bg-surface-hover transition-colors"
           >
             <Minus size={16} />
           </button>
-          <span className="w-8 text-center font-bold text-[var(--color-text-primary)]">{qty}</span>
+          <span className="w-8 text-center font-bold text-text-primary">{qty}</span>
           <button
             type="button"
             onClick={() => setQty((q) => Math.min(product.stock, q + 1))}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] transition-colors"
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-text-secondary hover:bg-surface-hover transition-colors"
           >
             <Plus size={16} />
           </button>
         </div>
-        <span className="ml-3 text-xs text-[var(--color-text-muted)]">{product.stock} disponibles</span>
+        <span className="ml-3 text-xs text-text-muted">{product.stock} disponibles</span>
       </div>
 
       {!canAdd && (
-        <p className="text-xs text-[var(--color-warning)] font-medium">
+        <p className="text-xs text-warning font-medium">
           Selecciona talla y color para continuar
         </p>
       )}
@@ -148,7 +148,7 @@ export function AddToCartPanel({ product }: AddToCartPanelProps) {
           href={`https://wa.me/${WA_NUMBER}?text=${waMsg}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-xl border-2 border-[var(--color-border)] bg-white px-5 text-sm font-semibold text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-border-hover)] hover:text-[var(--color-text-primary)]"
+          className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-xl border-2 border-border bg-white px-5 text-sm font-semibold text-text-secondary transition-colors hover:border-border-hover hover:text-text-primary"
         >
           <MessageCircle size={18} />
           Consultar por WhatsApp

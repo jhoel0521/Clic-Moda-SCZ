@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import Image from 'next/image';
@@ -17,8 +17,8 @@ export function ProductImageGallery({ images }: ProductImageGalleryProps) {
 
   return (
     <div className="space-y-4">
-      <div className="overflow-hidden rounded-[28px] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-lg)]">
-        <div className="relative aspect-[4/5] bg-[var(--color-surface-raised)]">
+      <div className="overflow-hidden rounded-[28px] border border-border bg-surface shadow-lg">
+        <div className="relative aspect-[4/5] bg-surface-raised">
           <Image
             src={selected.url}
             alt={selected.alt}
@@ -40,8 +40,8 @@ export function ProductImageGallery({ images }: ProductImageGalleryProps) {
               className={[
                 'relative aspect-square overflow-hidden rounded-2xl border-2 transition-all duration-150',
                 idx === selectedIdx
-                  ? 'border-[var(--color-brand)] shadow-[var(--shadow-brand)]'
-                  : 'border-[var(--color-border)] hover:border-[var(--color-border-hover)]',
+                  ? 'border-brand shadow-brand'
+                  : 'border-border hover:border-border-hover',
               ].join(' ')}
             >
               <Image

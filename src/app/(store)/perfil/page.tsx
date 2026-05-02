@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -33,17 +33,17 @@ export default function ProfilePage() {
   return (
     <div className="mx-auto w-full max-w-4xl px-6 py-14">
       <div className="mb-10">
-        <h1 className="text-3xl font-bold text-[var(--color-text-primary)]">Mi perfil</h1>
-        <p className="mt-1 text-[var(--color-text-muted)]">
-          Hola, <span className="font-semibold text-[var(--color-text-primary)]">{user.name}</span>
+        <h1 className="text-3xl font-bold text-text-primary">Mi perfil</h1>
+        <p className="mt-1 text-text-muted">
+          Hola, <span className="font-semibold text-text-primary">{user.name}</span>
         </p>
       </div>
 
       <div className="space-y-10">
         {/* Datos personales */}
-        <section className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-[var(--shadow-sm)]">
-          <h2 className="mb-5 flex items-center gap-2 font-bold text-[var(--color-text-primary)]">
-            <User size={18} className="text-[var(--color-brand)]" />
+        <section className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+          <h2 className="mb-5 flex items-center gap-2 font-bold text-text-primary">
+            <User size={18} className="text-brand" />
             Mis datos
           </h2>
           <ProfileDataForm />
@@ -51,11 +51,11 @@ export default function ProfilePage() {
 
         {/* Historial de pedidos */}
         <section>
-          <h2 className="mb-5 flex items-center gap-2 font-bold text-[var(--color-text-primary)]">
-            <Package size={18} className="text-[var(--color-brand)]" />
+          <h2 className="mb-5 flex items-center gap-2 font-bold text-text-primary">
+            <Package size={18} className="text-brand" />
             Mis pedidos
             {!isLoading && (
-              <span className="text-sm font-normal text-[var(--color-text-muted)]">
+              <span className="text-sm font-normal text-text-muted">
                 ({orders.length})
               </span>
             )}

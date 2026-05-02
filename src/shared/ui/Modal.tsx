@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
@@ -60,19 +60,16 @@ export function Modal({
     >
       <div
         ref={panelRef}
-        className={`relative w-full ${sizeClasses[size]} rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] flex flex-col max-h-[90vh]`}
-        style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)' }}
+        className={`relative w-full ${sizeClasses[size]} rounded-lg shadow-lg flex flex-col max-h-[90vh] bg-surface border border-border`}
       >
         {(title || showCloseButton) && (
           <div
-            className="flex items-center justify-between px-6 py-4 shrink-0"
-            style={{ borderBottom: '1px solid var(--color-border)' }}
+            className="flex items-center justify-between px-6 py-4 shrink-0 border-b border-border"
           >
             {title && (
               <h2
                 id="modal-title"
-                className="text-lg font-semibold"
-                style={{ color: 'var(--color-text-primary)' }}
+                className="text-lg font-semibold text-text-primary"
               >
                 {title}
               </h2>
@@ -81,8 +78,7 @@ export function Modal({
               <button
                 type="button"
                 onClick={onClose}
-                className="ml-auto p-1.5 rounded-[var(--radius-sm)] transition-colors cursor-pointer"
-                style={{ color: 'var(--color-text-muted)' }}
+                className="ml-auto p-1.5 rounded-sm transition-colors cursor-pointer text-text-muted"
                 aria-label="Cerrar modal"
               >
                 <X size={18} />

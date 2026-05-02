@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useRouter } from 'next/navigation';
 import { ShoppingBag, Truck } from 'lucide-react';
@@ -24,13 +24,13 @@ export function OrderSummary({ subtotal, appliedCoupon }: OrderSummaryProps) {
   }
 
   return (
-    <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-[var(--shadow-sm)] space-y-4">
-      <h2 className="font-bold text-[var(--color-text-primary)]">Resumen del pedido</h2>
+    <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm space-y-4">
+      <h2 className="font-bold text-text-primary">Resumen del pedido</h2>
 
       <div className="space-y-3 text-sm">
-        <div className="flex justify-between text-[var(--color-text-secondary)]">
+        <div className="flex justify-between text-text-secondary">
           <span>Subtotal</span>
-          <span className="font-medium text-[var(--color-text-primary)]">Bs. {subtotal.toFixed(2)}</span>
+          <span className="font-medium text-text-primary">Bs. {subtotal.toFixed(2)}</span>
         </div>
 
         {appliedCoupon?.valid && (
@@ -49,9 +49,9 @@ export function OrderSummary({ subtotal, appliedCoupon }: OrderSummaryProps) {
           <span className="font-bold text-amber-700">Por cobrar</span>
         </div>
 
-        <div className="h-px bg-[var(--color-border)]" />
+        <div className="h-px bg-border" />
 
-        <div className="flex justify-between text-base font-bold text-[var(--color-text-primary)]">
+        <div className="flex justify-between text-base font-bold text-text-primary">
           <span>Total estimado</span>
           <span>Bs. {total.toFixed(2)}</span>
         </div>
@@ -67,7 +67,7 @@ export function OrderSummary({ subtotal, appliedCoupon }: OrderSummaryProps) {
         Ir al Checkout
       </Button>
 
-      <p className="text-center text-xs text-[var(--color-text-muted)]">
+      <p className="text-center text-xs text-text-muted">
         El costo de envío se coordinará por WhatsApp
       </p>
     </div>

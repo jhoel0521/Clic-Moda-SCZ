@@ -1,4 +1,4 @@
-import { forwardRef, type InputHTMLAttributes } from 'react';
+﻿import { forwardRef, type InputHTMLAttributes } from 'react';
 
 interface FormFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -11,7 +11,7 @@ export const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
     const fieldId = id ?? label.toLowerCase().replace(/\s+/g, '-');
     return (
       <div className="space-y-1.5">
-        <label htmlFor={fieldId} className="block text-sm font-medium text-[var(--color-text-primary)]">
+        <label htmlFor={fieldId} className="block text-sm font-medium text-text-primary">
           {label}
         </label>
         <input
@@ -19,10 +19,10 @@ export const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
           id={fieldId}
           {...props}
           className={[
-            'w-full rounded-xl border bg-white px-4 py-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] transition-all focus:outline-none focus:ring-2',
+            'w-full rounded-xl border bg-white px-4 py-3 text-sm text-text-primary placeholder:text-text-muted transition-all focus:outline-none focus:ring-2',
             error
               ? 'border-red-400 focus:ring-red-200'
-              : 'border-[var(--color-border)] focus:ring-[var(--color-brand)] focus:border-[var(--color-brand)]',
+              : 'border-border focus:ring-brand focus:border-brand',
             className,
           ].join(' ')}
         />
@@ -32,7 +32,7 @@ export const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
           </p>
         )}
         {hint && !error && (
-          <p className="text-xs text-[var(--color-text-muted)]">{hint}</p>
+          <p className="text-xs text-text-muted">{hint}</p>
         )}
       </div>
     );

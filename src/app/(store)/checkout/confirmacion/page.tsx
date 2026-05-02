@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -43,8 +43,8 @@ export default function ConfirmationPage() {
     return (
       <div className="mx-auto max-w-xl px-6 py-24 text-center">
         <p className="text-4xl mb-4">❓</p>
-        <h1 className="text-2xl font-bold text-[var(--color-text-primary)] mb-3">No hay pedido activo</h1>
-        <p className="text-[var(--color-text-muted)] mb-8">
+        <h1 className="text-2xl font-bold text-text-primary mb-3">No hay pedido activo</h1>
+        <p className="text-text-muted mb-8">
           Para generar un ticket de pedido primero completá el proceso de compra.
         </p>
         <Link href={ROUTES.CATALOG}>
@@ -102,33 +102,33 @@ export default function ConfirmationPage() {
       />
 
       {/* Ticket */}
-      <div className="mb-6 rounded-2xl border-2 border-dashed border-[var(--color-border-brand)] bg-[var(--color-brand-subtle)] p-6 text-center">
-        <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-brand)] mb-1">
+      <div className="mb-6 rounded-2xl border-2 border-dashed border-border-brand bg-brand-subtle p-6 text-center">
+        <p className="text-xs font-semibold uppercase tracking-widest text-brand mb-1">
           Tu ticket
         </p>
-        <p className="font-mono text-3xl font-bold text-[var(--color-brand)] tracking-wider">
+        <p className="font-mono text-3xl font-bold text-brand tracking-wider">
           {order.ticketId}
         </p>
-        <p className="mt-1 text-xs text-[var(--color-text-muted)]">
+        <p className="mt-1 text-xs text-text-muted">
           {new Date(order.createdAt).toLocaleString('es-BO')}
         </p>
       </div>
 
       {/* Ítems del pedido */}
-      <div className="mb-6 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-sm)] overflow-hidden">
-        <div className="px-5 py-4 bg-[var(--color-bg-secondary)] border-b border-[var(--color-border)]">
-          <p className="font-semibold text-sm text-[var(--color-text-primary)]">Productos</p>
+      <div className="mb-6 rounded-2xl border border-border bg-surface shadow-sm overflow-hidden">
+        <div className="px-5 py-4 bg-bg-secondary border-b border-border">
+          <p className="font-semibold text-sm text-text-primary">Productos</p>
         </div>
-        <div className="divide-y divide-[var(--color-border)]">
+        <div className="divide-y divide-border">
           {order.items.map((item) => (
             <div key={item.id} className="flex items-center justify-between px-5 py-3 text-sm">
               <div>
-                <p className="font-medium text-[var(--color-text-primary)]">{item.product.name}</p>
-                <p className="text-xs text-[var(--color-text-muted)]">
+                <p className="font-medium text-text-primary">{item.product.name}</p>
+                <p className="text-xs text-text-muted">
                   {item.selectedSize} / {item.selectedColor} × {item.quantity}
                 </p>
               </div>
-              <p className="font-bold text-[var(--color-text-primary)]">
+              <p className="font-bold text-text-primary">
                 Bs. {(item.unitPrice * item.quantity).toFixed(2)}
               </p>
             </div>
@@ -136,8 +136,8 @@ export default function ConfirmationPage() {
         </div>
 
         {/* Totales */}
-        <div className="px-5 py-4 bg-[var(--color-bg-secondary)] border-t border-[var(--color-border)] space-y-2 text-sm">
-          <div className="flex justify-between text-[var(--color-text-secondary)]">
+        <div className="px-5 py-4 bg-bg-secondary border-t border-border space-y-2 text-sm">
+          <div className="flex justify-between text-text-secondary">
             <span>Subtotal</span>
             <span>Bs. {order.subtotal.toFixed(2)}</span>
           </div>
@@ -151,7 +151,7 @@ export default function ConfirmationPage() {
             <span className="text-amber-700 font-medium">Envío</span>
             <span className="font-bold text-amber-700">Por cobrar</span>
           </div>
-          <div className="flex justify-between font-bold text-base text-[var(--color-text-primary)] border-t border-[var(--color-border)] pt-2">
+          <div className="flex justify-between font-bold text-base text-text-primary border-t border-border pt-2">
             <span>Total</span>
             <span>Bs. {order.total.toFixed(2)}</span>
           </div>
@@ -181,7 +181,7 @@ export default function ConfirmationPage() {
       </div>
 
       <div className="mt-8 text-center">
-        <Link href={ROUTES.CATALOG} className="text-sm text-[var(--color-brand)] font-medium hover:underline">
+        <Link href={ROUTES.CATALOG} className="text-sm text-brand font-medium hover:underline">
           Seguir comprando →
         </Link>
       </div>

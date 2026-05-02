@@ -1,6 +1,12 @@
 @import "tailwindcss";
 @config "../../tailwind.config.ts";
 
+@theme {
+  --background-image-gradient-brand: linear-gradient(135deg, #e63f6e 0%, #ff6b96 50%, #c026d3 100%);
+  --background-image-gradient-dark: linear-gradient(180deg, #ffffff 0%, #f6eef1 100%);
+  --background-image-gradient-hero: linear-gradient(135deg, #fff2f6 0%, #fff9fb 45%, #f4f0ff 100%);
+}
+
 @layer base {
   html {
     color-scheme: light;

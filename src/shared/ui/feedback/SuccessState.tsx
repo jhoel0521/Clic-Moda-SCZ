@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import { CheckCircle } from 'lucide-react';
@@ -26,9 +26,9 @@ export function SuccessState({ title, description, children }: SuccessStateProps
       >
         <CheckCircle size={48} className="text-green-500" />
       </div>
-      <h1 className="text-3xl font-bold text-[var(--color-text-primary)] mb-3">{title}</h1>
+      <h1 className="text-3xl font-bold text-text-primary mb-3">{title}</h1>
       {description && (
-        <p className="text-[var(--color-text-muted)] mb-8 max-w-md mx-auto">{description}</p>
+        <p className="text-text-muted mb-8 max-w-md mx-auto">{description}</p>
       )}
       {children}
     </div>

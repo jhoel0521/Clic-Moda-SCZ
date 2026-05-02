@@ -1,4 +1,4 @@
-import { Loader2 } from 'lucide-react';
+﻿import { Loader2 } from 'lucide-react';
 
 type SpinnerSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
@@ -25,11 +25,11 @@ export function Spinner({ size = 'md', label, className = '' }: SpinnerProps) {
     >
       <Loader2
         size={sizeMap[size]}
-        className="animate-spin text-[var(--color-brand)]"
+        className="animate-spin text-brand"
         aria-hidden="true"
       />
       {label && (
-        <span className="text-sm text-[var(--color-text-muted)]">{label}</span>
+        <span className="text-sm text-text-muted">{label}</span>
       )}
     </div>
   );

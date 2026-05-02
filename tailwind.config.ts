@@ -53,13 +53,7 @@ const config: Config = {
         info: '#0284c7',
       },
 
-      backgroundImage: {
-        'gradient-brand': 'linear-gradient(135deg, #e63f6e 0%, #ff6b96 50%, #c026d3 100%)',
-        'gradient-dark': 'linear-gradient(180deg, #ffffff 0%, #f6eef1 100%)',
-        'gradient-hero': 'linear-gradient(135deg, #fff2f6 0%, #fff9fb 45%, #f4f0ff 100%)',
-      },
-
-      boxShadow: {
+boxShadow: {
         sm: '0 1px 2px rgba(42, 24, 34, 0.05)',
         md: '0 6px 20px rgba(42, 24, 34, 0.08)',
         lg: '0 18px 40px rgba(42, 24, 34, 0.12)',

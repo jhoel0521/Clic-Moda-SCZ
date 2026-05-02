@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { Tag, CheckCircle } from 'lucide-react';
@@ -59,21 +59,21 @@ export function CouponInput({ subtotal, onApply, appliedCoupon, onRemove }: Coup
     <div className="space-y-2">
       <div className="flex gap-2">
         <div className="relative flex-1">
-          <Tag size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" />
+          <Tag size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted" />
           <input
             type="text"
             placeholder="Código de cupón"
             value={code}
             onChange={(e) => { setCode(e.target.value.toUpperCase()); setError(null); }}
             onKeyDown={(e) => e.key === 'Enter' && handleApply()}
-            className="h-10 w-full rounded-xl border border-[var(--color-border)] bg-white pl-9 pr-3 text-sm uppercase text-[var(--color-text-primary)] placeholder:normal-case placeholder:text-[var(--color-text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]"
+            className="h-10 w-full rounded-xl border border-border bg-white pl-9 pr-3 text-sm uppercase text-text-primary placeholder:normal-case placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-brand"
           />
         </div>
         <Button size="sm" variant="outline" isLoading={isLoading} onClick={handleApply} disabled={!code.trim()}>
           Aplicar
         </Button>
       </div>
-      {error && <p className="text-xs text-[var(--color-danger)] font-medium">{error}</p>}
+      {error && <p className="text-xs text-danger font-medium">{error}</p>}
     </div>
   );
 }

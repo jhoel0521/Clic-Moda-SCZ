@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { forwardRef } from 'react';
 import { Loader2 } from 'lucide-react';
@@ -17,15 +17,15 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    'bg-[var(--color-brand)] text-white hover:bg-[var(--color-brand-dark)] active:scale-[0.98] shadow-sm',
+    'bg-brand text-white hover:bg-brand-dark active:scale-[0.98] shadow-sm',
   secondary:
-    'bg-[var(--color-surface-raised)] text-[var(--color-text-primary)] hover:bg-[var(--color-surface-hover)] border border-[var(--color-border)]',
+    'bg-surface-raised text-text-primary hover:bg-surface-hover border border-border',
   ghost:
-    'bg-transparent text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text-primary)]',
+    'bg-transparent text-text-secondary hover:bg-surface-hover hover:text-text-primary',
   danger:
-    'bg-[var(--color-danger)] text-white hover:bg-[var(--color-danger-dark)] active:scale-[0.98]',
+    'bg-danger text-white hover:bg-danger-dark active:scale-[0.98]',
   outline:
-    'bg-transparent border-2 border-[var(--color-brand)] text-[var(--color-brand)] hover:bg-[var(--color-brand)] hover:text-white',
+    'bg-transparent border-2 border-brand text-brand hover:bg-brand hover:text-white',
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
@@ -59,7 +59,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         className={[
           'inline-flex items-center justify-center rounded-xl font-semibold',
           'transition-all duration-150 ease-out',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)] focus-visible:ring-offset-2',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2',
           'disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100',
           variantClasses[variant],
           sizeClasses[size],

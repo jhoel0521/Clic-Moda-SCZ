@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { Star } from 'lucide-react';
@@ -24,8 +24,8 @@ export function ReviewForm({ productId, onSuccess }: ReviewFormProps) {
 
   if (!isAuthenticated || !user) {
     return (
-      <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)] px-5 py-4 text-sm text-[var(--color-text-muted)]">
-        <a href="/login" className="font-semibold text-[var(--color-brand)] hover:underline">
+      <div className="rounded-2xl border border-border bg-bg-secondary px-5 py-4 text-sm text-text-muted">
+        <a href="/login" className="font-semibold text-brand hover:underline">
           Iniciá sesión
         </a>{' '}
         para dejar una reseña en este producto.
@@ -66,8 +66,8 @@ export function ReviewForm({ productId, onSuccess }: ReviewFormProps) {
   const activeStar = hoveredStar || selectedStar;
 
   return (
-    <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-[var(--shadow-sm)]">
-      <p className="mb-4 font-semibold text-[var(--color-text-primary)]">Dejá tu reseña</p>
+    <div className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
+      <p className="mb-4 font-semibold text-text-primary">Dejá tu reseña</p>
 
       {/* Estrellas */}
       <div className="mb-4 flex gap-1">
@@ -87,7 +87,7 @@ export function ReviewForm({ productId, onSuccess }: ReviewFormProps) {
           </button>
         ))}
         {selectedStar > 0 && (
-          <span className="ml-2 self-center text-sm text-[var(--color-text-muted)]">
+          <span className="ml-2 self-center text-sm text-text-muted">
             {['', 'Muy malo', 'Malo', 'Regular', 'Bueno', 'Excelente'][selectedStar]}
           </span>
         )}
@@ -99,10 +99,10 @@ export function ReviewForm({ productId, onSuccess }: ReviewFormProps) {
         value={comment}
         onChange={(e) => { setComment(e.target.value); setError(null); }}
         placeholder="Contá tu experiencia con este producto..."
-        className="mb-3 w-full rounded-xl border border-[var(--color-border)] bg-white px-4 py-2.5 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]"
+        className="mb-3 w-full rounded-xl border border-border bg-white px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-brand"
       />
 
-      {error && <p className="mb-3 text-xs text-[var(--color-danger)] font-medium">{error}</p>}
+      {error && <p className="mb-3 text-xs text-danger font-medium">{error}</p>}
 
       <Button variant="primary" size="sm" isLoading={isLoading} onClick={handleSubmit}>
         Publicar reseña

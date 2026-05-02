@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { forwardRef, useState } from 'react';
 import { Eye, EyeOff, AlertCircle } from 'lucide-react';
@@ -37,7 +37,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={id}
-            className="text-sm font-medium text-[var(--color-text-primary)] select-none"
+            className="text-sm font-medium text-text-primary select-none"
           >
             {label}
           </label>
@@ -45,7 +45,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
         <div className="relative flex items-center">
           {leftIcon && (
-            <span className="absolute left-3 text-[var(--color-text-muted)] pointer-events-none">
+            <span className="absolute left-3 text-text-muted pointer-events-none">
               {leftIcon}
             </span>
           )}
@@ -55,14 +55,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             id={id}
             type={inputType}
             className={[
-              'w-full rounded-xl border bg-[var(--color-surface)] text-[var(--color-text-primary)]',
-              'placeholder:text-[var(--color-text-muted)] text-sm h-10',
+              'w-full rounded-xl border bg-surface text-text-primary',
+              'placeholder:text-text-muted text-sm h-10',
               'transition-all duration-150',
-              'focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)] focus:border-transparent',
+              'focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent',
               'disabled:opacity-50 disabled:cursor-not-allowed',
               error
-                ? 'border-[var(--color-danger)] focus:ring-[var(--color-danger)]'
-                : 'border-[var(--color-border)] hover:border-[var(--color-border-hover)]',
+                ? 'border-danger focus:ring-danger'
+                : 'border-border hover:border-border-hover',
               leftIcon ? 'pl-10' : 'pl-4',
               isPassword || rightIcon ? 'pr-10' : 'pr-4',
               className,
@@ -76,7 +76,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             <button
               type="button"
               onClick={() => setShowPassword((v) => !v)}
-              className="absolute right-3 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] transition-colors"
+              className="absolute right-3 text-text-muted hover:text-text-secondary transition-colors"
               tabIndex={-1}
               aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
             >
@@ -85,21 +85,21 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           )}
 
           {!isPassword && rightIcon && (
-            <span className="absolute right-3 text-[var(--color-text-muted)] pointer-events-none">
+            <span className="absolute right-3 text-text-muted pointer-events-none">
               {rightIcon}
             </span>
           )}
         </div>
 
         {error && (
-          <p className="flex items-center gap-1.5 text-xs text-[var(--color-danger)]" role="alert">
+          <p className="flex items-center gap-1.5 text-xs text-danger" role="alert">
             <AlertCircle size={12} className="shrink-0" />
             {error}
           </p>
         )}
 
         {!error && hint && (
-          <p className="text-xs text-[var(--color-text-muted)]">{hint}</p>
+          <p className="text-xs text-text-muted">{hint}</p>
         )}
       </div>
     );

@@ -1,4 +1,4 @@
-import { Star } from 'lucide-react';
+﻿import { Star } from 'lucide-react';
 import type { IResena } from '@src/core/models';
 
 interface ReviewListProps {
@@ -22,7 +22,7 @@ function StarRating({ rating }: { rating: number }) {
 export function ReviewList({ reviews }: ReviewListProps) {
   if (reviews.length === 0) {
     return (
-      <p className="text-center text-[var(--color-text-muted)] py-8 text-sm">
+      <p className="text-center text-text-muted py-8 text-sm">
         Sé el primero en reseñar este producto.
       </p>
     );
@@ -33,14 +33,14 @@ export function ReviewList({ reviews }: ReviewListProps) {
       {reviews.map((review) => (
         <article
           key={review.id}
-          className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-[var(--shadow-sm)]"
+          className="rounded-2xl border border-border bg-surface p-5 shadow-sm"
         >
           <div className="flex items-start justify-between gap-4 mb-3">
             <div>
-              <p className="font-semibold text-[var(--color-text-primary)] text-sm">
+              <p className="font-semibold text-text-primary text-sm">
                 {review.autor_nombre ?? 'Cliente verificado'}
               </p>
-              <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
+              <p className="text-xs text-text-muted mt-0.5">
                 {new Date(review.creado_en).toLocaleDateString('es-BO', {
                   year: 'numeric',
                   month: 'long',
@@ -50,7 +50,7 @@ export function ReviewList({ reviews }: ReviewListProps) {
             </div>
             <StarRating rating={review.calificacion_estrellas} />
           </div>
-          <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">{review.comentario}</p>
+          <p className="text-sm text-text-secondary leading-relaxed">{review.comentario}</p>
         </article>
       ))}
     </div>

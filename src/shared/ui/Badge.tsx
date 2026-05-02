@@ -1,4 +1,4 @@
-import type { OrderStatus } from '@src/core/constants/ORDER_STATUS';
+﻿import type { OrderStatus } from '@src/core/constants/ORDER_STATUS';
 import { ORDER_STATUS_LABELS } from '@src/core/constants/ORDER_STATUS';
 
 type BadgeVariant = 'brand' | 'success' | 'warning' | 'danger' | 'info' | 'neutral';
@@ -14,21 +14,21 @@ interface BadgeProps {
 }
 
 const variantClasses: Record<BadgeVariant, string> = {
-  brand: 'bg-[var(--color-brand-subtle)] text-[var(--color-brand)]',
+  brand: 'bg-brand-subtle text-brand',
   success: 'bg-emerald-500/15 text-emerald-400',
   warning: 'bg-amber-500/15 text-amber-400',
-  danger: 'bg-red-500/15 text-[var(--color-danger)]',
+  danger: 'bg-red-500/15 text-danger',
   info: 'bg-sky-500/15 text-sky-400',
-  neutral: 'bg-[var(--color-surface-raised)] text-[var(--color-text-secondary)]',
+  neutral: 'bg-surface-raised text-text-secondary',
 };
 
 const dotClasses: Record<BadgeVariant, string> = {
-  brand: 'bg-[var(--color-brand)]',
+  brand: 'bg-brand',
   success: 'bg-emerald-400',
   warning: 'bg-amber-400',
-  danger: 'bg-[var(--color-danger)]',
+  danger: 'bg-danger',
   info: 'bg-sky-400',
-  neutral: 'bg-[var(--color-text-muted)]',
+  neutral: 'bg-text-muted',
 };
 
 export function Badge({
