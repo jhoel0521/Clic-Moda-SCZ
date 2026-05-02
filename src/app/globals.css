@@ -1,96 +1,31 @@
 @import "tailwindcss";
 
-/* ============================================================
-   DESIGN TOKENS — Clic Moda SCZ
-   Sistema de variables CSS para toda la aplicación.
-   Tema único: light mode.
-   ============================================================ */
+@layer base {
+  html {
+    color-scheme: light;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-:root {
-  /* --- Paleta de marca --- */
-  --color-brand:         #e63f6e;
-  --color-brand-dark:    #c7305a;
-  --color-brand-light:   #ff6b96;
-  --color-brand-subtle:  rgba(230, 63, 110, 0.12);
+  body {
+    min-height: 100vh;
+    background-color: #fff9fb;
+    color: #24151c;
+    line-height: 1.6;
+  }
 
-  /* --- Colores de fondo --- */
-  --color-bg:            #fff9fb;
-  --color-bg-secondary:  #f8f2f4;
+  /* Focus visible global */
+  :focus-visible {
+    outline: 2px solid #e63f6e;
+    outline-offset: 2px;
+  }
 
-  /* --- Superficies / Tarjetas --- */
-  --color-surface:       #ffffff;
-  --color-surface-raised:#fffdfd;
-  --color-surface-hover: #f6eef1;
-
-  /* --- Bordes --- */
-  --color-border:        rgba(30, 22, 28, 0.08);
-  --color-border-hover:  rgba(30, 22, 28, 0.16);
-  --color-border-brand:  rgba(230, 63, 110, 0.24);
-
-  /* --- Texto --- */
-  --color-text-primary:  #24151c;
-  --color-text-secondary:#5d4c56;
-  --color-text-muted:    #8a7a84;
-  --color-text-inverse:  #ffffff;
-
-  /* --- Estados semánticos --- */
-  --color-success:       #16a34a;
-  --color-success-dark:  #15803d;
-  --color-warning:       #d97706;
-  --color-danger:        #dc2626;
-  --color-danger-dark:   #b91c1c;
-  --color-info:          #0284c7;
-
-  /* --- Gradientes de la marca --- */
-  --gradient-brand: linear-gradient(135deg, #e63f6e 0%, #ff6b96 50%, #c026d3 100%);
-  --gradient-dark:  linear-gradient(180deg, #ffffff 0%, #f6eef1 100%);
-  --gradient-hero:  linear-gradient(135deg, #fff2f6 0%, #fff9fb 45%, #f4f0ff 100%);
-
-  /* --- Sombras --- */
-  --shadow-sm:  0 1px 2px rgba(42, 24, 34, 0.05);
-  --shadow-md:  0 6px 20px rgba(42, 24, 34, 0.08);
-  --shadow-lg:  0 18px 40px rgba(42, 24, 34, 0.12);
-  --shadow-brand: 0 12px 26px rgba(230, 63, 110, 0.22);
-
-  /* --- Tipografía --- */
-  --font-sans: var(--font-inter), 'Inter', ui-sans-serif, system-ui, sans-serif;
-
-  /* --- Radio de bordes --- */
-  --radius-sm:   6px;
-  --radius-md:   12px;
-  --radius-lg:   16px;
-  --radius-xl:   24px;
-  --radius-full: 9999px;
-
-  /* --- Transiciones --- */
-  --transition-fast: 150ms ease-out;
-  --transition-base: 250ms ease-out;
-  --transition-slow: 400ms ease-out;
-}
-
-/* ============================================================
-   BASE STYLES
-   ============================================================ */
-
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  color-scheme: light;
-  scroll-behavior: smooth;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-body {
-  font-family: var(--font-sans);
-  background-color: var(--color-bg);
-  color: var(--color-text-primary);
-  min-height: 100vh;
-  line-height: 1.6;
+  /* Selección de texto */
+  ::selection {
+    background-color: rgba(230, 63, 110, 0.12);
+    color: #ff6b96;
+  }
 }
 
 /* Scrollbar personalizada */
@@ -98,61 +33,32 @@ body {
   width: 6px;
   height: 6px;
 }
-::-webkit-scrollbar-track { background: transparent; }
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 ::-webkit-scrollbar-thumb {
-  background: var(--color-surface-hover);
-  border-radius: var(--radius-full);
-}
-::-webkit-scrollbar-thumb:hover { background: var(--color-border-hover); }
-
-/* Selección de texto */
-::selection {
-  background-color: var(--color-brand-subtle);
-  color: var(--color-brand-light);
+  background: #f6eef1;
+  border-radius: 9999px;
 }
 
-/* Focus visible global */
-:focus-visible {
-  outline: 2px solid var(--color-brand);
-  outline-offset: 2px;
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(30, 22, 28, 0.16);
 }
 
-/* ============================================================
-   UTILIDADES DE GRADIENTE (para usar en clases className)
-   ============================================================ */
+/* Utilidades de gradiente */
+@layer components {
+  .gradient-text {
+    background: linear-gradient(135deg, #e63f6e 0%, #ff6b96 50%, #c026d3 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 
-.gradient-text {
-  background: var(--gradient-brand);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  .gradient-border {
+    border: 1px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+  }
 }
-
-.gradient-border {
-  border: 1px solid transparent;
-  background-clip: padding-box;
-  position: relative;
-}
-
-/* ============================================================
-   ANIMACIONES
-   ============================================================ */
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slideIn {
-  from { opacity: 0; transform: translateX(-16px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-
-@keyframes pulse-brand {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(230, 63, 110, 0.4); }
-  50%       { box-shadow: 0 0 0 8px rgba(230, 63, 110, 0); }
-}
-
-.animate-fade-in   { animation: fadeIn 0.3s ease-out both; }
-.animate-slide-in  { animation: slideIn 0.3s ease-out both; }
-.animate-pulse-brand { animation: pulse-brand 2s ease-in-out infinite; }
