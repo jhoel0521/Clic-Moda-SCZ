@@ -18,4 +18,13 @@ export const BannerService: IBannerService = {
     banner.activo = !banner.activo;
     return update('banners', banner);
   },
+
+  async updateBanner(
+    id: string,
+    data: Partial<Omit<IBannerPromocional, 'id'>>
+  ): Promise<IBannerPromocional | null> {
+    const banner = findById<IBannerPromocional>('banners', id);
+    if (!banner) return null;
+    return update('banners', { ...banner, ...data });
+  },
 };

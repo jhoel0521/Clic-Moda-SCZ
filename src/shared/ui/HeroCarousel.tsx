@@ -4,45 +4,30 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ROUTES } from '@src/routes';
+import type { IBannerPromocional } from '@src/core/models';
 
-const SLIDES = [
-  {
-    id: 1,
-    title: 'Tu moda, un click de distancia',
-    subtitle: 'Ropa trendy con tallas exactas, pagos simples y entrega coordinada por WhatsApp.',
-    image:
-      'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop',
-  },
-  {
-    id: 2,
-    title: 'Nueva Colección Verano 2026',
-    subtitle: 'Descubrí los colores de temporada y renová tu guardarropa hoy mismo.',
-    image:
-      'https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=2070&auto=format&fit=crop',
-  },
-  {
-    id: 3,
-    title: 'Ventas Flash ⚡',
-    subtitle: 'Hasta 50% de descuento en prendas seleccionadas por tiempo limitado.',
-    image:
-      'https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=2071&auto=format&fit=crop',
-  },
-];
+interface HeroCarouselProps {
+  banners: IBannerPromocional[];
+}
 
-export function HeroCarousel() {
+export function HeroCarousel({ banners }: HeroCarouselProps) {
   const [current, setCurrent] = useState(0);
 
   const goTo = useCallback((index: number) => {
     setCurrent(index);
   }, []);
 
-  // Efecto de autoplay que se reinicia al cambiar manualmente
   useEffect(() => {
+    if (banners.length <= 1) return;
     const timer = setInterval(() => {
-      setCurrent((prev) => (prev === SLIDES.length - 1 ? 0 : prev + 1));
+      setCurrent((prev) => (prev === banners.length - 1 ? 0 : prev + 1));
     }, 5000);
     return () => clearInterval(timer);
-  }, [current]); // <- se reinicia al cambiar current
+  }, [current, banners.length]);
+
+  if (banners.length === 0) return null;
+
+  const slide = banners[current];
 
   return (
     <section
@@ -51,20 +36,18 @@ export function HeroCarousel() {
       aria-roledescription="carousel"
       aria-label="Carrusel de promociones"
     >
-      {/* Imágenes de fondo */}
-      {SLIDES.map((slide, index) => (
+      {banners.map((banner, index) => (
         <div
-          key={slide.id}
+          key={banner.id}
           className={`absolute inset-0 h-full w-full transition-opacity duration-1000 ease-in-out ${
             index === current ? 'z-10 opacity-100' : 'z-0 opacity-0'
           }`}
           aria-hidden={index !== current}
         >
-          {/* Overlay con degradado más elegante */}
           <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/70 via-black/40 to-black/20" />
           <Image
-            src={slide.image}
-            alt={slide.title}
+            src={banner.url_pc}
+            alt={banner.titulo}
             fill
             className="object-cover"
             sizes="(max-width: 1200px) 100vw, 1200px"
@@ -73,7 +56,6 @@ export function HeroCarousel() {
         </div>
       ))}
 
-      {/* Contenido textual */}
       <div className="relative z-20 mx-auto flex max-w-4xl flex-col items-center px-6 text-center">
         <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-pink-400 bg-pink-500/20 px-4 py-1.5 text-sm font-medium text-pink-100 backdrop-blur-sm">
           <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-pink-400" />
@@ -81,12 +63,14 @@ export function HeroCarousel() {
         </span>
 
         <h1 className="mb-6 text-4xl font-extrabold tracking-tight text-white drop-shadow-lg sm:text-5xl lg:text-6xl">
-          {SLIDES[current].title}
+          {slide.titulo}
         </h1>
 
-        <p className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed text-gray-200 drop-shadow-md sm:text-xl">
-          {SLIDES[current].subtitle}
-        </p>
+        {slide.descripcion && (
+          <p className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed text-gray-200 drop-shadow-md sm:text-xl">
+            {slide.descripcion}
+          </p>
+        )}
 
         <div className="flex w-full flex-wrap justify-center gap-4">
           <Link
@@ -99,21 +83,22 @@ export function HeroCarousel() {
         </div>
       </div>
 
-      {/* Dots de navegación */}
-      <div className="absolute bottom-6 z-20 flex gap-2" role="tablist">
-        {SLIDES.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => goTo(index)}
-            role="tab"
-            aria-selected={index === current}
-            aria-label={`Ir a la diapositiva ${index + 1}`}
-            className={`h-3 w-10 rounded-full transition-all duration-300 ${
-              index === current ? 'w-12 scale-110 bg-pink-500' : 'bg-white/50 hover:bg-white/80'
-            }`}
-          />
-        ))}
-      </div>
+      {banners.length > 1 && (
+        <div className="absolute bottom-6 z-20 flex gap-2" role="tablist">
+          {banners.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => goTo(index)}
+              role="tab"
+              aria-selected={index === current}
+              aria-label={`Ir a la diapositiva ${index + 1}`}
+              className={`h-3 w-10 rounded-full transition-all duration-300 ${
+                index === current ? 'w-12 scale-110 bg-pink-500' : 'bg-white/50 hover:bg-white/80'
+              }`}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 }

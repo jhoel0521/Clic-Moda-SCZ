@@ -16,4 +16,12 @@ export const BannerService: IBannerService = {
     const service = await ServiceFactory.getBannerService();
     return service.toggleBanner(id);
   },
+
+  async updateBanner(
+    id: string,
+    data: Partial<Omit<import('@src/core/models').IBannerPromocional, 'id'>>
+  ) {
+    const service = await ServiceFactory.getBannerService();
+    return service.updateBanner(id, data);
+  },
 };

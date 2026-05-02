@@ -6,6 +6,7 @@ import { ROUTES } from '@src/routes';
 import { HeroCarousel } from '@src/shared/ui/HeroCarousel';
 import { ProductCard } from '@src/shared/ui/ProductCard';
 import { ProductService } from '@src/services/ProductService';
+import { BannerService } from '@src/services/BannerService';
 import { FlashSaleBanner } from '@src/shared/ui/FlashSaleBanner';
 
 export const metadata: Metadata = {
@@ -35,13 +36,16 @@ const COLECCIONES = [
 ];
 
 export default async function LandingPage() {
-  const flashProducts = await ProductService.getFlashSaleProducts();
+  const [flashProducts, banners] = await Promise.all([
+    ProductService.getFlashSaleProducts(),
+    BannerService.getActiveBanners(),
+  ]);
 
   return (
     <div className="flex w-full flex-col items-center justify-start gap-8 bg-gray-50">
       {/* ++++++++++++++++++ HERO CENTRADO ++++++++++++++++++ */}
       <div className="mx-auto mt-4 mt-6 w-full max-w-[1200px] md:mt-8">
-        <HeroCarousel />
+        <HeroCarousel banners={banners} />
       </div>
 
       {/* ++++++++++++++++++ CONTENIDO PRINCIPAL ++++++++++++++++++ */}

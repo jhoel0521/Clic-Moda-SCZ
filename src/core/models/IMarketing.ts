@@ -12,6 +12,7 @@ export interface ICuponDescuento {
 export interface IBannerPromocional {
   id: string;
   titulo: string;
+  descripcion?: string;
   url_pc: string;
   url_tablet: string;
   url_movil: string;

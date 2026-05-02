@@ -16,4 +16,11 @@ export const BannerApiService: IBannerService = {
       method: 'PATCH',
     });
   },
+
+  async updateBanner(id: string, data: Partial<Omit<IBannerPromocional, 'id'>>) {
+    return apiFetch<IBannerPromocional>(`/api/banners/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  },
 };
