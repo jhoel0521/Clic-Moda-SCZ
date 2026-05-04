@@ -1,70 +1,116 @@
-# 🛍️ Clic Moda SCZ - Frontend (SPA)
+# 🛍️ Clic Moda SCZ
 
-**Nuestra misión es construir "Clic Moda SCZ"**, una plataforma de fast fashion 100% digital diseñada para ventas ágiles, principalmente impulsadas desde redes sociales como TikTok. No estamos construyendo un e-commerce tradicional y pesado; el objetivo es ofrecer una experiencia de usuario sin fricciones, donde los clientes puedan navegar, visualizar medidas precisas de tallas para evitar dudas de compra, y llenar su carrito como invitados sin obligaciones de registro anticipado. Queremos que la tienda se sienta rápida, confiable y altamente visual.
+Plataforma de fast fashion pensada para venta ágil en Santa Cruz. El objetivo no es montar un e-commerce pesado, sino una experiencia visual y rápida que permita explorar productos, revisar tallas exactas, gestionar carrito y concretar pedidos por WhatsApp con un ticket claro.
 
-**Estrategia Técnica:** El desarrollo de la interfaz completa (React + Vite) operará sobre una arquitectura de **Mock Backend**, permitiendo que el equipo programe toda la lógica de negocio, vistas, gestión de roles y notificaciones en tiempo real utilizando servicios simulados en memoria y localStorage sin depender de una API real. Al respetar nuestra arquitectura limpia y modular, conectar el backend real en el futuro será tan sencillo como cambiar un interruptor.
+## Estado Actual
 
-## 🛠️ Stack Tecnológico
+El proyecto ya es un **MVP viable**.
 
-* **Core:** React 18 + TypeScript
-* **Build Tool:** Vite (compilación ultra rápida y HMR)
-* **Estilos:** Tailwind CSS v3 (Utility-first) + Lucide React (Iconografía)
-* **Enrutamiento:** React Router DOM v6
-* **Estado Global:** Zustand (ligero, sin boilerplate)
-* **Formularios:** React Hook Form + Zod (validación de esquemas)
-* **Mocking:** Servicios simulados basados en Promesas con latencia artificial.
+Ya están resueltos y funcionando:
 
----
+* Catálogo dinámico con filtros y tarjetas de producto.
+* Detalle de producto con tallas, colores, medidas y stock por talla.
+* Carrito persistente con cupones.
+* Checkout con validación y creación de orden.
+* Confirmación de pedido con ticket.
+* Autenticación con validación de sesión en hidración.
+* Panel de administración con productos, pedidos, cupones, banners y reseñas.
+* Inventario por talla con validación atómica al comprar.
 
-## 📂 Estructura de Carpetas (Arquitectura Modular por Dominios)
+## Stack Tecnológico
 
-El proyecto sigue una adaptación estricta de *Feature-Sliced Design* (Diseño segmentado por características). **Regla de oro:** Un módulo no puede importar componentes internos de otro módulo directamente. Todo lo transversal vive en `shared/` o `core/`.
+* **Framework:** Next.js 16.2.4
+* **UI:** React 19.2.4 + TypeScript
+* **Estilos:** Tailwind CSS v4 + Lucide React
+* **Estado global:** Zustand
+* **Formularios:** React Hook Form + Zod
+* **Persistencia local:** localStorage + cookie de sesión
+* **Validación:** ESLint + Prettier
+
+## Arquitectura
+
+El proyecto usa App Router y separa responsabilidades entre UI, dominio y servicios:
 
 ```text
-📦 src
- ┣ 📂 assets               # Recursos estáticos (imágenes genéricas, fuentes, favicon)
- ┣ 📂 core                 # Reglas de negocio y configuraciones globales puras
- ┃ ┣ 📂 config             # Variables de entorno e inicializadores (ej: env.config.ts)
- ┃ ┣ 📂 constants          # Constantes globales (ej: ROLES.ts, ORDER_STATUS.ts)
- ┃ ┣ 📂 guards             # Protectores de rutas (RequireAuth.tsx, RequireRole.tsx)
- ┃ ┣ 📂 models             # Interfaces TypeScript de la BD (IProduct, IUser, IOrder)
- ┃ ┗ 📂 store              # Estado global que cruza múltiples módulos (useAuthStore.ts)
- ┃
- ┣ 📂 features             # Módulos principales del negocio (Aislados)
- ┃ ┣ 📂 admin              # -> Dominio: Panel de Gerente y Despacho
- ┃ ┃ ┣ 📂 components       # Componentes exclusivos del admin (ProductForm, DailyLedger)
- ┃ ┃ ┣ 📂 pages            # Vistas enrutables (DashboardPage, InventoryPage)
- ┃ ┃ ┗ 📂 store            # Estado local del admin (useAdminUIStore.ts)
- ┃ ┃
- ┃ ┣ 📂 catalog            # -> Dominio: Catálogo y Productos
- ┃ ┃ ┣ 📂 components       # ProductCard, DynamicMeasurementsTable, FiltersSidebar
- ┃ ┃ ┣ 📂 pages            # HomePage, ProductListPage, ProductDetailPage
- ┃ ┃ ┗ 📂 hooks            # Lógica encapsulada (useFlashSaleTimer.ts)
- ┃ ┃
- ┃ ┣ 📂 checkout           # -> Dominio: Compras y Pagos
- ┃ ┃ ┣ 📂 components       # CartDrawer, CouponInput, CheckoutSummary
- ┃ ┃ ┣ 📂 pages            # CheckoutPage, SuccessTicketPage
- ┃ ┃ ┗ 📂 store            # useCartStore.ts (Persistido en LocalStorage)
- ┃ ┃
- ┃ ┗ 📂 customer           # -> Dominio: Experiencia del Cliente logueado
- ┃   ┣ 📂 components       # OrderHistoryTable, ReviewForm
- ┃   ┗ 📂 pages            # ProfilePage, OrderTrackingPage
- ┃
- ┣ 📂 mocks                # EL BACKEND FALSO (Simulación de la API y DB)
- ┃ ┣ 📂 data               # Bases de datos en memoria (products.json, users.json)
- ┃ ┣ 📂 services           # Servicios falsos (MockAuthService.ts, MockOrderService.ts)
- ┃ ┣ 📂 utils              # Simuladores de latencia (delay.ts)
- ┃ ┗ 📜 MockSocket.ts      # Emulador de WebSockets (setInterval para eventos push)
- ┃
- ┣ 📂 routes               # Definición de rutas de la aplicación
- ┃ ┗ 📜 AppRouter.tsx      # Mapeo de URLs a las "Pages" de los features
- ┃
- ┣ 📂 shared               # Código transversal utilizado por cualquier feature
- ┃ ┣ 📂 hooks              # Custom hooks genéricos (useDebounce, useMediaQuery)
- ┃ ┣ 📂 ui                 # Componentes "tontos" (Button.tsx, Input.tsx, Modal.tsx, Badge.tsx)
- ┃ ┗ 📂 utils              # Funciones puras de ayuda (formatCurrency.ts, formatDate.ts)
- ┃
- ┣ 📜 App.tsx              # Raíz de Providers (Toasters, RouterProvider)
- ┗ 📜 main.tsx             # Punto de entrada de React (createRoot)
- ```
+src/
+	app/            # Rutas, layouts y páginas
+	backend/        # Servicios de negocio y acceso a datos simulados
+	core/           # Modelos, contratos, stores, guards y constantes
+	infrastructure/ # Fábricas y adaptadores
+	shared/         # Componentes y hooks reutilizables
+	services/       # Facade de servicios consumidos por la UI
+	routes/         # Centralización de rutas
+data/db.json      # Base de datos simulada
+docs/database.dbml# Documentación de esquema
+```
+
+## Funcionalidades Principales
+
+### Cliente
+
+* Landing page con propuesta de valor.
+* Catálogo con filtros por talla, categoría, etiqueta y precio.
+* Tarjetas que muestran stock total y estado agotado.
+* Detalle de producto con stock por talla y selector de cantidad limitado.
+* Carrito con persistencia.
+* Checkout con validación de stock y generación de orden.
+* Confirmación de pedido con ticket y enlace a WhatsApp.
+
+### Autenticación
+
+* Login y registro.
+* Validación de sesión al cargar la app para evitar redirecciones erróneas.
+* Protección de rutas en cliente y en proxy.
+
+### Administración
+
+* Dashboard con métricas básicas.
+* CRUD de productos.
+* Gestión de pedidos.
+* Moderación de reseñas.
+* Cupones, banners y ventas flash.
+
+## Inventario por Talla
+
+El stock de productos ya no es un número único. Ahora se maneja como un objeto por talla, por ejemplo:
+
+```json
+{
+	"S": 3,
+	"M": 4,
+	"L": 3,
+	"XL": 3
+}
+```
+
+Esto permite:
+
+* Mostrar stock real por talla seleccionada.
+* Evitar compras de tallas sin existencia.
+* Descontar inventario de forma atómica al crear la orden.
+
+## Scripts
+
+```bash
+npm run dev
+npm run build
+npm run start
+npm run lint
+npm run format
+npm run pre-commit
+```
+
+## Validación
+
+El flujo actual se valida con:
+
+* `npm run lint`
+* `npm run build`
+* `npm run pre-commit`
+
+## Próximos pasos
+
+* Completar documentación visual de arquitectura y flujo UX.
+* Preparar el backend real si el proyecto evoluciona fuera del mock.
+* Mejorar analítica y control de inventario avanzado.
  
