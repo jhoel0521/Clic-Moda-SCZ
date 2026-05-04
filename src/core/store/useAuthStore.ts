@@ -10,12 +10,14 @@ interface AuthState {
   isLoading: boolean;
   error: string | null;
   _hasHydrated: boolean;
+  _hasValidatedWithServer: boolean;
 
   setUser: (user: IUser) => void;
   logout: () => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
   setHasHydrated: (v: boolean) => void;
+  setHasValidatedWithServer: (v: boolean) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -26,6 +28,7 @@ export const useAuthStore = create<AuthState>()(
       isLoading: false,
       error: null,
       _hasHydrated: false,
+      _hasValidatedWithServer: false,
 
       setUser: (user) => set({ user, isAuthenticated: true, error: null, isLoading: false }),
 
@@ -36,6 +39,8 @@ export const useAuthStore = create<AuthState>()(
       setError: (error) => set({ error, isLoading: false }),
 
       setHasHydrated: (v) => set({ _hasHydrated: v }),
+
+      setHasValidatedWithServer: (v) => set({ _hasValidatedWithServer: v }),
     }),
     {
       name: 'clic-moda-auth',

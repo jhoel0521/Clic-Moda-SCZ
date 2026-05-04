@@ -14,22 +14,29 @@ interface RequireAuthProps {
 
 /**
  * Guard de cliente: redirige a /login si el usuario no está autenticado.
- * Complementa el middleware.ts (que protege en el servidor).
- * Usar en layouts o páginas que requieran sesión activa.
+ *
+ * Espera a que:
+ * 1. Zustand termine de hidratar del localStorage (_hasHydrated)
+ * 2. La sesión se valide contra el servidor (_hasValidatedWithServer)
+ * 3. El usuario esté autenticado (isAuthenticated)
+ *
+ * Complementa el middleware.ts que protege en el servidor.
  */
 export function RequireAuth({ children, redirectTo = ROUTES.LOGIN }: RequireAuthProps) {
   const router = useRouter();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-  const isLoading = useAuthStore((s) => s.isLoading);
   const hasHydrated = useAuthStore((s) => s._hasHydrated);
+  const hasValidatedWithServer = useAuthStore((s) => s._hasValidatedWithServer);
 
   useEffect(() => {
-    if (hasHydrated && !isLoading && !isAuthenticated) {
+    // Ambas validaciones completadas: si no está autenticado, redirigir
+    if (hasHydrated && hasValidatedWithServer && !isAuthenticated) {
       router.replace(redirectTo);
     }
-  }, [hasHydrated, isAuthenticated, isLoading, redirectTo, router]);
+  }, [hasHydrated, hasValidatedWithServer, isAuthenticated, redirectTo, router]);
 
-  if (!hasHydrated || isLoading || !isAuthenticated) {
+  // Mostrar loading mientras se valida
+  if (!hasHydrated || !hasValidatedWithServer || !isAuthenticated) {
     return <PageSpinner label="Verificando sesión..." />;
   }
 
