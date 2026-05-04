@@ -107,6 +107,7 @@ export default function OrderDetailPage() {
         if (!data) setNotFound(true);
         else setOrder(data);
       })
+      .catch(() => setNotFound(true))
       .finally(() => setLoading(false));
   }, [params.id]);
 

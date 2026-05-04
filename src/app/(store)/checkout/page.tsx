@@ -86,11 +86,13 @@ function StepIndicator({ current }: { current: number }) {
 export default function CheckoutPage() {
   const router = useRouter();
   const [step, setStep] = useState(1);
+  const [orderPlaced, setOrderPlaced] = useState(false);
 
   const items = useCartStore((s) => s.items);
   const subtotal = useCartStore((s) => s.subtotal);
   const clearCart = useCartStore((s) => s.clearCart);
   const user = useAuthStore((s) => s.user);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const appliedCoupon = useCheckoutStore((s) => s.appliedCoupon);
   const setLastOrder = useCheckoutStore((s) => s.setLastOrder);
 
@@ -142,14 +144,19 @@ export default function CheckoutPage() {
       ProductService.decrementStock(item.productId, item.quantity);
     });
 
+    setOrderPlaced(true);
     setLastOrder(order);
     clearCart();
     router.push(ROUTES.ORDER_DETAIL(order.id));
   }
 
   useEffect(() => {
-    if (items.length === 0 && !isSubmitting) router.replace(ROUTES.CART);
-  }, [items.length, isSubmitting, router]);
+    if (!isAuthenticated) router.replace(`${ROUTES.LOGIN}?redirect=${ROUTES.CHECKOUT}`);
+  }, [isAuthenticated, router]);
+
+  useEffect(() => {
+    if (items.length === 0 && !orderPlaced) router.replace(ROUTES.CART);
+  }, [items.length, orderPlaced, router]);
 
   if (items.length === 0) return null;
 

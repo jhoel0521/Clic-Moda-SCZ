@@ -39,6 +39,16 @@
       "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=maria",
       "phone": "591 7 700-0004",
       "createdAt": "2025-03-15T14:00:00.000Z"
+    },
+    {
+      "id": "usr_f8887166",
+      "name": "JHOEL ALVARO CRUZ ZURITA",
+      "email": "jhoel0521@gmail.com",
+      "password": "ceb59a00d79f45b8108850beb169a77f:533c428ca431f778137a4977be93a1d6a704935f278055bdcb0ce5672f9173f8abadda442c11e1abc9686ab21cf90695df65e9f4b7718536eba6029af437f540",
+      "role": "CLIENTE",
+      "phone": "77045885",
+      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=JHOEL%20ALVARO%20CRUZ%20ZURITA",
+      "createdAt": "2026-05-04T01:25:22.543Z"
     }
   ],
   "products": [
@@ -50,7 +60,7 @@
       "price": 300,
       "originalPrice": 500,
       "category": "vestidos",
-      "stock": 15,
+      "stock": 13,
       "tipo_tela": "algodón",
       "estado": "activo",
       "sizes": ["S", "M", "L", "XL"],
@@ -370,6 +380,92 @@
       "notes": "",
       "createdAt": "2026-05-02T12:24:21.453Z",
       "updatedAt": "2026-05-02T12:25:04.088Z"
+    },
+    {
+      "id": "ord_298819c2-93ee-41e4-b47f-ae4c887076db",
+      "ticketId": "TICK-BAF0D6",
+      "items": [
+        {
+          "id": "item_1777857909255_0",
+          "product": {
+            "id": "prod_001",
+            "name": "Vestido Floral Primavera",
+            "slug": "vestido-floral-primavera",
+            "images": [
+              {
+                "id": "img",
+                "url": "https://picsum.photos/seed/clicmoda-prod-001-a/600/800",
+                "alt": "Vestido Floral Primavera",
+                "isPrimary": true
+              }
+            ],
+            "price": 300
+          },
+          "quantity": 1,
+          "selectedSize": "S",
+          "selectedColor": "rosa",
+          "unitPrice": 300
+        }
+      ],
+      "status": "PROCESADO",
+      "shippingAddress": {
+        "fullName": "JHOEL ALVARO CRUZ ZURITA",
+        "phone": "77045885",
+        "address": "3840 José Hurtado de Mendoza",
+        "city": "Santa Cruz de la Sierra",
+        "reference": ""
+      },
+      "paymentMethod": "qr_simple",
+      "subtotal": 300,
+      "discount": 0,
+      "total": 300,
+      "notes": "",
+      "createdAt": "2026-05-04T01:25:09.255Z",
+      "updatedAt": "2026-05-04T01:25:09.255Z"
+    },
+    {
+      "id": "ord_338325af-0365-4e83-a9f8-3befe0bc43f1",
+      "ticketId": "TICK-2C5293",
+      "items": [
+        {
+          "id": "item_1777857957580_0",
+          "product": {
+            "id": "prod_001",
+            "name": "Vestido Floral Primavera",
+            "slug": "vestido-floral-primavera",
+            "images": [
+              {
+                "id": "img",
+                "url": "https://picsum.photos/seed/clicmoda-prod-001-a/600/800",
+                "alt": "Vestido Floral Primavera",
+                "isPrimary": true
+              }
+            ],
+            "price": 300
+          },
+          "quantity": 1,
+          "selectedSize": "S",
+          "selectedColor": "rosa",
+          "unitPrice": 300
+        }
+      ],
+      "status": "PROCESADO",
+      "shippingAddress": {
+        "fullName": "JHOEL ALVARO CRUZ ZURITA",
+        "phone": "77045885",
+        "address": "3840 José Hurtado de Mendoza",
+        "city": "Santa Cruz de la Sierra",
+        "reference": ""
+      },
+      "paymentMethod": "contra_entrega",
+      "subtotal": 300,
+      "discount": 0,
+      "total": 300,
+      "customerId": "usr_f8887166",
+      "customerEmail": "jhoel0521@gmail.com",
+      "notes": "",
+      "createdAt": "2026-05-04T01:25:57.580Z",
+      "updatedAt": "2026-05-04T01:25:57.580Z"
     }
   ],
   "coupons": [

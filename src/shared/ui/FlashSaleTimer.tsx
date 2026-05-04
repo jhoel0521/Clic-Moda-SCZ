@@ -31,19 +31,18 @@ function pad(n: number) {
 }
 
 export function FlashSaleTimer({ endsAt, variant = 'default' }: FlashSaleTimerProps) {
-  const [time, setTime] = useState(() => getTimeLeft(endsAt));
+  const [time, setTime] = useState<ReturnType<typeof getTimeLeft> | null>(null);
 
   useEffect(() => {
-    if (time.expired) return;
-
     const id = setInterval(() => {
       const current = getTimeLeft(endsAt);
       setTime(current);
       if (current.expired) clearInterval(id);
     }, 1000);
-
     return () => clearInterval(id);
-  }, [endsAt, time.expired]);
+  }, [endsAt]);
+
+  if (!time) return null;
 
   if (time.expired) {
     return (

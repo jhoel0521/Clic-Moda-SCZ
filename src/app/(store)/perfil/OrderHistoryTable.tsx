@@ -1,12 +1,11 @@
 ﻿'use client';
 
 import Link from 'next/link';
-import { MessageCircle } from 'lucide-react';
+import { Eye, MessageCircle } from 'lucide-react';
 import { ORDER_STATUS_LABELS, type OrderStatus } from '@src/core/constants/ORDER_STATUS';
 import { ROUTES } from '@src/routes';
+import { envConfig } from '@src/core/config/env.config';
 import type { IOrder } from '@src/core/models';
-
-const WA_NUMBER = '59177000001';
 
 const STATUS_STYLES: Record<OrderStatus, string> = {
   PROCESADO: 'bg-blue-50 text-blue-700 border-blue-200',
@@ -74,15 +73,24 @@ export function OrderHistoryTable({ orders }: OrderHistoryTableProps) {
                   </span>
                 </td>
                 <td className="px-5 py-4">
-                  <a
-                    href={`https://wa.me/${WA_NUMBER}?text=${waMsg}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs font-medium text-green-700 hover:underline"
-                  >
-                    <MessageCircle size={13} />
-                    WhatsApp
-                  </a>
+                  <div className="flex flex-col gap-1.5">
+                    <Link
+                      href={ROUTES.ORDER_DETAIL(order.id)}
+                      className="text-brand inline-flex items-center gap-1 text-xs font-medium hover:underline"
+                    >
+                      <Eye size={12} />
+                      Ver pedido
+                    </Link>
+                    <a
+                      href={`https://wa.me/${envConfig.whatsappNumber}?text=${waMsg}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-xs font-medium text-green-700 hover:underline"
+                    >
+                      <MessageCircle size={13} />
+                      WhatsApp
+                    </a>
+                  </div>
                 </td>
               </tr>
             );
