@@ -23,4 +23,15 @@ export const envConfig = {
     min: 300,
     max: 800,
   },
+
+  /** Datos bancarios para mostrar al cliente cuando elige transferencia */
+  bank: {
+    name: process.env.NEXT_PUBLIC_BANK_NAME ?? 'Banco Nacional de Bolivia',
+    account: process.env.NEXT_PUBLIC_BANK_ACCOUNT ?? '1234567890',
+    holder: process.env.NEXT_PUBLIC_BANK_HOLDER ?? 'Titular de la cuenta',
+    ci: process.env.NEXT_PUBLIC_BANK_CI ?? '12345678',
+  },
+
+  /** URL de la imagen QR de cobros para el método QR Simple */
+  paymentQrUrl: process.env.NEXT_PUBLIC_PAYMENT_QR_URL ?? '',
 } as const;

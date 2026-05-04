@@ -1,6 +1,7 @@
 ﻿'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -14,6 +15,7 @@ import { Button } from '@src/shared/ui/Button';
 import { Input } from '@src/shared/ui/Input';
 import { PaymentMethodCard } from '@src/shared/ui/forms/PaymentMethodCard';
 import { ROUTES } from '@src/routes';
+import { envConfig } from '@src/core/config/env.config';
 import { checkoutSchema, type CheckoutFormData } from './checkout.schema';
 
 const PAYMENT_OPTIONS = [
@@ -92,10 +94,6 @@ export default function CheckoutPage() {
   const appliedCoupon = useCheckoutStore((s) => s.appliedCoupon);
   const setLastOrder = useCheckoutStore((s) => s.setLastOrder);
 
-  useEffect(() => {
-    if (items.length === 0) router.replace(ROUTES.CART);
-  }, [items.length, router]);
-
   const {
     register,
     handleSubmit,
@@ -146,8 +144,12 @@ export default function CheckoutPage() {
 
     setLastOrder(order);
     clearCart();
-    router.push(ROUTES.CHECKOUT_CONFIRMATION);
+    router.push(ROUTES.ORDER_DETAIL(order.id));
   }
+
+  useEffect(() => {
+    if (items.length === 0 && !isSubmitting) router.replace(ROUTES.CART);
+  }, [items.length, isSubmitting, router]);
 
   if (items.length === 0) return null;
 
@@ -298,6 +300,78 @@ export default function CheckoutPage() {
                 {errors.paymentMethod && (
                   <p className="text-danger mt-2 text-xs">{errors.paymentMethod.message}</p>
                 )}
+
+                {/* Panel contextual según método seleccionado */}
+                {selectedPayment === 'transferencia' && (
+                  <div className="border-border bg-surface mt-4 overflow-hidden rounded-2xl border shadow-sm">
+                    <div className="bg-bg-secondary border-border border-b px-5 py-3">
+                      <p className="text-text-primary flex items-center gap-2 text-sm font-semibold">
+                        <span>🏦</span> Datos para transferencia bancaria
+                      </p>
+                    </div>
+                    <div className="divide-border divide-y text-sm">
+                      <div className="flex justify-between px-5 py-3">
+                        <span className="text-text-muted">Banco</span>
+                        <span className="text-text-primary font-semibold">
+                          {envConfig.bank.name}
+                        </span>
+                      </div>
+                      <div className="flex justify-between px-5 py-3">
+                        <span className="text-text-muted">N° de cuenta</span>
+                        <span className="text-text-primary font-mono font-semibold">
+                          {envConfig.bank.account}
+                        </span>
+                      </div>
+                      <div className="flex justify-between px-5 py-3">
+                        <span className="text-text-muted">Titular</span>
+                        <span className="text-text-primary font-semibold">
+                          {envConfig.bank.holder}
+                        </span>
+                      </div>
+                      <div className="flex justify-between px-5 py-3">
+                        <span className="text-text-muted">CI / NIT</span>
+                        <span className="text-text-primary font-mono font-semibold">
+                          {envConfig.bank.ci}
+                        </span>
+                      </div>
+                    </div>
+                    <p className="text-text-muted px-5 py-3 text-xs">
+                      Enviá el comprobante por WhatsApp con tu número de ticket.
+                    </p>
+                  </div>
+                )}
+
+                {selectedPayment === 'qr_simple' && (
+                  <div className="border-border bg-surface mt-4 overflow-hidden rounded-2xl border shadow-sm">
+                    <div className="bg-bg-secondary border-border border-b px-5 py-3">
+                      <p className="text-text-primary flex items-center gap-2 text-sm font-semibold">
+                        <span>📱</span> Código QR para pago
+                      </p>
+                    </div>
+                    <div className="flex flex-col items-center gap-3 px-5 py-5">
+                      {envConfig.paymentQrUrl ? (
+                        <Image
+                          src={envConfig.paymentQrUrl}
+                          alt="QR de pago"
+                          width={180}
+                          height={180}
+                          className="rounded-xl"
+                          unoptimized
+                        />
+                      ) : (
+                        <div className="border-border flex h-44 w-44 items-center justify-center rounded-xl border-2 border-dashed">
+                          <p className="text-text-muted px-3 text-center text-xs">
+                            Agregá tu QR en NEXT_PUBLIC_PAYMENT_QR_URL
+                          </p>
+                        </div>
+                      )}
+                      <p className="text-text-muted text-center text-xs">
+                        Escaneá y enviá el comprobante por WhatsApp.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
                 <div className="mt-8 flex gap-3">
                   <Button
                     type="button"

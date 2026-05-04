@@ -1,7 +1,9 @@
 ﻿'use client';
 
+import Link from 'next/link';
 import { MessageCircle } from 'lucide-react';
 import { ORDER_STATUS_LABELS, type OrderStatus } from '@src/core/constants/ORDER_STATUS';
+import { ROUTES } from '@src/routes';
 import type { IOrder } from '@src/core/models';
 
 const WA_NUMBER = '59177000001';
@@ -50,7 +52,14 @@ export function OrderHistoryTable({ orders }: OrderHistoryTableProps) {
             const waMsg = encodeURIComponent(`Hola! Consulto por mi pedido *${order.ticketId}*`);
             return (
               <tr key={order.id} className="hover:bg-surface-hover">
-                <td className="text-brand px-5 py-4 font-mono font-bold">{order.ticketId}</td>
+                <td className="px-5 py-4">
+                  <Link
+                    href={ROUTES.ORDER_DETAIL(order.id)}
+                    className="text-brand font-mono font-bold hover:underline"
+                  >
+                    {order.ticketId}
+                  </Link>
+                </td>
                 <td className="text-text-muted hidden px-5 py-4 sm:table-cell">
                   {new Date(order.createdAt).toLocaleDateString('es-BO')}
                 </td>

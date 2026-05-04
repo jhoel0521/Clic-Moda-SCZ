@@ -25,6 +25,7 @@ export const ROUTES = {
 
   // Cliente autenticado
   PROFILE: '/perfil',
+  ORDER_DETAIL: (id: string) => `/pedidos/${id}`,
 
   // Panel de administración
   ADMIN: {
