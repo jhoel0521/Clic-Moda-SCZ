@@ -56,6 +56,7 @@ function FilterPanel({
   onToggleSize,
   onToggleEtiqueta,
   onPrice,
+  plain = false,
 }: {
   filters: Filters;
   availableEtiquetas: IEtiqueta[];
@@ -64,21 +65,24 @@ function FilterPanel({
   onToggleSize: (s: Talla) => void;
   onToggleEtiqueta: (id: string) => void;
   onPrice: (field: 'minPrice' | 'maxPrice', v: string) => void;
+  plain?: boolean;
 }) {
   return (
-    <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-      <div className="mb-5 flex items-center justify-between">
-        <p className="font-bold text-gray-900">Filtros</p>
-        {hasActive(filters) && (
-          <button
-            type="button"
-            onClick={onReset}
-            className="text-xs font-medium text-pink-600 hover:underline"
-          >
-            Limpiar todo
-          </button>
-        )}
-      </div>
+    <div className={plain ? '' : 'rounded-2xl border border-gray-100 bg-white p-6 shadow-sm'}>
+      {!plain && (
+        <div className="mb-5 flex items-center justify-between">
+          <p className="font-bold text-gray-900">Filtros</p>
+          {hasActive(filters) && (
+            <button
+              type="button"
+              onClick={onReset}
+              className="text-xs font-medium text-pink-600 hover:underline"
+            >
+              Limpiar todo
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Categoría */}
       <div className="mb-6">
@@ -288,21 +292,58 @@ export default function CatalogPage() {
         {drawerOpen && (
           <div className="fixed inset-0 z-50 lg:hidden">
             <div className="absolute inset-0 bg-black/40" onClick={() => setDrawerOpen(false)} />
-            <div className="absolute right-0 bottom-0 left-0 max-h-[85vh] overflow-y-auto rounded-t-2xl bg-gray-50 p-4">
-              <div className="mb-4 flex items-center justify-between">
+            <div className="absolute right-0 bottom-0 left-0 flex max-h-[90vh] flex-col rounded-t-2xl bg-gray-50">
+              {/* Header fijo */}
+              <div className="flex shrink-0 items-center justify-between rounded-t-2xl border-b border-gray-200 bg-white px-4 py-3">
                 <p className="font-bold text-gray-900">Filtros</p>
-                <button type="button" onClick={() => setDrawerOpen(false)}>
-                  <X size={20} className="text-gray-500" />
+                <div className="flex items-center gap-4">
+                  {hasActive(filters) && (
+                    <button
+                      type="button"
+                      onClick={filterProps.onReset}
+                      className="text-xs font-medium text-pink-600 hover:underline"
+                    >
+                      Limpiar todo
+                    </button>
+                  )}
+                  <button type="button" onClick={() => setDrawerOpen(false)}>
+                    <X size={20} className="text-gray-500" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Contenido scrolleable */}
+              <div className="flex-1 overflow-y-auto p-4">
+                <FilterPanel {...filterProps} plain />
+
+                {hasActive(filters) && (
+                  <div className="sticky bottom-4 mt-6 flex justify-center">
+                    <button
+                      type="button"
+                      onClick={() => setDrawerOpen(false)}
+                      className="flex animate-bounce items-center gap-2 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-pink-200"
+                    >
+                      <Search size={15} className="shrink-0" />
+                      {isPending
+                        ? '¡Buscando…!'
+                        : `¡Zas! ${products.length} resultado${products.length !== 1 ? 's' : ''}`}
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Footer fijo con botón de acción */}
+              <div className="shrink-0 border-t border-gray-200 bg-white p-4">
+                <button
+                  type="button"
+                  onClick={() => setDrawerOpen(false)}
+                  className="w-full rounded-xl bg-pink-600 py-3.5 text-sm font-bold text-white shadow-sm active:bg-pink-700"
+                >
+                  {isPending
+                    ? 'Buscando...'
+                    : `Ver ${products.length} resultado${products.length !== 1 ? 's' : ''}`}
                 </button>
               </div>
-              <FilterPanel {...filterProps} />
-              <button
-                type="button"
-                onClick={() => setDrawerOpen(false)}
-                className="mt-4 w-full rounded-xl bg-gray-900 py-3 font-bold text-white"
-              >
-                Ver {products.length} resultados
-              </button>
             </div>
           </div>
         )}
