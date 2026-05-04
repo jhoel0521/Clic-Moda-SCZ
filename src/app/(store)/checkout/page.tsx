@@ -10,7 +10,6 @@ import { useCartStore } from '@src/core/store/useCartStore';
 import { useAuthStore } from '@src/core/store/useAuthStore';
 import { useCheckoutStore } from '@src/core/store/useCheckoutStore';
 import { OrderService } from '@src/services/OrderService';
-import { ProductService } from '@src/services/ProductService';
 import { Button } from '@src/shared/ui/Button';
 import { Input } from '@src/shared/ui/Input';
 import { PaymentMethodCard } from '@src/shared/ui/forms/PaymentMethodCard';
@@ -123,31 +122,39 @@ export default function CheckoutPage() {
   }
 
   async function onSubmit(data: CheckoutFormData) {
-    const order = await OrderService.createOrder({
-      items,
-      shippingAddress: {
-        fullName: data.fullName,
-        phone: data.phone,
-        address: data.address,
-        city: data.city,
-        reference: data.reference,
-      },
-      paymentMethod: data.paymentMethod,
-      notes: data.notes,
-      customerId: user?.id,
-      customerEmail: user?.email,
-      couponCode: appliedCoupon?.codigo,
-      discount,
-    });
+    try {
+      const order = await OrderService.createOrder({
+        items,
+        shippingAddress: {
+          fullName: data.fullName,
+          phone: data.phone,
+          address: data.address,
+          city: data.city,
+          reference: data.reference,
+        },
+        paymentMethod: data.paymentMethod,
+        notes: data.notes,
+        customerId: user?.id,
+        customerEmail: user?.email,
+        couponCode: appliedCoupon?.codigo,
+        discount,
+      });
 
-    items.forEach((item) => {
-      ProductService.decrementStock(item.productId, item.quantity);
-    });
-
-    setOrderPlaced(true);
-    setLastOrder(order);
-    clearCart();
-    router.push(ROUTES.ORDER_DETAIL(order.id));
+      setOrderPlaced(true);
+      setLastOrder(order);
+      clearCart();
+      router.push(ROUTES.ORDER_DETAIL(order.id));
+    } catch (error) {
+      console.error('Error al crear la orden:', error);
+      // El stock insuficiente se manejará en el error
+      const message = (error as Error).message;
+      if (message.includes('Stock insuficiente')) {
+        // Mostrar toast de error de stock
+        alert(message);
+      } else {
+        alert('Error al procesar la orden. Intente nuevamente.');
+      }
+    }
   }
 
   useEffect(() => {

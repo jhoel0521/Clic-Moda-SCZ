@@ -29,7 +29,6 @@ const productSchema = z.object({
   price: z.number().positive({ message: 'Precio inválido' }),
   originalPrice: z.number().optional(),
   category: z.string().min(1, { message: 'Categoría requerida' }),
-  stock: z.number().int().nonnegative({ message: 'Stock inválido' }),
   tipo_tela: z.string().optional(),
   estado: z.enum(['activo', 'inactivo']),
   colors: z.string().optional(),
@@ -93,7 +92,6 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
       price: product?.price ?? 0,
       originalPrice: product?.originalPrice,
       category: product?.category ?? '',
-      stock: product?.stock ?? 0,
       tipo_tela: product?.tipo_tela ?? '',
       estado: product?.estado ?? 'activo',
       colors: product?.colors.join(', ') ?? '',
@@ -120,6 +118,12 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
     const medidas_dinamicas = Object.fromEntries(
       medidas.filter((m) => m.size).map((m) => [m.size, m.medidas])
     );
+
+    // Inicializar stock vacío para las tallas seleccionadas
+    const stock = Object.fromEntries(
+      selectedSizes.map((size) => [size, product?.stock?.[size] ?? 0])
+    );
+
     const productImages = images.map((img) => ({
       ...img,
       id: img.id ?? `img_${crypto.randomUUID()}`,
@@ -133,7 +137,7 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
       price: data.price,
       originalPrice: data.originalPrice || undefined,
       category: data.category,
-      stock: data.stock,
+      stock,
       tipo_tela: data.tipo_tela || undefined,
       estado: data.estado,
       sizes: selectedSizes,
@@ -197,12 +201,6 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
             type="number"
             step="0.01"
             {...register('originalPrice', { valueAsNumber: true })}
-          />
-          <Input
-            label="Stock"
-            type="number"
-            error={errors.stock?.message}
-            {...register('stock', { valueAsNumber: true })}
           />
           <Input
             label="Tipo de tela (opcional)"

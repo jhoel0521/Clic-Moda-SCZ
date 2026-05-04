@@ -2,6 +2,7 @@ import type { IOrderService } from '@src/core/contracts/IOrderService';
 import type { IOrder, IOrderItem, ICreateOrderInput, OrderStatus } from '@src/core/models';
 import { ORDER_STATUS } from '@src/core/constants/ORDER_STATUS';
 import { findAll, findById, insert, update } from '../db/db';
+import { ProductService } from './ProductService';
 import crypto from 'crypto';
 
 function generateTicketId(): string {
@@ -10,6 +11,18 @@ function generateTicketId(): string {
 
 export const OrderService: IOrderService = {
   async createOrder(input: ICreateOrderInput): Promise<IOrder> {
+    // Validar stock disponible para cada item con su talla específica
+    for (const item of input.items) {
+      const hasStock = await ProductService.decrementStock(
+        item.productId,
+        item.quantity,
+        item.selectedSize
+      );
+      if (!hasStock) {
+        throw new Error(`Stock insuficiente para ${item.name} en talla ${item.selectedSize}`);
+      }
+    }
+
     const subtotal = input.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const discount = input.discount ?? 0;
     const total = Math.max(0, subtotal - discount);

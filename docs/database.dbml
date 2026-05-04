@@ -39,10 +39,11 @@ Table PRODUCTO {
   id int [pk, increment]
   nombre varchar
   precio decimal
-  stock int
+  stock json [note: 'Stock por talla: { "S": 5, "M": 3, "L": 2, "XL": 1 }']
   estado varchar
   tipo_tela varchar
-  medidas_dinamicas json
+  tallas json [note: 'Array de tallas disponibles: ["S", "M", "L", "XL"]']
+  medidas_dinamicas json [note: 'Medidas por talla: { "S": "...", "M": "..." }']
   etiqueta_ids json [note: 'Array de IDs de etiquetas (relación M:N embebida)']
   tag_names json [note: 'Nombres de etiquetas denormalizados para búsqueda']
   creado_en datetime

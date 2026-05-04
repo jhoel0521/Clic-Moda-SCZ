@@ -38,7 +38,8 @@ export interface IProduct {
   images: IImage[];
   sizes: Talla[];
   colors: string[];
-  stock: number;
+  /** Stock disponible por talla: { S: 5, M: 3, L: 2, XL: 1 } */
+  stock: Record<Talla, number>;
   /** Medidas de la prenda por talla: { S: "...", M: "..." } o { largo: "75cm", ... } */
   medidas_dinamicas: MedidasDinamicas;
   etiquetaIds: string[];

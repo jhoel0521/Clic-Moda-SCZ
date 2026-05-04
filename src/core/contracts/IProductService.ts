@@ -6,7 +6,7 @@ export interface IProductService {
   getProductById(id: string): Promise<IProduct | null>;
   getFlashSaleProducts(): Promise<IProduct[]>;
   getCategories(): Promise<string[]>;
-  decrementStock(productId: string, quantity: number): Promise<boolean>;
+  decrementStock(productId: string, quantity: number, size: string): Promise<boolean>;
   addProduct(product: IProduct): Promise<IProduct>;
   updateProduct(updated: IProduct): Promise<IProduct | null>;
   toggleProductEstado(productId: string): Promise<IProduct | null>;

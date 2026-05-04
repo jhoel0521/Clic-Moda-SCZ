@@ -60,7 +60,12 @@
       "price": 300,
       "originalPrice": 500,
       "category": "vestidos",
-      "stock": 13,
+      "stock": {
+        "S": 3,
+        "M": 4,
+        "L": 3,
+        "XL": 3
+      },
       "tipo_tela": "algodón",
       "estado": "activo",
       "sizes": ["S", "M", "L", "XL"],
@@ -117,7 +122,12 @@
       ],
       "sizes": ["XS", "S", "M", "L"],
       "colors": ["blanco", "negro", "beige"],
-      "stock": 4,
+      "stock": {
+        "XS": 1,
+        "S": 1,
+        "M": 1,
+        "L": 1
+      },
       "medidas_dinamicas": {
         "XS": "Busto: 76cm | Hombros: 34cm | Largo: 52cm",
         "S": "Busto: 82cm | Hombros: 36cm | Largo: 54cm",
@@ -152,7 +162,13 @@
       ],
       "sizes": ["S", "M", "L", "XL", "XXL"],
       "colors": ["azul claro", "azul oscuro", "negro"],
-      "stock": 22,
+      "stock": {
+        "S": 3,
+        "M": 5,
+        "L": 5,
+        "XL": 5,
+        "XXL": 3
+      },
       "medidas_dinamicas": {
         "S": "Cintura: 68cm | Cadera: 92cm | Largo: 98cm | Tiro: 28cm",
         "M": "Cintura: 74cm | Cadera: 98cm | Largo: 99cm | Tiro: 29cm",
@@ -187,7 +203,11 @@
       ],
       "sizes": ["S", "M", "L"],
       "colors": ["mostaza", "verde oliva", "terracota"],
-      "stock": 5,
+      "stock": {
+        "S": 2,
+        "M": 2,
+        "L": 1
+      },
       "medidas_dinamicas": {
         "S": "Falda largo: 80cm | Cintura falda: 64cm | Crop largo: 35cm | Busto crop: 82cm",
         "M": "Falda largo: 82cm | Cintura falda: 70cm | Crop largo: 36cm | Busto crop: 88cm",
@@ -221,7 +241,12 @@
       ],
       "sizes": ["S", "M", "L", "XL"],
       "colors": ["azul claro", "negro"],
-      "stock": 12,
+      "stock": {
+        "S": 3,
+        "M": 3,
+        "L": 3,
+        "XL": 3
+      },
       "medidas_dinamicas": {
         "S": "Largo: 68cm | Hombros: 48cm | Pecho: 102cm | Manga: 60cm",
         "M": "Largo: 70cm | Hombros: 50cm | Pecho: 108cm | Manga: 61cm",
@@ -255,7 +280,12 @@
       ],
       "sizes": ["XS", "S", "M", "L"],
       "colors": ["rojo", "azul", "verde", "amarillo"],
-      "stock": 30,
+      "stock": {
+        "XS": 8,
+        "S": 8,
+        "M": 8,
+        "L": 6
+      },
       "medidas_dinamicas": {
         "XS": "Largo: 38cm | Cintura: 58-62cm",
         "S": "Largo: 38cm | Cintura: 63-68cm",
@@ -289,7 +319,12 @@
       ],
       "sizes": ["XS", "S", "M", "L"],
       "colors": ["champagne", "negro", "vino"],
-      "stock": 7,
+      "stock": {
+        "XS": 2,
+        "S": 2,
+        "M": 2,
+        "L": 1
+      },
       "medidas_dinamicas": {
         "XS": "Largo: 115cm | Busto: 76cm | Cintura: 60cm | Cadera: 84cm",
         "S": "Largo: 117cm | Busto: 82cm | Cintura: 66cm | Cadera: 90cm",
@@ -323,7 +358,9 @@
       ],
       "sizes": ["ÚNICO"],
       "colors": ["camel", "negro", "blanco"],
-      "stock": 18,
+      "stock": {
+        "ÚNICO": 18
+      },
       "medidas_dinamicas": {
         "ÚNICO": "Alto: 28cm | Ancho: 22cm | Fondo: 15cm | Asa larga: 55cm"
       },
@@ -466,6 +503,50 @@
       "notes": "",
       "createdAt": "2026-05-04T01:25:57.580Z",
       "updatedAt": "2026-05-04T01:25:57.580Z"
+    },
+    {
+      "id": "ord_4a9fb790-d8a8-438c-a329-6ae65d918f38",
+      "ticketId": "TICK-0FD5BC",
+      "items": [
+        {
+          "id": "item_1777860579933_0",
+          "product": {
+            "id": "prod_003",
+            "name": "Jeans Mom Fit Vintage",
+            "slug": "jeans-mom-fit-vintage",
+            "images": [
+              {
+                "id": "img",
+                "url": "https://picsum.photos/seed/clicmoda-prod-003-a/600/800",
+                "alt": "Jeans Mom Fit Vintage",
+                "isPrimary": true
+              }
+            ],
+            "price": 320
+          },
+          "quantity": 1,
+          "selectedSize": "S",
+          "selectedColor": "azul claro",
+          "unitPrice": 320
+        }
+      ],
+      "status": "PROCESADO",
+      "shippingAddress": {
+        "fullName": "JHOEL ALVARO CRUZ ZURITA",
+        "phone": "77045885",
+        "address": "3840 José Hurtado de Mendoza",
+        "city": "Santa Cruz de la Sierra",
+        "reference": ""
+      },
+      "paymentMethod": "efectivo_entrega",
+      "subtotal": 320,
+      "discount": 0,
+      "total": 320,
+      "customerId": "usr_f8887166",
+      "customerEmail": "jhoel0521@gmail.com",
+      "notes": "",
+      "createdAt": "2026-05-04T02:09:39.933Z",
+      "updatedAt": "2026-05-04T02:09:39.933Z"
     }
   ],
   "coupons": [

@@ -5,7 +5,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   try {
     const { id } = await params;
     const body = await req.json();
-    const success = await ProductService.decrementStock(id, body.decrement);
+    const success = await ProductService.decrementStock(id, body.decrement, body.size || 'M');
     return NextResponse.json({ success });
   } catch (err) {
     return NextResponse.json({ error: (err as Error).message }, { status: 400 });

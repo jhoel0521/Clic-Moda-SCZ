@@ -71,11 +71,16 @@ export const ProductService: IProductService = {
     return [...new Set(products.map((p) => p.category))];
   },
 
-  async decrementStock(productId: string, quantity: number): Promise<boolean> {
+  async decrementStock(productId: string, quantity: number, size: string): Promise<boolean> {
     const product = findById<IProduct>('products', productId);
-    if (!product || product.stock < quantity) return false;
+    if (!product) return false;
 
-    product.stock -= quantity;
+    // Obtener el stock de la talla específica
+    const sizeStock = product.stock[size as keyof typeof product.stock] ?? 0;
+    if (sizeStock < quantity) return false;
+
+    // Decrementar el stock de esa talla
+    product.stock[size as keyof typeof product.stock] = sizeStock - quantity;
     update('products', product);
     return true;
   },

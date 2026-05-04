@@ -32,9 +32,9 @@ export const ProductService: IProductService = {
     return service.getCategories();
   },
 
-  async decrementStock(productId: string, quantity: number) {
+  async decrementStock(productId: string, quantity: number, size: string) {
     const service = await ServiceFactory.getProductService();
-    return service.decrementStock(productId, quantity);
+    return service.decrementStock(productId, quantity, size);
   },
 
   async addProduct(product: IProduct) {

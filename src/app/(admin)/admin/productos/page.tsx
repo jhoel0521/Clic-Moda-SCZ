@@ -107,10 +107,12 @@ export default function AdminProductsPage() {
                     <td className="px-5 py-3 text-right">
                       <span
                         className={
-                          product.stock <= 5 ? 'text-warning font-bold' : 'text-text-primary'
+                          Object.values(product.stock).reduce((s, q) => s + q, 0) <= 5
+                            ? 'text-warning font-bold'
+                            : 'text-text-primary'
                         }
                       >
-                        {product.stock}
+                        {Object.values(product.stock).reduce((s, q) => s + q, 0)}
                       </span>
                     </td>
                     <td className="text-text-primary px-5 py-3 text-right font-semibold">

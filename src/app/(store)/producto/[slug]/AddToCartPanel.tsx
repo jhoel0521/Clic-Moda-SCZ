@@ -19,7 +19,11 @@ export function AddToCartPanel({ product }: AddToCartPanelProps) {
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [qty, setQty] = useState(1);
   const primaryImage = product.images.find((img) => img.isPrimary) ?? product.images[0];
-  const canAdd = selectedSize !== null && selectedColor !== null;
+
+  // Obtener stock disponible para la talla seleccionada
+  const availableStock = selectedSize ? (product.stock[selectedSize] ?? 0) : 0;
+  const canAdd = selectedSize !== null && selectedColor !== null && availableStock > 0;
+  const maxQty = Math.max(1, availableStock);
 
   function handleAddToCart() {
     if (!canAdd) return;
@@ -119,13 +123,22 @@ export function AddToCartPanel({ product }: AddToCartPanelProps) {
           <span className="text-text-primary w-8 text-center font-bold">{qty}</span>
           <button
             type="button"
-            onClick={() => setQty((q) => Math.min(product.stock, q + 1))}
-            className="text-text-secondary hover:bg-surface-hover flex h-8 w-8 items-center justify-center rounded-lg transition-colors"
+            onClick={() => setQty((q) => Math.min(maxQty, q + 1))}
+            disabled={!selectedSize || availableStock === 0}
+            className="text-text-secondary hover:bg-surface-hover flex h-8 w-8 items-center justify-center rounded-lg transition-colors disabled:opacity-50"
           >
             <Plus size={16} />
           </button>
         </div>
-        <span className="text-text-muted ml-3 text-xs">{product.stock} disponibles</span>
+        {selectedSize ? (
+          <span className="text-text-muted ml-3 text-xs">
+            {availableStock > 0
+              ? `${availableStock} disponibles en talla ${selectedSize}`
+              : `Sin stock en talla ${selectedSize}`}
+          </span>
+        ) : (
+          <span className="text-text-muted ml-3 text-xs">Selecciona una talla</span>
+        )}
       </div>
 
       {!canAdd && (

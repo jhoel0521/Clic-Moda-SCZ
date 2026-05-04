@@ -33,7 +33,11 @@ export function ProductDetailClient({
   });
 
   const primaryImage = product.images[activeImg] ?? product.images[0];
-  const canAdd = selectedSize !== null && (product.colors.length === 0 || selectedColor !== null);
+  const availableStock = selectedSize ? (product.stock[selectedSize] ?? 0) : 0;
+  const canAdd =
+    selectedSize !== null &&
+    (product.colors.length === 0 || selectedColor !== null) &&
+    availableStock > 0;
 
   function handleAdd() {
     if (!canAdd) return;
@@ -152,7 +156,9 @@ export function ProductDetailClient({
                 </span>
               )}
               <span className="rounded-lg bg-green-100 px-3 py-1.5 text-sm font-bold text-green-800">
-                Stock: {product.stock}
+                {selectedSize
+                  ? `Stock talla ${selectedSize}: ${availableStock}`
+                  : 'Selecciona una talla para ver stock'}
               </span>
             </div>
 
@@ -174,7 +180,10 @@ export function ProductDetailClient({
                   <button
                     key={t}
                     type="button"
-                    onClick={() => setSelectedSize(t)}
+                    onClick={() => {
+                      setSelectedSize(t);
+                      setQty(1);
+                    }}
                     className={`flex h-14 w-14 items-center justify-center rounded-xl border-2 text-base font-bold transition-all md:h-16 md:w-16 ${
                       selectedSize === t
                         ? 'border-gray-900 bg-gray-900 text-white shadow-md'
@@ -227,13 +236,20 @@ export function ProductDetailClient({
                 <span className="w-10 px-4 text-center text-base font-bold">{qty}</span>
                 <button
                   type="button"
-                  onClick={() => setQty((q) => Math.min(product.stock, q + 1))}
+                  onClick={() => setQty((q) => Math.min(availableStock || 1, q + 1))}
+                  disabled={!selectedSize || availableStock === 0}
                   className="rounded-r-xl p-2.5 transition-colors hover:bg-gray-100"
                 >
                   <Plus className="h-4 w-4" />
                 </button>
               </div>
-              <span className="text-xs text-gray-400">{product.stock} disponibles</span>
+              <span className="text-xs text-gray-400">
+                {selectedSize
+                  ? availableStock > 0
+                    ? `${availableStock} disponibles en talla ${selectedSize}`
+                    : `Sin stock en talla ${selectedSize}`
+                  : 'Selecciona una talla para ver stock'}
+              </span>
             </div>
 
             {/* Measurements table */}

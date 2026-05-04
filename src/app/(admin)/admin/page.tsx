@@ -24,12 +24,19 @@ export default function AdminDashboardPage() {
       .finally(() => setIsLoading(false));
   }, []);
 
+  const getTotalStock = (stock: Record<string, number>): number => {
+    return Object.values(stock).reduce((sum, qty) => sum + qty, 0);
+  };
+
   const today = new Date().toDateString();
   const todayOrders = orders.filter((o) => new Date(o.createdAt).toDateString() === today);
   const dailySales = todayOrders.reduce((sum, o) => sum + o.total, 0);
   const newOrders = orders.filter((o) => o.status === 'PROCESADO').length;
   const activeProducts = products.filter((p) => p.estado === 'activo').length;
-  const lowStockCount = products.filter((p) => p.stock <= 5 && p.stock > 0).length;
+  const lowStockCount = products.filter((p) => {
+    const totalStock = getTotalStock(p.stock);
+    return totalStock <= 5 && totalStock > 0;
+  }).length;
 
   const stats = [
     {
