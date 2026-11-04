@@ -1,0 +1,32 @@
+3:"$Sreact.fragment"
+4:"/Clic-Moda-SCZ/_next/static/chunks/2ga8ba48uiivr.js"
+5:I[39756,["$4"],"default"]
+6:I[37457,["$4"],"default"]
+b:"$Sreact.suspense"
+c:"/Clic-Moda-SCZ/_next/static/chunks/0b-jv_erzqcae.js"
+d:"/Clic-Moda-SCZ/_next/static/chunks/13qjf9ac_z3k_.js"
+e:"/Clic-Moda-SCZ/_next/static/chunks/1z1oi6vyumggn.js"
+f:I[5014,["$4","$c","$d","$e"],"default"]
+10:"ProductDetailClient"
+11:I[98572,["$4","$c","$d","$e"],"$10"]
+12:I[97367,["$4"],"OutletBoundary"]
+15:"ViewportBoundary"
+16:I[97367,["$4"],"$15"]
+17:"MetadataBoundary"
+18:I[97367,["$4"],"$17"]
+19:I[27201,["$4"],"IconMark"]
+8:X
+8:C
+9:X
+a:[["children",{"s":"__PAGE__","h":160,"d":{"r":["$","$3","c",{"children":[["$","$b",null,{"fallback":["$","div",null,{"className":"flex min-h-dvh items-center justify-center","children":["$","div",null,{"role":"status","aria-label":"Cargando...","className":"inline-flex flex-col items-center gap-3 ","children":[["$","$Lf",null,{"icon":{"name":"loader-circle","size":24,"node":[["path",{"d":"M21 12a9 9 0 1 1-6.219-8.56","key":"13zald"}]],"aliases":["loader-2"]},"className":"text-brand animate-spin","size":48,"aria-hidden":"true"}],["$","span",null,{"className":"text-text-muted text-sm","children":"Cargando..."}]]}]}],"children":["$","$L11",null,{}]}],[["$","script","script-0",{"src":"/Clic-Moda-SCZ/_next/static/chunks/1z1oi6vyumggn.js","async":true}]],["$","$L12",null,{"children":["$","$b",null,{"name":"Next.MetadataOutlet","children":"$@13"}]}]]}],"p":"$@14","v":null,"s":"$9"}}]]
+2:[["children",{"s":"producto","h":64,"d":{"r":["$","$3","c",{"children":[null,["$","$L5",null,{"parallelRouterKey":"children","template":["$","$L6",null,{}]}]]}],"p":"$@7","v":"$8","s":"$9"},"c":"$Qa"}]]
+1:[["children",{"s":"(store)","h":32,"c":"$Q2"}]]
+0:{"t":{"t":{"s":"","h":80,"c":"$Q1"},"h":{"r":["$","$3","h",{"children":[null,["$","$L16",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1, viewport-fit=cover"}],["$","meta","2",{"name":"theme-color","content":"#ffffff"}]]}],["$","$L18",null,{"children":[["$","div",null,{"hidden":true,"children":["$","$b",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"Clic Moda SCZ — Zapatos y ropa en Santa Cruz (demo)"}],["$","meta","1",{"name":"description","content":"Demo de tienda móvil de calzado y ropa, con talla exacta y pedidos por WhatsApp."}],["$","link","2",{"rel":"manifest","href":"/Clic-Moda-SCZ/manifest.webmanifest"}],["$","meta","3",{"name":"robots","content":"noindex, nofollow"}],["$","meta","4",{"name":"format-detection","content":"telephone=no"}],["$","meta","5",{"name":"mobile-web-app-capable","content":"yes"}],["$","meta","6",{"name":"apple-mobile-web-app-title","content":"Clic Moda"}],["$","meta","7",{"name":"apple-mobile-web-app-status-bar-style","content":"default"}],["$","link","8",{"rel":"apple-touch-icon","href":"/Clic-Moda-SCZ/apple-touch-icon.png"}],["$","$L19","9",{}]]}]}],null]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"p":"$@1a","v":null,"s":"$9"}},"a":"$@1b","u":"$@1c","b":"p33bqE-W5Y3dFFCP6DbGC"}
+13:null
+1c:true
+9:300
+9:C
+1b:0
+7:"$undefined"
+1a:"$undefined"
+14:"$undefined"
