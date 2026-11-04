@@ -34,7 +34,7 @@ export function OrderKanbanBoard({ orders, onAdvance }: OrderKanbanBoardProps) {
     status === ORDER_STATUS_SEQUENCE[ORDER_STATUS_SEQUENCE.length - 1];
 
   return (
-    <div className="flex gap-4 overflow-x-auto pb-4">
+    <div className="snap-row gap-3 pb-4">
       {byStatus.map(({ status, orders: columnOrders }) => (
         <div key={status} className="w-56 shrink-0">
           <div
@@ -57,7 +57,7 @@ export function OrderKanbanBoard({ orders, onAdvance }: OrderKanbanBoardProps) {
                   <button
                     type="button"
                     onClick={() => onAdvance(order.id)}
-                    className="bg-brand-subtle text-brand hover:bg-brand w-full rounded-lg py-1 text-[10px] font-bold transition-colors hover:text-white"
+                    className="bg-brand-subtle text-brand hover:bg-brand w-full rounded-lg py-2.5 text-xs font-bold transition-colors hover:text-white"
                   >
                     Avanzar →
                   </button>

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState } from 'react';
 import { Tag, CheckCircle } from 'lucide-react';
@@ -63,7 +63,7 @@ export function CouponInput({ subtotal, onApply, appliedCoupon, onRemove }: Coup
           <Tag size={15} className="text-text-muted absolute top-1/2 left-3.5 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Código de cupón"
+            placeholder="Cupón"
             value={code}
             onChange={(e) => {
               setCode(e.target.value.toUpperCase());

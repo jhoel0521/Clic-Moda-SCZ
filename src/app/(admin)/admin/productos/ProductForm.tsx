@@ -1,7 +1,10 @@
 'use client';
 
+import { uid } from '@src/shared/utils/uid';
+import { CATEGORIAS, TALLAS_CALZADO, TALLAS_ROPA } from '@src/core/constants/CATALOG';
+import { imageFileToDataUrl } from '@src/shared/utils/imageFile';
 import { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Plus, Trash2 } from 'lucide-react';
@@ -12,16 +15,7 @@ import { ProductService } from '@src/services/ProductService';
 import { EtiquetaService } from '@src/services/EtiquetaService';
 import type { IProduct, IEtiqueta, Talla } from '@src/core/models';
 
-const CATEGORIAS = [
-  'vestidos',
-  'blusas',
-  'pantalones',
-  'conjuntos',
-  'chaquetas',
-  'faldas',
-  'accesorios',
-];
-const TALLAS_DISPONIBLES: Talla[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+const TALLAS_DISPONIBLES: Talla[] = [...TALLAS_CALZADO, ...TALLAS_ROPA];
 
 const productSchema = z.object({
   name: z.string().min(2, { message: 'Nombre requerido' }),
@@ -75,6 +69,9 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
     product?.etiquetaIds ?? []
   );
   const [allEtiquetas, setAllEtiquetas] = useState<IEtiqueta[]>([]);
+  const [matrix, setMatrix] = useState<Record<string, Record<string, number>>>(
+    product?.variantStock ?? {}
+  );
 
   useEffect(() => {
     EtiquetaService.getAll().then(setAllEtiquetas);
@@ -82,6 +79,7 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<ProductFormInput, unknown, ProductFormData>({
@@ -98,6 +96,24 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
     },
   });
 
+  const colorsText = useWatch({ control, name: 'colors' }) ?? '';
+  const colorNames = colorsText
+    .split(',')
+    .map((c) => c.trim())
+    .filter(Boolean);
+  const stockColors = colorNames.length > 0 ? colorNames : ['Único'];
+
+  function setCell(color: string, size: string, value: string) {
+    const qty = Math.max(0, Number(value) || 0);
+    setMatrix((m) => ({ ...m, [color]: { ...m[color], [size]: qty } }));
+  }
+
+  async function addPhoto(file: File | undefined) {
+    if (!file) return;
+    const url = await imageFileToDataUrl(file);
+    setImages((imgs) => [...imgs, { url, alt: file.name, isPrimary: imgs.length === 0 }]);
+  }
+
   function toggleSize(size: Talla) {
     setSelectedSizes((prev) =>
       prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size]
@@ -106,6 +122,8 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
 
   async function onSubmit(data: ProductFormData) {
     const slug = data.name
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
       .toLowerCase()
       .replace(/\s+/g, '-')
       .replace(/[^a-z0-9-]/g, '');
@@ -119,18 +137,28 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
       medidas.filter((m) => m.size).map((m) => [m.size, m.medidas])
     );
 
-    // Inicializar stock vacío para las tallas seleccionadas
+    // Stock por color y talla; `stock` guarda la suma por talla
+    const finalColors = colors.length > 0 ? colors : ['Único'];
+    const variantStock = Object.fromEntries(
+      finalColors.map((color) => [
+        color,
+        Object.fromEntries(selectedSizes.map((size) => [size, matrix[color]?.[size] ?? 0])),
+      ])
+    );
     const stock = Object.fromEntries(
-      selectedSizes.map((size) => [size, product?.stock?.[size] ?? 0])
+      selectedSizes.map((size) => [
+        size,
+        finalColors.reduce((sum, color) => sum + (variantStock[color][size] ?? 0), 0),
+      ])
     );
 
     const productImages = images.map((img) => ({
       ...img,
-      id: img.id ?? `img_${crypto.randomUUID()}`,
+      id: img.id ?? `img_${uid()}`,
     }));
 
     const saved: IProduct = {
-      id: product?.id ?? `prod_${crypto.randomUUID()}`,
+      id: product?.id ?? `prod_${uid()}`,
       slug: product?.slug ?? slug,
       name: data.name,
       description: data.description,
@@ -138,6 +166,8 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
       originalPrice: data.originalPrice || undefined,
       category: data.category,
       stock,
+      variantStock,
+      colorImage: product?.colorImage,
       tipo_tela: data.tipo_tela || undefined,
       estado: data.estado,
       sizes: selectedSizes,
@@ -180,8 +210,8 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
             >
               <option value="">Seleccionar...</option>
               {CATEGORIAS.map((c) => (
-                <option key={c} value={c}>
-                  {c}
+                <option key={c.id} value={c.id}>
+                  {c.label}
                 </option>
               ))}
             </select>
@@ -200,16 +230,18 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
             label="Precio original (Bs., opcional)"
             type="number"
             step="0.01"
-            {...register('originalPrice', { valueAsNumber: true })}
+            {...register('originalPrice', {
+              setValueAs: (v) => (v === '' || v == null ? undefined : Number(v)),
+            })}
           />
           <Input
-            label="Tipo de tela (opcional)"
-            placeholder="Algodón, Poliéster..."
+            label="Material (opcional)"
+            placeholder="Cuero, gamuza, algodón..."
             {...register('tipo_tela')}
           />
           <Input
             label="Colores (separados por coma)"
-            placeholder="Rosa, Negro, Blanco"
+            placeholder="Negro, Camel, Vino"
             {...register('colors')}
           />
           <div className="sm:col-span-2">
@@ -278,7 +310,7 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
                 type="button"
                 onClick={() => toggleSize(size)}
                 className={[
-                  'rounded-lg border px-3 py-1.5 text-xs font-medium transition-all',
+                  'h-10 min-w-10 rounded-lg border px-2 text-sm font-medium transition-all',
                   selectedSizes.includes(size)
                     ? 'border-brand bg-brand-subtle text-brand'
                     : 'border-border text-text-secondary bg-white',
@@ -289,6 +321,47 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
             ))}
           </div>
         </div>
+
+        {/* Stock por color y talla */}
+        {selectedSizes.length > 0 && (
+          <div>
+            <p className="text-text-primary mb-2 text-sm font-medium">Stock por color y talla</p>
+            <div className="overflow-x-auto">
+              <table className="text-sm">
+                <thead>
+                  <tr>
+                    <th className="pr-2 text-left font-medium" />
+                    {selectedSizes.map((size) => (
+                      <th key={size} className="px-1 pb-1 text-center font-medium">
+                        {size}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {stockColors.map((color) => (
+                    <tr key={color}>
+                      <td className="pr-2 whitespace-nowrap">{color}</td>
+                      {selectedSizes.map((size) => (
+                        <td key={size} className="p-0.5">
+                          <input
+                            type="number"
+                            inputMode="numeric"
+                            min={0}
+                            aria-label={`Stock de ${color} talla ${size}`}
+                            value={matrix[color]?.[size] ?? 0}
+                            onChange={(e) => setCell(color, size, e.target.value)}
+                            className="border-border w-14 rounded-lg border bg-white px-2 text-center"
+                          />
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
 
         {/* Medidas dinámicas */}
         <div>
@@ -323,7 +396,7 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
                       m.map((r, j) => (j === i ? { ...r, medidas: e.target.value } : r))
                     )
                   }
-                  className="border-border focus:ring-brand flex-1 rounded-lg border bg-white px-3 py-2 text-sm focus:ring-1 focus:outline-none"
+                  className="border-border focus:ring-brand min-w-0 flex-1 rounded-lg border bg-white px-3 py-2 text-sm focus:ring-1 focus:outline-none"
                 />
                 <button
                   type="button"
@@ -340,7 +413,7 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
         {/* Imágenes */}
         <div>
           <div className="mb-2 flex items-center justify-between">
-            <p className="text-text-primary text-sm font-medium">Imágenes (URLs)</p>
+            <p className="text-text-primary text-sm font-medium">Fotos</p>
             <button
               type="button"
               onClick={() =>
@@ -348,9 +421,21 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
               }
               className="text-brand flex items-center gap-1 text-xs font-medium hover:underline"
             >
-              <Plus size={12} /> Agregar
+              <Plus size={12} /> Agregar URL
             </button>
           </div>
+          <label className="border-border text-text-secondary mb-2 flex h-12 cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed text-sm font-medium">
+            <Plus size={16} /> Subir foto desde el teléfono
+            <input
+              type="file"
+              accept="image/*"
+              className="sr-only"
+              onChange={(e) => {
+                void addPhoto(e.target.files?.[0]);
+                e.target.value = '';
+              }}
+            />
+          </label>
           <div className="space-y-2">
             {images.map((img, i) => (
               <div key={i} className="flex items-center gap-2">
@@ -362,17 +447,17 @@ export function ProductForm({ isOpen, onClose, product, onSaved }: ProductFormPr
                       imgs.map((r, j) => (j === i ? { ...r, url: e.target.value } : r))
                     )
                   }
-                  className="border-border focus:ring-brand flex-1 rounded-lg border bg-white px-3 py-2 text-sm focus:ring-1 focus:outline-none"
+                  className="border-border focus:ring-brand min-w-0 flex-1 rounded-lg border bg-white px-3 py-2 text-sm focus:ring-1 focus:outline-none"
                 />
                 <input
-                  placeholder="Alt"
+                  placeholder="Descripción"
                   value={img.alt}
                   onChange={(e) =>
                     setImages((imgs) =>
                       imgs.map((r, j) => (j === i ? { ...r, alt: e.target.value } : r))
                     )
                   }
-                  className="border-border focus:ring-brand w-32 rounded-lg border bg-white px-3 py-2 text-sm focus:ring-1 focus:outline-none"
+                  className="border-border focus:ring-brand hidden w-32 rounded-lg border bg-white px-3 py-2 text-sm focus:ring-1 focus:outline-none sm:block"
                 />
                 <label className="text-text-muted flex shrink-0 cursor-pointer items-center gap-1 text-xs">
                   <input

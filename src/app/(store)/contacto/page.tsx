@@ -1,10 +1,10 @@
 'use client';
 
+import { whatsappHref } from '@src/core/config/env.config';
 import { useState } from 'react';
 import { MessageCircle, Mail, MapPin, Clock, CheckCircle2 } from 'lucide-react';
 
-const WA_NUMBER = '59177000001';
-const WA_MSG = encodeURIComponent('Hola! Quiero consultar sobre sus productos 👗');
+const WA_MSG = 'Hola! Quiero consultar sobre sus productos 👗';
 
 export default function ContactoPage() {
   const [formState, setFormState] = useState<'idle' | 'sending' | 'success'>('idle');
@@ -16,11 +16,11 @@ export default function ContactoPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0">
+    <div className="min-h-dvh bg-gray-50 pb-20 md:pb-0">
       <div className="mx-auto max-w-7xl px-4 py-8 md:px-8 md:py-12">
         {/* Header */}
         <div className="mb-10 text-center">
-          <h1 className="mb-3 text-4xl font-black tracking-tight text-gray-900 md:text-5xl">
+          <h1 className="mb-3 text-2xl font-black tracking-tight text-gray-900 md:text-5xl">
             Estamos para <span className="text-pink-600">ayudarte</span>
           </h1>
           <p className="mx-auto max-w-2xl text-lg leading-relaxed text-gray-500">
@@ -33,7 +33,7 @@ export default function ContactoPage() {
         <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-2">
           {/* LEFT — Formulario */}
           <div>
-            <h2 className="mb-6 text-2xl font-black text-gray-900">Envíanos un mensaje</h2>
+            <h2 className="mb-6 text-xl font-black text-gray-900">Envíanos un mensaje</h2>
 
             {formState === 'success' ? (
               <div className="flex flex-col items-center gap-5 rounded-3xl border border-gray-100 bg-white p-12 text-center shadow-sm">
@@ -114,9 +114,9 @@ export default function ContactoPage() {
           <div className="flex flex-col gap-8">
             {/* WhatsApp CTA */}
             <div>
-              <h2 className="mb-4 text-2xl font-black text-gray-900">Contacto directo</h2>
+              <h2 className="mb-4 text-xl font-black text-gray-900">Contacto directo</h2>
               <a
-                href={`https://wa.me/${WA_NUMBER}?text=${WA_MSG}`}
+                href={whatsappHref(WA_MSG)}
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-5 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all hover:border-green-400 hover:shadow-md"
@@ -157,7 +157,7 @@ export default function ContactoPage() {
               <h3 className="mb-4 text-lg font-black text-gray-900">Síguenos en redes</h3>
               <div className="grid grid-cols-2 gap-3">
                 <a
-                  href="https://instagram.com/clicmodascz"
+                  href="https://www.instagram.com/"
                   target="_blank"
                   rel="noreferrer"
                   className="flex items-center gap-3 rounded-2xl border border-gray-100 bg-white p-4 transition-all hover:shadow-md"
@@ -172,7 +172,7 @@ export default function ContactoPage() {
                   </div>
                 </a>
                 <a
-                  href="https://facebook.com/clicmodascz"
+                  href="https://www.facebook.com/"
                   target="_blank"
                   rel="noreferrer"
                   className="flex items-center gap-3 rounded-2xl border border-gray-100 bg-white p-4 transition-all hover:shadow-md"

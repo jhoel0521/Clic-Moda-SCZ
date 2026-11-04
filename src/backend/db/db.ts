@@ -1,5 +1,3 @@
-import fs from 'fs';
-import path from 'path';
 import type {
   IUser,
   IProduct,
@@ -9,10 +7,14 @@ import type {
   IBannerPromocional,
   IEtiqueta,
 } from '@src/core/models';
-import { hashPassword } from './crypto';
+import seed from '../../../data/db.json';
 
-export interface Database {
-  users: IUser[];
+export interface IUserWithPassword extends IUser {
+  password: string;
+}
+
+export interface FullDatabase {
+  users: IUserWithPassword[];
   products: IProduct[];
   orders: IOrder[];
   coupons: ICuponDescuento[];
@@ -21,83 +23,79 @@ export interface Database {
   etiquetas: IEtiqueta[];
 }
 
-// Extendemos IUser para incluir el password en la base de datos
-export interface IUserWithPassword extends IUser {
-  password: string;
-}
-
-export interface FullDatabase extends Omit<Database, 'users'> {
-  users: IUserWithPassword[];
-}
-
-const DB_PATH = path.join(process.cwd(), 'data', 'db.json');
-
 /**
- * Obtiene el estado actual de la base de datos.
+ * Base de datos de la DEMO: vive en el navegador de cada visitante.
+ * - Se inicializa con data/db.json (datos de ejemplo).
+ * - Si localStorage falla (cuota llena, bloqueado), sigue funcionando en memoria.
  */
-export function getDb(): FullDatabase {
-  if (!fs.existsSync(DB_PATH)) {
-    // Si no existe, inicializamos una estructura vacía (esto no debería pasar tras el seed)
-    return {
-      users: [],
-      products: [],
-      orders: [],
-      coupons: [],
-      reviews: [],
-      banners: [],
-      etiquetas: [],
-    };
-  }
-  const data = fs.readFileSync(DB_PATH, 'utf-8');
-  const db: FullDatabase = JSON.parse(data);
+const STORAGE_KEY = 'clic-moda-demo-db-v1';
+const DAY_MS = 24 * 60 * 60 * 1000;
 
-  // Auto-hash passwords stored as "NEEDS_HASH:<plaintext>" — runs once on first load
-  let needsSave = false;
-  for (const user of db.users) {
-    if (user.password.startsWith('NEEDS_HASH:')) {
-      user.password = hashPassword(user.password.slice('NEEDS_HASH:'.length));
-      needsSave = true;
-    }
-  }
-  if (needsSave) saveDb(db);
+let memoryDb: FullDatabase | null = null;
 
+function freshDb(): FullDatabase {
+  const db = JSON.parse(JSON.stringify(seed)) as FullDatabase;
+  const now = Date.now();
+  // Fechas relativas: la demo siempre se ve "viva", sin importar cuándo se abra.
+  for (const product of db.products) {
+    if (product.isFlashSale) product.flashSaleEndsAt = new Date(now + 2.4 * DAY_MS).toISOString();
+  }
+  db.orders.forEach((order, index) => {
+    const date = new Date(now - index * 0.6 * DAY_MS).toISOString();
+    order.createdAt = date;
+    order.updatedAt = date;
+  });
   return db;
 }
 
-/**
- * Guarda el estado de la base de datos en el archivo.
- */
-export function saveDb(db: FullDatabase): void {
-  const dir = path.dirname(DB_PATH);
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
+export function getDb(): FullDatabase {
+  if (typeof window === 'undefined') return JSON.parse(JSON.stringify(seed)) as FullDatabase;
+  if (memoryDb) return memoryDb;
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    if (stored) return JSON.parse(stored) as FullDatabase;
+  } catch {
+    // Almacenamiento no disponible o dañado: se reinicia con los datos de ejemplo.
   }
-  fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2), 'utf-8');
+  const db = freshDb();
+  saveDb(db);
+  return db;
 }
 
-/**
- * Busca todos los elementos de una tabla.
- */
+export function saveDb(db: FullDatabase): void {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+    memoryDb = null;
+  } catch {
+    memoryDb = db;
+  }
+}
+
+/** Vuelve la demo a su estado inicial (botón "Reiniciar demo"). */
+export function resetDb(): void {
+  memoryDb = null;
+  try {
+    window.localStorage.removeItem(STORAGE_KEY);
+    window.localStorage.removeItem('clic-moda-cart');
+    window.localStorage.removeItem('clic-moda-auth');
+  } catch {
+    // Nada que limpiar.
+  }
+}
+
 export function findAll<K extends keyof FullDatabase>(table: K): FullDatabase[K] {
-  const db = getDb();
-  return db[table];
+  return getDb()[table];
 }
 
-/**
- * Busca un elemento por su ID en una tabla.
- */
 export function findById<T extends { id: string }>(
   table: keyof FullDatabase,
   id: string
 ): T | null {
-  const db = getDb();
-  const list = db[table] as unknown as T[];
+  const list = getDb()[table] as unknown as T[];
   return list.find((item) => item.id === id) ?? null;
 }
 
-/**
- * Inserta un nuevo elemento en una tabla.
- */
 export function insert<T extends { id: string }>(table: keyof FullDatabase, item: T): T {
   const db = getDb();
   (db[table] as Array<{ id: string }>).push(item);
@@ -105,9 +103,6 @@ export function insert<T extends { id: string }>(table: keyof FullDatabase, item
   return item;
 }
 
-/**
- * Actualiza un elemento existente en una tabla.
- */
 export function update<T extends { id: string }>(table: keyof FullDatabase, item: T): T {
   const db = getDb();
   const list = db[table] as Array<{ id: string }>;
@@ -119,9 +114,6 @@ export function update<T extends { id: string }>(table: keyof FullDatabase, item
   return item;
 }
 
-/**
- * Elimina un elemento de una tabla por su ID.
- */
 export function remove(table: keyof FullDatabase, id: string): void {
   const db = getDb();
   const list = db[table] as Array<{ id: string }>;

@@ -40,7 +40,7 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 pb-20 md:pb-0">
+      <div className="min-h-dvh bg-gray-50 pb-20 md:pb-0">
         <div className="mx-auto max-w-7xl px-4 py-12 md:px-8">
           <div className="rounded-3xl border border-dashed border-gray-300 bg-white py-20 text-center shadow-sm">
             <ShoppingCart className="mx-auto mb-4 h-16 w-16 text-gray-300" />
@@ -58,13 +58,12 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24 md:pb-0">
+    <div className="page-with-nav-cta min-h-dvh bg-gray-50 md:pb-0">
       <div className="mx-auto max-w-7xl px-4 py-6 md:px-8 md:py-12">
         {/* Título */}
-        <h1 className="mb-8 flex items-center gap-3 text-3xl font-black text-gray-900 md:text-4xl">
-          <ShoppingCart className="h-8 w-8 text-pink-500 md:h-10 md:w-10" />
-          Tu Carrito
-          <span className="text-lg font-normal text-gray-400">
+        <h1 className="mb-5 flex items-center gap-2 text-2xl font-black text-gray-900 md:text-4xl">
+          Tu carrito
+          <span className="text-base font-normal text-gray-400">
             ({items.length} {items.length === 1 ? 'artículo' : 'artículos'})
           </span>
         </h1>
@@ -89,7 +88,9 @@ export default function CartPage() {
 
             {/* Cupón */}
             <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-              <p className="mb-3 text-sm font-bold text-gray-900">¿Tenés un cupón?</p>
+              <p className="mb-3 text-sm font-bold text-gray-900">
+                ¿Tenés un cupón? Probá BIENVENIDA10
+              </p>
               <CouponInput
                 subtotal={subtotal}
                 appliedCoupon={appliedCoupon}
@@ -139,7 +140,7 @@ export default function CartPage() {
 
               <div className="mb-8 flex items-end justify-between border-t border-gray-100 pt-4">
                 <span className="text-lg font-bold text-gray-600">Total a Pagar</span>
-                <span className="text-3xl font-black text-pink-600 md:text-4xl">
+                <span className="text-2xl font-black text-pink-600 md:text-4xl">
                   Bs. {total.toFixed(2)}
                 </span>
               </div>
@@ -158,13 +159,13 @@ export default function CartPage() {
       </div>
 
       {/* CTA Flotante Mobile */}
-      <div className="fixed right-0 bottom-16 left-0 z-40 border-t border-gray-200 bg-white p-3 shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.1)] md:hidden">
+      <div className="above-bottom-nav fixed right-0 left-0 z-40 border-t border-gray-200 bg-white p-3 md:hidden">
         <button
           type="button"
           onClick={goToCheckout}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-pink-600 py-4 text-lg font-black text-white shadow-lg transition-transform hover:bg-pink-700 active:scale-95"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gray-900 py-3.5 text-base font-bold text-white active:bg-black"
         >
-          IR A PAGAR <ChevronRight className="h-5 w-5" />
+          Hacer pedido · Bs. {total.toFixed(2)} <ChevronRight className="h-5 w-5" />
         </button>
       </div>
     </div>

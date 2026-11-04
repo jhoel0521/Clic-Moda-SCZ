@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { forwardRef, useState } from 'react';
+import { forwardRef, useId, useState } from 'react';
 import { Eye, EyeOff, AlertCircle } from 'lucide-react';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -30,12 +30,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     ref
   ) => {
     const [showPassword, setShowPassword] = useState(false);
+    const generatedId = useId();
+    const inputId = id ?? generatedId;
     const inputType = isPassword ? (showPassword ? 'text' : 'password') : type;
 
     return (
       <div className="flex flex-col gap-1.5">
         {label && (
-          <label htmlFor={id} className="text-text-primary text-sm font-medium select-none">
+          <label htmlFor={inputId} className="text-text-primary text-sm font-medium select-none">
             {label}
           </label>
         )}
@@ -47,7 +49,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
           <input
             ref={ref}
-            id={id}
+            id={inputId}
             type={inputType}
             className={[
               'bg-surface text-text-primary w-full rounded-xl border',

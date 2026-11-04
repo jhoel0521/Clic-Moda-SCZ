@@ -11,10 +11,9 @@ export const ROUTES = {
 
   // Tienda pública
   CATALOG: '/catalogo',
-  PRODUCT: (slug: string) => `/producto/${slug}`,
+  PRODUCT: (slug: string) => `/producto?slug=${encodeURIComponent(slug)}`,
   CART: '/carrito',
   CHECKOUT: '/checkout',
-  CHECKOUT_CONFIRMATION: '/checkout/confirmacion',
 
   // Páginas informativas
   ABOUT: '/nosotros',
@@ -25,7 +24,7 @@ export const ROUTES = {
 
   // Cliente autenticado
   PROFILE: '/perfil',
-  ORDER_DETAIL: (id: string) => `/pedidos/${id}`,
+  ORDER_DETAIL: (id: string) => `/pedidos?id=${encodeURIComponent(id)}`,
 
   // Panel de administración
   ADMIN: {

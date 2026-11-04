@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -41,7 +41,7 @@ export default function ProfilePage() {
 
       <div className="space-y-10">
         {/* Datos personales */}
-        <section className="border-border bg-surface rounded-2xl border p-6 shadow-sm">
+        <section className="border-border bg-surface rounded-2xl border p-4 shadow-sm md:p-6">
           <h2 className="text-text-primary mb-5 flex items-center gap-2 font-bold">
             <User size={18} className="text-brand" />
             Mis datos

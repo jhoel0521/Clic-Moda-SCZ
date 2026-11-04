@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Star } from 'lucide-react';
 import { ROUTES } from '@src/routes';
+import { colorSwatch } from '@src/core/constants/CATALOG';
 import type { IProduct } from '@src/core/models';
 
 interface ProductCardProps {
@@ -12,7 +13,7 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, priority = false }: ProductCardProps) {
-  const primaryImage = product.images.find((img) => img.isPrimary) ?? product.images[0];
+  const image = product.images.find((img) => img.isPrimary) ?? product.images[0];
   const hasDiscount = product.originalPrice != null && product.originalPrice > product.price;
   const discountPct = hasDiscount
     ? Math.round((1 - product.price / product.originalPrice!) * 100)
@@ -21,107 +22,62 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
   const isOutOfStock = totalStock <= 0;
 
   const content = (
-    <article className="border-border bg-surface hover:border-border-brand hover:shadow-brand overflow-hidden rounded-2xl border shadow-[0_0_0_0_transparent] transition-all duration-300 hover:-translate-y-1">
-      {/* Imagen */}
-      <div className="bg-surface-raised relative aspect-[3/4] overflow-hidden">
-        {primaryImage ? (
+    <article className="overflow-hidden rounded-2xl border border-gray-100 bg-white">
+      <div className="relative aspect-[4/5] overflow-hidden bg-gray-100">
+        {image && (
           <Image
-            src={primaryImage.url}
-            alt={primaryImage.alt}
+            src={image.url}
+            alt={image.alt}
             fill
-            className={`object-cover transition-transform duration-500 group-hover:scale-105 ${
-              isOutOfStock ? 'grayscale' : ''
-            }`}
+            className={`object-cover ${isOutOfStock ? 'grayscale' : ''}`}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             priority={priority}
-            loading={priority ? 'eager' : 'lazy'}
           />
-        ) : (
-          <div className="bg-surface-raised flex h-full w-full items-center justify-center">
-            <svg
-              className="h-12 w-12 text-gray-300"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1}
-                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-              />
-            </svg>
-          </div>
         )}
 
-        {/* Badges */}
-        <div className="absolute top-3 left-3 flex flex-col gap-1.5">
-          {product.isFlashSale && (
-            <span className="bg-gradient-brand rounded-full px-2 py-0.5 text-[11px] font-bold text-white">
-              FLASH
-            </span>
-          )}
+        <div className="absolute top-2 left-2 flex flex-col items-start gap-1">
           {hasDiscount && (
-            <span className="rounded-full bg-black/70 px-2 py-0.5 text-[11px] font-bold text-white backdrop-blur-sm">
+            <span className="rounded-full bg-pink-600 px-2 py-0.5 text-[11px] font-bold text-white">
               -{discountPct}%
             </span>
           )}
           {isOutOfStock ? (
-            <span className="rounded-full bg-red-100 px-2 py-0.5 text-[11px] font-bold text-red-800">
+            <span className="rounded-full bg-gray-900 px-2 py-0.5 text-[11px] font-bold text-white">
               Agotado
             </span>
-          ) : totalStock <= 5 ? (
-            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-bold text-amber-800">
-              Últimas {totalStock}
-            </span>
           ) : (
-            <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-bold text-emerald-800">
-              Stock {totalStock}
-            </span>
+            totalStock <= 8 && (
+              <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-bold text-amber-800">
+                Últimos pares
+              </span>
+            )
           )}
         </div>
-
-        {isOutOfStock && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/35">
-            <span className="rounded-full bg-white px-4 py-1.5 text-xs font-black tracking-wide text-gray-900 uppercase shadow-lg">
-              Sin stock
-            </span>
-          </div>
-        )}
       </div>
 
-      {/* Info */}
-      <div className="space-y-2 p-5">
-        <p className="text-text-primary line-clamp-2 text-sm leading-snug font-semibold">
-          {product.name}
-        </p>
-
-        {product.tagNames.length > 0 && (
-          <div className="flex flex-wrap gap-1">
-            {product.tagNames.slice(0, 3).map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-medium text-gray-500"
-              >
-                #{tag}
-              </span>
-            ))}
-          </div>
-        )}
-
-        {product.rating != null && (
-          <div className="text-text-muted flex items-center gap-1 text-xs">
-            <Star size={11} className="fill-yellow-400 text-yellow-400" />
-            <span>{product.rating}</span>
-            <span>({product.reviewCount})</span>
-          </div>
-        )}
-
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-text-primary text-base font-bold">Bs. {product.price}</span>
+      <div className="space-y-1 p-3">
+        <p className="line-clamp-1 text-sm font-semibold text-gray-900">{product.name}</p>
+        <div className="flex items-baseline gap-1.5">
+          <span className="text-[15px] font-bold text-gray-900">Bs. {product.price}</span>
           {hasDiscount && (
-            <span className="text-text-muted text-sm line-through">
-              Bs. {product.originalPrice}
+            <span className="text-xs text-gray-400 line-through">Bs. {product.originalPrice}</span>
+          )}
+        </div>
+        <div className="flex h-4 items-center justify-between">
+          <span className="flex gap-1">
+            {product.colors.slice(0, 4).map((color) => (
+              <span
+                key={color}
+                title={color}
+                className="h-3 w-3 rounded-full border border-black/15"
+                style={{ background: colorSwatch(color) }}
+              />
+            ))}
+          </span>
+          {product.rating != null && (
+            <span className="flex items-center gap-0.5 text-xs text-gray-500">
+              <Star size={11} className="fill-yellow-400 text-yellow-400" />
+              {product.rating}
             </span>
           )}
         </div>
@@ -130,11 +86,11 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
   );
 
   if (isOutOfStock) {
-    return <div className="group block cursor-not-allowed opacity-80">{content}</div>;
+    return <div className="block opacity-80">{content}</div>;
   }
 
   return (
-    <Link href={ROUTES.PRODUCT(product.slug)} className="group block">
+    <Link href={ROUTES.PRODUCT(product.slug)} className="block active:opacity-80">
       {content}
     </Link>
   );

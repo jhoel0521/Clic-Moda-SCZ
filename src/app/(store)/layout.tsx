@@ -1,19 +1,21 @@
 import { StoreNavbar } from '@src/shared/ui/StoreNavbar';
 import { StoreFooter } from '@src/shared/ui/StoreFooter';
 import { MobileBottomNav } from '@src/shared/ui/MobileBottomNav';
+import { DemoBar } from '@src/shared/ui/DemoBar';
 
 export default function StoreLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen flex-col bg-gray-50">
+    <div className="flex min-h-dvh flex-col bg-gray-50">
+      <DemoBar />
       <StoreNavbar />
 
-      {/* main ocupa el espacio disponible y tiene padding inferior para la barra móvil */}
-      <main className="w-full flex-1 pb-20 md:pb-16">{children}</main>
+      {/* El espacio inferior deja libre la barra de navegación móvil */}
+      <main className="page-with-nav w-full flex-1 md:pb-16">{children}</main>
 
-      {/* Footer siempre al fondo gracias al flex-1 del main */}
-      <StoreFooter />
+      <div className="hidden md:block">
+        <StoreFooter />
+      </div>
 
-      {/* Barra de navegación móvil fija */}
       <MobileBottomNav />
     </div>
   );

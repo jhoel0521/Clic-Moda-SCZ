@@ -54,7 +54,7 @@ export default function AdminOrdersPage() {
             type="button"
             onClick={() => setViewMode('list')}
             className={[
-              'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all',
+              'flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all',
               viewMode === 'list'
                 ? 'bg-brand-subtle text-brand'
                 : 'text-text-muted hover:text-text-primary',
@@ -66,7 +66,7 @@ export default function AdminOrdersPage() {
             type="button"
             onClick={() => setViewMode('kanban')}
             className={[
-              'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all',
+              'flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-all',
               viewMode === 'kanban'
                 ? 'bg-brand-subtle text-brand'
                 : 'text-text-muted hover:text-text-primary',
@@ -91,61 +91,102 @@ export default function AdminOrdersPage() {
               <p>Aún no hay pedidos registrados.</p>
             </div>
           ) : (
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-bg-secondary border-border border-b">
-                  <th className="text-text-primary px-5 py-3 text-left font-semibold">Ticket</th>
-                  <th className="text-text-primary hidden px-5 py-3 text-left font-semibold md:table-cell">
-                    Cliente
-                  </th>
-                  <th className="text-text-primary hidden px-5 py-3 text-left font-semibold sm:table-cell">
-                    Fecha
-                  </th>
-                  <th className="text-text-primary px-5 py-3 text-right font-semibold">Total</th>
-                  <th className="text-text-primary px-5 py-3 text-center font-semibold">Estado</th>
-                  <th className="text-text-primary px-5 py-3 text-center font-semibold">Acción</th>
-                </tr>
-              </thead>
-              <tbody className="divide-border divide-y bg-white">
+            <>
+              <ul className="divide-border divide-y bg-white md:hidden">
                 {orders.map((order) => {
                   const next = getNextOrderStatus(order.status);
                   return (
-                    <tr key={order.id} className="hover:bg-surface-hover">
-                      <td className="text-brand px-5 py-3 font-mono font-bold">{order.ticketId}</td>
-                      <td className="text-text-secondary hidden px-5 py-3 md:table-cell">
-                        {order.shippingAddress.fullName}
-                      </td>
-                      <td className="text-text-muted hidden px-5 py-3 sm:table-cell">
-                        {new Date(order.createdAt).toLocaleDateString('es-BO')}
-                      </td>
-                      <td className="text-text-primary px-5 py-3 text-right font-semibold">
-                        Bs. {order.total.toFixed(2)}
-                      </td>
-                      <td className="px-5 py-3 text-center">
-                        <span
-                          className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${STATUS_STYLES[order.status]}`}
-                        >
-                          {ORDER_STATUS_LABELS[order.status]}
+                    <li key={order.id} className="space-y-2 p-4">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-brand font-mono text-sm font-bold">
+                          {order.ticketId}
                         </span>
-                      </td>
-                      <td className="px-5 py-3 text-center">
-                        {next ? (
-                          <button
-                            type="button"
-                            onClick={() => handleAdvance(order.id)}
-                            className="bg-brand-subtle text-brand hover:bg-brand rounded-lg px-3 py-1.5 text-xs font-bold transition-colors hover:text-white"
-                          >
-                            → {ORDER_STATUS_LABELS[next]}
-                          </button>
-                        ) : (
-                          <span className="text-text-muted text-xs">Finalizado</span>
-                        )}
-                      </td>
-                    </tr>
+                        <span className="text-text-primary font-semibold whitespace-nowrap">
+                          Bs. {order.total.toFixed(2)}
+                        </span>
+                      </div>
+                      <p className="text-text-secondary text-sm">
+                        {order.shippingAddress.fullName}
+                        {' · '}
+                        {ORDER_STATUS_LABELS[order.status]}
+                      </p>
+                      {next ? (
+                        <button
+                          type="button"
+                          onClick={() => handleAdvance(order.id)}
+                          className="bg-brand-subtle text-brand h-11 w-full rounded-xl text-sm font-semibold"
+                        >
+                          Pasar a {ORDER_STATUS_LABELS[next]}
+                        </button>
+                      ) : (
+                        <p className="text-text-muted text-xs">Finalizado</p>
+                      )}
+                    </li>
                   );
                 })}
-              </tbody>
-            </table>
+              </ul>
+              <table className="hidden w-full text-sm md:table">
+                <thead>
+                  <tr className="bg-bg-secondary border-border border-b">
+                    <th className="text-text-primary px-5 py-3 text-left font-semibold">Ticket</th>
+                    <th className="text-text-primary hidden px-5 py-3 text-left font-semibold md:table-cell">
+                      Cliente
+                    </th>
+                    <th className="text-text-primary hidden px-5 py-3 text-left font-semibold sm:table-cell">
+                      Fecha
+                    </th>
+                    <th className="text-text-primary px-5 py-3 text-right font-semibold">Total</th>
+                    <th className="text-text-primary px-5 py-3 text-center font-semibold">
+                      Estado
+                    </th>
+                    <th className="text-text-primary px-5 py-3 text-center font-semibold">
+                      Acción
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-border divide-y bg-white">
+                  {orders.map((order) => {
+                    const next = getNextOrderStatus(order.status);
+                    return (
+                      <tr key={order.id} className="hover:bg-surface-hover">
+                        <td className="text-brand px-5 py-3 font-mono font-bold">
+                          {order.ticketId}
+                        </td>
+                        <td className="text-text-secondary hidden px-5 py-3 md:table-cell">
+                          {order.shippingAddress.fullName}
+                        </td>
+                        <td className="text-text-muted hidden px-5 py-3 sm:table-cell">
+                          {new Date(order.createdAt).toLocaleDateString('es-BO')}
+                        </td>
+                        <td className="text-text-primary px-5 py-3 text-right font-semibold">
+                          Bs. {order.total.toFixed(2)}
+                        </td>
+                        <td className="px-5 py-3 text-center">
+                          <span
+                            className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${STATUS_STYLES[order.status]}`}
+                          >
+                            {ORDER_STATUS_LABELS[order.status]}
+                          </span>
+                        </td>
+                        <td className="px-5 py-3 text-center">
+                          {next ? (
+                            <button
+                              type="button"
+                              onClick={() => handleAdvance(order.id)}
+                              className="bg-brand-subtle text-brand hover:bg-brand rounded-lg px-3 py-1.5 text-xs font-bold transition-colors hover:text-white"
+                            >
+                              → {ORDER_STATUS_LABELS[next]}
+                            </button>
+                          ) : (
+                            <span className="text-text-muted text-xs">Finalizado</span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </>
           )}
         </div>
       )}

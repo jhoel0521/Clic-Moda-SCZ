@@ -10,7 +10,7 @@ export const envConfig = {
   apiBaseUrl: process.env.NEXT_PUBLIC_API_BASE_URL ?? '',
 
   /** Número de WhatsApp para el checkout (formato internacional) */
-  whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '59170000000',
+  whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '',
 
   /** ¿Usar backend simulado? true durante desarrollo sin API real */
   useSimulatedBackend: process.env.NEXT_PUBLIC_USE_SIMULATED_BACKEND !== 'false',
@@ -23,15 +23,12 @@ export const envConfig = {
     min: 300,
     max: 800,
   },
-
-  /** Datos bancarios para mostrar al cliente cuando elige transferencia */
-  bank: {
-    name: process.env.NEXT_PUBLIC_BANK_NAME ?? 'Banco Nacional de Bolivia',
-    account: process.env.NEXT_PUBLIC_BANK_ACCOUNT ?? '1234567890',
-    holder: process.env.NEXT_PUBLIC_BANK_HOLDER ?? 'Titular de la cuenta',
-    ci: process.env.NEXT_PUBLIC_BANK_CI ?? '12345678',
-  },
-
-  /** URL de la imagen QR de cobros para el método QR Simple */
-  paymentQrUrl: process.env.NEXT_PUBLIC_PAYMENT_QR_URL ?? '',
 } as const;
+
+/**
+ * Enlace a WhatsApp. Sin número configurado abre el selector de contactos,
+ * así la demo nunca le escribe a un número ajeno.
+ */
+export function whatsappHref(message: string): string {
+  return `https://wa.me/${envConfig.whatsappNumber}?text=${encodeURIComponent(message)}`;
+}

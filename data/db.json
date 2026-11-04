@@ -2,551 +2,1393 @@
   "users": [
     {
       "id": "usr_001",
-      "name": "Ana Gerente",
-      "email": "gerente@clicmoda.bo",
-      "password": "048943a96f02cefc0222a2271943cffb:2a59633dcfc7b5de7baf75222918fdb11d5d3ed8bb725506a2611269dadcff988208f927901fda5cf5d62eebecdd8457ae5866fc181e68dc071e11a6520ea11c",
+      "name": "Gerencia Demo",
+      "email": "gerente@demo.test",
+      "password": "demo1234",
       "role": "GERENTE",
-      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=ana",
-      "phone": "591 7 700-0001",
-      "createdAt": "2025-01-01T00:00:00.000Z"
+      "avatarUrl": "",
+      "phone": "70000001",
+      "createdAt": "2026-01-01T00:00:00.000Z"
     },
     {
       "id": "usr_002",
-      "name": "Carlos Despacho",
-      "email": "despacho@clicmoda.bo",
-      "password": "b05e7a324a1a0d03f34fec8f7defea0c:fccc59c2dc00b052ade66dcafa3fd9f27f18e57923b5716b5a220ceef7ce06fbcf5e2ff136084d54397f53982479cf244c8c386b81ce95495a2898501dde6b14",
+      "name": "Despacho Demo",
+      "email": "despacho@demo.test",
+      "password": "demo1234",
       "role": "DESPACHO",
-      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=carlos",
-      "phone": "591 7 700-0002",
-      "createdAt": "2025-01-01T00:00:00.000Z"
+      "avatarUrl": "",
+      "phone": "70000002",
+      "createdAt": "2026-01-01T00:00:00.000Z"
     },
     {
       "id": "usr_003",
-      "name": "Laura Atención",
-      "email": "atencion@clicmoda.bo",
-      "password": "ef4ee814c13174ab0a786c8a3f8c8a8d:911bea4cedb1d2aa8a72e6683cbcf5c3efa3b7255c2db4fece3aedc36dea1c8162041e5a8aa6b3e4db912bb0ad4f96b3995baf54e5d5c18d944fe10017cad341",
+      "name": "Atención Demo",
+      "email": "atencion@demo.test",
+      "password": "demo1234",
       "role": "ATENCION_CLIENTE",
-      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=laura",
-      "phone": "591 7 700-0003",
-      "createdAt": "2025-01-01T00:00:00.000Z"
+      "avatarUrl": "",
+      "phone": "70000003",
+      "createdAt": "2026-01-01T00:00:00.000Z"
     },
     {
       "id": "usr_004",
-      "name": "María Cliente",
-      "email": "maria@example.com",
-      "password": "e97574e478ca4690e766fc7fdc1cf36f:ce08faba86db1222694a5f8d4dd0c70a063ffdefbd32f7f180e1058645ba9caf2a6a44dc99fe7650b854517eb30f4994f1c0a315649eaf457a4db77996f06d26",
+      "name": "Cliente Demo",
+      "email": "cliente@demo.test",
+      "password": "demo1234",
       "role": "CLIENTE",
-      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=maria",
-      "phone": "591 7 700-0004",
-      "createdAt": "2025-03-15T14:00:00.000Z"
-    },
-    {
-      "id": "usr_f8887166",
-      "name": "JHOEL ALVARO CRUZ ZURITA",
-      "email": "jhoel0521@gmail.com",
-      "password": "ceb59a00d79f45b8108850beb169a77f:533c428ca431f778137a4977be93a1d6a704935f278055bdcb0ce5672f9173f8abadda442c11e1abc9686ab21cf90695df65e9f4b7718536eba6029af437f540",
-      "role": "CLIENTE",
-      "phone": "77045885",
-      "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=JHOEL%20ALVARO%20CRUZ%20ZURITA",
-      "createdAt": "2026-05-04T01:25:22.543Z"
+      "avatarUrl": "",
+      "phone": "70000004",
+      "createdAt": "2026-01-01T00:00:00.000Z"
     }
   ],
   "products": [
     {
       "id": "prod_001",
-      "slug": "vestido-floral-primavera",
-      "name": "Vestido Floral Primavera",
-      "description": "Vestido midi con estampado floral vibrante, perfecto para el verano cruceño. Tela liviana y fresca de algodón 100%.",
-      "price": 300,
-      "originalPrice": 500,
-      "category": "vestidos",
+      "slug": "stiletto-luna",
+      "name": "Stiletto Luna",
+      "description": "Taco fino de 9 cm con punta almendrada y plantilla acolchada. Hecho para aguantar toda la noche sin sufrir.",
+      "price": 420,
+      "originalPrice": 520,
+      "category": "tacones",
       "stock": {
-        "S": 3,
-        "M": 4,
-        "L": 3,
-        "XL": 3
+        "35": 1,
+        "36": 10,
+        "37": 3,
+        "38": 9,
+        "39": 6,
+        "40": 6
       },
-      "tipo_tela": "algodón",
+      "variantStock": {
+        "Azul marino": {
+          "35": 0,
+          "36": 4,
+          "37": 1,
+          "38": 6,
+          "39": 2,
+          "40": 3
+        },
+        "Floral": {
+          "35": 1,
+          "36": 6,
+          "37": 2,
+          "38": 3,
+          "39": 4,
+          "40": 3
+        }
+      },
+      "colorImage": {
+        "Azul marino": 0,
+        "Floral": 2
+      },
+      "tipo_tela": "Gamuza sintética",
       "estado": "activo",
-      "sizes": ["S", "M", "L", "XL"],
-      "colors": ["rosa", "celeste", "blanco"],
+      "sizes": [
+        "35",
+        "36",
+        "37",
+        "38",
+        "39",
+        "40"
+      ],
+      "colors": [
+        "Azul marino",
+        "Floral"
+      ],
       "medidas_dinamicas": {
-        "S": "Largo: 105cm | Busto: 82cm | Cintura: 66cm",
-        "M": "Largo: 107cm | Busto: 88cm | Cintura: 72cm",
-        "L": "Largo: 109cm | Busto: 94cm | Cintura: 78cm",
-        "XL": "Largo: 111cm | Busto: 100cm | Cintura: 84cm"
+        "35": "Largo del pie: 22,5 cm",
+        "36": "Largo del pie: 23,0 cm",
+        "37": "Largo del pie: 23,5 cm",
+        "38": "Largo del pie: 24,0 cm",
+        "39": "Largo del pie: 25,0 cm",
+        "40": "Largo del pie: 25,5 cm"
       },
       "images": [
         {
           "id": "img_001_1",
-          "url": "https://picsum.photos/seed/clicmoda-prod-001-a/600/800",
-          "alt": "Vestido Floral Primavera - frente",
+          "url": "https://images.unsplash.com/photo-1515347619252-60a4bf4fff4f?auto=format&fit=crop&q=70&w=800&h=1000",
+          "alt": "Stiletto Luna Azul marino",
           "isPrimary": true
         },
         {
           "id": "img_001_2",
-          "url": "https://picsum.photos/seed/clicmoda-prod-001-b/600/800",
-          "alt": "Vestido Floral Primavera - detalle",
+          "url": "https://images.unsplash.com/photo-1515347619252-60a4bf4fff4f?auto=format&fit=crop&q=70&w=800&h=1000&crop=focalpoint&fp-x=0.5&fp-y=0.55&fp-z=1.7",
+          "alt": "Stiletto Luna Azul marino - detalle",
+          "isPrimary": false
+        },
+        {
+          "id": "img_001_3",
+          "url": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&q=70&w=800&h=1000",
+          "alt": "Stiletto Luna Floral",
+          "isPrimary": false
+        },
+        {
+          "id": "img_001_4",
+          "url": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&q=70&w=800&h=1000&crop=focalpoint&fp-x=0.5&fp-y=0.55&fp-z=1.7",
+          "alt": "Stiletto Luna Floral - detalle",
           "isPrimary": false
         }
       ],
-      "isFlashSale": false,
+      "isFlashSale": true,
+      "flashSaleEndsAt": "2030-01-01T00:00:00.000Z",
       "rating": 4.8,
-      "reviewCount": 23,
-      "createdAt": "2025-03-01T00:00:00.000Z",
-      "etiquetaIds": ["etag_001", "etag_002", "etag_003", "etag_004"],
-      "tagNames": ["vestido", "floral", "verano", "midi"]
+      "reviewCount": 24,
+      "createdAt": "2026-10-01T00:00:00.000Z",
+      "etiquetaIds": [
+        "etag_fiesta",
+        "etag_oferta"
+      ],
+      "tagNames": [
+        "fiesta",
+        "oferta"
+      ]
     },
     {
       "id": "prod_002",
-      "slug": "blusa-off-shoulder-tule",
-      "name": "Blusa Off-Shoulder Tule",
-      "description": "Blusa elegante con hombros descubiertos y tela de tul bordado. Ideal para salidas y eventos especiales.",
-      "price": 185,
-      "originalPrice": null,
+      "slug": "stiletto-noche",
+      "name": "Stiletto Noche",
+      "description": "El clásico negro que combina con todo. Taco de 10 cm y acabado satinado.",
+      "price": 390,
+      "category": "tacones",
+      "stock": {
+        "35": 6,
+        "36": 2,
+        "37": 3,
+        "38": 4,
+        "39": 3,
+        "40": 5
+      },
+      "variantStock": {
+        "Negro": {
+          "35": 6,
+          "36": 2,
+          "37": 3,
+          "38": 4,
+          "39": 3,
+          "40": 5
+        }
+      },
+      "colorImage": {
+        "Negro": 0
+      },
+      "tipo_tela": "Charol",
       "estado": "activo",
-      "tipo_tela": "tul bordado",
-      "category": "blusas",
+      "sizes": [
+        "35",
+        "36",
+        "37",
+        "38",
+        "39",
+        "40"
+      ],
+      "colors": [
+        "Negro"
+      ],
+      "medidas_dinamicas": {
+        "35": "Largo del pie: 22,5 cm",
+        "36": "Largo del pie: 23,0 cm",
+        "37": "Largo del pie: 23,5 cm",
+        "38": "Largo del pie: 24,0 cm",
+        "39": "Largo del pie: 25,0 cm",
+        "40": "Largo del pie: 25,5 cm"
+      },
       "images": [
         {
           "id": "img_002_1",
-          "url": "https://picsum.photos/seed/clicmoda-prod-002-a/600/800",
-          "alt": "Blusa Off-Shoulder Tule - frente",
+          "url": "https://images.unsplash.com/photo-1596703263926-eb0762ee17e4?auto=format&fit=crop&q=70&w=800&h=1000",
+          "alt": "Stiletto Noche Negro",
           "isPrimary": true
         },
         {
           "id": "img_002_2",
-          "url": "https://picsum.photos/seed/clicmoda-prod-002-b/600/800",
-          "alt": "Blusa Off-Shoulder Tule - lateral"
+          "url": "https://images.unsplash.com/photo-1596703263926-eb0762ee17e4?auto=format&fit=crop&q=70&w=800&h=1000&crop=focalpoint&fp-x=0.5&fp-y=0.55&fp-z=1.7",
+          "alt": "Stiletto Noche Negro - detalle",
+          "isPrimary": false
         }
       ],
-      "sizes": ["XS", "S", "M", "L"],
-      "colors": ["blanco", "negro", "beige"],
-      "stock": {
-        "XS": 1,
-        "S": 1,
-        "M": 1,
-        "L": 1
-      },
-      "medidas_dinamicas": {
-        "XS": "Busto: 76cm | Hombros: 34cm | Largo: 52cm",
-        "S": "Busto: 82cm | Hombros: 36cm | Largo: 54cm",
-        "M": "Busto: 88cm | Hombros: 38cm | Largo: 56cm",
-        "L": "Busto: 94cm | Hombros: 40cm | Largo: 58cm"
-      },
-      "isFlashSale": true,
-      "flashSaleEndsAt": "2026-12-31T23:59:59.000Z",
-      "rating": 4.5,
-      "reviewCount": 11,
-      "createdAt": "2025-03-05T00:00:00.000Z",
-      "etiquetaIds": ["etag_005", "etag_006", "etag_007", "etag_008"],
-      "tagNames": ["blusa", "elegante", "fiesta", "off-shoulder"]
+      "isFlashSale": false,
+      "rating": 4.6,
+      "reviewCount": 17,
+      "createdAt": "2026-10-01T00:00:00.000Z",
+      "etiquetaIds": [
+        "etag_fiesta",
+        "etag_nuevo"
+      ],
+      "tagNames": [
+        "fiesta",
+        "nuevo"
+      ]
     },
     {
       "id": "prod_003",
-      "slug": "jeans-mom-fit-vintage",
-      "name": "Jeans Mom Fit Vintage",
-      "description": "Jean clásico de tiro alto con lavado vintage. Corte mom fit que favorece todas las figuras.",
-      "price": 320,
-      "originalPrice": null,
+      "slug": "plataforma-sol",
+      "name": "Plataforma Sol",
+      "description": "Sandalia de plataforma con tiras cruzadas. Liviana y fresca para el calor de Santa Cruz.",
+      "price": 340,
+      "originalPrice": 430,
+      "category": "sandalias",
+      "stock": {
+        "35": 4,
+        "36": 3,
+        "37": 5,
+        "38": 2,
+        "39": 0,
+        "40": 4
+      },
+      "variantStock": {
+        "Vino": {
+          "35": 4,
+          "36": 3,
+          "37": 5,
+          "38": 2,
+          "39": 0,
+          "40": 4
+        }
+      },
+      "colorImage": {
+        "Vino": 0
+      },
+      "tipo_tela": "Cuero vegano",
       "estado": "activo",
-      "tipo_tela": "denim",
-      "category": "pantalones",
+      "sizes": [
+        "35",
+        "36",
+        "37",
+        "38",
+        "39",
+        "40"
+      ],
+      "colors": [
+        "Vino"
+      ],
+      "medidas_dinamicas": {
+        "35": "Largo del pie: 22,5 cm",
+        "36": "Largo del pie: 23,0 cm",
+        "37": "Largo del pie: 23,5 cm",
+        "38": "Largo del pie: 24,0 cm",
+        "39": "Largo del pie: 25,0 cm",
+        "40": "Largo del pie: 25,5 cm"
+      },
       "images": [
         {
           "id": "img_003_1",
-          "url": "https://picsum.photos/seed/clicmoda-prod-003-a/600/800",
-          "alt": "Jeans Mom Fit - frente",
+          "url": "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&q=70&w=800&h=1000",
+          "alt": "Plataforma Sol Vino",
           "isPrimary": true
+        },
+        {
+          "id": "img_003_2",
+          "url": "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&q=70&w=800&h=1000&crop=focalpoint&fp-x=0.5&fp-y=0.55&fp-z=1.7",
+          "alt": "Plataforma Sol Vino - detalle",
+          "isPrimary": false
         }
       ],
-      "sizes": ["S", "M", "L", "XL", "XXL"],
-      "colors": ["azul claro", "azul oscuro", "negro"],
-      "stock": {
-        "S": 3,
-        "M": 5,
-        "L": 5,
-        "XL": 5,
-        "XXL": 3
-      },
-      "medidas_dinamicas": {
-        "S": "Cintura: 68cm | Cadera: 92cm | Largo: 98cm | Tiro: 28cm",
-        "M": "Cintura: 74cm | Cadera: 98cm | Largo: 99cm | Tiro: 29cm",
-        "L": "Cintura: 80cm | Cadera: 104cm | Largo: 100cm | Tiro: 30cm",
-        "XL": "Cintura: 86cm | Cadera: 110cm | Largo: 101cm | Tiro: 31cm",
-        "XXL": "Cintura: 92cm | Cadera: 116cm | Largo: 102cm | Tiro: 32cm"
-      },
-      "isFlashSale": false,
-      "rating": 4.9,
-      "reviewCount": 45,
-      "createdAt": "2025-02-10T00:00:00.000Z",
-      "etiquetaIds": ["etag_009", "etag_010", "etag_011", "etag_012"],
-      "tagNames": ["jeans", "mom fit", "vintage", "casual"]
+      "isFlashSale": true,
+      "flashSaleEndsAt": "2030-01-01T00:00:00.000Z",
+      "rating": 4.7,
+      "reviewCount": 31,
+      "createdAt": "2026-10-01T00:00:00.000Z",
+      "etiquetaIds": [
+        "etag_verano",
+        "etag_oferta"
+      ],
+      "tagNames": [
+        "verano",
+        "oferta"
+      ]
     },
     {
       "id": "prod_004",
-      "slug": "conjunto-crop-falda-plisada",
-      "name": "Conjunto Crop + Falda Plisada",
-      "description": "Conjunto de dos piezas con top crop y falda plisada midi. Un look completo y moderno para cualquier ocasión.",
-      "price": 420,
-      "originalPrice": 520,
+      "slug": "botin-urbano",
+      "name": "Botín Urbano",
+      "description": "Botín al tobillo con cierre lateral y suela antideslizante.",
+      "price": 490,
+      "category": "botas",
+      "stock": {
+        "35": 2,
+        "36": 0,
+        "37": 4,
+        "38": 1,
+        "39": 6,
+        "40": 2
+      },
+      "variantStock": {
+        "Camel": {
+          "35": 2,
+          "36": 0,
+          "37": 4,
+          "38": 1,
+          "39": 6,
+          "40": 2
+        }
+      },
+      "colorImage": {
+        "Camel": 0
+      },
+      "tipo_tela": "Gamuza",
       "estado": "activo",
-      "tipo_tela": "poliéster",
-      "category": "conjuntos",
+      "sizes": [
+        "35",
+        "36",
+        "37",
+        "38",
+        "39",
+        "40"
+      ],
+      "colors": [
+        "Camel"
+      ],
+      "medidas_dinamicas": {
+        "35": "Largo del pie: 22,5 cm",
+        "36": "Largo del pie: 23,0 cm",
+        "37": "Largo del pie: 23,5 cm",
+        "38": "Largo del pie: 24,0 cm",
+        "39": "Largo del pie: 25,0 cm",
+        "40": "Largo del pie: 25,5 cm"
+      },
       "images": [
         {
           "id": "img_004_1",
-          "url": "https://picsum.photos/seed/clicmoda-prod-004-a/600/800",
-          "alt": "Conjunto Crop + Falda Plisada",
+          "url": "https://images.unsplash.com/photo-1605733160314-4fc7dac4bb16?auto=format&fit=crop&q=70&w=800&h=1000",
+          "alt": "Botín Urbano Camel",
           "isPrimary": true
+        },
+        {
+          "id": "img_004_2",
+          "url": "https://images.unsplash.com/photo-1605733160314-4fc7dac4bb16?auto=format&fit=crop&q=70&w=800&h=1000&crop=focalpoint&fp-x=0.5&fp-y=0.55&fp-z=1.7",
+          "alt": "Botín Urbano Camel - detalle",
+          "isPrimary": false
         }
       ],
-      "sizes": ["S", "M", "L"],
-      "colors": ["mostaza", "verde oliva", "terracota"],
-      "stock": {
-        "S": 2,
-        "M": 2,
-        "L": 1
-      },
-      "medidas_dinamicas": {
-        "S": "Falda largo: 80cm | Cintura falda: 64cm | Crop largo: 35cm | Busto crop: 82cm",
-        "M": "Falda largo: 82cm | Cintura falda: 70cm | Crop largo: 36cm | Busto crop: 88cm",
-        "L": "Falda largo: 84cm | Cintura falda: 76cm | Crop largo: 37cm | Busto crop: 94cm"
-      },
-      "isFlashSale": true,
-      "flashSaleEndsAt": "2026-12-31T23:59:59.000Z",
-      "rating": 4.7,
-      "reviewCount": 8,
-      "createdAt": "2025-04-01T00:00:00.000Z",
-      "etiquetaIds": ["etag_013", "etag_014", "etag_015", "etag_016"],
-      "tagNames": ["conjunto", "crop top", "falda plisada", "tendencia"]
+      "isFlashSale": false,
+      "rating": 4.5,
+      "reviewCount": 12,
+      "createdAt": "2026-10-01T00:00:00.000Z",
+      "etiquetaIds": [
+        "etag_nuevo",
+        "etag_comodo"
+      ],
+      "tagNames": [
+        "nuevo",
+        "cómodo"
+      ]
     },
     {
       "id": "prod_005",
-      "slug": "chaqueta-denim-oversize",
-      "name": "Chaqueta Denim Oversize",
-      "description": "Chaqueta de jean oversize con parches bordados. El básico perfecto para elevar cualquier look casual.",
-      "price": 390,
-      "originalPrice": null,
+      "slug": "bota-sierra",
+      "name": "Bota Sierra",
+      "description": "Bota de cuero con cordones y suela de goma cosida. Durabilidad para años.",
+      "price": 620,
+      "category": "botas",
+      "stock": {
+        "38": 1,
+        "39": 6,
+        "40": 2,
+        "41": 3,
+        "42": 4,
+        "43": 3,
+        "44": 5
+      },
+      "variantStock": {
+        "Café oscuro": {
+          "38": 1,
+          "39": 6,
+          "40": 2,
+          "41": 3,
+          "42": 4,
+          "43": 3,
+          "44": 5
+        }
+      },
+      "colorImage": {
+        "Café oscuro": 0
+      },
+      "tipo_tela": "Cuero vacuno",
       "estado": "activo",
-      "tipo_tela": "denim",
-      "category": "chaquetas",
+      "sizes": [
+        "38",
+        "39",
+        "40",
+        "41",
+        "42",
+        "43",
+        "44"
+      ],
+      "colors": [
+        "Café oscuro"
+      ],
+      "medidas_dinamicas": {
+        "38": "Largo del pie: 24,0 cm",
+        "39": "Largo del pie: 25,0 cm",
+        "40": "Largo del pie: 25,5 cm",
+        "41": "Largo del pie: 26,0 cm",
+        "42": "Largo del pie: 27,0 cm",
+        "43": "Largo del pie: 27,5 cm",
+        "44": "Largo del pie: 28,0 cm"
+      },
       "images": [
         {
           "id": "img_005_1",
-          "url": "https://picsum.photos/seed/clicmoda-prod-005-a/600/800",
-          "alt": "Chaqueta Denim Oversize - frente",
+          "url": "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?auto=format&fit=crop&q=70&w=800&h=1000",
+          "alt": "Bota Sierra Café oscuro",
           "isPrimary": true
+        },
+        {
+          "id": "img_005_2",
+          "url": "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?auto=format&fit=crop&q=70&w=800&h=1000&crop=focalpoint&fp-x=0.5&fp-y=0.55&fp-z=1.7",
+          "alt": "Bota Sierra Café oscuro - detalle",
+          "isPrimary": false
         }
       ],
-      "sizes": ["S", "M", "L", "XL"],
-      "colors": ["azul claro", "negro"],
-      "stock": {
-        "S": 3,
-        "M": 3,
-        "L": 3,
-        "XL": 3
-      },
-      "medidas_dinamicas": {
-        "S": "Largo: 68cm | Hombros: 48cm | Pecho: 102cm | Manga: 60cm",
-        "M": "Largo: 70cm | Hombros: 50cm | Pecho: 108cm | Manga: 61cm",
-        "L": "Largo: 72cm | Hombros: 52cm | Pecho: 114cm | Manga: 62cm",
-        "XL": "Largo: 74cm | Hombros: 54cm | Pecho: 120cm | Manga: 63cm"
-      },
       "isFlashSale": false,
-      "rating": 4.6,
-      "reviewCount": 19,
-      "createdAt": "2025-01-20T00:00:00.000Z",
-      "etiquetaIds": ["etag_017", "etag_018", "etag_019", "etag_012"],
-      "tagNames": ["chaqueta", "denim", "oversize", "casual"]
+      "rating": 4.9,
+      "reviewCount": 40,
+      "createdAt": "2026-10-01T00:00:00.000Z",
+      "etiquetaIds": [
+        "etag_cuero",
+        "etag_nuevo"
+      ],
+      "tagNames": [
+        "cuero",
+        "nuevo"
+      ]
     },
     {
       "id": "prod_006",
-      "slug": "falda-mini-plisada-colores",
-      "name": "Falda Mini Plisada Colores",
-      "description": "Falda mini plisada en colores vibrantes. Ligera y cómoda para el calor de Santa Cruz.",
-      "price": 145,
-      "originalPrice": 180,
+      "slug": "bota-andes",
+      "name": "Bota Andes",
+      "description": "Bota resistente con horma ancha, ideal para el trabajo y el fin de semana.",
+      "price": 580,
+      "category": "botas",
+      "stock": {
+        "38": 3,
+        "39": 4,
+        "40": 3,
+        "41": 5,
+        "42": 2,
+        "43": 0,
+        "44": 4
+      },
+      "variantStock": {
+        "Coñac": {
+          "38": 3,
+          "39": 4,
+          "40": 3,
+          "41": 5,
+          "42": 2,
+          "43": 0,
+          "44": 4
+        }
+      },
+      "colorImage": {
+        "Coñac": 0
+      },
+      "tipo_tela": "Cuero engrasado",
       "estado": "activo",
-      "tipo_tela": "poliéster",
-      "category": "faldas",
+      "sizes": [
+        "38",
+        "39",
+        "40",
+        "41",
+        "42",
+        "43",
+        "44"
+      ],
+      "colors": [
+        "Coñac"
+      ],
+      "medidas_dinamicas": {
+        "38": "Largo del pie: 24,0 cm",
+        "39": "Largo del pie: 25,0 cm",
+        "40": "Largo del pie: 25,5 cm",
+        "41": "Largo del pie: 26,0 cm",
+        "42": "Largo del pie: 27,0 cm",
+        "43": "Largo del pie: 27,5 cm",
+        "44": "Largo del pie: 28,0 cm"
+      },
       "images": [
         {
           "id": "img_006_1",
-          "url": "https://picsum.photos/seed/clicmoda-prod-006-a/600/800",
-          "alt": "Falda Mini Plisada - multicolor",
+          "url": "https://images.unsplash.com/photo-1520639888713-7851133b1ed0?auto=format&fit=crop&q=70&w=800&h=1000",
+          "alt": "Bota Andes Coñac",
           "isPrimary": true
+        },
+        {
+          "id": "img_006_2",
+          "url": "https://images.unsplash.com/photo-1520639888713-7851133b1ed0?auto=format&fit=crop&q=70&w=800&h=1000&crop=focalpoint&fp-x=0.5&fp-y=0.55&fp-z=1.7",
+          "alt": "Bota Andes Coñac - detalle",
+          "isPrimary": false
         }
       ],
-      "sizes": ["XS", "S", "M", "L"],
-      "colors": ["rojo", "azul", "verde", "amarillo"],
-      "stock": {
-        "XS": 8,
-        "S": 8,
-        "M": 8,
-        "L": 6
-      },
-      "medidas_dinamicas": {
-        "XS": "Largo: 38cm | Cintura: 58-62cm",
-        "S": "Largo: 38cm | Cintura: 63-68cm",
-        "M": "Largo: 38cm | Cintura: 69-74cm",
-        "L": "Largo: 38cm | Cintura: 75-82cm"
-      },
       "isFlashSale": false,
       "rating": 4.4,
-      "reviewCount": 37,
-      "createdAt": "2025-03-20T00:00:00.000Z",
-      "etiquetaIds": ["etag_020", "etag_021", "etag_022", "etag_023", "etag_003"],
-      "tagNames": ["falda", "mini", "plisada", "colorida", "verano"]
+      "reviewCount": 9,
+      "createdAt": "2026-10-01T00:00:00.000Z",
+      "etiquetaIds": [
+        "etag_cuero",
+        "etag_comodo"
+      ],
+      "tagNames": [
+        "cuero",
+        "cómodo"
+      ]
     },
     {
       "id": "prod_007",
-      "slug": "vestido-lencero-satinado",
-      "name": "Vestido Lencero Satinado",
-      "description": "Vestido de corte lencero en tela satinada. Sensual y elegante, ideal para noches especiales.",
-      "price": 340,
-      "originalPrice": null,
+      "slug": "oxford-clasico",
+      "name": "Oxford Clásico",
+      "description": "Zapato formal con costura a mano. Elegí el tono que va con tu estilo.",
+      "price": 540,
+      "originalPrice": 640,
+      "category": "formales",
+      "stock": {
+        "38": 5,
+        "39": 6,
+        "40": 1,
+        "41": 10,
+        "42": 3,
+        "43": 9,
+        "44": 6
+      },
+      "variantStock": {
+        "Coñac": {
+          "38": 5,
+          "39": 2,
+          "40": 0,
+          "41": 4,
+          "42": 1,
+          "43": 6,
+          "44": 2
+        },
+        "Verde musgo": {
+          "38": 0,
+          "39": 4,
+          "40": 1,
+          "41": 6,
+          "42": 2,
+          "43": 3,
+          "44": 4
+        }
+      },
+      "colorImage": {
+        "Coñac": 0,
+        "Verde musgo": 2
+      },
+      "tipo_tela": "Cuero pulido",
       "estado": "activo",
-      "tipo_tela": "satén",
-      "category": "vestidos",
+      "sizes": [
+        "38",
+        "39",
+        "40",
+        "41",
+        "42",
+        "43",
+        "44"
+      ],
+      "colors": [
+        "Coñac",
+        "Verde musgo"
+      ],
+      "medidas_dinamicas": {
+        "38": "Largo del pie: 24,0 cm",
+        "39": "Largo del pie: 25,0 cm",
+        "40": "Largo del pie: 25,5 cm",
+        "41": "Largo del pie: 26,0 cm",
+        "42": "Largo del pie: 27,0 cm",
+        "43": "Largo del pie: 27,5 cm",
+        "44": "Largo del pie: 28,0 cm"
+      },
       "images": [
         {
           "id": "img_007_1",
-          "url": "https://picsum.photos/seed/clicmoda-prod-007-a/600/800",
-          "alt": "Vestido Lencero Satinado",
+          "url": "https://images.unsplash.com/photo-1449505278894-297fdb3edbc1?auto=format&fit=crop&q=70&w=800&h=1000",
+          "alt": "Oxford Clásico Coñac",
           "isPrimary": true
+        },
+        {
+          "id": "img_007_2",
+          "url": "https://images.unsplash.com/photo-1449505278894-297fdb3edbc1?auto=format&fit=crop&q=70&w=800&h=1000&crop=focalpoint&fp-x=0.5&fp-y=0.55&fp-z=1.7",
+          "alt": "Oxford Clásico Coñac - detalle",
+          "isPrimary": false
+        },
+        {
+          "id": "img_007_3",
+          "url": "https://images.unsplash.com/photo-1560343090-f0409e92791a?auto=format&fit=crop&q=70&w=800&h=1000",
+          "alt": "Oxford Clásico Verde musgo",
+          "isPrimary": false
+        },
+        {
+          "id": "img_007_4",
+          "url": "https://images.unsplash.com/photo-1560343090-f0409e92791a?auto=format&fit=crop&q=70&w=800&h=1000&crop=focalpoint&fp-x=0.5&fp-y=0.55&fp-z=1.7",
+          "alt": "Oxford Clásico Verde musgo - detalle",
+          "isPrimary": false
         }
       ],
-      "sizes": ["XS", "S", "M", "L"],
-      "colors": ["champagne", "negro", "vino"],
-      "stock": {
-        "XS": 2,
-        "S": 2,
-        "M": 2,
-        "L": 1
-      },
-      "medidas_dinamicas": {
-        "XS": "Largo: 115cm | Busto: 76cm | Cintura: 60cm | Cadera: 84cm",
-        "S": "Largo: 117cm | Busto: 82cm | Cintura: 66cm | Cadera: 90cm",
-        "M": "Largo: 119cm | Busto: 88cm | Cintura: 72cm | Cadera: 96cm",
-        "L": "Largo: 121cm | Busto: 94cm | Cintura: 78cm | Cadera: 102cm"
-      },
-      "isFlashSale": false,
-      "rating": 5,
-      "reviewCount": 6,
-      "createdAt": "2025-04-10T00:00:00.000Z",
-      "etiquetaIds": ["etag_001", "etag_024", "etag_006", "etag_025", "etag_007"],
-      "tagNames": ["vestido", "satinado", "elegante", "noche", "fiesta"]
+      "isFlashSale": true,
+      "flashSaleEndsAt": "2030-01-01T00:00:00.000Z",
+      "rating": 4.8,
+      "reviewCount": 22,
+      "createdAt": "2026-10-01T00:00:00.000Z",
+      "etiquetaIds": [
+        "etag_cuero",
+        "etag_oficina",
+        "etag_oferta"
+      ],
+      "tagNames": [
+        "cuero",
+        "oficina",
+        "oferta"
+      ]
     },
     {
       "id": "prod_008",
-      "slug": "bolso-bucket-piel-sintetica",
-      "name": "Bolso Bucket Piel Sintética",
-      "description": "Bolso tipo bucket en piel sintética premium. Amplio, práctico y muy trendy.",
-      "price": 210,
-      "originalPrice": 260,
+      "slug": "monk-doble-hebilla",
+      "name": "Monk Doble Hebilla",
+      "description": "Formal con doble hebilla para ocasiones especiales.",
+      "price": 560,
+      "category": "formales",
+      "stock": {
+        "38": 0,
+        "39": 0,
+        "40": 0,
+        "41": 0,
+        "42": 0,
+        "43": 0,
+        "44": 0
+      },
+      "variantStock": {
+        "Café": {
+          "38": 0,
+          "39": 0,
+          "40": 0,
+          "41": 0,
+          "42": 0,
+          "43": 0,
+          "44": 0
+        }
+      },
+      "colorImage": {
+        "Café": 0
+      },
+      "tipo_tela": "Cuero pulido",
       "estado": "activo",
-      "tipo_tela": "piel sintética",
-      "category": "accesorios",
+      "sizes": [
+        "38",
+        "39",
+        "40",
+        "41",
+        "42",
+        "43",
+        "44"
+      ],
+      "colors": [
+        "Café"
+      ],
+      "medidas_dinamicas": {
+        "38": "Largo del pie: 24,0 cm",
+        "39": "Largo del pie: 25,0 cm",
+        "40": "Largo del pie: 25,5 cm",
+        "41": "Largo del pie: 26,0 cm",
+        "42": "Largo del pie: 27,0 cm",
+        "43": "Largo del pie: 27,5 cm",
+        "44": "Largo del pie: 28,0 cm"
+      },
       "images": [
         {
           "id": "img_008_1",
-          "url": "https://picsum.photos/seed/clicmoda-prod-008-a/600/800",
-          "alt": "Bolso Bucket - piel sintética",
+          "url": "https://images.unsplash.com/photo-1533867617858-e7b97e060509?auto=format&fit=crop&q=70&w=800&h=1000",
+          "alt": "Monk Doble Hebilla Café",
           "isPrimary": true
+        },
+        {
+          "id": "img_008_2",
+          "url": "https://images.unsplash.com/photo-1533867617858-e7b97e060509?auto=format&fit=crop&q=70&w=800&h=1000&crop=focalpoint&fp-x=0.5&fp-y=0.55&fp-z=1.7",
+          "alt": "Monk Doble Hebilla Café - detalle",
+          "isPrimary": false
         }
       ],
-      "sizes": ["ÚNICO"],
-      "colors": ["camel", "negro", "blanco"],
-      "stock": {
-        "ÚNICO": 18
-      },
-      "medidas_dinamicas": {
-        "ÚNICO": "Alto: 28cm | Ancho: 22cm | Fondo: 15cm | Asa larga: 55cm"
-      },
       "isFlashSale": false,
       "rating": 4.3,
+      "reviewCount": 6,
+      "createdAt": "2026-10-01T00:00:00.000Z",
+      "etiquetaIds": [
+        "etag_oficina",
+        "etag_cuero"
+      ],
+      "tagNames": [
+        "oficina",
+        "cuero"
+      ]
+    },
+    {
+      "id": "prod_009",
+      "slug": "zapatilla-arena",
+      "name": "Zapatilla Arena",
+      "description": "Urbana y liviana, con plantilla de memoria. Tu par para todos los días.",
+      "price": 360,
+      "category": "zapatillas",
+      "stock": {
+        "36": 2,
+        "37": 3,
+        "38": 4,
+        "39": 3,
+        "40": 5,
+        "41": 2,
+        "42": 0,
+        "43": 4
+      },
+      "variantStock": {
+        "Arena": {
+          "36": 2,
+          "37": 3,
+          "38": 4,
+          "39": 3,
+          "40": 5,
+          "41": 2,
+          "42": 0,
+          "43": 4
+        }
+      },
+      "colorImage": {
+        "Arena": 0
+      },
+      "tipo_tela": "Cuero y lona",
+      "estado": "activo",
+      "sizes": [
+        "36",
+        "37",
+        "38",
+        "39",
+        "40",
+        "41",
+        "42",
+        "43"
+      ],
+      "colors": [
+        "Arena"
+      ],
+      "medidas_dinamicas": {
+        "36": "Largo del pie: 23,0 cm",
+        "37": "Largo del pie: 23,5 cm",
+        "38": "Largo del pie: 24,0 cm",
+        "39": "Largo del pie: 25,0 cm",
+        "40": "Largo del pie: 25,5 cm",
+        "41": "Largo del pie: 26,0 cm",
+        "42": "Largo del pie: 27,0 cm",
+        "43": "Largo del pie: 27,5 cm"
+      },
+      "images": [
+        {
+          "id": "img_009_1",
+          "url": "https://images.unsplash.com/photo-1603808033192-082d6919d3e1?auto=format&fit=crop&q=70&w=800&h=1000",
+          "alt": "Zapatilla Arena Arena",
+          "isPrimary": true
+        },
+        {
+          "id": "img_009_2",
+          "url": "https://images.unsplash.com/photo-1603808033192-082d6919d3e1?auto=format&fit=crop&q=70&w=800&h=1000&crop=focalpoint&fp-x=0.5&fp-y=0.55&fp-z=1.7",
+          "alt": "Zapatilla Arena Arena - detalle",
+          "isPrimary": false
+        }
+      ],
+      "isFlashSale": false,
+      "rating": 4.7,
+      "reviewCount": 35,
+      "createdAt": "2026-10-01T00:00:00.000Z",
+      "etiquetaIds": [
+        "etag_comodo",
+        "etag_nuevo"
+      ],
+      "tagNames": [
+        "cómodo",
+        "nuevo"
+      ]
+    },
+    {
+      "id": "prod_010",
+      "slug": "jean-mom-celeste",
+      "name": "Jean Mom Celeste",
+      "description": "Tiro alto y corte relajado. El complemento perfecto para tus zapatillas.",
+      "price": 260,
+      "category": "jeans",
+      "stock": {
+        "S": 3,
+        "M": 5,
+        "L": 2,
+        "XL": 0
+      },
+      "variantStock": {
+        "Celeste": {
+          "S": 3,
+          "M": 5,
+          "L": 2,
+          "XL": 0
+        }
+      },
+      "colorImage": {
+        "Celeste": 0
+      },
+      "tipo_tela": "Denim",
+      "estado": "activo",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "colors": [
+        "Celeste"
+      ],
+      "medidas_dinamicas": {},
+      "images": [
+        {
+          "id": "img_010_1",
+          "url": "https://images.unsplash.com/photo-1475178626620-a4d074967452?auto=format&fit=crop&q=70&w=800&h=1000",
+          "alt": "Jean Mom Celeste Celeste",
+          "isPrimary": true
+        },
+        {
+          "id": "img_010_2",
+          "url": "https://images.unsplash.com/photo-1475178626620-a4d074967452?auto=format&fit=crop&q=70&w=800&h=1000&crop=focalpoint&fp-x=0.5&fp-y=0.55&fp-z=1.7",
+          "alt": "Jean Mom Celeste Celeste - detalle",
+          "isPrimary": false
+        }
+      ],
+      "isFlashSale": false,
+      "rating": 4.5,
       "reviewCount": 14,
-      "createdAt": "2025-02-28T00:00:00.000Z",
-      "etiquetaIds": ["etag_026", "etag_027", "etag_028", "etag_029"],
-      "tagNames": ["bolso", "bucket", "accesorio", "trendy"]
+      "createdAt": "2026-10-01T00:00:00.000Z",
+      "etiquetaIds": [
+        "etag_nuevo"
+      ],
+      "tagNames": [
+        "nuevo"
+      ]
+    },
+    {
+      "id": "prod_011",
+      "slug": "blusa-tejida",
+      "name": "Blusa Tejida",
+      "description": "Blusa en tejido suave. Fresca y fácil de combinar.",
+      "price": 190,
+      "category": "blusas",
+      "stock": {
+        "S": 0,
+        "M": 4,
+        "L": 1,
+        "XL": 6
+      },
+      "variantStock": {
+        "Crudo": {
+          "S": 0,
+          "M": 4,
+          "L": 1,
+          "XL": 6
+        }
+      },
+      "colorImage": {
+        "Crudo": 0
+      },
+      "tipo_tela": "Algodón",
+      "estado": "activo",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "colors": [
+        "Crudo"
+      ],
+      "medidas_dinamicas": {},
+      "images": [
+        {
+          "id": "img_011_1",
+          "url": "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&q=70&w=800&h=1000",
+          "alt": "Blusa Tejida Crudo",
+          "isPrimary": true
+        },
+        {
+          "id": "img_011_2",
+          "url": "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&q=70&w=800&h=1000&crop=focalpoint&fp-x=0.5&fp-y=0.55&fp-z=1.7",
+          "alt": "Blusa Tejida Crudo - detalle",
+          "isPrimary": false
+        }
+      ],
+      "isFlashSale": false,
+      "rating": 4.2,
+      "reviewCount": 8,
+      "createdAt": "2026-10-01T00:00:00.000Z",
+      "etiquetaIds": [
+        "etag_verano"
+      ],
+      "tagNames": [
+        "verano"
+      ]
+    },
+    {
+      "id": "prod_012",
+      "slug": "chaqueta-cuero-camel",
+      "name": "Chaqueta Camel",
+      "description": "Chaqueta de corte recto para las noches frescas y el surazo.",
+      "price": 720,
+      "category": "chaquetas",
+      "stock": {
+        "S": 6,
+        "M": 2,
+        "L": 3,
+        "XL": 4
+      },
+      "variantStock": {
+        "Camel": {
+          "S": 6,
+          "M": 2,
+          "L": 3,
+          "XL": 4
+        }
+      },
+      "colorImage": {
+        "Camel": 0
+      },
+      "tipo_tela": "Cuero sintético",
+      "estado": "activo",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "colors": [
+        "Camel"
+      ],
+      "medidas_dinamicas": {},
+      "images": [
+        {
+          "id": "img_012_1",
+          "url": "https://images.unsplash.com/photo-1614252369475-531eba835eb1?auto=format&fit=crop&q=70&w=800&h=1000",
+          "alt": "Chaqueta Camel Camel",
+          "isPrimary": true
+        },
+        {
+          "id": "img_012_2",
+          "url": "https://images.unsplash.com/photo-1614252369475-531eba835eb1?auto=format&fit=crop&q=70&w=800&h=1000&crop=focalpoint&fp-x=0.5&fp-y=0.55&fp-z=1.7",
+          "alt": "Chaqueta Camel Camel - detalle",
+          "isPrimary": false
+        }
+      ],
+      "isFlashSale": false,
+      "rating": 4.6,
+      "reviewCount": 11,
+      "createdAt": "2026-10-01T00:00:00.000Z",
+      "etiquetaIds": [
+        "etag_nuevo"
+      ],
+      "tagNames": [
+        "nuevo"
+      ]
+    },
+    {
+      "id": "prod_013",
+      "slug": "conjunto-negro",
+      "name": "Conjunto Negro",
+      "description": "Conjunto de falda y top para salir de la oficina directo a la cena.",
+      "price": 340,
+      "category": "vestidos",
+      "stock": {
+        "S": 4,
+        "M": 3,
+        "L": 5,
+        "XL": 2
+      },
+      "variantStock": {
+        "Negro": {
+          "S": 4,
+          "M": 3,
+          "L": 5,
+          "XL": 2
+        }
+      },
+      "colorImage": {
+        "Negro": 0
+      },
+      "tipo_tela": "Crepé",
+      "estado": "activo",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "colors": [
+        "Negro"
+      ],
+      "medidas_dinamicas": {},
+      "images": [
+        {
+          "id": "img_013_1",
+          "url": "https://images.unsplash.com/photo-1550639525-c97d455acf70?auto=format&fit=crop&q=70&w=800&h=1000",
+          "alt": "Conjunto Negro Negro",
+          "isPrimary": true
+        },
+        {
+          "id": "img_013_2",
+          "url": "https://images.unsplash.com/photo-1550639525-c97d455acf70?auto=format&fit=crop&q=70&w=800&h=1000&crop=focalpoint&fp-x=0.5&fp-y=0.55&fp-z=1.7",
+          "alt": "Conjunto Negro Negro - detalle",
+          "isPrimary": false
+        }
+      ],
+      "isFlashSale": false,
+      "rating": 4.4,
+      "reviewCount": 7,
+      "createdAt": "2026-10-01T00:00:00.000Z",
+      "etiquetaIds": [
+        "etag_oficina"
+      ],
+      "tagNames": [
+        "oficina"
+      ]
     }
   ],
   "orders": [
     {
-      "id": "ord_153b78f5-4265-4ad5-ad1b-c34f09b335aa",
-      "ticketId": "TICK-AA8168",
+      "id": "ord_demo_1",
+      "ticketId": "TICK-D0001",
       "items": [
         {
-          "id": "item_1777724661453_0",
+          "id": "item_1_0",
           "product": {
-            "id": "prod_002",
-            "name": "Blusa Off-Shoulder Tule",
-            "slug": "blusa-off-shoulder-tule",
+            "id": "prod_001",
+            "name": "Stiletto Luna",
+            "slug": "stiletto-luna",
             "images": [
               {
-                "id": "img",
-                "url": "https://picsum.photos/seed/clicmoda-prod-002-a/600/800",
-                "alt": "Blusa Off-Shoulder Tule",
+                "id": "img_001_1",
+                "url": "https://images.unsplash.com/photo-1515347619252-60a4bf4fff4f?auto=format&fit=crop&q=70&w=800&h=1000",
+                "alt": "Stiletto Luna Azul marino",
                 "isPrimary": true
               }
             ],
-            "price": 185
+            "price": 420
           },
-          "quantity": 4,
-          "selectedSize": "S",
-          "selectedColor": "blanco",
-          "unitPrice": 185
+          "quantity": 1,
+          "selectedSize": "37",
+          "selectedColor": "Azul marino",
+          "unitPrice": 420
+        }
+      ],
+      "status": "PROCESADO",
+      "shippingAddress": {
+        "fullName": "Cliente de ejemplo 1",
+        "phone": "70000011",
+        "address": "Barrio de ejemplo, calle 1",
+        "city": "Santa Cruz de la Sierra",
+        "reference": ""
+      },
+      "paymentMethod": "whatsapp",
+      "subtotal": 420,
+      "discount": 0,
+      "total": 420,
+      "notes": "",
+      "createdAt": "2026-11-01T00:00:00.000Z",
+      "updatedAt": "2026-11-01T00:00:00.000Z"
+    },
+    {
+      "id": "ord_demo_2",
+      "ticketId": "TICK-D0002",
+      "items": [
+        {
+          "id": "item_2_0",
+          "product": {
+            "id": "prod_009",
+            "name": "Zapatilla Arena",
+            "slug": "zapatilla-arena",
+            "images": [
+              {
+                "id": "img_009_1",
+                "url": "https://images.unsplash.com/photo-1603808033192-082d6919d3e1?auto=format&fit=crop&q=70&w=800&h=1000",
+                "alt": "Zapatilla Arena Arena",
+                "isPrimary": true
+              }
+            ],
+            "price": 360
+          },
+          "quantity": 2,
+          "selectedSize": "40",
+          "selectedColor": "Arena",
+          "unitPrice": 360
+        }
+      ],
+      "status": "PROCESADO",
+      "shippingAddress": {
+        "fullName": "Cliente de ejemplo 2",
+        "phone": "70000012",
+        "address": "Barrio de ejemplo, calle 2",
+        "city": "Santa Cruz de la Sierra",
+        "reference": ""
+      },
+      "paymentMethod": "whatsapp",
+      "subtotal": 720,
+      "discount": 0,
+      "total": 720,
+      "notes": "",
+      "createdAt": "2026-11-01T00:00:00.000Z",
+      "updatedAt": "2026-11-01T00:00:00.000Z"
+    },
+    {
+      "id": "ord_demo_3",
+      "ticketId": "TICK-D0003",
+      "items": [
+        {
+          "id": "item_3_0",
+          "product": {
+            "id": "prod_005",
+            "name": "Bota Sierra",
+            "slug": "bota-sierra",
+            "images": [
+              {
+                "id": "img_005_1",
+                "url": "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?auto=format&fit=crop&q=70&w=800&h=1000",
+                "alt": "Bota Sierra Café oscuro",
+                "isPrimary": true
+              }
+            ],
+            "price": 620
+          },
+          "quantity": 1,
+          "selectedSize": "42",
+          "selectedColor": "Café oscuro",
+          "unitPrice": 620
         }
       ],
       "status": "EN_PREPARACION",
       "shippingAddress": {
-        "fullName": "Ana Gerente",
-        "phone": "77045885",
-        "address": "Calle 7 avendia paragua",
+        "fullName": "Cliente Demo",
+        "phone": "70000013",
+        "address": "Barrio de ejemplo, calle 3",
         "city": "Santa Cruz de la Sierra",
         "reference": ""
       },
-      "paymentMethod": "qr_simple",
-      "subtotal": 740,
-      "discount": 148,
-      "total": 592,
-      "couponCode": "FLASH20",
-      "customerId": "usr_001",
-      "customerEmail": "gerente@clicmoda.bo",
-      "notes": "",
-      "createdAt": "2026-05-02T12:24:21.453Z",
-      "updatedAt": "2026-05-02T12:25:04.088Z"
-    },
-    {
-      "id": "ord_298819c2-93ee-41e4-b47f-ae4c887076db",
-      "ticketId": "TICK-BAF0D6",
-      "items": [
-        {
-          "id": "item_1777857909255_0",
-          "product": {
-            "id": "prod_001",
-            "name": "Vestido Floral Primavera",
-            "slug": "vestido-floral-primavera",
-            "images": [
-              {
-                "id": "img",
-                "url": "https://picsum.photos/seed/clicmoda-prod-001-a/600/800",
-                "alt": "Vestido Floral Primavera",
-                "isPrimary": true
-              }
-            ],
-            "price": 300
-          },
-          "quantity": 1,
-          "selectedSize": "S",
-          "selectedColor": "rosa",
-          "unitPrice": 300
-        }
-      ],
-      "status": "PROCESADO",
-      "shippingAddress": {
-        "fullName": "JHOEL ALVARO CRUZ ZURITA",
-        "phone": "77045885",
-        "address": "3840 José Hurtado de Mendoza",
-        "city": "Santa Cruz de la Sierra",
-        "reference": ""
-      },
-      "paymentMethod": "qr_simple",
-      "subtotal": 300,
+      "paymentMethod": "whatsapp",
+      "subtotal": 620,
       "discount": 0,
-      "total": 300,
+      "total": 620,
+      "customerId": "usr_004",
+      "customerEmail": "cliente@demo.test",
       "notes": "",
-      "createdAt": "2026-05-04T01:25:09.255Z",
-      "updatedAt": "2026-05-04T01:25:09.255Z"
+      "createdAt": "2026-11-01T00:00:00.000Z",
+      "updatedAt": "2026-11-01T00:00:00.000Z"
     },
     {
-      "id": "ord_338325af-0365-4e83-a9f8-3befe0bc43f1",
-      "ticketId": "TICK-2C5293",
+      "id": "ord_demo_4",
+      "ticketId": "TICK-D0004",
       "items": [
         {
-          "id": "item_1777857957580_0",
-          "product": {
-            "id": "prod_001",
-            "name": "Vestido Floral Primavera",
-            "slug": "vestido-floral-primavera",
-            "images": [
-              {
-                "id": "img",
-                "url": "https://picsum.photos/seed/clicmoda-prod-001-a/600/800",
-                "alt": "Vestido Floral Primavera",
-                "isPrimary": true
-              }
-            ],
-            "price": 300
-          },
-          "quantity": 1,
-          "selectedSize": "S",
-          "selectedColor": "rosa",
-          "unitPrice": 300
-        }
-      ],
-      "status": "PROCESADO",
-      "shippingAddress": {
-        "fullName": "JHOEL ALVARO CRUZ ZURITA",
-        "phone": "77045885",
-        "address": "3840 José Hurtado de Mendoza",
-        "city": "Santa Cruz de la Sierra",
-        "reference": ""
-      },
-      "paymentMethod": "contra_entrega",
-      "subtotal": 300,
-      "discount": 0,
-      "total": 300,
-      "customerId": "usr_f8887166",
-      "customerEmail": "jhoel0521@gmail.com",
-      "notes": "",
-      "createdAt": "2026-05-04T01:25:57.580Z",
-      "updatedAt": "2026-05-04T01:25:57.580Z"
-    },
-    {
-      "id": "ord_4a9fb790-d8a8-438c-a329-6ae65d918f38",
-      "ticketId": "TICK-0FD5BC",
-      "items": [
-        {
-          "id": "item_1777860579933_0",
+          "id": "item_4_0",
           "product": {
             "id": "prod_003",
-            "name": "Jeans Mom Fit Vintage",
-            "slug": "jeans-mom-fit-vintage",
+            "name": "Plataforma Sol",
+            "slug": "plataforma-sol",
             "images": [
               {
-                "id": "img",
-                "url": "https://picsum.photos/seed/clicmoda-prod-003-a/600/800",
-                "alt": "Jeans Mom Fit Vintage",
+                "id": "img_003_1",
+                "url": "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?auto=format&fit=crop&q=70&w=800&h=1000",
+                "alt": "Plataforma Sol Vino",
                 "isPrimary": true
               }
             ],
-            "price": 320
+            "price": 340
           },
           "quantity": 1,
-          "selectedSize": "S",
-          "selectedColor": "azul claro",
-          "unitPrice": 320
+          "selectedSize": "38",
+          "selectedColor": "Vino",
+          "unitPrice": 340
         }
       ],
-      "status": "PROCESADO",
+      "status": "EN_PREPARACION",
       "shippingAddress": {
-        "fullName": "JHOEL ALVARO CRUZ ZURITA",
-        "phone": "77045885",
-        "address": "3840 José Hurtado de Mendoza",
+        "fullName": "Cliente de ejemplo 4",
+        "phone": "70000014",
+        "address": "Barrio de ejemplo, calle 4",
         "city": "Santa Cruz de la Sierra",
         "reference": ""
       },
-      "paymentMethod": "efectivo_entrega",
-      "subtotal": 320,
-      "discount": 0,
-      "total": 320,
-      "customerId": "usr_f8887166",
-      "customerEmail": "jhoel0521@gmail.com",
+      "paymentMethod": "whatsapp",
+      "subtotal": 340,
+      "discount": 34,
+      "total": 306,
+      "couponCode": "BIENVENIDA10",
       "notes": "",
-      "createdAt": "2026-05-04T02:09:39.933Z",
-      "updatedAt": "2026-05-04T02:09:39.933Z"
+      "createdAt": "2026-11-01T00:00:00.000Z",
+      "updatedAt": "2026-11-01T00:00:00.000Z"
+    },
+    {
+      "id": "ord_demo_5",
+      "ticketId": "TICK-D0005",
+      "items": [
+        {
+          "id": "item_5_0",
+          "product": {
+            "id": "prod_007",
+            "name": "Oxford Clásico",
+            "slug": "oxford-clasico",
+            "images": [
+              {
+                "id": "img_007_1",
+                "url": "https://images.unsplash.com/photo-1449505278894-297fdb3edbc1?auto=format&fit=crop&q=70&w=800&h=1000",
+                "alt": "Oxford Clásico Coñac",
+                "isPrimary": true
+              }
+            ],
+            "price": 540
+          },
+          "quantity": 1,
+          "selectedSize": "41",
+          "selectedColor": "Coñac",
+          "unitPrice": 540
+        }
+      ],
+      "status": "LISTO_PARA_RECOGER",
+      "shippingAddress": {
+        "fullName": "Cliente de ejemplo 5",
+        "phone": "70000015",
+        "address": "Barrio de ejemplo, calle 5",
+        "city": "Santa Cruz de la Sierra",
+        "reference": ""
+      },
+      "paymentMethod": "whatsapp",
+      "subtotal": 540,
+      "discount": 0,
+      "total": 540,
+      "notes": "",
+      "createdAt": "2026-11-01T00:00:00.000Z",
+      "updatedAt": "2026-11-01T00:00:00.000Z"
+    },
+    {
+      "id": "ord_demo_6",
+      "ticketId": "TICK-D0006",
+      "items": [
+        {
+          "id": "item_6_0",
+          "product": {
+            "id": "prod_004",
+            "name": "Botín Urbano",
+            "slug": "botin-urbano",
+            "images": [
+              {
+                "id": "img_004_1",
+                "url": "https://images.unsplash.com/photo-1605733160314-4fc7dac4bb16?auto=format&fit=crop&q=70&w=800&h=1000",
+                "alt": "Botín Urbano Camel",
+                "isPrimary": true
+              }
+            ],
+            "price": 490
+          },
+          "quantity": 1,
+          "selectedSize": "37",
+          "selectedColor": "Camel",
+          "unitPrice": 490
+        }
+      ],
+      "status": "ENVIANDO",
+      "shippingAddress": {
+        "fullName": "Cliente de ejemplo 6",
+        "phone": "70000016",
+        "address": "Barrio de ejemplo, calle 6",
+        "city": "Santa Cruz de la Sierra",
+        "reference": ""
+      },
+      "paymentMethod": "whatsapp",
+      "subtotal": 490,
+      "discount": 0,
+      "total": 490,
+      "notes": "",
+      "createdAt": "2026-11-01T00:00:00.000Z",
+      "updatedAt": "2026-11-01T00:00:00.000Z"
+    },
+    {
+      "id": "ord_demo_7",
+      "ticketId": "TICK-D0007",
+      "items": [
+        {
+          "id": "item_7_0",
+          "product": {
+            "id": "prod_009",
+            "name": "Zapatilla Arena",
+            "slug": "zapatilla-arena",
+            "images": [
+              {
+                "id": "img_009_1",
+                "url": "https://images.unsplash.com/photo-1603808033192-082d6919d3e1?auto=format&fit=crop&q=70&w=800&h=1000",
+                "alt": "Zapatilla Arena Arena",
+                "isPrimary": true
+              }
+            ],
+            "price": 360
+          },
+          "quantity": 1,
+          "selectedSize": "39",
+          "selectedColor": "Arena",
+          "unitPrice": 360
+        }
+      ],
+      "status": "ENTREGADO",
+      "shippingAddress": {
+        "fullName": "Cliente Demo",
+        "phone": "70000017",
+        "address": "Barrio de ejemplo, calle 7",
+        "city": "Santa Cruz de la Sierra",
+        "reference": ""
+      },
+      "paymentMethod": "whatsapp",
+      "subtotal": 360,
+      "discount": 0,
+      "total": 360,
+      "customerId": "usr_004",
+      "customerEmail": "cliente@demo.test",
+      "notes": "",
+      "createdAt": "2026-11-01T00:00:00.000Z",
+      "updatedAt": "2026-11-01T00:00:00.000Z"
+    },
+    {
+      "id": "ord_demo_8",
+      "ticketId": "TICK-D0008",
+      "items": [
+        {
+          "id": "item_8_0",
+          "product": {
+            "id": "prod_001",
+            "name": "Stiletto Luna",
+            "slug": "stiletto-luna",
+            "images": [
+              {
+                "id": "img_001_1",
+                "url": "https://images.unsplash.com/photo-1515347619252-60a4bf4fff4f?auto=format&fit=crop&q=70&w=800&h=1000",
+                "alt": "Stiletto Luna Azul marino",
+                "isPrimary": true
+              }
+            ],
+            "price": 420
+          },
+          "quantity": 1,
+          "selectedSize": "36",
+          "selectedColor": "Floral",
+          "unitPrice": 420
+        }
+      ],
+      "status": "ENTREGADO",
+      "shippingAddress": {
+        "fullName": "Cliente de ejemplo 8",
+        "phone": "70000018",
+        "address": "Barrio de ejemplo, calle 8",
+        "city": "Santa Cruz de la Sierra",
+        "reference": ""
+      },
+      "paymentMethod": "whatsapp",
+      "subtotal": 420,
+      "discount": 0,
+      "total": 420,
+      "notes": "",
+      "createdAt": "2026-11-01T00:00:00.000Z",
+      "updatedAt": "2026-11-01T00:00:00.000Z"
     }
   ],
   "coupons": [
@@ -554,33 +1396,17 @@
       "id": "cup_001",
       "codigo": "BIENVENIDA10",
       "porcentaje_descuento": 10,
-      "fecha_caducidad": "2026-12-31T23:59:59.000Z",
+      "fecha_caducidad": "2030-12-31T23:59:59.000Z",
       "limite_usos": 500,
       "veces_usado": 47
     },
     {
       "id": "cup_002",
-      "codigo": "FLASH20",
-      "porcentaje_descuento": 20,
-      "fecha_caducidad": "2026-06-30T23:59:59.000Z",
-      "limite_usos": 100,
-      "veces_usado": 39
-    },
-    {
-      "id": "cup_003",
-      "codigo": "VIP30",
-      "porcentaje_descuento": 30,
-      "fecha_caducidad": "2026-12-31T23:59:59.000Z",
-      "limite_usos": 50,
-      "veces_usado": 12
-    },
-    {
-      "id": "cup_004",
-      "codigo": "EXPIRADO",
+      "codigo": "ZAPATOS15",
       "porcentaje_descuento": 15,
-      "fecha_caducidad": "2025-01-01T00:00:00.000Z",
-      "limite_usos": 200,
-      "veces_usado": 200
+      "fecha_caducidad": "2030-12-31T23:59:59.000Z",
+      "limite_usos": 100,
+      "veces_usado": 12
     }
   ],
   "reviews": [
@@ -588,232 +1414,155 @@
       "id": "rev_001",
       "producto_id": "prod_001",
       "usuario_id": "usr_004",
-      "autor_nombre": "María Cliente",
+      "autor_nombre": "Reseña de ejemplo",
       "calificacion_estrellas": 5,
-      "comentario": "¡Me encantó el vestido! La tela es super liviana y fresca, perfecta para el calor de Santa Cruz. Las medidas fueron exactas según la tabla. Lo recomiendo totalmente.",
+      "comentario": "Muy cómodos para ser de taco alto. La talla fue exacta con la guía.",
       "estado_moderacion": "APROBADA",
       "imagenes": [],
-      "creado_en": "2025-04-10T14:30:00.000Z"
+      "creado_en": "2026-10-15T14:00:00.000Z"
     },
     {
       "id": "rev_002",
       "producto_id": "prod_001",
-      "usuario_id": "usr_001",
-      "autor_nombre": "Ana G.",
+      "usuario_id": "usr_004",
+      "autor_nombre": "Reseña de ejemplo",
       "calificacion_estrellas": 4,
-      "comentario": "Muy bonito el estampado floral. Llegó bien embalado. Le doy 4 estrellas porque el color en la foto es un poco más saturado que en persona, pero igual queda hermoso.",
+      "comentario": "Lindo acabado y llegaron rápido. Coordinar por WhatsApp fue fácil.",
       "estado_moderacion": "APROBADA",
       "imagenes": [],
-      "creado_en": "2025-04-15T09:00:00.000Z"
+      "creado_en": "2026-10-15T14:00:00.000Z"
     },
     {
       "id": "rev_003",
-      "producto_id": "prod_002",
+      "producto_id": "prod_005",
       "usuario_id": "usr_004",
-      "autor_nombre": "María Cliente",
+      "autor_nombre": "Reseña de ejemplo",
       "calificacion_estrellas": 5,
-      "comentario": "La blusa de tul es preciosa. La coordinación por WhatsApp fue muy rápida, en 2 días tenía mi pedido. ¡Definitivamente volvería a comprar!",
+      "comentario": "El cuero se siente de buena calidad y la suela agarra bien.",
       "estado_moderacion": "APROBADA",
       "imagenes": [],
-      "creado_en": "2025-04-18T16:45:00.000Z"
+      "creado_en": "2026-10-15T14:00:00.000Z"
     },
     {
       "id": "rev_004",
-      "producto_id": "prod_003",
+      "producto_id": "prod_009",
       "usuario_id": "usr_004",
-      "autor_nombre": "María Cliente",
+      "autor_nombre": "Reseña de ejemplo",
       "calificacion_estrellas": 5,
-      "comentario": "Los jeans mom fit son increíbles. El lavado vintage se ve muy auténtico. Pedí talla M y quedaron perfectos según las medidas de la tabla.",
+      "comentario": "Livianas y cómodas para todo el día.",
       "estado_moderacion": "APROBADA",
       "imagenes": [],
-      "creado_en": "2025-03-20T11:00:00.000Z"
+      "creado_en": "2026-10-15T14:00:00.000Z"
     },
     {
       "id": "rev_005",
-      "producto_id": "prod_001",
-      "usuario_id": "usr_002",
-      "autor_nombre": "Carlos D.",
-      "calificacion_estrellas": 2,
-      "comentario": "Reseña de prueba pendiente de moderación.",
+      "producto_id": "prod_003",
+      "usuario_id": "usr_004",
+      "autor_nombre": "Reseña de ejemplo",
+      "calificacion_estrellas": 5,
+      "comentario": "Frescas y altas sin cansar el pie.",
+      "estado_moderacion": "APROBADA",
+      "imagenes": [],
+      "creado_en": "2026-10-15T14:00:00.000Z"
+    },
+    {
+      "id": "rev_006",
+      "producto_id": "prod_007",
+      "usuario_id": "usr_004",
+      "autor_nombre": "Reseña de ejemplo",
+      "calificacion_estrellas": 4,
+      "comentario": "Elegantes. Pedí media talla más por la horma.",
+      "estado_moderacion": "APROBADA",
+      "imagenes": [],
+      "creado_en": "2026-10-15T14:00:00.000Z"
+    },
+    {
+      "id": "rev_007",
+      "producto_id": "prod_002",
+      "usuario_id": "usr_004",
+      "autor_nombre": "Reseña de ejemplo",
+      "calificacion_estrellas": 5,
+      "comentario": "Esta reseña espera aprobación en el panel de administración.",
       "estado_moderacion": "PENDIENTE",
       "imagenes": [],
-      "creado_en": "2025-04-28T08:00:00.000Z"
+      "creado_en": "2026-10-15T14:00:00.000Z"
+    },
+    {
+      "id": "rev_008",
+      "producto_id": "prod_009",
+      "usuario_id": "usr_004",
+      "autor_nombre": "Reseña de ejemplo",
+      "calificacion_estrellas": 4,
+      "comentario": "Buen par, esta reseña también está por moderar.",
+      "estado_moderacion": "PENDIENTE",
+      "imagenes": [],
+      "creado_en": "2026-10-15T14:00:00.000Z"
     }
   ],
   "banners": [
     {
       "id": "ban_001",
-      "titulo": "Nueva Colección Verano 2026",
-      "descripcion": "Descubrí los colores de temporada y renová tu guardarropa hoy mismo.",
-      "url_pc": "https://picsum.photos/seed/clicmoda-banner-1/1400/800",
-      "url_tablet": "https://picsum.photos/seed/clicmoda-banner-1/900/700",
-      "url_movil": "https://picsum.photos/seed/clicmoda-banner-1/600/800",
+      "titulo": "Pisá con estilo",
+      "descripcion": "Nueva colección de calzado, con talla exacta y entrega coordinada por WhatsApp.",
+      "url_pc": "https://images.unsplash.com/photo-1603808033192-082d6919d3e1?auto=format&fit=crop&q=70&w=1400&h=800",
+      "url_tablet": "https://images.unsplash.com/photo-1603808033192-082d6919d3e1?auto=format&fit=crop&q=70&w=900&h=900",
+      "url_movil": "https://images.unsplash.com/photo-1603808033192-082d6919d3e1?auto=format&fit=crop&q=70&w=800&h=1000",
       "activo": true
     },
     {
       "id": "ban_002",
-      "titulo": "Ventas Flash ⚡ Hasta 30% OFF",
-      "descripcion": "Ofertas por tiempo limitado en prendas seleccionadas. ¡No te las pierdas!",
-      "url_pc": "https://picsum.photos/seed/clicmoda-banner-2/1400/800",
-      "url_tablet": "https://picsum.photos/seed/clicmoda-banner-2/900/700",
-      "url_movil": "https://picsum.photos/seed/clicmoda-banner-2/600/800",
+      "titulo": "Tacones para tu noche",
+      "descripcion": "Cómodos de verdad, en tallas 35 a 40.",
+      "url_pc": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&q=70&w=1400&h=800",
+      "url_tablet": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&q=70&w=900&h=900",
+      "url_movil": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&q=70&w=800&h=1000",
       "activo": true
     },
     {
       "id": "ban_003",
-      "titulo": "Accesorios Trendy",
-      "descripcion": "Completá tu look con los accesorios más buscados de la temporada.",
-      "url_pc": "https://picsum.photos/seed/clicmoda-banner-3/1400/800",
-      "url_tablet": "https://picsum.photos/seed/clicmoda-banner-3/900/700",
-      "url_movil": "https://picsum.photos/seed/clicmoda-banner-3/600/800",
+      "titulo": "Cuero que dura años",
+      "descripcion": "Botas y formales hechos para acompañarte.",
+      "url_pc": "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?auto=format&fit=crop&q=70&w=1400&h=800",
+      "url_tablet": "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?auto=format&fit=crop&q=70&w=900&h=900",
+      "url_movil": "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?auto=format&fit=crop&q=70&w=800&h=1000",
       "activo": true
     }
   ],
   "etiquetas": [
     {
-      "id": "etag_001",
-      "nombre": "vestido",
-      "slug": "vestido"
-    },
-    {
-      "id": "etag_002",
-      "nombre": "floral",
-      "slug": "floral"
-    },
-    {
-      "id": "etag_003",
-      "nombre": "verano",
-      "slug": "verano"
-    },
-    {
-      "id": "etag_004",
-      "nombre": "midi",
-      "slug": "midi"
-    },
-    {
-      "id": "etag_005",
-      "nombre": "blusa",
-      "slug": "blusa"
-    },
-    {
-      "id": "etag_006",
-      "nombre": "elegante",
-      "slug": "elegante"
-    },
-    {
-      "id": "etag_007",
+      "id": "etag_fiesta",
       "nombre": "fiesta",
       "slug": "fiesta"
     },
     {
-      "id": "etag_008",
-      "nombre": "off-shoulder",
-      "slug": "off-shoulder"
+      "id": "etag_oferta",
+      "nombre": "oferta",
+      "slug": "oferta"
     },
     {
-      "id": "etag_009",
-      "nombre": "jeans",
-      "slug": "jeans"
+      "id": "etag_nuevo",
+      "nombre": "nuevo",
+      "slug": "nuevo"
     },
     {
-      "id": "etag_010",
-      "nombre": "mom fit",
-      "slug": "mom-fit"
+      "id": "etag_verano",
+      "nombre": "verano",
+      "slug": "verano"
     },
     {
-      "id": "etag_011",
-      "nombre": "vintage",
-      "slug": "vintage"
+      "id": "etag_comodo",
+      "nombre": "cómodo",
+      "slug": "comodo"
     },
     {
-      "id": "etag_012",
-      "nombre": "casual",
-      "slug": "casual"
+      "id": "etag_cuero",
+      "nombre": "cuero",
+      "slug": "cuero"
     },
     {
-      "id": "etag_013",
-      "nombre": "conjunto",
-      "slug": "conjunto"
-    },
-    {
-      "id": "etag_014",
-      "nombre": "crop top",
-      "slug": "crop-top"
-    },
-    {
-      "id": "etag_015",
-      "nombre": "falda plisada",
-      "slug": "falda-plisada"
-    },
-    {
-      "id": "etag_016",
-      "nombre": "tendencia",
-      "slug": "tendencia"
-    },
-    {
-      "id": "etag_017",
-      "nombre": "chaqueta",
-      "slug": "chaqueta"
-    },
-    {
-      "id": "etag_018",
-      "nombre": "denim",
-      "slug": "denim"
-    },
-    {
-      "id": "etag_019",
-      "nombre": "oversize",
-      "slug": "oversize"
-    },
-    {
-      "id": "etag_020",
-      "nombre": "falda",
-      "slug": "falda"
-    },
-    {
-      "id": "etag_021",
-      "nombre": "mini",
-      "slug": "mini"
-    },
-    {
-      "id": "etag_022",
-      "nombre": "plisada",
-      "slug": "plisada"
-    },
-    {
-      "id": "etag_023",
-      "nombre": "colorida",
-      "slug": "colorida"
-    },
-    {
-      "id": "etag_024",
-      "nombre": "satinado",
-      "slug": "satinado"
-    },
-    {
-      "id": "etag_025",
-      "nombre": "noche",
-      "slug": "noche"
-    },
-    {
-      "id": "etag_026",
-      "nombre": "bolso",
-      "slug": "bolso"
-    },
-    {
-      "id": "etag_027",
-      "nombre": "bucket",
-      "slug": "bucket"
-    },
-    {
-      "id": "etag_028",
-      "nombre": "accesorio",
-      "slug": "accesorio"
-    },
-    {
-      "id": "etag_029",
-      "nombre": "trendy",
-      "slug": "trendy"
+      "id": "etag_oficina",
+      "nombre": "oficina",
+      "slug": "oficina"
     }
   ]
 }

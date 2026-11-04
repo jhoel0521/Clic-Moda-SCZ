@@ -1,4 +1,4 @@
-﻿import { Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 
 type SpinnerSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
@@ -32,7 +32,7 @@ export function Spinner({ size = 'md', label, className = '' }: SpinnerProps) {
 /** Spinner de pantalla completa para carga de páginas */
 export function PageSpinner({ label = 'Cargando…' }: { label?: string }) {
   return (
-    <div className="flex min-h-screen items-center justify-center">
+    <div className="flex min-h-dvh items-center justify-center">
       <Spinner size="xl" label={label} />
     </div>
   );

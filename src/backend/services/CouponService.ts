@@ -1,7 +1,7 @@
+import { uid } from '@src/shared/utils/uid';
 import type { ICouponService } from '@src/core/contracts/ICouponService';
 import type { ICuponDescuento, IAplicacionCupon } from '@src/core/models';
-import { findAll, insert, update, remove } from '../db/db';
-import crypto from 'crypto';
+import { findAll, insert, remove } from '../db/db';
 
 export const CouponService: ICouponService = {
   async validateCoupon(codigo: string): Promise<ICuponDescuento | null> {
@@ -30,10 +30,6 @@ export const CouponService: ICouponService = {
 
     const discount = Math.round((subtotal * coupon.porcentaje_descuento) / 100);
 
-    // Incrementamos usos
-    coupon.veces_usado += 1;
-    update('coupons', coupon);
-
     return {
       valid: true,
       couponId: coupon.id,
@@ -49,7 +45,7 @@ export const CouponService: ICouponService = {
 
   async createCoupon(data: Omit<ICuponDescuento, 'id' | 'veces_usado'>): Promise<ICuponDescuento> {
     const newCoupon: ICuponDescuento = {
-      id: `cup_${crypto.randomUUID().substring(0, 8)}`,
+      id: `cup_${uid(8)}`,
       veces_usado: 0,
       ...data,
       codigo: data.codigo.toUpperCase(),

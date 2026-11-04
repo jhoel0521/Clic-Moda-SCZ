@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
@@ -49,7 +49,7 @@ export function Modal({
 
   const modal = (
     <div
-      className="animate-fade-in fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="animate-fade-in fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby={title ? 'modal-title' : undefined}
@@ -60,7 +60,7 @@ export function Modal({
     >
       <div
         ref={panelRef}
-        className={`relative w-full ${sizeClasses[size]} bg-surface border-border flex max-h-[90vh] flex-col rounded-lg border shadow-lg`}
+        className={`relative w-full ${sizeClasses[size]} bg-surface border-border safe-bottom flex max-h-[92dvh] flex-col rounded-t-2xl border shadow-lg sm:rounded-lg`}
       >
         {(title || showCloseButton) && (
           <div className="border-border flex shrink-0 items-center justify-between border-b px-6 py-4">

@@ -1,33 +1,58 @@
+import { uid } from '@src/shared/utils/uid';
 import type { IOrderService } from '@src/core/contracts/IOrderService';
-import type { IOrder, IOrderItem, ICreateOrderInput, OrderStatus } from '@src/core/models';
+import type {
+  ICuponDescuento,
+  IOrder,
+  IOrderItem,
+  ICreateOrderInput,
+  IProduct,
+  OrderStatus,
+} from '@src/core/models';
 import { ORDER_STATUS } from '@src/core/constants/ORDER_STATUS';
 import { findAll, findById, insert, update } from '../db/db';
-import { ProductService } from './ProductService';
-import crypto from 'crypto';
+import { ProductService, availableStock } from './ProductService';
+import { CouponService } from './CouponService';
 
 function generateTicketId(): string {
-  return `TICK-${crypto.randomBytes(3).toString('hex').toUpperCase()}`;
+  return `TICK-${uid(6).toUpperCase()}`;
 }
 
 export const OrderService: IOrderService = {
   async createOrder(input: ICreateOrderInput): Promise<IOrder> {
-    // Validar stock disponible para cada item con su talla específica
-    for (const item of input.items) {
-      const hasStock = await ProductService.decrementStock(
+    // Precios y stock salen del catálogo; primero se valida todo y luego se descuenta.
+    const priced = input.items.map((item) => {
+      const product = findById<IProduct>('products', item.productId);
+      const stock = product ? availableStock(product, item.selectedSize, item.selectedColor) : 0;
+      if (!product || item.quantity <= 0 || stock < item.quantity) {
+        throw new Error(
+          `Stock insuficiente para ${item.name}, talla ${item.selectedSize} (${item.selectedColor})`
+        );
+      }
+      return { ...item, price: product.price };
+    });
+
+    for (const item of priced) {
+      await ProductService.decrementStock(
         item.productId,
         item.quantity,
-        item.selectedSize
+        item.selectedSize,
+        item.selectedColor
       );
-      if (!hasStock) {
-        throw new Error(`Stock insuficiente para ${item.name} en talla ${item.selectedSize}`);
-      }
     }
 
-    const subtotal = input.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const discount = input.discount ?? 0;
+    const subtotal = priced.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const coupon = input.couponCode
+      ? await CouponService.applyCoupon(input.couponCode, subtotal)
+      : null;
+    const discount = coupon?.valid ? coupon.discount : 0;
     const total = Math.max(0, subtotal - discount);
 
-    const orderItems: IOrderItem[] = input.items.map((item, idx) => ({
+    if (coupon?.valid && coupon.couponId) {
+      const stored = findById<ICuponDescuento>('coupons', coupon.couponId);
+      if (stored) update('coupons', { ...stored, veces_usado: stored.veces_usado + 1 });
+    }
+
+    const orderItems: IOrderItem[] = priced.map((item, idx) => ({
       id: `item_${Date.now()}_${idx}`,
       product: {
         id: item.productId,
@@ -44,16 +69,16 @@ export const OrderService: IOrderService = {
 
     const now = new Date().toISOString();
     const order: IOrder = {
-      id: `ord_${crypto.randomUUID()}`,
+      id: `ord_${uid()}`,
       ticketId: generateTicketId(),
       items: orderItems,
       status: ORDER_STATUS.PROCESADO,
       shippingAddress: input.shippingAddress,
-      paymentMethod: input.paymentMethod ?? 'qr_simple',
+      paymentMethod: input.paymentMethod ?? 'whatsapp',
       subtotal,
       discount,
       total,
-      couponCode: input.couponCode,
+      couponCode: coupon?.valid ? input.couponCode : undefined,
       customerId: input.customerId,
       customerEmail: input.customerEmail,
       notes: input.notes,

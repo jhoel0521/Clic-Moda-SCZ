@@ -40,6 +40,10 @@ export interface IProduct {
   colors: string[];
   /** Stock disponible por talla: { S: 5, M: 3, L: 2, XL: 1 } */
   stock: Record<Talla, number>;
+  /** Stock real por color y talla: { Negro: { '38': 2 } }. `stock` guarda la suma por talla. */
+  variantStock?: Record<string, Record<Talla, number>>;
+  /** Foto que corresponde a cada color: { Negro: 0 } (índice en images). */
+  colorImage?: Record<string, number>;
   /** Medidas de la prenda por talla: { S: "...", M: "..." } o { largo: "75cm", ... } */
   medidas_dinamicas: MedidasDinamicas;
   etiquetaIds: string[];

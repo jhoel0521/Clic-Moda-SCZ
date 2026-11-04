@@ -21,7 +21,7 @@ export interface IShippingAddress {
 }
 
 /** Métodos de pago aceptados */
-export type MetodoPago = 'transferencia' | 'qr_simple' | 'efectivo_entrega' | 'contra_entrega';
+export type MetodoPago = 'whatsapp';
 
 /** Pedido completo */
 export interface IOrder {

@@ -14,7 +14,7 @@ export type OrderStatus = (typeof ORDER_STATUS)[keyof typeof ORDER_STATUS];
 
 /** Etiquetas legibles para mostrar en la UI */
 export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
-  PROCESADO: 'Procesado',
+  PROCESADO: 'Por confirmar por WhatsApp',
   EN_PREPARACION: 'En preparación',
   LISTO_PARA_RECOGER: 'Listo para recoger',
   ENVIANDO: 'Enviando',

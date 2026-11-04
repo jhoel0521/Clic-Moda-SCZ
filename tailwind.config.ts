@@ -7,37 +7,37 @@ const config: Config = {
       colors: {
         /* Paleta de marca */
         brand: {
-          DEFAULT: '#e63f6e',
-          dark: '#c7305a',
-          light: '#ff6b96',
-          subtle: 'rgba(230, 63, 110, 0.12)',
+          DEFAULT: '#c2410c',
+          dark: '#9a3412',
+          light: '#ea580c',
+          subtle: 'rgba(194, 65, 12, 0.12)',
         },
 
         /* Fondos */
         bg: {
-          DEFAULT: '#fff9fb',
-          secondary: '#f8f2f4',
+          DEFAULT: '#fafaf9',
+          secondary: '#f5f5f4',
         },
 
         /* Superficies */
         surface: {
           DEFAULT: '#ffffff',
-          raised: '#fffdfd',
-          hover: '#f6eef1',
+          raised: '#ffffff',
+          hover: '#f5f5f4',
         },
 
         /* Bordes */
         border: {
           DEFAULT: 'rgba(30, 22, 28, 0.08)',
           hover: 'rgba(30, 22, 28, 0.16)',
-          brand: 'rgba(230, 63, 110, 0.24)',
+          brand: 'rgba(194, 65, 12, 0.24)',
         },
 
         /* Texto */
         text: {
-          primary: '#24151c',
-          secondary: '#5d4c56',
-          muted: '#8a7a84',
+          primary: '#1c1917',
+          secondary: '#57534e',
+          muted: '#78716c',
           inverse: '#ffffff',
         },
 
@@ -54,7 +54,7 @@ const config: Config = {
         sm: '0 1px 2px rgba(42, 24, 34, 0.05)',
         md: '0 6px 20px rgba(42, 24, 34, 0.08)',
         lg: '0 18px 40px rgba(42, 24, 34, 0.12)',
-        brand: '0 12px 26px rgba(230, 63, 110, 0.22)',
+        brand: '0 12px 26px rgba(194, 65, 12, 0.22)',
       },
 
       borderRadius: {
@@ -103,10 +103,10 @@ const config: Config = {
         },
         'pulse-brand': {
           '0%, 100%': {
-            boxShadow: '0 0 0 0 rgba(230, 63, 110, 0.4)',
+            boxShadow: '0 0 0 0 rgba(194, 65, 12, 0.4)',
           },
           '50%': {
-            boxShadow: '0 0 0 8px rgba(230, 63, 110, 0)',
+            boxShadow: '0 0 0 8px rgba(194, 65, 12, 0)',
           },
         },
       },

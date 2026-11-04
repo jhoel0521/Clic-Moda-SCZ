@@ -62,18 +62,28 @@ export default function AdminProductsPage() {
           <Spinner size="lg" />
         </div>
       ) : (
-        <div className="border-border overflow-hidden rounded-2xl border shadow-sm">
+        <div className="border-border overflow-x-auto rounded-2xl border shadow-sm">
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-bg-secondary border-border border-b">
-                <th className="text-text-primary px-5 py-3 text-left font-semibold">Producto</th>
-                <th className="text-text-primary hidden px-5 py-3 text-left font-semibold sm:table-cell">
+                <th className="text-text-primary px-2 py-3 text-left font-semibold sm:px-5">
+                  Producto
+                </th>
+                <th className="text-text-primary hidden px-2 py-3 text-left font-semibold sm:table-cell sm:px-5">
                   Categoría
                 </th>
-                <th className="text-text-primary px-5 py-3 text-right font-semibold">Stock</th>
-                <th className="text-text-primary px-5 py-3 text-right font-semibold">Precio</th>
-                <th className="text-text-primary px-5 py-3 text-center font-semibold">Estado</th>
-                <th className="text-text-primary px-5 py-3 text-center font-semibold">Acciones</th>
+                <th className="text-text-primary px-2 py-3 text-right font-semibold sm:px-5">
+                  Stock
+                </th>
+                <th className="text-text-primary px-2 py-3 text-right font-semibold sm:px-5">
+                  Precio
+                </th>
+                <th className="text-text-primary hidden px-2 py-3 text-center font-semibold sm:table-cell sm:px-5">
+                  Estado
+                </th>
+                <th className="text-text-primary px-2 py-3 text-center font-semibold sm:px-5">
+                  Acciones
+                </th>
               </tr>
             </thead>
             <tbody className="divide-border divide-y bg-white">
@@ -81,7 +91,7 @@ export default function AdminProductsPage() {
                 const img = product.images.find((i) => i.isPrimary) ?? product.images[0];
                 return (
                   <tr key={product.id} className="hover:bg-surface-hover">
-                    <td className="px-5 py-3">
+                    <td className="px-2 py-3 sm:px-5">
                       <div className="flex items-center gap-3">
                         <div className="bg-surface-raised relative h-10 w-10 shrink-0 overflow-hidden rounded-lg">
                           {img ? (
@@ -98,13 +108,15 @@ export default function AdminProductsPage() {
                             </span>
                           )}
                         </div>
-                        <p className="text-text-primary line-clamp-1 font-medium">{product.name}</p>
+                        <p className="text-text-primary line-clamp-2 leading-tight font-medium">
+                          {product.name}
+                        </p>
                       </div>
                     </td>
-                    <td className="text-text-muted hidden px-5 py-3 capitalize sm:table-cell">
+                    <td className="text-text-muted hidden px-2 py-3 capitalize sm:table-cell sm:px-5">
                       {product.category}
                     </td>
-                    <td className="px-5 py-3 text-right">
+                    <td className="px-2 py-3 text-right sm:px-5">
                       <span
                         className={
                           Object.values(product.stock).reduce((s, q) => s + q, 0) <= 5
@@ -115,10 +127,10 @@ export default function AdminProductsPage() {
                         {Object.values(product.stock).reduce((s, q) => s + q, 0)}
                       </span>
                     </td>
-                    <td className="text-text-primary px-5 py-3 text-right font-semibold">
+                    <td className="text-text-primary px-2 py-3 text-right font-semibold whitespace-nowrap sm:px-5">
                       Bs. {product.price}
                     </td>
-                    <td className="px-5 py-3 text-center">
+                    <td className="hidden px-2 py-3 text-center sm:table-cell sm:px-5">
                       <span
                         className={[
                           'inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold',
@@ -130,26 +142,26 @@ export default function AdminProductsPage() {
                         {product.estado}
                       </span>
                     </td>
-                    <td className="px-5 py-3">
-                      <div className="flex items-center justify-center gap-2">
+                    <td className="px-2 py-3 sm:px-5">
+                      <div className="flex items-center justify-center">
                         <button
                           type="button"
                           onClick={() => openEdit(product)}
-                          className="text-text-muted hover:bg-surface-hover hover:text-brand rounded-lg p-1.5 transition-colors"
+                          className="text-text-muted hover:bg-surface-hover hover:text-brand flex h-10 w-10 items-center justify-center rounded-lg transition-colors"
                           title="Editar"
                         >
-                          <Pencil size={15} />
+                          <Pencil size={18} />
                         </button>
                         <button
                           type="button"
                           onClick={() => handleToggleEstado(product)}
-                          className="text-text-muted hover:bg-surface-hover rounded-lg p-1.5 transition-colors"
+                          className="text-text-muted hover:bg-surface-hover flex h-10 w-10 items-center justify-center rounded-lg transition-colors"
                           title="Cambiar estado"
                         >
                           {product.estado === 'activo' ? (
-                            <ToggleRight size={16} className="text-green-600" />
+                            <ToggleRight size={20} className="text-green-600" />
                           ) : (
-                            <ToggleLeft size={16} />
+                            <ToggleLeft size={20} />
                           )}
                         </button>
                       </div>

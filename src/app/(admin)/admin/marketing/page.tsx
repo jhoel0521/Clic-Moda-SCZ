@@ -27,7 +27,7 @@ export default function MarketingPage() {
 
       {/* Tabs */}
       <div className="border-border border-b">
-        <nav className="-mb-px flex gap-1">
+        <nav className="snap-row -mb-px gap-1">
           {TABS.map((tab) => (
             <button
               key={tab.id}

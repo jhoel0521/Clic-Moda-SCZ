@@ -1,10 +1,10 @@
-﻿'use client';
+'use client';
 
 import Link from 'next/link';
 import { Eye, MessageCircle } from 'lucide-react';
 import { ORDER_STATUS_LABELS, type OrderStatus } from '@src/core/constants/ORDER_STATUS';
 import { ROUTES } from '@src/routes';
-import { envConfig } from '@src/core/config/env.config';
+import { whatsappHref } from '@src/core/config/env.config';
 import type { IOrder } from '@src/core/models';
 
 const STATUS_STYLES: Record<OrderStatus, string> = {
@@ -34,7 +34,31 @@ export function OrderHistoryTable({ orders }: OrderHistoryTableProps) {
 
   return (
     <div className="border-border overflow-hidden rounded-2xl border shadow-sm">
-      <table className="w-full text-sm">
+      <ul className="divide-border divide-y bg-white md:hidden">
+        {orders.map((order) => (
+          <li key={order.id}>
+            <Link
+              href={ROUTES.ORDER_DETAIL(order.id)}
+              className="flex items-center justify-between gap-3 p-4 active:bg-gray-50"
+            >
+              <span className="min-w-0">
+                <span className="text-brand block font-mono text-sm font-bold">
+                  {order.ticketId}
+                </span>
+                <span className="text-text-muted block text-xs">
+                  {new Date(order.createdAt).toLocaleDateString('es-BO')}
+                  {' · '}
+                  {ORDER_STATUS_LABELS[order.status]}
+                </span>
+              </span>
+              <span className="text-text-primary font-semibold whitespace-nowrap">
+                Bs. {order.total.toFixed(2)}
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+      <table className="hidden w-full text-sm md:table">
         <thead>
           <tr className="bg-bg-secondary border-border border-b">
             <th className="text-text-primary px-5 py-3 text-left font-semibold">Ticket</th>
@@ -48,7 +72,7 @@ export function OrderHistoryTable({ orders }: OrderHistoryTableProps) {
         </thead>
         <tbody className="divide-border divide-y bg-white">
           {orders.map((order) => {
-            const waMsg = encodeURIComponent(`Hola! Consulto por mi pedido *${order.ticketId}*`);
+            const waMsg = `Hola! Consulto por mi pedido *${order.ticketId}*`;
             return (
               <tr key={order.id} className="hover:bg-surface-hover">
                 <td className="px-5 py-4">
@@ -82,7 +106,7 @@ export function OrderHistoryTable({ orders }: OrderHistoryTableProps) {
                       Ver pedido
                     </Link>
                     <a
-                      href={`https://wa.me/${envConfig.whatsappNumber}?text=${waMsg}`}
+                      href={whatsappHref(waMsg)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 text-xs font-medium text-green-700 hover:underline"

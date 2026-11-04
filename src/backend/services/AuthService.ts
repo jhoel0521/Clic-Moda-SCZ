@@ -1,9 +1,9 @@
+import { uid } from '@src/shared/utils/uid';
 import type { IAuthService } from '@src/core/contracts/IAuthService';
 import type { IUser, ILoginCredentials, IRegisterData } from '@src/core/models';
 import { ROLES } from '@src/core/constants/ROLES';
-import { hashPassword, verifyPassword } from '../db/crypto';
+import { ANY_PASSWORD, verifyPassword } from '../db/crypto';
 import { findAll, insert, findById, IUserWithPassword } from '../db/db';
-import crypto from 'crypto';
 
 export const AuthService: IAuthService = {
   async login(credentials: ILoginCredentials): Promise<IUser> {
@@ -28,13 +28,13 @@ export const AuthService: IAuthService = {
     }
 
     const newUser: IUserWithPassword = {
-      id: `usr_${crypto.randomUUID().substring(0, 8)}`,
+      id: `usr_${uid(8)}`,
       name: data.name,
       email: data.email,
-      password: hashPassword(data.password),
+      password: ANY_PASSWORD,
       role: ROLES.CLIENTE,
       phone: data.phone,
-      avatarUrl: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(data.name)}`,
+      avatarUrl: '',
       createdAt: new Date().toISOString(),
     };
 

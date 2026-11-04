@@ -48,27 +48,26 @@ export function StoreNavbar() {
   return (
     <>
       {/* ── NAVBAR ── */}
-      <header className="sticky top-0 z-40 h-12 w-full border-b border-gray-200 bg-white/90 shadow-md backdrop-blur-md lg:h-16">
-        <div className="align-center flex h-full w-full justify-center">
-          <div className="mx-auto flex h-full max-w-[1200px] items-center justify-between px-4 md:px-8">
+      <header className="sticky top-0 z-40 h-14 w-full border-b border-gray-200 bg-white lg:h-16">
+        <div className="h-full w-full">
+          <div className="mx-auto flex h-full w-full max-w-[1200px] items-center justify-between px-2 md:px-8">
             {/* LEFT: hamburger + logo */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1">
               <button
-                className="rounded-xl p-1.5 text-gray-800 transition-colors hover:text-pink-600 md:hidden"
+                className="flex h-11 w-11 items-center justify-center rounded-xl text-gray-800 md:hidden"
                 onClick={() => setDrawerOpen(true)}
                 aria-label="Abrir menú"
               >
-                <Menu className="h-5 w-5" />
+                <Menu className="h-6 w-6" />
               </button>
               <Link
                 href={ROUTES.HOME}
-                className="text-xl font-black tracking-tight whitespace-nowrap text-gray-900 sm:text-2xl"
+                className="text-lg font-black tracking-tight whitespace-nowrap text-gray-900 sm:text-2xl"
                 onClick={() => setDrawerOpen(false)}
               >
                 CLIC <span className="text-pink-500">MODA SCZ</span>
               </Link>
             </div>
-            <div className="w-15"></div>
             {/* CENTER: desktop links */}
             <nav className="hidden items-center gap-6 text-sm font-bold text-gray-600 md:flex lg:gap-8 lg:text-base">
               {NAV_LINKS.map(({ label, href }) => (
@@ -86,16 +85,16 @@ export function StoreNavbar() {
                 </Link>
               ))}
             </nav>
-            <div className="w-15"></div>
             {/* RIGHT: icons */}
             <div className="flex items-center gap-1 sm:gap-2">
               {/* Search desktop */}
-              <button
-                className="hidden rounded-xl p-2 text-gray-800 transition-colors hover:text-pink-600 md:flex"
+              <Link
+                href={`${ROUTES.CATALOG}?buscar=1`}
+                className="flex h-11 w-11 items-center justify-center rounded-xl text-gray-800 transition-colors hover:text-pink-600"
                 aria-label="Buscar"
               >
                 <Search className="h-5 w-5 lg:h-6 lg:w-6" />
-              </button>
+              </Link>
 
               {/* User / Logout (desktop) */}
               {isAuthenticated && user ? (
@@ -139,7 +138,7 @@ export function StoreNavbar() {
               {/* Cart icon siempre visible */}
               <Link
                 href={ROUTES.CART}
-                className="relative rounded-xl p-2 text-gray-800 transition-colors hover:text-pink-600"
+                className="relative hidden h-11 w-11 items-center justify-center rounded-xl text-gray-800 transition-colors hover:text-pink-600 md:flex"
                 aria-label={`Carrito (${itemCount})`}
               >
                 <ShoppingCart className="h-5 w-5" />
@@ -163,13 +162,13 @@ export function StoreNavbar() {
           {/* Panel */}
           <div className="absolute top-0 bottom-0 left-0 flex w-3/4 max-w-sm flex-col bg-white shadow-2xl">
             {/* Drawer header */}
-            <div className="flex items-center justify-between border-b border-gray-100 px-6 py-5">
+            <div className="safe-top flex items-center justify-between border-b border-gray-100 px-6 py-4">
               <Link
                 href={ROUTES.HOME}
                 className="text-2xl font-black tracking-tight text-gray-900"
                 onClick={() => setDrawerOpen(false)}
               >
-                CLIC<span className="text-pink-500">MODA SCZ</span>
+                CLIC <span className="text-pink-500">MODA SCZ</span>
               </Link>
               <button
                 onClick={() => setDrawerOpen(false)}
@@ -208,9 +207,19 @@ export function StoreNavbar() {
             </nav>
 
             {/* Drawer footer */}
-            <div className="border-t border-gray-100 px-4 py-6">
+            <div className="safe-bottom-3 border-t border-gray-100 px-4 pt-4">
               {isAuthenticated && user ? (
                 <div className="flex flex-col gap-3">
+                  {ADMIN_ROLES.includes(user.role as (typeof ADMIN_ROLES)[number]) && (
+                    <Link
+                      href={ROUTES.ADMIN.DASHBOARD}
+                      onClick={() => setDrawerOpen(false)}
+                      className="flex items-center gap-3 rounded-xl bg-pink-50 px-4 py-3 font-bold text-pink-600"
+                    >
+                      <LayoutDashboard className="h-5 w-5" />
+                      Panel del negocio
+                    </Link>
+                  )}
                   <Link
                     href={ROUTES.PROFILE}
                     onClick={() => setDrawerOpen(false)}

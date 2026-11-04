@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import Image from 'next/image';
 import { Minus, Plus, Trash2 } from 'lucide-react';
@@ -12,9 +12,9 @@ interface CartItemRowProps {
 
 export function CartItemRow({ item, onRemove, onUpdateQty }: CartItemRowProps) {
   return (
-    <div className="border-border bg-surface flex gap-4 rounded-2xl border p-4 shadow-sm">
+    <div className="border-border bg-surface flex gap-3 rounded-2xl border p-3 shadow-sm">
       {/* Imagen */}
-      <div className="bg-surface-raised relative h-24 w-20 shrink-0 overflow-hidden rounded-xl">
+      <div className="bg-surface-raised relative h-20 w-16 shrink-0 overflow-hidden rounded-xl">
         {item.imageUrl ? (
           <Image src={item.imageUrl} alt={item.name} fill className="object-cover" sizes="80px" />
         ) : (
@@ -40,23 +40,23 @@ export function CartItemRow({ item, onRemove, onUpdateQty }: CartItemRowProps) {
           <button
             type="button"
             onClick={onRemove}
-            className="text-text-muted hover:text-danger shrink-0 rounded-lg p-1.5 transition-colors hover:bg-red-50"
+            className="text-text-muted hover:text-danger -mt-2 -mr-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-lg transition-colors hover:bg-red-50"
             aria-label="Eliminar ítem"
           >
-            <Trash2 size={15} />
+            <Trash2 size={18} />
           </button>
         </div>
 
-        <div className="mt-2 flex items-center justify-between">
+        <div className="mt-2 flex flex-wrap items-center justify-between gap-1">
           {/* Cantidad */}
-          <div className="border-border inline-flex items-center gap-1.5 rounded-lg border bg-white p-0.5">
+          <div className="border-border inline-flex items-center rounded-lg border bg-white">
             <button
               type="button"
               onClick={() => onUpdateQty(item.quantity - 1)}
-              className="text-text-muted hover:bg-surface-hover flex h-6 w-6 items-center justify-center rounded transition-colors"
+              className="text-text-muted hover:bg-surface-hover flex h-9 w-9 items-center justify-center rounded transition-colors"
               aria-label="Reducir cantidad"
             >
-              <Minus size={12} />
+              <Minus size={16} />
             </button>
             <span className="text-text-primary w-6 text-center text-sm font-bold">
               {item.quantity}
@@ -64,15 +64,15 @@ export function CartItemRow({ item, onRemove, onUpdateQty }: CartItemRowProps) {
             <button
               type="button"
               onClick={() => onUpdateQty(item.quantity + 1)}
-              className="text-text-muted hover:bg-surface-hover flex h-6 w-6 items-center justify-center rounded transition-colors"
+              className="text-text-muted hover:bg-surface-hover flex h-9 w-9 items-center justify-center rounded transition-colors"
               aria-label="Aumentar cantidad"
             >
-              <Plus size={12} />
+              <Plus size={16} />
             </button>
           </div>
 
           {/* Precio total del ítem */}
-          <p className="text-text-primary font-bold">
+          <p className="text-text-primary font-bold whitespace-nowrap">
             Bs. {(item.price * item.quantity).toFixed(2)}
           </p>
         </div>

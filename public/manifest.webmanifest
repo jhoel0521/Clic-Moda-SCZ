@@ -1,0 +1,10 @@
+{
+  "name": "Clic Moda SCZ (demo)",
+  "short_name": "Clic Moda",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "start_url": "./",
+  "scope": "./",
+  "icons": [{ "src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }]
+}

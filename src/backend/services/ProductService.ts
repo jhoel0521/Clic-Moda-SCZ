@@ -2,6 +2,12 @@ import type { IProductService } from '@src/core/contracts/IProductService';
 import type { IProduct, IProductFilters } from '@src/core/models';
 import { findAll, findById, insert, update } from '../db/db';
 
+/** Unidades disponibles de una talla, y de un color si el producto maneja stock por color. */
+export function availableStock(product: IProduct, size: string, color?: string): number {
+  if (color && product.variantStock?.[color]) return product.variantStock[color][size] ?? 0;
+  return product.stock[size] ?? 0;
+}
+
 export const ProductService: IProductService = {
   async getProducts(filters?: IProductFilters): Promise<IProduct[]> {
     let results = findAll('products');
@@ -71,16 +77,17 @@ export const ProductService: IProductService = {
     return [...new Set(products.map((p) => p.category))];
   },
 
-  async decrementStock(productId: string, quantity: number, size: string): Promise<boolean> {
+  async decrementStock(
+    productId: string,
+    quantity: number,
+    size: string,
+    color?: string
+  ): Promise<boolean> {
     const product = findById<IProduct>('products', productId);
-    if (!product) return false;
+    if (!product || quantity <= 0 || availableStock(product, size, color) < quantity) return false;
 
-    // Obtener el stock de la talla específica
-    const sizeStock = product.stock[size as keyof typeof product.stock] ?? 0;
-    if (sizeStock < quantity) return false;
-
-    // Decrementar el stock de esa talla
-    product.stock[size as keyof typeof product.stock] = sizeStock - quantity;
+    if (color && product.variantStock?.[color]) product.variantStock[color][size] -= quantity;
+    product.stock[size] = (product.stock[size] ?? 0) - quantity;
     update('products', product);
     return true;
   },

@@ -16,7 +16,7 @@ export function Toast() {
   if (toasts.length === 0) return null;
 
   return (
-    <div className="pointer-events-none fixed top-6 right-6 z-[200] flex flex-col gap-3">
+    <div className="safe-top pointer-events-none fixed top-3 right-3 left-3 z-[200] flex flex-col items-end gap-3">
       {toasts.map((t) => {
         const { Icon, iconClass, wrapClass } = CONFIG[t.type];
         return (

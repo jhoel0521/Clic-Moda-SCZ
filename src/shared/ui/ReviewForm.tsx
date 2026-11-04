@@ -1,6 +1,7 @@
-﻿'use client';
+'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { Star } from 'lucide-react';
 import { useAuthStore } from '@src/core/store/useAuthStore';
 import { ReviewService } from '@src/services/ReviewService';
@@ -25,9 +26,9 @@ export function ReviewForm({ productId, onSuccess }: ReviewFormProps) {
   if (!isAuthenticated || !user) {
     return (
       <div className="border-border bg-bg-secondary text-text-muted rounded-2xl border px-5 py-4 text-sm">
-        <a href="/login" className="text-brand font-semibold hover:underline">
+        <Link href="/login" className="text-brand font-semibold hover:underline">
           Iniciá sesión
-        </a>{' '}
+        </Link>{' '}
         para dejar una reseña en este producto.
       </div>
     );
@@ -90,7 +91,7 @@ export function ReviewForm({ productId, onSuccess }: ReviewFormProps) {
             className="transition-transform hover:scale-110"
           >
             <Star
-              size={28}
+              size={32}
               className={
                 star <= activeStar
                   ? 'fill-yellow-400 text-yellow-400'

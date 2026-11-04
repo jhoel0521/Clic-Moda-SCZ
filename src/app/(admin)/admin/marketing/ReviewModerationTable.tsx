@@ -44,7 +44,7 @@ export function ReviewModerationTable() {
     <div className="space-y-4">
       {reviews.map((review) => (
         <div key={review.id} className="border-border rounded-2xl border bg-white p-5 shadow-sm">
-          <div className="flex items-start justify-between gap-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
             <div className="min-w-0 flex-1">
               <div className="mb-1 flex items-center gap-2">
                 <span className="text-text-primary text-sm font-semibold">

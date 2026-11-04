@@ -1,7 +1,7 @@
+import { uid } from '@src/shared/utils/uid';
 import type { IReviewService } from '@src/core/contracts/IReviewService';
 import type { IResena, ICreateResenaData } from '@src/core/models';
 import { findAll, findById, insert, update } from '../db/db';
-import crypto from 'crypto';
 
 export const ReviewService: IReviewService = {
   async getReviewsByProduct(productoId: string): Promise<IResena[]> {
@@ -18,7 +18,7 @@ export const ReviewService: IReviewService = {
 
   async createReview(data: ICreateResenaData & { autor_nombre?: string }): Promise<IResena> {
     const newReview: IResena = {
-      id: `rev_${crypto.randomUUID().substring(0, 8)}`,
+      id: `rev_${uid(8)}`,
       producto_id: data.producto_id,
       usuario_id: data.usuario_id,
       autor_nombre: data.autor_nombre,
