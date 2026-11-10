@@ -30,7 +30,8 @@
     "migration:show": "pnpm build && pnpm db:cli migration:show -d dist/shared/infrastructure/database/data-source.js",
     "migration:generate": "pnpm build && pnpm db:cli migration:generate --esm -d dist/shared/infrastructure/database/data-source.js",
     "seed:manager": "pnpm build && node --env-file-if-exists=.env dist/identity/infrastructure/cli/seed-manager.js",
-    "roles:assign": "pnpm build && node --env-file-if-exists=.env dist/identity/infrastructure/cli/assign-roles.js"
+    "roles:assign": "pnpm build && node --env-file-if-exists=.env dist/identity/infrastructure/cli/assign-roles.js",
+    "db:drop": "pnpm build && pnpm db:cli schema:drop -d dist/shared/infrastructure/database/data-source.js"
   },
   "dependencies": {
     "@inquirer/prompts": "8.7.5",

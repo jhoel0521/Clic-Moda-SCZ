@@ -1,11 +1,18 @@
 # Se valida en TODOS los subproyectos (apps/shop, apps/admin, services/api).
-# 0) Cada subproyecto cumple el contrato (scripts lint/test/build, eslint, prettier...)
+# `set -e`: el primer paso que falle detiene el hook y rechaza el commit, sin importar cómo se ejecute.
+set -e
+
+echo "▶ [1/5] Contrato de los subproyectos (scripts lint/test/build/format, regla de 25 líneas)"
 pnpm verify:projects
-# 1) Secretos en los archivos en staging
+
+echo "▶ [2/5] Secretos en los archivos en staging"
 pnpm exec lint-staged
-# 2) Lint completo de cada subproyecto (incluye formato y tipos donde aplique)
+
+echo "▶ [3/5] Lint de cada subproyecto (incluye formato y tipos donde aplique)"
 pnpm lint:all
-# 3) Pruebas unitarias de cada subproyecto (sin servicios externos)
+
+echo "▶ [4/5] Pruebas unitarias de cada subproyecto (sin servicios externos)"
 pnpm test:all
-# 4) Build de cada subproyecto (incluye chequeo de tipos)
+
+echo "▶ [5/5] Build de cada subproyecto (incluye chequeo de tipos)"
 pnpm build:all

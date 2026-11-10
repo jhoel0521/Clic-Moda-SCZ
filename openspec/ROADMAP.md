@@ -41,6 +41,7 @@ apps/admin     Astro 7.4.8 (SSR, adaptador Node) + islas React       ← Gerente
 apps/shop      Astro 7.4.8 (SSR, adaptador Node), móvil-first         ← clientes y, luego, espectadores del Live
 ```
 
+- **Puertos de desarrollo** (fuente única: `ports.json`): infra 10001-10009 (Postgres 10001) y apps 10010-10020 (api 10010, admin 10011, shop 10012), para no chocar con otros proyectos en paralelo. Orquestador en la raíz: `pnpm docker:up`, `pnpm db:migrate`, `pnpm dev`.
 - Cada proyecto es **independiente** (su `package.json`, lockfile y `node_modules`); la raíz solo orquesta.
 - **Astro no publica canal LTS en npm** (solo `latest`, `beta`, `rc` y `legacy`): se fija la última estable (7.4.8, exige Node ≥ 22.23.4) y se actualiza de forma deliberada.
 - Contratos: la API publica OpenAPI y es la única implementación de la lógica de negocio; admin y shop no la duplican.

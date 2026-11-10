@@ -5,6 +5,11 @@ import tseslint from 'typescript-eslint';
 
 export default defineConfig([
   globalIgnores(['dist/**', '.astro/**', 'node_modules/**']),
+  {
+    // Los archivos de configuración se ejecutan en Node: pueden leer process.env.
+    files: ['*.config.{js,mjs,ts}'],
+    languageOptions: { globals: { process: 'readonly' } },
+  },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   ...astro.configs.recommended,

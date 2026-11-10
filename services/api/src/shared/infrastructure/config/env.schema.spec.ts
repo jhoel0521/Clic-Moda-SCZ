@@ -7,9 +7,9 @@ describe('envSchema: valores por defecto y obligatorios', () => {
   it('aplica valores por defecto cuando solo hay contraseña de base de datos', () => {
     expect(envSchema.parse(base)).toEqual({
       NODE_ENV: 'development',
-      PORT: 3000,
+      PORT: 10010,
       DB_HOST: 'localhost',
-      DB_PORT: 5432,
+      DB_PORT: 10001,
       DB_USER: 'clic_moda',
       DB_PASSWORD: 'secreto',
       DB_NAME: 'clic_moda',

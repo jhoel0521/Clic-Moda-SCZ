@@ -4,9 +4,9 @@ const port = z.coerce.number().int().min(1).max(65535);
 
 export const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
-  PORT: port.default(3000),
+  PORT: port.default(10010),
   DB_HOST: z.string().min(1).default('localhost'),
-  DB_PORT: port.default(5432),
+  DB_PORT: port.default(10001),
   DB_USER: z.string().min(1).default('clic_moda'),
   DB_PASSWORD: z.string().min(1),
   DB_NAME: z.string().min(1).default('clic_moda'),

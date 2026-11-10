@@ -45,11 +45,45 @@ Hoja de ruta hacia producción: [`openspec/ROADMAP.md`](openspec/ROADMAP.md).
 
 Requiere Node 26 (LTS) y pnpm 12 (versiones fijadas en `.nvmrc` y `packageManager`).
 
+Necesita Docker para la base de datos. Copia `services/api/.env.example` a `services/api/.env` y completa
+`DB_PASSWORD` y `AUTH_JWT_KEY` (el archivo explica cómo generarla).
+
 ```bash
-pnpm install:all     # instala cada proyecto por separado
-pnpm dev:shop        # levanta la tienda en http://localhost:3000
-pnpm build:all       # compila todo
+pnpm install:all       # instala cada proyecto por separado
+pnpm docker:up         # levanta la infraestructura (Postgres) y espera a que esté sana
+pnpm db:migrate        # aplica las migraciones
+pnpm db:seed           # crea el primer Gerente (si no hay contraseña configurada, genera una y la muestra una vez)
+pnpm dev               # levanta api, admin y shop en paralelo
 ```
+
+**Infraestructura y base de datos**
+
+| Comando | Qué hace |
+|---|---|
+| `pnpm docker:up` / `docker:down` | Levanta / detiene la infraestructura (conserva los datos) |
+| `pnpm docker:logs` / `docker:status` | Sigue los registros / muestra el estado |
+| `pnpm docker:reset --yes` | Detiene y **borra los datos** de desarrollo (exige `--yes`) |
+| `pnpm db:migrate` / `db:revert` / `db:status` | Aplica / revierte la última / lista las migraciones |
+| `pnpm db:seed` | Crea el primer Gerente |
+| `pnpm db:fresh` / `db:fresh:seed` | Borra todo y migra (y siembra). Se niega fuera de desarrollo local |
+| `pnpm dev:api` / `dev:admin` / `dev:shop` | Levanta un solo servidor |
+| `pnpm ports` / `preflight` | Muestra el mapa de puertos / comprueba que Postgres responde y que los puertos están libres |
+
+**Puertos** (fuente única: [`ports.json`](ports.json), pensados para no chocar con otros proyectos en paralelo):
+
+| Rango | Servicio | Puerto |
+|---|---|---|
+| Infraestructura `10001–10009` | PostgreSQL | `10001` |
+| Apps y servicios `10010–10020` | API (NestJS) | `10010` |
+| | Admin (Astro) | `10011` |
+| | Shop (Astro) | `10012` |
+
+Para añadir un servicio, agrégalo a `ports.json` en el rango que le toca: el orquestador valida que ningún
+puerto salga de su rango ni se repita.
+
+**Comprobaciones:** `pnpm check` (contrato, secretos, lint, pruebas unitarias y build de todo) y
+`pnpm check:full` (además las pruebas e2e, que necesitan `pnpm docker:up`). El hook de commit corre `check`
+sin las e2e. Comando de servidor para casos extremos: `pnpm --dir services/api roles:assign`.
 
 ## Arquitectura de la tienda (`apps/shop`)
 
