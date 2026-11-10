@@ -7,9 +7,12 @@ context: |
 
   # Proyecto
   Clic Moda SCZ: tienda de moda de Santa Cruz (Bolivia), canal principal TikTok/Instagram.
-  Diferenciador: venta en vivo (Live) con reserva en tiempo real de prendas con numero de
-  serie; quien reserva primero la gana por un tiempo (TTL) y confirma por WhatsApp.
-  La tienda normal usa el mismo motor de reservas. Sin pasarela de pago por ahora
+  Nacio como proyecto universitario; hoy se convierte en producto para un posible primer
+  cliente al que le gusto la demo actual (esa demo es la linea base: no se debe retroceder).
+  Propuesta del equipo, POR VALIDAR con el cliente: venta en vivo (Live) con reserva en
+  tiempo real de prendas con numero de serie; quien reserva primero la gana por un tiempo
+  (TTL) y confirma por WhatsApp. La tienda normal usaria el mismo motor de reservas.
+  El nombre de la tienda aun no esta definido: "Verashoe" es provisional. Sin pasarela de pago por ahora
   (QR/transferencia con confirmacion manual). Presupuesto acotado, mercado movil-first.
   Hoja de ruta: openspec/ROADMAP.md. Modelo de datos actual: docs/database.dbml.
 

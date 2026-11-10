@@ -1,3 +1,5 @@
+> **Documento histórico.** Corresponde al proyecto universitario (rúbrica, SDLC académico, sprints 0–3). **No es el roadmap vigente**: la hoja de ruta del producto para el primer cliente está en [`openspec/ROADMAP.md`](../../openspec/ROADMAP.md).
+
 # Roadmap de Desarrollo Frontend: Clic Moda SCZ
 
 ## 🎯 Visión del Producto

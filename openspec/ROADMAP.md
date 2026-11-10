@@ -1,134 +1,139 @@
-# Roadmap — Clic Moda SCZ (del MVP universitario a producción)
+# Roadmap — Clic Moda SCZ (del prototipo al primer cliente)
 
-> Documento vivo. Cada fase se desglosa en **changes de OpenSpec** (`/opsx:propose <nombre>`); el roadmap dice *qué y en qué orden*, OpenSpec dice *cómo*.
+> Documento vivo. Cada rebanada se convierte en un **change de OpenSpec** (`/opsx:propose <nombre>`): el roadmap dice *qué y en qué orden*, OpenSpec dice *cómo*. Última revisión: 2026-11-10.
 
 ## Visión
 
-Tienda de moda cruceña cuyo canal principal es TikTok/Instagram. Diferenciador: **venta en vivo con reserva en tiempo real** — en un Live se fija una prenda con número de serie, quien la reserva primero la gana por un tiempo definido y confirma por WhatsApp. La tienda normal usa **el mismo motor de reservas**.
+Construir **desde cero** el producto real para un posible primer cliente al que le gustó la demo. El proyecto nació como trabajo universitario; su roadmap histórico está en `docs/historico/road-to-mvp-universitario.md` y **ya no rige**.
 
-**Restricciones del cliente:** sin pasarela de pago por ahora (aún no factura); presupuesto acotado; mercado móvil-first.
+La demo es el **prototipo: inspiración, no base de código ni especificación**. Muestra qué le gustó al cliente, pero hay comportamiento que nunca se especificó y mucho por validar y mejorar. Nada se porta tal cual: cada funcionalidad se re-especifica, se mejora y se construye con **backend real y administrable desde el admin**.
+
+Tienda de moda cruceña, canal principal TikTok/Instagram, móvil-first. **Restricciones del cliente:** sin pasarela de pago por ahora (aún no factura); presupuesto acotado (~3000 en activos fijos). Nombre, logo y colores sin definir: "Verashoe" es provisional.
+
+## Prototipos (referencia, solo lectura)
+
+| Qué | Dónde | Para qué |
+|---|---|---|
+| Shop Next.js completa (demo aprobada) | tag git `demo-aprobada` (se crea en el paso 0.1) | Consultar pantallas y flujos; `git show demo-aprobada:apps/shop/...` |
+| Demo móvil estática para iPhone con pedidos por WhatsApp | rama `origin/demo/movil-first` | Inspiración móvil-first |
+| Demo publicada | rama `origin/gh-pages` | Lo que vio el cliente |
+
+## Cómo se trabaja: rebanadas verticales
+
+Cada funcionalidad se entrega de punta a punta y en este orden, con pruebas en cada paso:
+
+```
+0) Auditoría del prototipo  →  qué hace, qué se conserva, qué se mejora, qué se descarta  (/opsx:explore)
+1) Change de OpenSpec       →  specs nuevas y validadas con el cliente
+2) API (NestJS)             →  rutas + pruebas unitarias y e2e con Postgres real
+3) Admin (Astro)            →  cómo se ve, cómo se configura y administra, usando la API + pruebas
+4) Shop (Astro)            →  cómo se refleja al cliente final + pruebas
+5) Validación con el cliente
+```
+
+**Reglas transversales:** Node 26 (LTS) y pnpm 12; funciones de máximo 25 líneas (`error` en proyectos nuevos); hook de commit con secretos, lint y build en todos los subproyectos; UI conforme a `.ux/` (`ux-plan-review` antes de aprobar, `ux-check` al terminar); nunca `--no-verify`.
 
 ## Arquitectura objetivo
 
 ```
-services/api   NestJS + PostgreSQL + WebSocket (Socket.io)   ← única fuente de verdad
-apps/shop      Next.js, móvil-first / PWA                    ← clientes y espectadores del Live
-apps/admin     Panel de gestión + consola del Live           ← Gerente, Despacho, Atención
+services/api   NestJS 12.4.2 + TypeORM 1.1.2 + PostgreSQL (Docker)  ← única fuente de verdad
+apps/admin     Astro 7.4.8 (SSR, adaptador Node) + islas React       ← Gerente, Despacho, Atención
+apps/shop      Astro 7.4.8 (SSR, adaptador Node), móvil-first         ← clientes y, luego, espectadores del Live
 ```
 
-- Cada proyecto es **independiente** (su `package.json`, `pnpm-lock.yaml` y `node_modules`); la raíz solo los orquesta (`pnpm dev:shop`, `pnpm build:all`, …).
-- Contratos compartidos: el API publica OpenAPI; los clientes generan tipos desde ahí (sin paquete compartido por ahora).
-- Un solo servicio para REST y tiempo real: el servidor mantiene el estado vivo de las salas y es el **único árbitro** de las reservas.
-
-## Principios de diseño del motor de reservas
-
-1. **Reservar primero, vender después.** Toda compra pasa por una reserva con vencimiento (TTL configurable por canal/producto).
-2. **El servidor manda.** Orden por reloj del servidor; cola serial por unidad; `UPDATE ... WHERE estado='disponible'` como garantía final en BD (nunca doble venta).
-3. **Inventario por unidad** para prendas de serie única; stock por talla para producto masivo (modo híbrido, a decidir en F2).
-4. **Los timers sobreviven reinicios:** el vencimiento vive en BD y se reprograma al arrancar.
-5. **Antiabuso desde el inicio:** OTP por teléfono, tope de reservas activas, contador de no-shows.
+- Cada proyecto es **independiente** (su `package.json`, lockfile y `node_modules`); la raíz solo orquesta.
+- **Astro no publica canal LTS en npm** (solo `latest`, `beta`, `rc` y `legacy`): se fija la última estable (7.4.8, exige Node ≥ 22.23.4) y se actualiza de forma deliberada.
+- Contratos: la API publica OpenAPI y es la única implementación de la lógica de negocio; admin y shop no la duplican.
+- Tiempo real (Socket.io) solo entra con la rebanada de Live, si el cliente la valida.
 
 ---
 
-## Fase 0 — Fundaciones del repo ✅ (en curso)
+## Paso 0 — Fundación (`platform-foundation`)
 
-- [x] Monorepo con orquestador pnpm en la raíz; `apps/shop` migrada a pnpm y compilando
-- [x] Placeholders `apps/admin` y `services/api`
-- [x] OpenSpec inicializado (artefactos en español)
-- [x] Skills de ux-kit instalados (`ux-guide`, `ux-init`, `ux-discover`, `ux-plan-review`, `ux-check`)
-- [x] Husky + lint-staged (pre-commit) con protector de secretos (secretlint) y formato/lint de la shop
-- [x] Regla `max-lines-per-function` (25 líneas) en la shop como `warn`: ~75 funciones heredadas la violan (54 archivos, 28 con más de 80 líneas)
-- [ ] En `services/api` y `apps/admin` la misma regla va como `error` desde el primer commit; ampliar `.lintstagedrc.mjs` a esas apps al crearlas
-- [ ] Reducir los `warn` de la shop refactorizando al tocar cada archivo (objetivo: pasar la regla a `error`)
-- [ ] Ejecutar `ux-init` y `ux-discover` (usuarios reales, marca, tokens) — mejor tras crear admin/api para que detecte las 3 apps
-- [ ] CI básico (lint + build por app)
-- [ ] Decidir si `.claude/` y `.agents/` se versionan (hoy están en `.gitignore`: el equipo no recibiría los skills)
+Deja los tres proyectos vacíos pero vivos, con las herramientas ya exigidas. **Primer change a implementar.**
 
-**Changes OpenSpec:** `repo-monorepo-conventions`, `ci-pipeline`
+- [ ] 0.1 Preservar el prototipo: tag `demo-aprobada` sobre el commit actual y comprobar que `origin/demo/movil-first` y `origin/gh-pages` siguen intactas.
+- [ ] 0.2 **Borrar el contenido de `apps/shop`** (la app Next.js, `git rm`), conservando solo la carpeta; el prototipo queda consultable por el tag.
+- [ ] 0.3 **Chore inicial de `apps/shop` con Astro 7.4.8** (`create-astro --no-ai`, adaptador Node, TypeScript estricto, Tailwind v4, pnpm, regla de 25 líneas como `error`).
+- [ ] 0.4 Chore inicial de `apps/admin` con Astro 7.4.8 (mismas bases + islas React).
+- [ ] 0.5 Chore inicial de `services/api` con NestJS 12.4.2 (`nest new -p pnpm --skip-git`), endpoint de salud, OpenAPI, regla de 25 líneas como `error`.
+- [ ] 0.6 PostgreSQL en `docker compose` (desarrollo y pruebas), TypeORM con migraciones (sin `synchronize`), variables de entorno documentadas.
+- [ ] 0.7 Auth de personal: login con JWT y guard de roles (Gerente, Despacho, Atención), contraseñas con `crypto.scrypt`, usuario Gerente de semilla.
+- [ ] 0.8 Orquestador y hooks: scripts `dev:*`, `build:*`, `lint:*`, `test:*` de los 3 proyectos, `lint-staged` extendido, `.ux/` re-sincronizado (`ux-init`), Dockerfiles y README.
+- [ ] 0.9 Auditoría del prototipo: inventario de lo que hace la demo (con captura de pantallas y flujos) y decisión conservar / mejorar / descartar por funcionalidad; es la base de los specs de las rebanadas siguientes.
 
-## Fase 1 — API base y datos reales
+**Hecho cuando:** `pnpm dev:api`, `dev:admin` y `dev:shop` levantan; `pnpm build:all`, `lint:all` y `test:all` pasan; un Gerente puede iniciar sesión contra la API.
 
-Objetivo: la shop deja de leer `data/db.json` y consume una API real.
+## Rebanada 1 — Marca y configuración de la tienda (`store-branding-config`)
 
-- [ ] Scaffold NestJS (`services/api`), PostgreSQL + ORM (Prisma o TypeORM), migraciones, seeds desde `db.json`
-- [ ] Auth real: registro/login, JWT o sesión, roles (Gerente, Despacho, Atención, Cliente), reemplazo de `proxy.ts`/mock
-- [ ] Módulos CRUD: productos (+imágenes, etiquetas, categorías), pedidos, cupones, banners, reseñas, favoritos
-- [ ] OpenAPI publicado + cliente tipado generado para shop y admin
-- [ ] Almacenamiento de imágenes (S3-compatible / CDN) en lugar de URLs sueltas
-- [ ] Shop consumiendo la API (se retiran los route handlers y servicios en `src/backend`)
+Nombre, logo, paleta, contacto y datos de cobro, editables por el Gerente. Specs ya escritas (`openspec/changes/store-branding-config/`).
 
-**Changes OpenSpec:** `api-scaffold`, `auth-roles`, `catalog-api`, `orders-api`, `marketing-api`, `shop-migrate-to-api`
+- **API:** `GET` público y cacheado, `PUT` solo Gerente con validación y rechazo por contraste AA, proyección de pago autenticada, endpoint de validación para la vista previa; pruebas unitarias y e2e.
+- **Admin:** pantalla de configuración con vista previa y validación de contraste en vivo; pruebas.
+- **Shop:** esqueleto que consume la configuración y refleja nombre, logo, colores y contacto (≤ 60 s tras guardar); pruebas.
 
-## Fase 2 — Motor de reservas (núcleo del negocio) ⭐
+## Rebanada 2 — Catálogo
 
-- [ ] Modelo `unidad` (producto, talla, **serie**, estado) y `reserva` (+ ítems, canal, expira_en, extendida)
-- [ ] Reserva atómica multi-unidad en transacción (todas o ninguna)
-- [ ] TTL configurable (Live ≈ 10–15 min, tienda ≈ 30–60 min) desde el admin; extensión única por staff
-- [ ] Vencimiento con timers persistidos + reprogramación al reiniciar; liberación automática
-- [ ] Confirmación manual (staff) → `vendida`; flujo WhatsApp con ticket y serie
-- [ ] Fila de espera: al vencer, se ofrece al siguiente
-- [ ] Checkout de la tienda reserva en vez de descontar stock directo
-- [ ] Antiabuso: OTP por teléfono, tope de reservas activas, no-shows
-- [ ] Pruebas de concurrencia (N clientes simultáneos sobre la misma unidad)
-- [ ] **Decisión pendiente:** ¿todas las prendas pasan a unidades o solo las de serie única?
+Productos, categorías, etiquetas, tallas, stock por talla, medidas, imágenes. *Auditar:* qué filtros usa de verdad el cliente en móvil, cómo se cargan fotos desde el celular, qué pasa con el stock agotado.
 
-**Changes OpenSpec:** `inventory-units`, `reservation-engine`, `reservation-ttl-expiry`, `waitlist`, `anti-abuse-otp`, `shop-checkout-reservation`
+- **API:** CRUD y búsqueda/filtros, almacenamiento de imágenes. **Admin:** gestión de productos y stock. **Shop:** catálogo y detalle móvil-first.
 
-## Fase 3 — Venta en vivo (Live/Drop) en tiempo real
+## Rebanada 3 — Clientes y sesión
 
-- [ ] Gateway WebSocket: salas por Live, autenticación de conexión
-- [ ] Eventos: `prenda:fijada`, `unidad:reservada`, `unidad:liberada`, `unidad:vendida`, `espectadores:n`
-- [ ] Shop móvil: pantalla `/live/[id]` — prenda fijada, botón "¡Lo quiero!" de un toque, cuenta regresiva de la reserva, estado en vivo
-- [ ] Compra sin fricción: nombre + teléfono (OTP), sin registro obligatorio
-- [ ] Links por prenda/serie pensados para el navegador interno de TikTok/Instagram
-- [ ] Rate limiting por conexión; reconexión y resincronización de estado
-- [ ] Prueba de carga (cientos de espectadores) y de latencia
+Registro y login de clientes, perfil, favoritos. *Auditar:* si hace falta registro obligatorio o basta nombre + teléfono.
 
-**Changes OpenSpec:** `realtime-gateway`, `live-rooms`, `shop-live-page`, `live-guest-checkout`, `live-load-testing`
+- **API:** auth de clientes (y verificación por teléfono si se valida). **Admin:** consulta de clientes. **Shop:** login, perfil.
 
-## Fase 4 — Admin
+## Rebanada 4 — Carrito y checkout
 
-- [ ] Scaffold `apps/admin`; extraer del `src/app/(admin)` actual de la shop
-- [ ] Consola del Live: fijar prenda, ver reservas activas y cuenta regresiva, confirmar/liberar/extender
-- [ ] Inventario por serie: alta masiva, etiquetas/QR, historial por unidad
-- [ ] Pedidos (kanban actual), pagos manuales (QR/transferencia: marcar como verificado)
-- [ ] Configuración: TTLs, topes antiabuso, número de WhatsApp, mensajes
-- [ ] Reportes: ventas por Live, reservas vencidas, no-shows, rotación
+Carrito, cupones aplicados, validación atómica de stock, pago por QR/transferencia con confirmación manual, ticket y mensaje de WhatsApp. Aquí se completa el control de acceso a los datos de pago por dueño del pedido.
 
-**Changes OpenSpec:** `admin-scaffold`, `admin-live-console`, `admin-serial-inventory`, `admin-orders-payments`, `admin-settings`, `admin-reports`
+## Rebanada 5 — Pedidos
 
-## Fase 5 — Salida a producción
+Estados, kanban de despacho, confirmación de pago manual, historial y detalle para el cliente.
 
-- [ ] Infraestructura: VPS (API + Postgres + Nginx), shop y admin desplegados, dominio y HTTPS
-- [ ] Backups automáticos de Postgres y prueba de restauración
-- [ ] Logs, métricas y alertas (reservas, errores, latencia del gateway)
-- [ ] Seguridad: secretos, CORS, validación de entrada, revisión OWASP básica, rate limits
-- [ ] Legal/operativo: términos de reservas y no-show, política de datos, capacitación del staff
-- [ ] Piloto con el cliente (un Live real acotado) y ajustes
+## Rebanada 6 — Promociones
 
-**Changes OpenSpec:** `deploy-infra`, `backups-observability`, `security-hardening`, `pilot-launch`
+Cupones, banners por dispositivo, ventas flash con cuenta regresiva.
 
-## Fase 6 — Después del piloto (backlog abierto)
+## Rebanada 7 — Reseñas
 
-- Pasarela/QR interoperable con conciliación automática (cuando el negocio facture)
-- Facturación electrónica
-- Notificaciones push / WhatsApp Business API
-- Multi-Live simultáneos, métricas por vendedor
-- Investigación de referencias de live-commerce en China (Douyin/Taobao Live) para mecánicas de venta rápida — *no realizada aún*
+Reseñas con foto y compra verificada, y moderación desde el admin.
+
+## Rebanada 8 — Reservas y Live (solo si el cliente lo valida)
+
+Inventario por unidad con serie, reserva con vencimiento (la misma para tienda y Live), sala en tiempo real, fila de espera, antiabuso (OTP, tope por cliente, no-shows). El servidor es el único árbitro de las reservas; los vencimientos viven en base de datos.
+
+## Continuo — Producción
+
+- Infraestructura: VPS (API + Postgres + Nginx), shop y admin desplegados, dominio y HTTPS.
+- Backups de Postgres con prueba de restauración; logs, métricas y alertas.
+- **Seguridad:** control de acceso en todas las rutas de la API (el prototipo no lo tenía), validación de entrada, rate limits, secretos, revisión OWASP básica.
+- Legal/operativo: términos, política de datos, capacitación del personal.
+- Piloto acotado con el cliente y ajustes.
+
+## Más adelante
+
+Pasarela/QR interoperable con conciliación (cuando facture), facturación electrónica, notificaciones push o WhatsApp Business API, métricas por vendedor, e investigación de live-commerce (Douyin/Taobao Live) — *no realizada aún*.
 
 ---
 
-## Orden recomendado y camino crítico
+## Qué hacía el prototipo (para auditar, no para copiar)
 
-`F0 → F1 → F2 → F3 → F4 → F5`. F4 puede avanzar en paralelo a F3 una vez cerrada F1. **Para mostrar valor al cliente cuanto antes:** prototipo mínimo de F2+F3 (una prenda, una sala, reserva en vivo) apenas exista la API base.
+Catálogo con filtros y stock por talla; carrito persistente con cupones; checkout con ticket por WhatsApp; login, perfil e historial; admin con dashboard, productos, pedidos (kanban), cupones, banners, ventas flash y moderación de reseñas. **Sin control de acceso en la API, con datos bancarios en el bundle público y sin pruebas automáticas.**
+
+## Orden y camino crítico
+
+`Paso 0 → Rebanada 1 → 2 → 3 → 4 → 5 → 6 → 7 → (8)`. Las rebanadas 4 y 5 son el mínimo para vender; 6 y 7 pueden ir en paralelo a ellas. Para mostrar valor pronto al cliente: Paso 0 + Rebanada 1 + Rebanada 2 ya dan una tienda configurable con catálogo real.
 
 ## Decisiones abiertas
 
-| # | Decisión | Impacto |
+| # | Decisión | Afecta |
 |---|---|---|
-| 1 | ORM: Prisma vs TypeORM | F1 |
-| 2 | ¿Todo el catálogo por unidades o modo híbrido? | F2 |
-| 3 | TTL por defecto en Live y en tienda | F2/F3 |
-| 4 | Admin: reutilizar Next o framework distinto | F4 |
-| 5 | Hosting concreto (proveedor, región) y presupuesto mensual | F5 |
-| 6 | ¿Se versionan los skills de `.claude/`/`.agents/`? | F0 |
+| 1 | ORM: TypeORM 1.1.2 (propuesto) vs Prisma 7.10.1 fijada (su tag `latest` instala un RC) | Paso 0 |
+| 2 | Nombre, logo y paleta definitivos; rosa por defecto `#d43a65` (4.57:1) en lugar de `#e63f6e` (3.96:1) | Rebanada 1 |
+| 3 | ¿Quién edita la configuración además del Gerente? | Rebanada 1 |
+| 4 | ¿El cliente quiere Live y reservas con serie? Validarlo antes de invertir | Rebanada 8 |
+| 5 | Orden de las rebanadas 2–7 según prioridad del cliente | Todas |
+| 6 | Hosting concreto (proveedor, región) y presupuesto mensual | Producción |
+| 7 | Almacenamiento de imágenes (S3-compatible / CDN) | Rebanada 2 |
