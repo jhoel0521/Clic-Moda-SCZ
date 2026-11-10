@@ -1,9 +1,9 @@
 # Se valida en TODOS los subproyectos (apps/shop, apps/admin, services/api).
 # 0) Cada subproyecto cumple el contrato (scripts lint/test/build, eslint, prettier...)
 pnpm verify:projects
-# 1) Secretos + formato + lint de los archivos en staging
+# 1) Secretos en los archivos en staging
 pnpm exec lint-staged
-# 2) Lint completo de cada subproyecto
+# 2) Lint completo de cada subproyecto (incluye formato y tipos donde aplique)
 pnpm lint:all
 # 3) Pruebas unitarias de cada subproyecto (sin servicios externos)
 pnpm test:all

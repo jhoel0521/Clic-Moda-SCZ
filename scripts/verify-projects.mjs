@@ -3,39 +3,35 @@
 // Uso:  node scripts/verify-projects.mjs            errores = exit 1; "sin scaffolding" = aviso
 //       node scripts/verify-projects.mjs --strict   también falla si algún proyecto es un placeholder
 //
-// Contrato de cada proyecto: scripts lint, test y build; eslint y prettier instalados como
-// devDependencies; eslint.config.* con max-lines-per-function como error; .prettierrc;
-// packageManager pnpm y engines de Node. El escáner de secretos es solo de la raíz.
+// El orquestador NO conoce las herramientas internas de cada proyecto (ESLint, oxlint, Prettier...):
+// solo llama a scripts con un nombre fijo. Contrato de cada proyecto:
+//   - scripts: lint, test, build y format
+//   - la regla max-lines-per-function (máx. 25) como error, en el motor que use (ESLint u oxlint)
+//   - packageManager pnpm y engines.node
+// El escáner de secretos es único y vive en la raíz.
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
 const ROOT = resolve(import.meta.dirname, '..');
 const PROJECTS = ['apps/shop', 'apps/admin', 'services/api'];
-const REQUIRED_SCRIPTS = ['lint', 'test', 'build'];
-const REQUIRED_DEV = ['eslint', 'prettier'];
+const REQUIRED_SCRIPTS = ['lint', 'test', 'build', 'format'];
 const STRICT = process.argv.includes('--strict');
+const RULE_AS_ERROR = /max-lines-per-function['"]?\s*:\s*(\[\s*)?['"]error/;
+const LINT_CONFIGS = [/^eslint\.config\./, /^\.oxlintrc\.json$/];
 
 const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'));
-const isPlaceholder = (pkg) => Object.values(pkg.scripts ?? {}).some((s) => /pendiente de scaffolding/.test(s));
-const files = (dir) => (existsSync(dir) ? readdirSync(dir) : []);
+const isPlaceholder = (pkg) =>
+  Object.values(pkg.scripts ?? {}).some((s) => /pendiente de scaffolding/.test(s));
 
 function scriptProblems(pkg) {
   return REQUIRED_SCRIPTS.filter((s) => !pkg.scripts?.[s]).map((s) => `falta el script "${s}"`);
 }
 
-function toolProblems(pkg) {
-  const dev = { ...pkg.devDependencies, ...pkg.dependencies };
-  return REQUIRED_DEV.filter((d) => !dev[d]).map((d) => `falta ${d} en devDependencies`);
-}
-
-function configProblems(dir) {
-  const out = [];
-  const eslintCfg = files(dir).find((f) => f.startsWith('eslint.config.'));
-  if (!eslintCfg) out.push('falta eslint.config.*');
-  else if (!/max-lines-per-function['"]?\s*:\s*\[\s*['"]error/.test(readFileSync(join(dir, eslintCfg), 'utf8')))
-    out.push('eslint.config.* no define max-lines-per-function como "error"');
-  if (!files(dir).some((f) => f.startsWith('.prettierrc'))) out.push('falta .prettierrc');
-  return out;
+function lintRuleProblems(dir) {
+  const configs = readdirSync(dir).filter((f) => LINT_CONFIGS.some((re) => re.test(f)));
+  if (!configs.length) return ['falta la configuración del linter (eslint.config.* o .oxlintrc.json)'];
+  const ok = configs.some((f) => RULE_AS_ERROR.test(readFileSync(join(dir, f), 'utf8')));
+  return ok ? [] : ['el linter no define max-lines-per-function como "error"'];
 }
 
 function metaProblems(pkg) {
@@ -50,8 +46,10 @@ function check(project) {
   const file = join(dir, 'package.json');
   if (!existsSync(file)) return { project, status: 'error', problems: ['no existe package.json'] };
   const pkg = readJson(file);
-  if (isPlaceholder(pkg)) return { project, status: 'placeholder', problems: ['sin scaffolding (script de relleno)'] };
-  const problems = [...scriptProblems(pkg), ...toolProblems(pkg), ...configProblems(dir), ...metaProblems(pkg)];
+  if (isPlaceholder(pkg)) {
+    return { project, status: 'placeholder', problems: ['sin scaffolding (script de relleno)'] };
+  }
+  const problems = [...scriptProblems(pkg), ...lintRuleProblems(dir), ...metaProblems(pkg)];
   return { project, status: problems.length ? 'error' : 'ok', problems };
 }
 
