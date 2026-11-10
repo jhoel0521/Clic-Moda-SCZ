@@ -13,6 +13,9 @@ import { SetVariantActiveUseCase } from './application/use-cases/set-variant-act
 import { UpdateCategoryUseCase } from './application/use-cases/update-category.use-case.js';
 import { UpdateProductUseCase } from './application/use-cases/update-product.use-case.js';
 import { UpdateVariantUseCase } from './application/use-cases/update-variant.use-case.js';
+import { CategoriesController } from './infrastructure/http/categories.controller.js';
+import { ProductsController } from './infrastructure/http/products.controller.js';
+import { VariantsController } from './infrastructure/http/variants.controller.js';
 import { CATEGORIES_REPOSITORY } from './domain/categories.repository.port.js';
 import { PRODUCTS_REPOSITORY } from './domain/products.repository.port.js';
 import { CategoryOrmEntity } from './infrastructure/persistence/category.orm-entity.js';
@@ -40,6 +43,7 @@ const USE_CASES = [
 // Raíz de composición del contexto: enlaza cada puerto con su implementación.
 @Module({
   imports: [TypeOrmModule.forFeature([CategoryOrmEntity, ProductOrmEntity, VariantOrmEntity])],
+  controllers: [CategoriesController, ProductsController, VariantsController],
   providers: [
     { provide: CATEGORIES_REPOSITORY, useClass: TypeOrmCategoriesRepository },
     { provide: PRODUCTS_REPOSITORY, useClass: TypeOrmProductsRepository },

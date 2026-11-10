@@ -202,7 +202,7 @@ describe('UpdateVariantUseCase', () => {
   it('cambia el SKU si no tiene movimientos y lo rechaza si ya los tiene', async () => {
     const world = await setup();
     const product = await world.register.execute(botaCommand(world, [v('38'), v('39')]));
-    const [first, second] = product.variants as [{ id: string }, { id: string }];
+    const [first, second] = product.variants as unknown as [{ id: string }, { id: string }];
 
     const renamed = await world.updateVariant.execute(
       new UpdateVariantCommand(first.id, { sku: 'nuevo-1' })
