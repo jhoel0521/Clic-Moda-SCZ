@@ -93,9 +93,10 @@ function db(action) {
     migrate: () => api('migration:run'),
     revert: () => api('migration:revert'),
     status: () => api('migration:show'),
-    seed: () => seedManager(),
+    seed: () => seedManager() || api('seed:catalog'),
+    'seed-catalog': () => api('seed:catalog'),
     fresh: () => (assertSafeToDrop(), api('db:drop') || api('migration:run')),
-    'fresh-seed': () => (assertSafeToDrop(), api('db:drop') || api('migration:run') || seedManager()),
+    'fresh-seed': () => (assertSafeToDrop(), api('db:drop') || api('migration:run') || seedManager() || api('seed:catalog')),
   };
   if (!steps[action]) fail(`db: acción desconocida "${action}" (${Object.keys(steps).join(', ')})`);
   return steps[action]();

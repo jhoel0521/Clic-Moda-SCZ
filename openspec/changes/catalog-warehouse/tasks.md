@@ -46,7 +46,7 @@
 - [x] 7.2 `TypeOrmStockCommandsRepository`: encolado con `pg_advisory_xact_lock(NS_ENQUEUE, …)` por variante, `INSERT … ON CONFLICT DO NOTHING` para la idempotencia y reintentos; ejecutar `stockCommandsRepositoryContract` contra la base real y verificar que `seq` respeta el orden de confirmación con encolados simultáneos.
 - [x] 7.3 `TypeOrmStockProcessingAdapter`: una transacción por comando (reclamo con `pg_try_advisory_xact_lock(NS_PROCESS, …)` y `SKIP LOCKED`, solo el más antiguo de la variante sin filtrar por `available_at`, actualización condicional, movimiento y estado final); ejecutar la suite de contrato de `StockCommandProcessingPort` contra la base real y verificar con una caída simulada a mitad de transacción que el comando sigue `PENDING` y el stock no cambia; verificar con un encolado simultáneo que un encolado no espera a un procesamiento en curso de la misma variante.
 - [x] 7.4 Política de reintentos (`attempts` incrementado en su propia transacción confirmada antes de procesar, espera creciente, máximo 5, `PROCESSING_FAILED`) y `TypeOrmStockQueries` (stock, bajo stock, movimientos paginados, estado de la cola); pruebas de integración de reintentos agotados, de un comando que tumba el proceso y se agota entre reinicios, y de cada consulta.
-- [ ] 7.5 `StockCommandProcessor` (sondeo configurable `STOCK_QUEUE_POLL_MS`, despertar tras encolar, `STOCK_QUEUE_WORKER`, apagado ordenado) registrado en el ciclo de vida de Nest, con variables en `env.schema.ts` y `.env.example`; verificar que arranca con la API, procesa comandos y termina el comando en curso al apagar.
+- [x] 7.5 `StockCommandProcessor` (sondeo configurable `STOCK_QUEUE_POLL_MS`, despertar tras encolar, `STOCK_QUEUE_WORKER`, apagado ordenado) registrado en el ciclo de vida de Nest, con variables en `env.schema.ts` y `.env.example`; verificar que arranca con la API, procesa comandos y termina el comando en curso al apagar.
 
 ## 8. Inventario — HTTP y roles (capa infrastructure)
 
@@ -62,7 +62,7 @@
 
 ## 10. Datos de ejemplo y documentación (capas infrastructure y docs)
 
-- [ ] 10.1 CLI `seed:catalog` idempotente con categorías y productos genéricos de calzado ingresados por la cola (`EnqueueStockCommand` + `drain`), script `pnpm db:seed:catalog` en la raíz; verificar ejecutándolo dos veces (la segunda no duplica) y listando el stock resultante.
+- [x] 10.1 CLI `seed:catalog` idempotente con categorías y productos genéricos de calzado ingresados por la cola (`EnqueueStockCommand` + `drain`), script `pnpm db:seed:catalog` en la raíz; verificar ejecutándolo dos veces (la segunda no duplica) y listando el stock resultante.
 - [ ] 10.2 Actualizar `README`, `openspec/ROADMAP.md` (la rebanada 2 pasa antes que la 1, con su alcance real y lo diferido) y `services/api/ARCHITECTURE.md` con el patrón de cola de comandos; verificar que los comandos del README funcionan tal cual.
 
 ## 11. Admin — base (apps/admin)

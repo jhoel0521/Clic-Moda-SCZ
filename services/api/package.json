@@ -30,6 +30,7 @@
     "migration:show": "pnpm build && pnpm db:cli migration:show -d dist/shared/infrastructure/database/data-source.js",
     "migration:generate": "pnpm build && pnpm db:cli migration:generate --esm -d dist/shared/infrastructure/database/data-source.js",
     "seed:manager": "pnpm build && node --env-file-if-exists=.env dist/identity/infrastructure/cli/seed-manager.js",
+    "seed:catalog": "pnpm build && node --env-file-if-exists=.env dist/seed/seed-catalog.js",
     "roles:assign": "pnpm build && node --env-file-if-exists=.env dist/identity/infrastructure/cli/assign-roles.js",
     "password:reset": "pnpm build && node --env-file-if-exists=.env dist/identity/infrastructure/cli/reset-password.js",
     "db:drop": "pnpm build && pnpm db:cli schema:drop -d dist/shared/infrastructure/database/data-source.js"

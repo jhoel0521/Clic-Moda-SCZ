@@ -21,6 +21,7 @@
     "db:revert": "node scripts/orchestrate.mjs db revert",
     "db:status": "node scripts/orchestrate.mjs db status",
     "db:seed": "node scripts/orchestrate.mjs db seed",
+    "db:seed:catalog": "node scripts/orchestrate.mjs db seed-catalog",
     "db:fresh": "node scripts/orchestrate.mjs db fresh",
     "db:fresh:seed": "node scripts/orchestrate.mjs db fresh-seed",
     "password:reset": "node scripts/orchestrate.mjs run api -- pnpm --dir services/api password:reset",
