@@ -27,10 +27,15 @@ async function readBody(response: Response): Promise<unknown> {
   }
 }
 
-export async function api<T>(method: Method, path: string, body?: unknown): Promise<T> {
+export async function api<T>(
+  method: Method,
+  path: string,
+  body?: unknown,
+  extraHeaders?: Record<string, string>
+): Promise<T> {
   const response = await fetch(`/api/${path}`, {
     method,
-    headers: body === undefined ? undefined : { 'Content-Type': 'application/json' },
+    headers: body === undefined ? extraHeaders : { 'Content-Type': 'application/json', ...extraHeaders },
     body: body === undefined ? undefined : JSON.stringify(body),
   });
   const data = await readBody(response);

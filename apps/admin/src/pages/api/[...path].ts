@@ -5,6 +5,12 @@ import { callApi } from '../../lib/api-server';
 const ALLOWED = ['catalog/', 'inventory/', 'auth/me'];
 const allowed = (path: string): boolean => ALLOWED.some((prefix) => path.startsWith(prefix));
 
+// La clave de idempotencia de un movimiento de stock debe llegar tal cual a la API.
+const idempotencyHeader = (request: Request): Record<string, string> => {
+  const key = request.headers.get('idempotency-key');
+  return key ? { 'Idempotency-Key': key } : {};
+};
+
 // Reenvía la petición a la API añadiendo el token de la sesión (que el navegador no ve).
 const forward: APIRoute = async ({ params, request, locals }) => {
   const path = params.path ?? '';
@@ -16,6 +22,7 @@ const forward: APIRoute = async ({ params, request, locals }) => {
     method: request.method,
     token: locals.session?.token,
     body,
+    headers: idempotencyHeader(request),
   });
   if (result.status === 204 || result.body === null) return new Response(null, { status: result.status });
   return Response.json(result.body, { status: result.status });

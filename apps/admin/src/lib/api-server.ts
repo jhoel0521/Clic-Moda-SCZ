@@ -11,11 +11,12 @@ interface CallOptions {
   method?: string;
   token?: string;
   body?: unknown;
+  headers?: Record<string, string>;
 }
 
 // Llama a la API y devuelve estado y cuerpo ya interpretado (JSON si lo hay).
 export async function callApi(path: string, options: CallOptions = {}): Promise<ApiResult> {
-  const headers: Record<string, string> = { Accept: 'application/json' };
+  const headers: Record<string, string> = { Accept: 'application/json', ...options.headers };
   if (options.token) headers.Authorization = `Bearer ${options.token}`;
   if (options.body !== undefined) headers['Content-Type'] = 'application/json';
   const response = await fetch(`${apiBase()}${path}`, {

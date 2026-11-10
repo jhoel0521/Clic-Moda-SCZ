@@ -1,0 +1,11 @@
+---
+import StockManager from '../../components/StockManager';
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { can } from '../../lib/session';
+
+const canWrite = can(Astro.locals.session, 'stock:write');
+---
+
+<AdminLayout title="Almacén" subtitle="Stock por variante, ingresos, salidas y ajustes">
+  <StockManager client:load canWrite={canWrite} />
+</AdminLayout>
