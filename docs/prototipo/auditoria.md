@@ -89,12 +89,23 @@ Cada endpoint del prototipo se reemplaza por uno de `services/api` con roles. Ni
 | Inicio de sesión | Correo/contraseña; social falso | **Mejorar** (H2, H7) | 3 |
 | Roles | Un campo `role` con Gerente, Despacho, AtencionCliente y Cliente (`core/constants/ROLES.ts`), sin aplicarse en la API (H1) | **Mejorar**: la API nueva ya tiene Gerente, Despacho y Atención con control real; Cliente llega en la rebanada 3 | Hecho / 3 |
 
-## 5. Preguntas abiertas para el cliente (resumen)
+## 5. Respuestas del cliente (2026-11-10) y decisiones que se derivan
 
-1. Nombre, logo, paleta y textos definitivos; redes y números reales.
-2. ¿Compra con cuenta obligatoria o con nombre y teléfono? ¿Qué proveedores sociales (Google, TikTok) y a nombre de quién se registran las apps?
-3. Cómo confirman hoy el pago y cómo se calcula el envío (por cobrar, zonas, tarifas).
-4. Estados reales de un pedido y cuántas personas despachan.
-5. Filtros que realmente usan sus clientas y cómo cargan las fotos desde el celular.
-6. Qué promociones usan (cupones, banners, ventas flash) y con qué frecuencia.
-7. Si quieren Live y reservas con serie (rebanada 8) antes de invertir en ello.
+| # | Respuesta | Decisión |
+|---|---|---|
+| 1 | Marca, logo, textos, redes y números **no se piden: se configuran** desde el módulo de configuración. Para el seed: nombre "Clic Moda SC" y el resto genérico; en producción se edita. Pide reglas de **mínimo y máximo** (largos de textos, tamaño y proporción del logo) para que no se vea mal en celular ni en computadora. | Rebanada 1 (`store-branding-config`): seed con datos genéricos y validación con límites min/max en la API y en el admin. No hay que esperar contenido real para construir. |
+| 2 | Prefieren compra **sin cuenta obligatoria**. Quieren medir cuántas ventas se cierran desde cada enlace y poder poner el enlace (TikTok, Instagram), y un buen **SEO**. | Checkout de invitado (nombre y teléfono). Enlaces con parámetros de origen (UTM) guardados en el pedido. SEO técnico en la tienda Astro (metadatos, Open Graph, sitemap, datos estructurados). Cuentas (Google/TikTok) bajan de prioridad. |
+| 3 | Todo se cierra por **WhatsApp**. Antes del pago solo hay dos métodos: **delivery** o **recojo en oficina**. Si piden envío, se cierra por WhatsApp. | No hay pasarela ni QR en el checkout inicial. El pedido se crea y se coordina por WhatsApp. Se descartan por ahora los datos bancarios y QR en el sitio (también resuelve el hallazgo H6). |
+| 4 | Son **3 personas**: una hace el Live, otras responden mensajes y confirman ventas. Al día siguiente todo se anota en un cuaderno y se prepara. Es un **proceso a mejorar**. | Roles ya existentes (Gerente, Despacho, Atención). El admin reemplaza el cuaderno: lista de pedidos confirmados del día para preparar. |
+| 5 | Todo debe ser **asíncrono**, con API hexagonal. Confirmar y validar el pedido es el método de pago: **manual por WhatsApp**. Empresa pequeña (menos de 5 mil Bs al mes), sin NIT ni inversión grande; si crece, se agrega una pasarela sin cambiar mucho. Como el pago es manual, **hay que reservar el stock** para no prometer lo mismo a dos clientes. | La **reserva de stock con vencimiento** pasa a ser requisito del flujo de pedido (rebanadas 4 y 5), no de Live. El pago se modela como puerto/interfaz (manual hoy, pasarela mañana). La confirmación es una acción del personal. |
+| 6 | Por ahora **cupones**: en algunos Live se validan a mano en su libro, porque lanzan cupones por Live o por duración corta. **Sin banners** ni videos publicitarios propios. **Venta flash** = lo que se muestra en el Live. | Cupones con vigencia corta y validación en el pedido (consumir el uso al confirmar, hallazgo H5). Banners: se descartan por ahora. Venta flash: se mantiene como precio temporal ligado al Live. |
+| 7 | Duda: empezar solo con **zapatos** para dar un paso de calidad en control y gestión de operación (inventario, etc.). | Ver la recomendación abajo. |
+
+### Consecuencias para la hoja de ruta
+
+- La **reserva de stock** deja de ser exclusiva de la rebanada 8 y sube a los pedidos: es el mayor riesgo real del negocio (vender el mismo par a dos clientes).
+- **Cuentas de cliente** (rebanada 3) ya no son prerrequisito de comprar; Google y TikTok quedan para después.
+- **Pasarela de pagos, NIT y banners**: fuera de alcance por ahora; el diseño de puertos permite agregarlos.
+- Para el punto 7: empezar con zapatos como **catálogo inicial** es razonable y simplifica (tallas numéricas, sin medidas de tela), siempre que el modelo de producto no quede atado a zapatos. Es una decisión de negocio tuya; el cambio técnico es pequeño.
+
+**Estado:** respuestas incorporadas. La tarea 8.2 se cierra cuando confirmes que las columnas de decisión de las secciones 2 a 4 reflejan esto.
