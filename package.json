@@ -1,38 +1,21 @@
 {
-  "name": "clip-moda-scz",
-  "version": "0.1.0",
+  "name": "clic-moda-scz",
   "private": true,
+  "description": "Orquestador del monorepo Clic Moda SCZ. Cada proyecto es independiente (su propio package.json, lockfile y node_modules); aquí solo se coordinan.",
+  "packageManager": "pnpm@12.18.0",
+  "engines": {
+    "node": ">=26",
+    "pnpm": ">=12"
+  },
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint",
-    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css}\"",
-    "pre-commit": "npm run format && npm run lint && npm run build"
-  },
-  "dependencies": {
-    "@hookform/resolvers": "^5.2.2",
-    "lucide-react": "^1.11.0",
-    "next": "16.2.4",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
-    "react-hook-form": "^7.74.0",
-    "zod": "^4.3.6",
-    "zustand": "^5.0.12"
-  },
-  "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "babel-plugin-react-compiler": "1.0.0",
-    "eslint": "^9",
-    "eslint-config-next": "16.2.4",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.5",
-    "prettier": "^3.8.3",
-    "prettier-plugin-tailwindcss": "^0.8.0",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "install:all": "pnpm --dir apps/shop install && pnpm --dir apps/admin install && pnpm --dir services/api install",
+    "dev:shop": "pnpm --dir apps/shop dev",
+    "dev:admin": "pnpm --dir apps/admin dev",
+    "dev:api": "pnpm --dir services/api dev",
+    "build:shop": "pnpm --dir apps/shop build",
+    "build:admin": "pnpm --dir apps/admin build",
+    "build:api": "pnpm --dir services/api build",
+    "build:all": "pnpm build:shop && pnpm build:admin && pnpm build:api",
+    "lint:all": "pnpm --dir apps/shop lint && pnpm --dir apps/admin lint && pnpm --dir services/api lint"
   }
 }
