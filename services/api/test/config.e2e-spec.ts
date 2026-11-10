@@ -8,21 +8,34 @@ const compileConfig = () =>
     imports: [ConfigModule.forRoot({ validationSchema: envSchema, ignoreEnvFile: true })],
   }).compile();
 
-const KEYS = ['PORT', 'DB_PASSWORD'] as const;
+const KEYS = ['PORT', 'DB_PASSWORD', 'AUTH_JWT_KEY'] as const;
 
-describe('Configuración (e2e)', () => {
+// Guarda las variables que toca la prueba y devuelve la función que las restaura.
+function snapshotEnv(): () => void {
   const saved = Object.fromEntries(KEYS.map((key) => [key, process.env[key]]));
-
-  beforeEach(() => {
-    process.env.DB_PASSWORD = 'secreto';
-  });
-
-  afterEach(() => {
+  return () => {
     for (const key of KEYS) {
       if (saved[key] === undefined) delete process.env[key];
       else process.env[key] = saved[key];
     }
+  };
+}
+
+// Cada prueba parte de un entorno válido y lo deja como estaba.
+function useValidEnv(): void {
+  let restoreEnv: () => void;
+
+  beforeEach(() => {
+    restoreEnv = snapshotEnv();
+    process.env.DB_PASSWORD = 'secreto';
+    process.env.AUTH_JWT_KEY = 'k'.repeat(32);
   });
+
+  afterEach(() => restoreEnv());
+}
+
+describe('Configuración (e2e): valores', () => {
+  useValidEnv();
 
   it('lee un PORT válido ya convertido a número', async () => {
     process.env.PORT = '4100';
@@ -36,9 +49,19 @@ describe('Configuración (e2e)', () => {
 
     await expect(compileConfig()).rejects.toThrow();
   });
+});
+
+describe('Configuración (e2e): variables obligatorias', () => {
+  useValidEnv();
 
   it('no arranca si falta DB_PASSWORD', async () => {
     delete process.env.DB_PASSWORD;
+
+    await expect(compileConfig()).rejects.toThrow();
+  });
+
+  it('no arranca si falta AUTH_JWT_KEY', async () => {
+    delete process.env.AUTH_JWT_KEY;
 
     await expect(compileConfig()).rejects.toThrow();
   });

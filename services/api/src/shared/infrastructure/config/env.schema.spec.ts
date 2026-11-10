@@ -1,6 +1,7 @@
 import { envSchema } from './env.schema.js';
 
-const base = { DB_PASSWORD: 'secreto' };
+const KEY = 'k'.repeat(32);
+const base = { DB_PASSWORD: 'secreto', AUTH_JWT_KEY: KEY };
 
 describe('envSchema: valores por defecto y obligatorios', () => {
   it('aplica valores por defecto cuando solo hay contraseña de base de datos', () => {
@@ -12,6 +13,10 @@ describe('envSchema: valores por defecto y obligatorios', () => {
       DB_USER: 'clic_moda',
       DB_PASSWORD: 'secreto',
       DB_NAME: 'clic_moda',
+      AUTH_JWT_KEY: KEY,
+      AUTH_JWT_ISSUER: 'clic-moda-api',
+      AUTH_JWT_AUDIENCE: 'clic-moda',
+      AUTH_SCRYPT_LOG_N: 17,
     });
   });
 
@@ -32,5 +37,21 @@ describe('envSchema: conversión y rechazos', () => {
 
   it.each(['0', '70000', 'abc'])('rechaza el PORT inválido %s', (port) => {
     expect(envSchema.safeParse({ ...base, PORT: port }).success).toBe(false);
+  });
+});
+
+describe('envSchema: autenticación', () => {
+  it('exige AUTH_JWT_KEY', () => {
+    expect(envSchema.safeParse({ DB_PASSWORD: 'secreto' }).success).toBe(false);
+  });
+
+  it('rechaza una AUTH_JWT_KEY demasiado corta', () => {
+    expect(envSchema.safeParse({ DB_PASSWORD: 'secreto', AUTH_JWT_KEY: 'corta' }).success).toBe(
+      false
+    );
+  });
+
+  it.each(['9', '21', 'abc'])('rechaza un AUTH_SCRYPT_LOG_N fuera de rango (%s)', (logN) => {
+    expect(envSchema.safeParse({ ...base, AUTH_SCRYPT_LOG_N: logN }).success).toBe(false);
   });
 });

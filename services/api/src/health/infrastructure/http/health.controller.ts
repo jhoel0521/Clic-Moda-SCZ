@@ -1,3 +1,4 @@
+import { Public } from '@nestjs/authentication';
 import { Controller, Get } from '@nestjs/common';
 import { HealthCheck, HealthCheckService, TypeOrmHealthIndicator } from '@nestjs/terminus';
 
@@ -8,6 +9,7 @@ export class HealthController {
     private readonly database: TypeOrmHealthIndicator
   ) {}
 
+  @Public() // el guard global de autenticación exige sesión en todo lo demás
   @Get()
   @HealthCheck()
   check() {
