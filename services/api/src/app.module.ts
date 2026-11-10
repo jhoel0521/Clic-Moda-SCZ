@@ -1,6 +1,7 @@
 import { Module, StandardSchemaValidationPipe } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
+import { CatalogModule } from './catalog/catalog.module.js';
 import { HealthModule } from './health/infrastructure/http/health.module.js';
 import { IdentityModule } from './identity/identity.module.js';
 import { envSchema } from './shared/infrastructure/config/env.schema.js';
@@ -12,6 +13,7 @@ import { DomainErrorFilter } from './shared/infrastructure/http/domain-error.fil
     ConfigModule.forRoot({ isGlobal: true, validationSchema: envSchema }),
     DatabaseModule,
     IdentityModule,
+    CatalogModule,
     HealthModule,
   ],
   providers: [

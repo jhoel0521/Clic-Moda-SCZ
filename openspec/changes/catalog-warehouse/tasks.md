@@ -22,8 +22,8 @@
 
 ## 4. Catálogo — infraestructura (capa infrastructure)
 
-- [ ] 4.1 Entidades ORM, mappers y `TypeOrmCategoriesRepository`; ejecutar `categoriesRepositoryContract` contra `clic_moda_test` y verificar que pasa igual que en memoria.
-- [ ] 4.2 `TypeOrmProductsRepository` (guardado en cascada atómico, traducción del error 23505 a `ConflictError`, búsqueda con paginación y conteo) y `SqlVariantHasMovements`; ejecutar `productsRepositoryContract` y la suite de `VariantHasMovementsPort` contra la base real, incluida la atomicidad con un SKU repetido en la segunda variante.
+- [x] 4.1 Entidades ORM, mappers y `TypeOrmCategoriesRepository`; ejecutar `categoriesRepositoryContract` contra `clic_moda_test` y verificar que pasa igual que en memoria.
+- [x] 4.2 `TypeOrmProductsRepository` (guardado en cascada atómico, traducción del error 23505 a `ConflictError`, búsqueda con paginación y conteo) y `SqlVariantHasMovements`; ejecutar `productsRepositoryContract` y la suite de `VariantHasMovementsPort` contra la base real, incluida la atomicidad con un SKU repetido en la segunda variante.
 - [ ] 4.3 Controladores y DTOs HTTP (Zod) de categorías y productos con `@Roles` (Gerente escribe, todo el personal lee) y `catalog.module.ts` registrado en `AppModule`; prueba e2e de cada ruta con Gerente 2xx, Despacho/Atención 403 en escritura y 401 sin sesión.
 
 ## 5. Inventario — dominio (capa domain)
