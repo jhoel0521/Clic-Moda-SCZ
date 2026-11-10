@@ -8,6 +8,7 @@
     "pnpm": ">=12"
   },
   "scripts": {
+    "prepare": "husky",
     "install:all": "pnpm --dir apps/shop install && pnpm --dir apps/admin install && pnpm --dir services/api install",
     "dev:shop": "pnpm --dir apps/shop dev",
     "dev:admin": "pnpm --dir apps/admin dev",
@@ -16,6 +17,13 @@
     "build:admin": "pnpm --dir apps/admin build",
     "build:api": "pnpm --dir services/api build",
     "build:all": "pnpm build:shop && pnpm build:admin && pnpm build:api",
-    "lint:all": "pnpm --dir apps/shop lint && pnpm --dir apps/admin lint && pnpm --dir services/api lint"
+    "lint:all": "pnpm --dir apps/shop lint && pnpm --dir apps/admin lint && pnpm --dir services/api lint",
+    "secrets:scan": "secretlint \"**/*\""
+  },
+  "devDependencies": {
+    "@secretlint/secretlint-rule-preset-recommend": "^13.1.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "secretlint": "^13.1.0"
   }
 }

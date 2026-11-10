@@ -1,0 +1,7 @@
+# Se valida en TODOS los subproyectos (apps/shop, apps/admin, services/api).
+# 1) Secretos + formato + lint de los archivos en staging
+pnpm exec lint-staged
+# 2) Lint completo de cada subproyecto
+pnpm lint:all
+# 3) Build de cada subproyecto (incluye chequeo de tipos)
+pnpm build:all
