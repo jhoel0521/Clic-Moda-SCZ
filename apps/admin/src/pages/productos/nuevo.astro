@@ -7,6 +7,6 @@ import { can } from '../../lib/session';
 if (!can(Astro.locals.session, 'catalog:write')) return Astro.redirect('/productos');
 ---
 
-<AdminLayout title="Registrar producto">
+<AdminLayout title="Registrar producto" subtitle="Agrega sus tallas, colores y precios">
   <ProductForm client:load />
 </AdminLayout>

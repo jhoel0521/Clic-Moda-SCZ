@@ -17,8 +17,7 @@ const forward: APIRoute = async ({ params, request, locals }) => {
     token: locals.session?.token,
     body,
   });
-  if (result.status === 204 || result.body === null)
-    return new Response(null, { status: result.status });
+  if (result.status === 204 || result.body === null) return new Response(null, { status: result.status });
   return Response.json(result.body, { status: result.status });
 };
 

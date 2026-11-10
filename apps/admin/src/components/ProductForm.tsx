@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useState } from 'react';
 import { api, ApiError } from '../lib/client-api';
 import {
   createProduct,
@@ -13,7 +13,7 @@ import {
   type VariantDraft,
 } from '../lib/product-form';
 import { errorMessage, type Category, type Product } from '../lib/types';
-import { Button, ErrorBanner, Field, SelectField } from './ui';
+import { Button, Card, ErrorBanner, Field, SelectField } from './ui';
 
 async function loadProduct(productId: string | undefined): Promise<Product | null> {
   return productId ? api<Product>('GET', `catalog/products/${productId}`) : null;
@@ -76,18 +76,11 @@ interface RowProps {
 
 function VariantFields({ variant, errors, onChange }: RowProps) {
   const error = (field: string) => errors[`${variant.key}.${field}`];
-  const text = (key: keyof VariantDraft) => (e: { target: { value: string } }) =>
-    onChange({ [key]: e.target.value });
+  const text = (key: keyof VariantDraft) => (e: { target: { value: string } }) => onChange({ [key]: e.target.value });
   return (
-    <>
+    <div className="grid grid-cols-2 gap-3">
       <Field label="Talla" value={variant.size} error={error('size')} onChange={text('size')} />
       <Field label="Color" value={variant.color} onChange={text('color')} />
-      <Field
-        label="SKU (opcional)"
-        value={variant.sku}
-        error={error('sku')}
-        onChange={text('sku')}
-      />
       <Field
         label="Precio (Bs)"
         inputMode="decimal"
@@ -95,7 +88,14 @@ function VariantFields({ variant, errors, onChange }: RowProps) {
         error={error('price')}
         onChange={text('price')}
       />
-    </>
+      <Field
+        label="SKU (opcional)"
+        autoCapitalize="characters"
+        value={variant.sku}
+        error={error('sku')}
+        onChange={text('sku')}
+      />
+    </div>
   );
 }
 
@@ -110,26 +110,28 @@ interface ExtrasProps {
 function VariantExtras({ variant, canRemove, onChange, onRemove }: ExtrasProps) {
   if (variant.id) {
     return (
-      <label className="flex min-h-11 items-center gap-2 self-end">
+      <label className="flex min-h-12 items-center gap-3 font-medium">
         <input
           type="checkbox"
+          className="size-6 accent-[#c7305a]"
           checked={variant.active}
           onChange={(e) => onChange({ active: e.target.checked })}
         />
-        Activa
+        Variante activa
       </label>
     );
   }
   return (
-    <Button variant="secondary" className="self-end" disabled={!canRemove} onClick={onRemove}>
-      Quitar
+    <Button variant="ghost" icon="trash" disabled={!canRemove} onClick={onRemove}>
+      Quitar variante
     </Button>
   );
 }
 
-function VariantRow(props: RowProps & ExtrasProps) {
+function VariantCard(props: RowProps & ExtrasProps & { index: number }) {
   return (
-    <li className="border-line bg-surface grid gap-3 rounded-lg border p-3 sm:grid-cols-5">
+    <Card className="flex flex-col gap-3 p-4">
+      <p className="text-muted text-sm font-semibold">Variante {props.index + 1}</p>
       <VariantFields variant={props.variant} errors={props.errors} onChange={props.onChange} />
       <VariantExtras
         variant={props.variant}
@@ -137,7 +139,7 @@ function VariantRow(props: RowProps & ExtrasProps) {
         onChange={props.onChange}
         onRemove={props.onRemove}
       />
-    </li>
+    </Card>
   );
 }
 
@@ -153,19 +155,20 @@ function VariantList({ draft, errors, onDraft }: SectionProps) {
       ...draft,
       variants: draft.variants.map((v) => (v.key === key ? { ...v, ...changes } : v)),
     });
-  const remove = (key: string) =>
-    onDraft({ ...draft, variants: draft.variants.filter((v) => v.key !== key) });
+  const remove = (key: string) => onDraft({ ...draft, variants: draft.variants.filter((v) => v.key !== key) });
   return (
     <ul className="flex flex-col gap-3">
-      {draft.variants.map((variant) => (
-        <VariantRow
-          key={variant.key}
-          variant={variant}
-          errors={errors}
-          canRemove={draft.variants.length > 1}
-          onChange={(changes) => change(variant.key, changes)}
-          onRemove={() => remove(variant.key)}
-        />
+      {draft.variants.map((variant, index) => (
+        <li key={variant.key}>
+          <VariantCard
+            index={index}
+            variant={variant}
+            errors={errors}
+            canRemove={draft.variants.length > 1}
+            onChange={(c) => change(variant.key, c)}
+            onRemove={() => remove(variant.key)}
+          />
+        </li>
       ))}
     </ul>
   );
@@ -175,13 +178,13 @@ function VariantsSection({ draft, errors, onDraft }: SectionProps) {
   const add = () => onDraft({ ...draft, variants: [...draft.variants, newVariant()] });
   return (
     <section aria-labelledby="variantes" className="flex flex-col gap-3">
-      <h2 id="variantes" className="text-lg font-semibold">
-        Variantes (talla, color y precio)
+      <h2 id="variantes" className="text-lg font-bold">
+        Tallas, colores y precios
       </h2>
       {errors.variants && <ErrorBanner>{errors.variants}</ErrorBanner>}
       <VariantList draft={draft} errors={errors} onDraft={onDraft} />
-      <Button variant="secondary" className="self-start" onClick={add}>
-        Agregar variante
+      <Button variant="secondary" icon="plus" block onClick={add}>
+        Agregar otra variante
       </Button>
     </section>
   );
@@ -191,23 +194,24 @@ interface FieldsProps extends SectionProps {
   categories: Category[];
 }
 
-interface CategoryFieldProps {
+function CategoryField(props: {
   value: string;
   error?: string;
   categories: Category[];
   onChange: (value: string) => void;
-}
-
-function CategoryField({ value, error, categories, onChange }: CategoryFieldProps) {
-  const options = categories.map((category) => ({ value: category.id, label: category.name }));
+}) {
+  const options = props.categories.map((category) => ({
+    value: category.id,
+    label: category.name,
+  }));
   return (
     <SelectField
       label="Categoría"
-      value={value}
-      error={error}
+      value={props.value}
+      error={props.error}
       options={options}
       placeholder="Elige una"
-      onChange={(e) => onChange(e.target.value)}
+      onChange={(e) => props.onChange(e.target.value)}
     />
   );
 }
@@ -215,9 +219,9 @@ function CategoryField({ value, error, categories, onChange }: CategoryFieldProp
 function ProductFields({ draft, errors, categories, onDraft }: FieldsProps) {
   const set = (changes: Partial<ProductDraft>) => onDraft({ ...draft, ...changes });
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
+    <Card className="flex flex-col gap-4 p-4">
       <Field
-        label="Nombre"
+        label="Nombre del producto"
         value={draft.name}
         error={errors.name}
         maxLength={120}
@@ -229,44 +233,28 @@ function ProductFields({ draft, errors, categories, onDraft }: FieldsProps) {
         categories={categories}
         onChange={(categoryId) => set({ categoryId })}
       />
-      <DescriptionField
-        value={draft.description}
-        onChange={(description) => set({ description })}
-      />
-    </div>
-  );
-}
-
-function DescriptionField({
-  value,
-  onChange,
-}: {
-  value: string;
-  onChange: (value: string) => void;
-}) {
-  return (
-    <div className="sm:col-span-2">
       <Field
         label="Descripción (opcional)"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
+        value={draft.description}
+        onChange={(e) => set({ description: e.target.value })}
       />
-    </div>
+    </Card>
   );
 }
 
-function FormActions({ busy }: { busy: boolean }) {
+// Barra de guardado pegada sobre la barra de navegación inferior: siempre al alcance del pulgar.
+function SaveBar({ busy }: { busy: boolean }) {
   return (
-    <div className="flex gap-3">
-      <Button type="submit" disabled={busy}>
-        {busy ? 'Guardando…' : 'Guardar producto'}
-      </Button>
+    <div className="glass border-line sticky bottom-[calc(4rem+env(safe-area-inset-bottom))] z-10 -mx-4 flex gap-3 border-t p-3 md:bottom-0 md:mx-0 md:rounded-2xl md:border">
       <a
         href="/productos"
-        className="border-border bg-surface flex min-h-11 items-center rounded-lg border px-4 font-semibold"
+        className="border-border bg-surface inline-flex min-h-12 flex-1 items-center justify-center rounded-xl border font-semibold"
       >
         Cancelar
       </a>
+      <Button type="submit" className="flex-[2]" disabled={busy}>
+        {busy ? 'Guardando…' : 'Guardar producto'}
+      </Button>
     </div>
   );
 }
@@ -274,16 +262,16 @@ function FormActions({ busy }: { busy: boolean }) {
 export default function ProductForm({ productId }: { productId?: string }) {
   const { categories, saved, draft, setDraft, loadError } = useLoaded(productId);
   const { errors, serverError, busy, save } = useSave(productId, saved, draft);
-  const onSubmit = (event: FormEvent) => {
+  const onSubmit = (event: { preventDefault: () => void }) => {
     event.preventDefault();
     void save();
   };
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-6" noValidate>
+    <form onSubmit={onSubmit} className="flex flex-col gap-5" noValidate>
       {(loadError || serverError) && <ErrorBanner>{loadError ?? serverError}</ErrorBanner>}
       <ProductFields draft={draft} errors={errors} categories={categories} onDraft={setDraft} />
       <VariantsSection draft={draft} errors={errors} onDraft={setDraft} />
-      <FormActions busy={busy} />
+      <SaveBar busy={busy} />
     </form>
   );
 }

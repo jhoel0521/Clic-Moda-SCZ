@@ -1,12 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  createPayload,
-  draftFrom,
-  emptyDraft,
-  newVariant,
-  skuErrorFor,
-  validate,
-} from './product-form';
+import { createPayload, draftFrom, emptyDraft, newVariant, skuErrorFor, validate } from './product-form';
 
 const valid = () => ({
   ...emptyDraft(),
@@ -78,9 +71,7 @@ describe('draftFrom', () => {
       name: 'Bota',
       description: null,
       active: true,
-      variants: [
-        { id: 'v1', sku: 'BOT-38', size: '38', color: null, price: '100.00', active: false },
-      ],
+      variants: [{ id: 'v1', sku: 'BOT-38', size: '38', color: null, price: '100.00', active: false }],
     });
 
     expect(draft.description).toBe('');

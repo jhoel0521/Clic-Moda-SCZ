@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Icon from '../components/Icon.astro';
 import LoginForm from '../components/LoginForm';
 
 if (Astro.locals.session) return Astro.redirect('/');
@@ -11,14 +12,22 @@ const next = Astro.url.searchParams.get('next') ?? undefined;
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#fff9fb" />
     <title>Iniciar sesión · Clic Moda</title>
   </head>
-  <body class="flex min-h-screen items-center justify-center px-4">
-    <main class="w-full max-w-sm rounded-xl border border-line bg-surface p-6 shadow-sm">
-      <h1 class="mb-1 text-2xl font-bold text-action">Clic Moda</h1>
-      <p class="mb-6 text-muted">Panel de administración</p>
-      <LoginForm client:load next={next} />
+  <body class="hero-gradient pt-safe pb-safe">
+    <main class="mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center gap-8 px-5 py-10">
+      <div class="flex flex-col items-center gap-3 text-center">
+        <span class="brand-gradient flex size-16 items-center justify-center rounded-2xl text-on-action shadow-brand">
+          <Icon name="tag" class="size-8" />
+        </span>
+        <h1 class="text-3xl font-bold tracking-tight">Clic Moda</h1>
+        <p class="text-muted">Panel de administración</p>
+      </div>
+      <div class="rounded-3xl border border-line bg-surface p-6 shadow-card">
+        <LoginForm client:load next={next} />
+      </div>
     </main>
   </body>
 </html>

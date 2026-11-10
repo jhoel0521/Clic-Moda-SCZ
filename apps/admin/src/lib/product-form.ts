@@ -59,11 +59,7 @@ const SKU = /^[A-Za-z0-9.-]{3,40}$/;
 function variantErrors(variant: VariantDraft, errors: Errors): void {
   const at = (field: string) => `${variant.key}.${field}`;
   if (!variant.size.trim()) errors[at('size')] = 'Indica la talla';
-  if (
-    !PRICE.test(variant.price.trim()) ||
-    Number(variant.price) <= 0 ||
-    Number(variant.price) > 100000
-  ) {
+  if (!PRICE.test(variant.price.trim()) || Number(variant.price) <= 0 || Number(variant.price) > 100000) {
     errors[at('price')] = 'Precio entre 0.01 y 100000, con hasta 2 decimales';
   }
   if (variant.sku.trim() && !SKU.test(variant.sku.trim())) {
@@ -75,8 +71,7 @@ function variantErrors(variant: VariantDraft, errors: Errors): void {
 export function validate(draft: ProductDraft): Errors {
   const errors: Errors = {};
   const name = draft.name.trim();
-  if (name.length < 2 || name.length > 120)
-    errors.name = 'El nombre debe tener de 2 a 120 caracteres';
+  if (name.length < 2 || name.length > 120) errors.name = 'El nombre debe tener de 2 a 120 caracteres';
   if (!draft.categoryId) errors.categoryId = 'Elige una categoría';
   if (draft.variants.length === 0) errors.variants = 'Agrega al menos una variante';
   draft.variants.forEach((variant) => variantErrors(variant, errors));
@@ -103,11 +98,7 @@ export const createProduct = (draft: ProductDraft): Promise<Product> =>
 
 async function saveVariant(productId: string, current: VariantDraft, original?: VariantDraft) {
   if (!original) {
-    const added = await api<Product>(
-      'POST',
-      `catalog/products/${productId}/variants`,
-      variantBody(current)
-    );
+    const added = await api<Product>('POST', `catalog/products/${productId}/variants`, variantBody(current));
     return added;
   }
   const body = { ...variantBody(current), sku: current.sku.trim() || original.sku };
@@ -119,11 +110,7 @@ async function saveVariant(productId: string, current: VariantDraft, original?: 
 }
 
 // Guarda los cambios de un producto existente: datos del producto y luego variante por variante.
-export async function updateProduct(
-  productId: string,
-  draft: ProductDraft,
-  saved: Product
-): Promise<void> {
+export async function updateProduct(productId: string, draft: ProductDraft, saved: Product): Promise<void> {
   await api('PATCH', `catalog/products/${productId}`, {
     name: draft.name.trim(),
     description: draft.description.trim() || null,

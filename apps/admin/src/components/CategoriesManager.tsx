@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useState, type FormEvent } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { api } from '../lib/client-api';
 import { errorMessage, type Category } from '../lib/types';
-import { Button, EmptyState, ErrorBanner, Field } from './ui';
+import Icon from './Icon';
+import { Badge, Button, Card, EmptyState, ErrorBanner, Field, IconButton } from './ui';
 
 // Ejecuta una acción y recarga; si falla devuelve false y muestra el error del servidor.
 function useRunner(reload: () => Promise<void>, setError: (message: string | null) => void) {
@@ -36,62 +37,27 @@ function useCategories() {
 
 function NewCategory({ onCreate }: { onCreate: (name: string) => Promise<boolean> }) {
   const [name, setName] = useState('');
-  const submit = async (event: FormEvent) => {
+  const submit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
     if (await onCreate(name)) setName('');
   };
   return (
-    <form onSubmit={(event) => void submit(event)} className="flex flex-wrap items-end gap-3">
-      <div className="min-w-56 flex-1">
-        <Field
-          label="Nueva categoría"
-          value={name}
-          maxLength={60}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </div>
-      <Button type="submit" disabled={name.trim().length < 2}>
-        Agregar
-      </Button>
-    </form>
-  );
-}
-
-function ViewActions(props: { deletable: boolean; onEdit: () => void; onDelete: () => void }) {
-  const hint = props.deletable ? undefined : 'Tiene productos: no se puede borrar';
-  const confirmDelete = () => window.confirm('¿Borrar esta categoría?') && props.onDelete();
-  return (
-    <div className="flex gap-2">
-      <Button variant="secondary" onClick={props.onEdit}>
-        Editar
-      </Button>
-      <Button variant="danger" disabled={!props.deletable} title={hint} onClick={confirmDelete}>
-        Borrar
-      </Button>
-    </div>
-  );
-}
-
-function EditActions({ onSave, onCancel }: { onSave: () => void; onCancel: () => void }) {
-  return (
-    <div className="flex gap-2">
-      <Button onClick={onSave}>Guardar</Button>
-      <Button variant="secondary" onClick={onCancel}>
-        Cancelar
-      </Button>
-    </div>
-  );
-}
-
-function Summary({ category }: { category: Category }) {
-  const count = category.productCount;
-  return (
-    <div className="min-w-48 flex-1">
-      <p className="font-semibold">{category.name}</p>
-      <p className="text-muted text-sm">
-        {count} {count === 1 ? 'producto' : 'productos'}
-      </p>
-    </div>
+    <Card className="p-4">
+      <form onSubmit={(event) => void submit(event)} className="flex flex-col gap-3 sm:flex-row sm:items-end">
+        <div className="flex-1">
+          <Field
+            label="Nueva categoría"
+            placeholder="Ej: Vestidos"
+            value={name}
+            maxLength={60}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+        <Button type="submit" icon="plus" disabled={name.trim().length < 2}>
+          Agregar
+        </Button>
+      </form>
+    </Card>
   );
 }
 
@@ -102,18 +68,51 @@ interface RowProps {
   onDelete: (id: string) => Promise<boolean>;
 }
 
-interface BodyProps {
-  category: Category;
-  editing: boolean;
-  name: string;
-  onName: (value: string) => void;
+function Summary({ category }: { category: Category }) {
+  const count = category.productCount;
+  return (
+    <div className="flex min-w-0 flex-1 items-center gap-3">
+      <span className="bg-tint text-action flex size-11 shrink-0 items-center justify-center rounded-xl">
+        <Icon name="tag" />
+      </span>
+      <div className="min-w-0">
+        <p className="truncate font-semibold">{category.name}</p>
+        <Badge tone={count > 0 ? 'brand' : 'neutral'}>
+          {count} {count === 1 ? 'producto' : 'productos'}
+        </Badge>
+      </div>
+    </div>
+  );
 }
 
-function RowBody({ category, editing, name, onName }: BodyProps) {
-  if (!editing) return <Summary category={category} />;
+function RowActions(props: { deletable: boolean; onEdit: () => void; onDelete: () => void }) {
+  const confirmDelete = () => window.confirm('¿Borrar esta categoría?') && props.onDelete();
+  const deleteLabel = props.deletable ? 'Borrar categoría' : 'No se puede borrar: tiene productos';
   return (
-    <div className="min-w-48 flex-1">
+    <div className="flex shrink-0">
+      <IconButton icon="pencil" label="Editar categoría" onClick={props.onEdit} />
+      <IconButton icon="trash" label={deleteLabel} tone="danger" disabled={!props.deletable} onClick={confirmDelete} />
+    </div>
+  );
+}
+
+interface EditorProps {
+  name: string;
+  onName: (value: string) => void;
+  onSave: () => void;
+  onCancel: () => void;
+}
+
+function Editor({ name, onName, onSave, onCancel }: EditorProps) {
+  return (
+    <div className="flex w-full flex-col gap-3">
       <Field label="Nombre" value={name} maxLength={60} onChange={(e) => onName(e.target.value)} />
+      <div className="grid grid-cols-2 gap-3">
+        <Button onClick={onSave}>Guardar</Button>
+        <Button variant="secondary" onClick={onCancel}>
+          Cancelar
+        </Button>
+      </div>
     </div>
   );
 }
@@ -124,51 +123,59 @@ function CategoryRow({ category, canWrite, onRename, onDelete }: RowProps) {
   const save = async () => {
     if (await onRename(category.id, name)) setEditing(false);
   };
+  if (editing) {
+    return <Editor name={name} onName={setName} onSave={() => void save()} onCancel={() => setEditing(false)} />;
+  }
   return (
-    <li className="border-line flex flex-wrap items-center gap-3 border-b p-3 last:border-b-0">
-      <RowBody category={category} editing={editing} name={name} onName={setName} />
-      {canWrite && editing && (
-        <EditActions onSave={() => void save()} onCancel={() => setEditing(false)} />
-      )}
-      {canWrite && !editing && (
-        <ViewActions
+    <>
+      <Summary category={category} />
+      {canWrite && (
+        <RowActions
           deletable={category.productCount === 0}
           onEdit={() => setEditing(true)}
           onDelete={() => void onDelete(category.id)}
         />
       )}
-    </li>
+    </>
   );
 }
 
-type ListProps = Omit<RowProps, 'category'> & { items: Category[] };
+interface ListProps {
+  items: Category[];
+  canWrite: boolean;
+  onRename: RowProps['onRename'];
+  onDelete: RowProps['onDelete'];
+}
 
 function CategoryList({ items, ...rest }: ListProps) {
   return (
-    <ul className="border-line bg-surface rounded-xl border">
+    <ul className="flex flex-col gap-3">
       {items.map((category) => (
-        <CategoryRow key={category.id} category={category} {...rest} />
+        <li key={category.id}>
+          <Card className="flex items-center gap-2 p-3">
+            <CategoryRow category={category} {...rest} />
+          </Card>
+        </li>
       ))}
     </ul>
   );
 }
 
+function Content({ items, ...rest }: Omit<ListProps, 'items'> & { items: Category[] | null }) {
+  if (items === null) return <p className="text-muted">Cargando…</p>;
+  if (items.length === 0) return <EmptyState title="Todavía no hay categorías" icon="tag" />;
+  return <CategoryList items={items} {...rest} />;
+}
+
 export default function CategoriesManager({ canWrite }: { canWrite: boolean }) {
   const { items, error, run } = useCategories();
-  const onRename = (id: string, name: string) =>
-    run(() => api('PATCH', `catalog/categories/${id}`, { name }));
+  const onRename = (id: string, name: string) => run(() => api('PATCH', `catalog/categories/${id}`, { name }));
   const onDelete = (id: string) => run(() => api('DELETE', `catalog/categories/${id}`));
   return (
     <div className="flex flex-col gap-4">
       {error && <ErrorBanner>{error}</ErrorBanner>}
-      {canWrite && (
-        <NewCategory onCreate={(name) => run(() => api('POST', 'catalog/categories', { name }))} />
-      )}
-      {items === null && !error && <p className="text-muted">Cargando…</p>}
-      {items?.length === 0 && <EmptyState title="Todavía no hay categorías" />}
-      {items && items.length > 0 && (
-        <CategoryList items={items} canWrite={canWrite} onRename={onRename} onDelete={onDelete} />
-      )}
+      {canWrite && <NewCategory onCreate={(name) => run(() => api('POST', 'catalog/categories', { name }))} />}
+      <Content items={items} canWrite={canWrite} onRename={onRename} onDelete={onDelete} />
     </div>
   );
 }

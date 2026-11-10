@@ -1,21 +1,20 @@
 ---
 import ProductsList from '../../components/ProductsList';
 import AdminLayout from '../../layouts/AdminLayout.astro';
+import Icon from '../../components/Icon.astro';
 import { can } from '../../lib/session';
 
 const canWrite = can(Astro.locals.session, 'catalog:write');
 ---
 
-<AdminLayout title="Productos">
+<AdminLayout title="Productos" subtitle="Lo que vendes, con sus tallas y precios">
   {canWrite && (
-    <p class="mb-4">
-      <a
-        href="/productos/nuevo"
-        class="inline-flex min-h-11 items-center rounded-lg bg-action px-4 font-semibold text-on-action hover:bg-action-hover"
-      >
-        Registrar producto
-      </a>
-    </p>
+    <a
+      href="/productos/nuevo"
+      class="mb-4 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-action px-5 font-semibold text-on-action shadow-brand md:w-auto"
+    >
+      <Icon name="plus" class="size-5" /> Registrar producto
+    </a>
   )}
   <ProductsList client:load canWrite={canWrite} />
 </AdminLayout>

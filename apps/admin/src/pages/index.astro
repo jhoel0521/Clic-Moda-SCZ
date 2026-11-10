@@ -1,24 +1,46 @@
 ---
+import Icon from '../components/Icon.astro';
 import AdminLayout from '../layouts/AdminLayout.astro';
+import type { IconName } from '../lib/icons';
+import { can } from '../lib/session';
 
-const name = Astro.locals.session?.user.name ?? '';
-const cards = [
-  { href: '/categorias', title: 'Categorías', text: 'Organiza los productos por tipo.' },
-  { href: '/productos', title: 'Productos', text: 'Registra productos y sus tallas y colores.' },
-  { href: '/almacen', title: 'Almacén', text: 'Stock, ingresos, ajustes y movimientos.' },
+const session = Astro.locals.session;
+const name = session?.user.name ?? '';
+const canEdit = can(session, 'catalog:write');
+const tiles: { href: string; title: string; text: string; icon: IconName }[] = [
+  { href: '/productos', title: 'Productos', text: 'Registra y edita lo que vendes', icon: 'box' },
+  { href: '/categorias', title: 'Categorías', text: 'Ordena tu catálogo', icon: 'tag' },
+  { href: '/almacen', title: 'Almacén', text: 'Stock, ingresos y ajustes', icon: 'warehouse' },
 ];
 ---
 
-<AdminLayout title={`Hola, ${name}`}>
-  <ul class="grid gap-4 sm:grid-cols-3">
-    {cards.map((card) => (
+<AdminLayout title={`Hola, ${name}`} subtitle="¿Qué quieres hacer hoy?">
+  {canEdit && (
+    <a
+      href="/productos/nuevo"
+      class="brand-gradient mb-5 flex min-h-20 items-center justify-between gap-4 rounded-3xl p-5 text-on-action shadow-brand"
+    >
+      <span>
+        <span class="block text-lg font-bold">Registrar un producto</span>
+        <span class="block text-sm opacity-95">Con sus tallas, colores y precios</span>
+      </span>
+      <Icon name="plus" class="size-8 shrink-0" />
+    </a>
+  )}
+  <ul class="grid gap-3 sm:grid-cols-3">
+    {tiles.map((tile) => (
       <li>
         <a
-          href={card.href}
-          class="block h-full rounded-xl border border-line bg-surface p-5 hover:border-action"
+          href={tile.href}
+          class="flex min-h-24 items-center gap-4 rounded-2xl border border-line bg-surface p-4 shadow-card transition active:scale-[0.99] sm:flex-col sm:items-start"
         >
-          <h2 class="text-lg font-semibold">{card.title}</h2>
-          <p class="mt-1 text-muted">{card.text}</p>
+          <span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-tint text-action">
+            <Icon name={tile.icon} class="size-6" />
+          </span>
+          <span>
+            <span class="block font-semibold">{tile.title}</span>
+            <span class="block text-sm text-muted">{tile.text}</span>
+          </span>
         </a>
       </li>
     ))}

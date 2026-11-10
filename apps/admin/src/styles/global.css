@@ -1,28 +1,117 @@
 @import 'tailwindcss';
 
-/* Tokens de .ux/standard/tokens.json con los pares de contraste verificados (AA):
-   texto 16.8:1, texto atenuado 6.2:1, acción con texto blanco 5.25:1, borde de campos 3.9:1. */
+/* Tokens de .ux/standard/tokens.json (paleta de la demo) con los pares de contraste verificados:
+   texto 16.8:1, texto atenuado 6.2:1, acción con texto blanco 5.25:1, borde de campos 3.9:1.
+   El rosa de marca #e63f6e (3.96:1) solo se usa en elementos decorativos y degradados, nunca como texto. */
 @theme {
   --color-bg: #fff9fb;
+  --color-bg-soft: #f8f2f4;
   --color-surface: #ffffff;
+  --color-hover: #f6eef1;
   --color-text: #24151c;
   --color-muted: #6b5a64;
+  --color-brand: #e63f6e;
+  --color-brand-light: #ff6b96;
   --color-action: #c7305a;
   --color-action-hover: #b0284f;
   --color-on-action: #ffffff;
+  --color-tint: #fde8ef;
+  --color-line: #ece4e8;
   --color-border: #8a7a84;
-  --color-line: #ede7e9;
   --color-danger: #b91c1c;
   --color-success: #15803d;
   --color-warning: #92400e;
+  --shadow-card: 0 1px 2px rgba(42, 24, 34, 0.05), 0 6px 20px rgba(42, 24, 34, 0.06);
+  --shadow-brand: 0 10px 22px rgba(230, 63, 110, 0.25);
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', system-ui, 'Segoe UI', sans-serif;
 }
 
-body {
-  background: var(--color-bg);
-  color: var(--color-text);
+@layer base {
+  html {
+    color-scheme: light;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* 100vh en Safari de iPhone incluye la barra del navegador y corta el contenido: se usa dvh y
+     100vh queda solo como respaldo para navegadores que no lo soportan. */
+  body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
+  }
+
+  /* Safari hace zoom al enfocar un campo con menos de 16 px: nunca se baja de ese tamaño. */
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+
+  button,
+  a,
+  summary,
+  label {
+    touch-action: manipulation;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-action);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: rgba(230, 63, 110, 0.18);
+  }
 }
 
-:focus-visible {
-  outline: 3px solid var(--color-action);
-  outline-offset: 2px;
+@layer components {
+  .hero-gradient {
+    background: linear-gradient(135deg, #fff2f6 0%, #fff9fb 45%, #f4f0ff 100%);
+  }
+
+  .brand-gradient {
+    background: linear-gradient(135deg, #e63f6e 0%, #ff6b96 55%, #c026d3 100%);
+  }
+
+  /* Barra fija al borde inferior/superior respetando la muesca y la barra de inicio del iPhone. */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .glass {
+    /* Opaco: con transparencia el contenido se transparenta detrás de las barras fijas (se vio en iPhone). */
+    background: #ffffff;
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    backdrop-filter: saturate(180%) blur(14px);
+  }
+
+  /* Selector propio: en iOS el nativo se ve gris y distinto al resto de campos. */
+  .select-field {
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: var(--color-surface);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b5a64' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.9rem center;
+    background-size: 1.25rem;
+    padding-right: 2.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

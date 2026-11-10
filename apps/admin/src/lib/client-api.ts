@@ -37,7 +37,6 @@ export async function api<T>(method: Method, path: string, body?: unknown): Prom
   if (response.status === 401 && typeof window !== 'undefined' && path !== 'login') {
     window.location.assign(`/login?next=${encodeURIComponent(window.location.pathname)}`);
   }
-  if (!response.ok)
-    throw new ApiError(response.status, messageOf(data, 'No se pudo completar la acción'));
+  if (!response.ok) throw new ApiError(response.status, messageOf(data, 'No se pudo completar la acción'));
   return data as T;
 }

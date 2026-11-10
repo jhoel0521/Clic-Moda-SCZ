@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { api } from '../lib/client-api';
 import { errorMessage, type Category, type Page, type Product } from '../lib/types';
-import { Button, EmptyState, ErrorBanner, Field, SelectField } from './ui';
+import Icon from './Icon';
+import { Badge, Button, Card, EmptyState, ErrorBanner, Field, SelectField } from './ui';
 
 interface Filters {
   text: string;
@@ -56,25 +57,19 @@ const priceRange = (product: Product): string => {
 function RowInfo({ product, categoryName }: { product: Product; categoryName: string }) {
   const count = product.variants.length;
   return (
-    <div className="min-w-48 flex-1">
-      <a
-        href={`/productos/${product.id}`}
-        className="font-semibold underline-offset-2 hover:underline"
-      >
-        {product.name}
-      </a>
-      <p className="text-muted text-sm">
-        {categoryName} · {count} {count === 1 ? 'variante' : 'variantes'} · {priceRange(product)}
-      </p>
+    <div className="flex min-w-0 flex-1 items-center gap-3">
+      <span className="bg-tint text-action flex size-12 shrink-0 items-center justify-center rounded-xl">
+        <Icon name="box" className="size-6" />
+      </span>
+      <div className="min-w-0">
+        <p className="truncate font-semibold">{product.name}</p>
+        <p className="text-muted truncate text-sm">
+          {categoryName} · {count} {count === 1 ? 'variante' : 'variantes'}
+        </p>
+      </div>
     </div>
   );
 }
-
-const Status = ({ active }: { active: boolean }) => (
-  <span className={`text-sm font-semibold ${active ? 'text-success' : 'text-warning'}`}>
-    {active ? 'Activo' : 'Inactivo'}
-  </span>
-);
 
 interface RowProps {
   product: Product;
@@ -83,17 +78,28 @@ interface RowProps {
   onToggle: (product: Product) => void;
 }
 
-function ProductRow({ product, categoryName, canWrite, onToggle }: RowProps) {
+function ProductCard({ product, categoryName, canWrite, onToggle }: RowProps) {
   return (
-    <li className="border-line flex flex-wrap items-center gap-3 border-b p-3 last:border-b-0">
-      <RowInfo product={product} categoryName={categoryName} />
-      <Status active={product.active} />
+    <Card className="flex flex-col gap-3 p-4">
+      <div className="flex items-start justify-between gap-3">
+        <RowInfo product={product} categoryName={categoryName} />
+        <Badge tone={product.active ? 'success' : 'warning'}>{product.active ? 'Activo' : 'Inactivo'}</Badge>
+      </div>
+      <p className="text-lg font-bold">{priceRange(product)}</p>
       {canWrite && (
-        <Button variant="secondary" onClick={() => onToggle(product)}>
-          {product.active ? 'Desactivar' : 'Activar'}
-        </Button>
+        <div className="grid grid-cols-2 gap-3">
+          <a
+            href={`/productos/${product.id}`}
+            className="border-border hover:bg-hover inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border font-semibold"
+          >
+            <Icon name="pencil" /> Editar
+          </a>
+          <Button variant="secondary" onClick={() => onToggle(product)}>
+            {product.active ? 'Desactivar' : 'Activar'}
+          </Button>
+        </div>
       )}
-    </li>
+    </Card>
   );
 }
 
@@ -108,38 +114,41 @@ const STATES = [
   { value: 'false', label: 'Inactivos' },
 ];
 
-function FilterBar({ filters, categories, onChange }: FilterBarProps) {
+function SelectFilters({ filters, categories, onChange }: FilterBarProps) {
   const options = [...categories].map(([value, label]) => ({ value, label }));
-  const set = (changes: Partial<Filters>) => onChange({ ...changes, page: 1 });
   return (
-    <div className="grid gap-3 sm:grid-cols-3">
-      <SearchFilter value={filters.text} onChange={(text) => set({ text })} />
+    <div className="grid grid-cols-2 gap-3">
       <SelectField
         label="Categoría"
         value={filters.categoryId}
         options={options}
         placeholder="Todas"
-        onChange={(e) => set({ categoryId: e.target.value })}
+        onChange={(e) => onChange({ categoryId: e.target.value })}
       />
       <SelectField
         label="Estado"
         value={filters.active}
         options={STATES}
         placeholder="Todos"
-        onChange={(e) => set({ active: e.target.value })}
+        onChange={(e) => onChange({ active: e.target.value })}
       />
     </div>
   );
 }
 
-function SearchFilter({ value, onChange }: { value: string; onChange: (value: string) => void }) {
+function FilterBar({ filters, categories, onChange }: FilterBarProps) {
+  const set = (changes: Partial<Filters>) => onChange({ ...changes, page: 1 });
   return (
-    <Field
-      label="Buscar por nombre o SKU"
-      type="search"
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-    />
+    <div className="flex flex-col gap-3">
+      <Field
+        label="Buscar por nombre o SKU"
+        type="search"
+        enterKeyHint="search"
+        value={filters.text}
+        onChange={(e) => set({ text: e.target.value })}
+      />
+      <SelectFilters filters={filters} categories={categories} onChange={set} />
+    </div>
   );
 }
 
@@ -149,19 +158,35 @@ interface PagerProps {
   onPage: (page: number) => void;
 }
 
+function PageInfo({ page, pages, total }: { page: number; pages: number; total: number }) {
+  return (
+    <span className="text-muted text-center text-sm">
+      Página {page} de {pages}
+      <br />
+      {total} {total === 1 ? 'producto' : 'productos'}
+    </span>
+  );
+}
+
 function Pager({ page, total, onPage }: PagerProps) {
   const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   return (
     <div className="flex items-center justify-between gap-3">
-      <Button variant="secondary" disabled={page <= 1} onClick={() => onPage(page - 1)}>
-        Anterior
-      </Button>
-      <span className="text-muted">
-        Página {page} de {pages} · {total} productos
-      </span>
-      <Button variant="secondary" disabled={page >= pages} onClick={() => onPage(page + 1)}>
-        Siguiente
-      </Button>
+      <Button
+        variant="secondary"
+        icon="left"
+        disabled={page <= 1}
+        onClick={() => onPage(page - 1)}
+        aria-label="Página anterior"
+      />
+      <PageInfo page={page} pages={pages} total={total} />
+      <Button
+        variant="secondary"
+        icon="right"
+        disabled={page >= pages}
+        onClick={() => onPage(page + 1)}
+        aria-label="Página siguiente"
+      />
     </div>
   );
 }
@@ -175,10 +200,10 @@ interface ItemsProps {
 
 function EmptyProducts({ canWrite }: { canWrite: boolean }) {
   return (
-    <EmptyState title="No hay productos con esos filtros">
+    <EmptyState title="No hay productos con esos filtros" icon="box">
       {canWrite && (
         <a href="/productos/nuevo" className="text-action font-semibold underline">
-          Registrar el primero
+          Registrar un producto
         </a>
       )}
     </EmptyState>
@@ -188,15 +213,16 @@ function EmptyProducts({ canWrite }: { canWrite: boolean }) {
 function Items({ items, names, canWrite, onToggle }: ItemsProps) {
   if (items.length === 0) return <EmptyProducts canWrite={canWrite} />;
   return (
-    <ul className="border-line bg-surface rounded-xl border">
+    <ul className="flex flex-col gap-3">
       {items.map((product) => (
-        <ProductRow
-          key={product.id}
-          product={product}
-          categoryName={names.get(product.categoryId) ?? '—'}
-          canWrite={canWrite}
-          onToggle={onToggle}
-        />
+        <li key={product.id}>
+          <ProductCard
+            product={product}
+            categoryName={names.get(product.categoryId) ?? '—'}
+            canWrite={canWrite}
+            onToggle={onToggle}
+          />
+        </li>
       ))}
     </ul>
   );
@@ -209,19 +235,6 @@ function useToggle(reload: () => Promise<void>, setError: (message: string | nul
       .catch((failure) => setError(errorMessage(failure)));
 }
 
-function Body({ filters, data, names, canWrite, onFilters, onToggle }: BodyProps) {
-  return (
-    <>
-      <Items items={data.items} names={names} canWrite={canWrite} onToggle={onToggle} />
-      <Pager
-        page={filters.page}
-        total={data.total}
-        onPage={(page) => onFilters({ ...filters, page })}
-      />
-    </>
-  );
-}
-
 interface BodyProps {
   filters: Filters;
   data: Page<Product>;
@@ -229,6 +242,15 @@ interface BodyProps {
   canWrite: boolean;
   onFilters: (filters: Filters) => void;
   onToggle: (product: Product) => void;
+}
+
+function Body({ filters, data, names, canWrite, onFilters, onToggle }: BodyProps) {
+  return (
+    <>
+      <Items items={data.items} names={names} canWrite={canWrite} onToggle={onToggle} />
+      <Pager page={filters.page} total={data.total} onPage={(page) => onFilters({ ...filters, page })} />
+    </>
+  );
 }
 
 function ListStatus({ error, loading }: { error: string | null; loading: boolean }) {

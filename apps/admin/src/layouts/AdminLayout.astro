@@ -1,22 +1,27 @@
 ---
 import '../styles/global.css';
+import Icon from '../components/Icon.astro';
 import LogoutButton from '../components/LogoutButton';
+import type { IconName } from '../lib/icons';
 import { can } from '../lib/session';
 
 interface Props {
   title: string;
+  subtitle?: string;
 }
 
-const { title } = Astro.props;
+const { title, subtitle } = Astro.props;
 const session = Astro.locals.session;
-const links = [
-  { href: '/', label: 'Inicio', show: true },
-  { href: '/categorias', label: 'Categorías', show: true },
-  { href: '/productos', label: 'Productos', show: true },
-  { href: '/almacen', label: 'Almacén', show: true },
-].filter((link) => link.show);
 const path = Astro.url.pathname;
-const writes = can(session, 'catalog:write');
+const links: { href: string; label: string; icon: IconName }[] = [
+  { href: '/', label: 'Inicio', icon: 'home' },
+  { href: '/categorias', label: 'Categorías', icon: 'tag' },
+  { href: '/productos', label: 'Productos', icon: 'box' },
+  { href: '/almacen', label: 'Almacén', icon: 'warehouse' },
+];
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+const readOnly = !can(session, 'catalog:write') && !can(session, 'stock:write');
+const role = session?.user.roles[0]?.toLowerCase() ?? '';
 ---
 
 <!doctype html>
@@ -24,44 +29,83 @@ const writes = can(session, 'catalog:write');
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- viewport-fit=cover: el contenido usa toda la pantalla del iPhone y las zonas seguras se respetan con env(safe-area-inset-*) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#fff9fb" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
     <title>{title} · Clic Moda</title>
   </head>
-  <body class="min-h-screen">
-    <header class="border-b border-line bg-surface">
-      <div class="mx-auto flex max-w-5xl flex-wrap items-center gap-3 px-4 py-3">
-        <a href="/" class="mr-2 text-lg font-bold text-action">
-          Clic Moda
-        </a>
-        <nav aria-label="Principal" class="flex flex-1 flex-wrap gap-1">
-          {links.map((link) => (
+  <body class="md:flex">
+    <aside class="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col gap-6 border-r border-line bg-surface p-5 md:flex">
+      <a href="/" class="flex items-center gap-3 px-2 text-lg font-bold">
+        <span class="brand-gradient flex size-10 items-center justify-center rounded-xl text-on-action shadow-brand">
+          <Icon name="tag" class="size-5" />
+        </span>
+        Clic Moda
+      </a>
+      <nav aria-label="Principal" class="flex flex-col gap-1">
+        {links.map((link) => (
+          <a
+            href={link.href}
+            aria-current={isActive(link.href) ? 'page' : undefined}
+            class="flex min-h-12 items-center gap-3 rounded-xl px-3 font-medium hover:bg-hover aria-[current=page]:bg-tint aria-[current=page]:font-bold aria-[current=page]:text-action"
+          >
+            <Icon name={link.icon} class="size-5" />
+            {link.label}
+          </a>
+        ))}
+      </nav>
+      {session && (
+        <div class="mt-auto flex flex-col gap-3">
+          <div class="px-2 text-sm">
+            <p class="font-semibold">{session.user.name}</p>
+            <p class="text-muted">
+              {role}
+              {readOnly && ' · solo consulta'}
+            </p>
+          </div>
+          <LogoutButton client:load />
+        </div>
+      )}
+    </aside>
+
+    <div class="min-w-0 flex-1">
+      <header class="glass pt-safe sticky top-0 z-20 border-b border-line md:hidden">
+        <div class="flex min-h-14 items-center justify-between px-4">
+          <div class="flex items-center gap-3">
+            <span class="brand-gradient flex size-9 items-center justify-center rounded-xl text-on-action">
+              <Icon name="tag" class="size-5" />
+            </span>
+            <span class="text-lg font-bold">Clic Moda</span>
+          </div>
+          {session && <LogoutButton client:load compact />}
+        </div>
+      </header>
+
+      <main class="mx-auto w-full max-w-3xl px-4 pt-5 pb-[calc(6.5rem+env(safe-area-inset-bottom))] md:px-8 md:pt-8 md:pb-10">
+        <div class="mb-5">
+          <h1 class="text-2xl font-bold tracking-tight md:text-3xl">{title}</h1>
+          {subtitle && <p class="mt-1 text-muted">{subtitle}</p>}
+        </div>
+        <slot />
+      </main>
+    </div>
+
+    <nav aria-label="Principal" class="glass pb-safe fixed inset-x-0 bottom-0 z-30 border-t border-line md:hidden">
+      <ul class="mx-auto grid max-w-lg grid-cols-4">
+        {links.map((link) => (
+          <li>
             <a
               href={link.href}
-              aria-current={
-                path === link.href || (link.href !== '/' && path.startsWith(link.href))
-                  ? 'page'
-                  : undefined
-              }
-              class="flex min-h-11 items-center rounded-lg px-3 font-medium hover:bg-line aria-[current=page]:bg-line aria-[current=page]:font-bold"
+              aria-current={isActive(link.href) ? 'page' : undefined}
+              class="flex min-h-16 flex-col items-center justify-center gap-1 text-xs font-medium text-muted aria-[current=page]:text-action aria-[current=page]:font-bold"
             >
+              <Icon name={link.icon} class="size-6" />
               {link.label}
             </a>
-          ))}
-        </nav>
-        {session && (
-          <div class="flex items-center gap-3">
-            <span class="text-sm text-muted">
-              {session.user.name} · {session.user.roles.join(', ').toLowerCase()}
-              {!writes && ' (solo consulta)'}
-            </span>
-            <LogoutButton client:load />
-          </div>
-        )}
-      </div>
-    </header>
-    <main class="mx-auto max-w-5xl px-4 py-6">
-      <h1 class="mb-6 text-2xl font-bold">{title}</h1>
-      <slot />
-    </main>
+          </li>
+        ))}
+      </ul>
+    </nav>
   </body>
 </html>

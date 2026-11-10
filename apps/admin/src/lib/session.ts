@@ -16,15 +16,12 @@ export interface Session {
   expiresAt: number; // milisegundos desde 1970
 }
 
-export const encodeSession = (session: Session): string =>
-  encodeURIComponent(JSON.stringify(session));
+export const encodeSession = (session: Session): string => encodeURIComponent(JSON.stringify(session));
 
 const isSession = (value: unknown): value is Session => {
   const session = value as Session;
   return (
-    typeof session?.token === 'string' &&
-    typeof session.expiresAt === 'number' &&
-    Array.isArray(session.user?.roles)
+    typeof session?.token === 'string' && typeof session.expiresAt === 'number' && Array.isArray(session.user?.roles)
   );
 };
 
