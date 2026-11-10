@@ -17,8 +17,8 @@
 ## 3. Catálogo — aplicación (capa application)
 
 - [x] 3.1 DTOs de comando, consulta y resultado del catálogo y los casos de uso `CreateCategory`, `UpdateCategory`, `DeleteCategory` (conflicto si tiene productos) y `ListCategories` con conteo; pruebas unitarias con repositorios en memoria.
-- [ ] 3.2 Casos de uso `RegisterProduct` (categoría inexistente → no encontrada; SKU generado con reintento; todo o nada), `UpdateProduct`, `SetProductActive`; pruebas unitarias de cada escenario de `product-catalog`.
-- [ ] 3.3 Casos de uso `AddVariant`, `UpdateVariant` (el SKU no cambia si ya hay movimientos: consulta mediante un puerto de aplicación `VariantHasMovementsPort`), `SetVariantActive`, `SearchProducts` (texto, categoría, estado, paginación) y `GetProduct`; puerto `VariantHasMovementsPort` con su suite de contrato y su doble en memoria; pruebas unitarias.
+- [x] 3.2 Casos de uso `RegisterProduct` (categoría inexistente → no encontrada; SKU generado con reintento; todo o nada), `UpdateProduct`, `SetProductActive`; pruebas unitarias de cada escenario de `product-catalog`.
+- [x] 3.3 Casos de uso `AddVariant`, `UpdateVariant` (el SKU no cambia si ya hay movimientos: consulta mediante un puerto de aplicación `VariantHasMovementsPort`), `SetVariantActive`, `SearchProducts` (texto, categoría, estado, paginación) y `GetProduct`; puerto `VariantHasMovementsPort` con su suite de contrato y su doble en memoria; pruebas unitarias.
 
 ## 4. Catálogo — infraestructura (capa infrastructure)
 
