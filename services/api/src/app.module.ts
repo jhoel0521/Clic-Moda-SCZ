@@ -1,6 +1,6 @@
-import { Module } from '@nestjs/common';
+import { Module, StandardSchemaValidationPipe } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { HealthModule } from './health/infrastructure/http/health.module.js';
 import { IdentityModule } from './identity/identity.module.js';
 import { envSchema } from './shared/infrastructure/config/env.schema.js';
@@ -14,6 +14,10 @@ import { DomainErrorFilter } from './shared/infrastructure/http/domain-error.fil
     IdentityModule,
     HealthModule,
   ],
-  providers: [{ provide: APP_FILTER, useClass: DomainErrorFilter }],
+  providers: [
+    { provide: APP_FILTER, useClass: DomainErrorFilter },
+    // Aplica el esquema Zod declarado en @Body({ schema }) / @Param({ schema }) de toda la API.
+    { provide: APP_PIPE, useValue: new StandardSchemaValidationPipe({ transform: true }) },
+  ],
 })
 export class AppModule {}

@@ -1,15 +1,19 @@
 import { AuthenticationModule, AuthenticationStorage } from '@nestjs/authentication';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import type { Env } from '../shared/infrastructure/config/env.schema.js';
 import { ACCESS_TOKEN_ISSUER } from './application/ports/access-token-issuer.port.js';
 import { PASSWORD_HASHER } from './application/ports/password-hasher.port.js';
 import { AuthenticateStaffUseCase } from './application/use-cases/authenticate-staff.use-case.js';
+import { SeedManagerUseCase } from './application/use-cases/seed-manager.use-case.js';
 import { USERS_REPOSITORY } from './domain/users.repository.port.js';
 import { AuthenticationAccessTokenIssuer } from './infrastructure/external/authentication-access-token-issuer.js';
 import { AuthenticationPasswordHasher } from './infrastructure/external/authentication-password-hasher.js';
 import { buildAuthenticationOptions } from './infrastructure/external/authentication.options.js';
+import { AuthController } from './infrastructure/http/auth.controller.js';
+import { LOGIN_THROTTLER } from './infrastructure/http/login-throttler.guard.js';
 import { StaffJwtAuth } from './infrastructure/http/staff-jwt-auth.provider.js';
 import { RefreshTokenOrmEntity } from './infrastructure/persistence/refresh-token.orm-entity.js';
 import { RevokedRefreshFamilyOrmEntity } from './infrastructure/persistence/revoked-refresh-family.orm-entity.js';
@@ -29,6 +33,7 @@ const AUTH_STORAGE_REGISTRATION = Symbol('AuthStorageRegistration');
       RefreshTokenOrmEntity,
       RevokedRefreshFamilyOrmEntity,
     ]),
+    ThrottlerModule.forRoot(LOGIN_THROTTLER),
     AuthenticationModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService<Env, true>) =>
@@ -40,6 +45,7 @@ const AUTH_STORAGE_REGISTRATION = Symbol('AuthStorageRegistration');
         }),
     }),
   ],
+  controllers: [AuthController],
   providers: [
     { provide: USERS_REPOSITORY, useClass: TypeOrmUsersRepository },
     { provide: PASSWORD_HASHER, useClass: AuthenticationPasswordHasher },
@@ -54,7 +60,8 @@ const AUTH_STORAGE_REGISTRATION = Symbol('AuthStorageRegistration');
     },
     StaffJwtAuth,
     AuthenticateStaffUseCase,
+    SeedManagerUseCase,
   ],
-  exports: [USERS_REPOSITORY, AuthenticateStaffUseCase],
+  exports: [USERS_REPOSITORY, AuthenticateStaffUseCase, SeedManagerUseCase],
 })
 export class IdentityModule {}
