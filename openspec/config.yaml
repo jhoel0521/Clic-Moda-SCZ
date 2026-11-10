@@ -6,14 +6,18 @@ context: |
   Keep OpenSpec structural headings and SHALL/MUST keywords in English.
 
   # Proyecto
-  Clic Moda SCZ: tienda de moda de Santa Cruz (Bolivia), canal principal TikTok/Instagram.
-  Nacio como proyecto universitario; hoy se convierte en producto para un posible primer
-  cliente al que le gusto la demo actual (esa demo es la linea base: no se debe retroceder).
-  Propuesta del equipo, POR VALIDAR con el cliente: venta en vivo (Live) con reserva en
-  tiempo real de prendas con numero de serie; quien reserva primero la gana por un tiempo
-  (TTL) y confirma por WhatsApp. La tienda normal usaria el mismo motor de reservas.
-  El nombre de la tienda aun no esta definido: "Verashoe" es provisional. Sin pasarela de pago por ahora
-  (QR/transferencia con confirmacion manual). Presupuesto acotado, mercado movil-first.
+  Clic Moda SCZ: tienda de calzado de Santa Cruz (Bolivia). Nacio como proyecto universitario; hoy se
+  convierte en producto para un posible primer cliente al que le gusto la demo (la demo es solo un
+  prototipo; el producto se reconstruye con un backend administrable). Se empieza solo con zapatos.
+  Modelo de venta (hechos del cliente):
+  - Se vende en vivo (Live) en TikTok/Instagram y todo se cierra por WhatsApp: delivery o recojo en
+    el almacen (que tambien hace de showroom: estantes con cajas de zapatos).
+  - Pago manual (sin pasarela ni NIT); ventas de menos de 5 mil Bs al mes.
+  - 3 personas: una hace el Live, las otras responden y confirman (hoy usan un cuaderno).
+  - Hay que reservar stock mientras se confirma el pago manual (nunca vender dos veces el mismo par).
+  - Compra sin cuenta obligatoria; medir ventas por enlace; buen SEO; cupones por Live; sin banners.
+  - Marca, logo, textos y redes se configuran desde un modulo de configuracion (semilla "Clic Moda SC").
+  Cuentas por correo: pendiente de decidir (issue #1); queda fuera de alcance hasta entonces.
   Hoja de ruta: openspec/ROADMAP.md. Modelo de datos actual: docs/database.dbml.
 
   # Monorepo (cada proyecto es independiente: su package.json, lockfile y node_modules)
@@ -40,8 +44,6 @@ context: |
     contrato por puerto. Los limites de capa los hace cumplir el lint (.oxlintrc.json).
   - El servidor es el unico arbitro de reservas: orden por reloj del servidor, UPDATE atomico
     en BD (nunca doble venta), vencimientos persistidos en BD.
-  - apps/shop usa Next.js con cambios incompatibles: leer node_modules/next/dist/docs/ antes
-    de escribir codigo (ver AGENTS.md).
   - Cambios de UI: seguir el estandar de .ux/ (ux-kit) y correr ux-check al terminar.
 
 rules:
