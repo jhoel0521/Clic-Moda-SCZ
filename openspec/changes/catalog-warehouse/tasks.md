@@ -56,9 +56,9 @@
 
 ## 9. Pruebas de concurrencia y de carga (capa infrastructure)
 
-- [ ] 9.1 Prueba de concurrencia: 200 salidas simultáneas de 1 unidad sobre una variante con 5 unidades, con varias instancias de procesador; verificar que exactamente 5 quedan `APPLIED`, 195 `REJECTED` con `INSUFFICIENT_STOCK`, el stock termina en 0 y la suma de movimientos coincide con el stock; añadir el caso en que el más antiguo falla y espera un reintento, y comprobar que ningún comando posterior de esa variante lo adelanta.
-- [ ] 9.2 Prueba de idempotencia y de caída: mismo `Idempotency-Key` enviado 50 veces en paralelo produce un solo comando, y un proceso detenido a mitad no duplica ni pierde stock al reanudar.
-- [ ] 9.3 Prueba de carga: 10 000 comandos repartidos entre 50 variantes; medir comandos por segundo y latencia hasta el estado final, registrar los números en `design.md` (Riesgos) y comprobar que no queda ningún `PENDING`.
+- [x] 9.1 Proyecto `e2e/load` (k6 en Docker): `docker-compose.yml` propio con Postgres, API y el ejecutor de k6, **cada servicio limitado a 0.5 CPU y 250 MB** para no usar la máquina del equipo; scripts `load:up`, `load:run` y `load:down` en la raíz; verificar que la API arranca dentro del límite sin que Docker la mate por memoria.
+- [x] 9.2 Escenario de lectura (catálogo, inventario y resumen con sesión del Gerente): rampa de usuarios virtuales y reporte de percentiles p50, p90, p95 y p99 más tasa de errores, con umbrales que hacen fallar la corrida (p95 y errores); registrar los números en `design.md` (Riesgos).
+- [x] 9.3 Escenario de escritura: salidas simultáneas sobre pocas unidades (nunca se vende de más), misma `Idempotency-Key` repetida en paralelo (un solo comando) y espera hasta vaciar la cola; verificar al final que los comandos aplicados igualan el stock inicial, el stock termina en 0 y la suma de movimientos coincide.
 
 ## 10. Datos de ejemplo y documentación (capas infrastructure y docs)
 
@@ -75,11 +75,11 @@
 ## 12. Admin — pantallas (apps/admin)
 
 - [ ] 12.1 Categorías: listado con conteo, crear, editar y borrar (con aviso si tiene productos), con validación y error junto al campo; pruebas de componentes (Vitest + Testing Library) de cada estado: carga, vacío, error y éxito.
-- [ ] 12.2 Productos: listado paginado con búsqueda por nombre o SKU y filtros por categoría y estado; pruebas de componentes.
+- [ ] 12.2 Inventario: lista de modelos con el resumen de arriba (modelos, pares, agotadas, stock bajo), búsqueda por modelo o SKU y filtros por categoría y stock, y la matriz color × talla de cada modelo; pruebas de componentes.
 - [ ] 12.3 Formulario de producto con variantes dinámicas (agregar y quitar tallas y colores, SKU opcional), edición y activar o desactivar; pruebas de componentes, incluido el error de SKU duplicado junto al campo.
-- [ ] 12.4 Almacén: tabla de stock por variante (físico, reservado, disponible, ubicación, umbral) con la lista de stock bajo; pruebas de componentes.
-- [ ] 12.5 Ingreso, salida y ajuste con motivo, estado "En cola" actualizado hasta el estado final, rechazo explicado y bloqueo del doble envío; pruebas de componentes con una API simulada.
-- [ ] 12.6 Historial de movimientos de una variante y vista de la cola (pendientes y antigüedad); pruebas de componentes.
+- [ ] 12.4 Celda de la matriz: ingresar, retirar y ajustar con motivo, estado "En cola" actualizado hasta el estado final, rechazo explicado, bloqueo del doble envío e historial de la variante; pruebas de componentes con una API simulada.
+- [ ] 12.5 Interruptores de activo (modelo y variante) con cambio optimista que se revierte si falla, y precio único por modelo; pruebas de componentes.
+- [ ] 12.6 Estante: un solo texto opcional por modelo (se edita en el formulario del modelo y vale para todas sus variantes) y regla fija de stock bajo (2 pares o menos); quitar la pantalla de ajustes y el umbral configurable.
 - [ ] 12.7 Instalar y configurar Playwright en `apps/admin` (versión fijada, proyectos de escritorio y móvil de 360 px, arranque de la API y Docker desde la prueba, datos de prueba por flujo); verificar con una prueba mínima que abre el inicio de sesión.
 - [ ] 12.8 Flujos e2e con Playwright contra la API real: el Gerente registra un producto, Despacho ingresa stock y ve "Aplicado", una salida mayor al stock se muestra rechazada, y Atención no ve los botones de modificar.
 

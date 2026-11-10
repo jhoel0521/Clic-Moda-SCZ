@@ -1,0 +1,6 @@
+# k6 con los escenarios dentro de la imagen (sin montar carpetas del host).
+FROM grafana/k6:1.0.0
+COPY k6 /scripts
+WORKDIR /scripts
+ENTRYPOINT ["k6"]
+CMD ["run", "/scripts/main.js"]

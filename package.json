@@ -41,6 +41,8 @@
     "test:api": "pnpm --dir services/api test",
     "test:all": "pnpm test:shop && pnpm test:admin && pnpm test:api",
     "test:e2e": "pnpm --dir services/api test:e2e",
+    "load": "node e2e/load/run.mjs",
+    "load:down": "docker compose -f e2e/load/docker-compose.yml --profile run down -v --remove-orphans",
     "verify:projects": "node scripts/verify-projects.mjs",
     "check": "pnpm verify:projects && pnpm secrets:scan && pnpm lint:all && pnpm test:all && pnpm build:all",
     "check:full": "pnpm check && pnpm test:e2e",

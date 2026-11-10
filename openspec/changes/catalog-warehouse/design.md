@@ -101,6 +101,20 @@ El tema del admin recibe los tokens de `.ux/standard/tokens.json`. Tres pares de
 - **Imágenes diferidas:** un producto sin foto es poco útil para la tienda pública, pero no bloquea el almacén ni el admin; el change de imágenes resuelve la decisión abierta nº 7.
 - **Configuración de proyecto desactualizada:** `openspec/config.yaml` aún menciona "Verashoe", pago por QR y que `apps/shop` usa Next.js. Este change se apoya en las respuestas del cliente (`docs/prototipo/auditoria.md`, sección 5) y en el stack real; el config conviene corregirlo aparte.
 
+### Medición de carga (2026-11-10, `pnpm load`)
+
+Laboratorio en Docker (`e2e/load`): base, API y k6, **cada uno con 0.5 CPU y 250 MB**; scrypt a 2^14 solo en el laboratorio.
+
+| Escenario | Resultado |
+|---|---|
+| Lectura, rampa a 30 usuarios virtuales (catálogo, inventario, resumen) | p95 49–90 ms, p99 95–172 ms según la ruta, 0 % de errores |
+| Encolar una salida | p50 112 ms, p95 312 ms, p99 367 ms |
+| 60 salidas simultáneas contra 5 unidades | 5 aplicadas y 55 rechazadas, hasta el estado final p95 1.5 s |
+| 50 envíos con la misma clave | 1 solo comando |
+| Consumo máximo | API 90 MB y 50 % de CPU (el tope), base 64 MB, k6 37 MB; ningún OOM |
+
+Lectura: la API llegó al tope de CPU con 30 usuarios que piensan 1 s entre pasos (unas 54 peticiones por segundo en total), muy por encima de lo que harán 3 personas. Falta una prueba de estrés para hallar el punto de quiebre.
+
 ## Migration Plan
 
 Cinco migraciones nuevas, todas aditivas y reversibles (`down` las deshace en orden inverso): `categories`; `products` y `product_variants`; `stock_levels` y `stock_movements`; `stock_commands`; índices. No hay datos previos que migrar. Despliegue: `pnpm db:migrate`, luego arrancar la API (que inicia el procesador). El seed es opcional.

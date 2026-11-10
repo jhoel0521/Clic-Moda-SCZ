@@ -1,0 +1,115 @@
+# Laboratorio de carga: Postgres + API + k6, TODOS dentro de Docker y con recursos topados, para medir
+# sin usar la máquina del equipo y ver cómo se comporta el sistema en un servidor pequeño.
+#
+#   pnpm load            (corre todo y muestra percentiles y consumo)    pnpm load:down  (limpia)
+#
+# - Cada servicio: 0.5 CPU y 250 MB (cambia LOAD_CPUS / LOAD_MEM para probar otros tamaños).
+# - No publica puertos: todo viaja por la red interna del compose (no choca con ports.json).
+# - Los secretos de aquí son de usar y tirar; la base nace vacía en cada corrida (down -v).
+# - Sin montajes de carpetas del host (Docker Desktop en Windows no comparte algunas unidades):
+#   los scripts de k6 van dentro de su imagen (Dockerfile.k6).
+name: clic-moda-load
+
+x-limits: &limits
+  cpus: ${LOAD_CPUS:-0.5}
+  memory: ${LOAD_MEM:-250M}
+
+x-api-env: &api-env
+  NODE_ENV: production
+  PORT: '10010'
+  DB_HOST: db
+  DB_PORT: '5432'
+  DB_USER: load
+  DB_PASSWORD: ${LOAD_DB_PASSWORD:-load-only-db-password}
+  DB_NAME: load
+  AUTH_JWT_KEY: ${LOAD_JWT_KEY:-load-only-jwt-key-not-for-real-use-0123456789}
+  AUTH_JWT_ISSUER: clic-moda-api
+  AUTH_JWT_AUDIENCE: clic-moda
+  # scrypt de 2^17 pide ~128 MB por clave: no cabe en 250 MB. Aquí solo se inicia sesión una vez por corrida.
+  AUTH_SCRYPT_LOG_N: '14'
+  INITIAL_MANAGER_EMAIL: manager@load.local
+  INITIAL_MANAGER_PASSWORD: ${LOAD_MANAGER_PASSWORD:-LoadTestPassword123}
+  INITIAL_MANAGER_NAME: Gerente
+  STOCK_QUEUE_WORKER: 'on'
+  STOCK_QUEUE_POLL_MS: '200'
+  # El montón de Node queda por debajo del tope del contenedor para que el recolector actúe antes del OOM.
+  NODE_OPTIONS: --max-old-space-size=170
+
+services:
+  db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: load
+      POSTGRES_PASSWORD: ${LOAD_DB_PASSWORD:-load-only-db-password}
+      POSTGRES_DB: load
+    command: postgres -c shared_buffers=48MB -c max_connections=40 -c work_mem=2MB
+    volumes:
+      - dbdata:/var/lib/postgresql
+    deploy:
+      resources:
+        limits: *limits
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U load -d load']
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  # Una sola vez: migraciones, Gerente y catálogo de ejemplo (los mismos comandos que en producción).
+  setup:
+    build:
+      context: ../../services/api
+    environment: *api-env
+    command:
+      - sh
+      - -c
+      - >-
+        node node_modules/typeorm/cli.js migration:run -d dist/shared/infrastructure/database/data-source.js &&
+        node dist/identity/infrastructure/cli/seed-manager.js &&
+        node dist/seed/seed-catalog.js
+    depends_on:
+      db:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits: *limits
+    restart: 'no'
+
+  api:
+    build:
+      context: ../../services/api
+    environment: *api-env
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+    deploy:
+      resources:
+        limits: *limits
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://localhost:10010/health').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))"
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  k6:
+    profiles: [run]
+    build:
+      context: .
+      dockerfile: Dockerfile.k6
+    environment:
+      BASE_URL: http://api:10010
+      SCENARIO: ${SCENARIO:-all}
+      MANAGER_EMAIL: manager@load.local
+      MANAGER_PASSWORD: ${LOAD_MANAGER_PASSWORD:-LoadTestPassword123}
+    depends_on:
+      api:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits: *limits
+
+volumes:
+  dbdata:
