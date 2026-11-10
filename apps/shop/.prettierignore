@@ -1,6 +1,4 @@
-node_modules
-.next
-build
 dist
-*.lock
-public
+.astro
+node_modules
+pnpm-lock.yaml
