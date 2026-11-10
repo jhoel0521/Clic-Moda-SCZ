@@ -20,6 +20,12 @@
     "build:api": "pnpm --dir services/api build",
     "build:all": "pnpm build:shop && pnpm build:admin && pnpm build:api",
     "lint:all": "pnpm --dir apps/shop lint && pnpm --dir apps/admin lint && pnpm --dir services/api lint",
+    "test:shop": "pnpm --dir apps/shop test",
+    "test:admin": "pnpm --dir apps/admin test",
+    "test:api": "pnpm --dir services/api test",
+    "test:all": "pnpm test:shop && pnpm test:admin && pnpm test:api",
+    "verify:projects": "node scripts/verify-projects.mjs",
+    "check": "pnpm verify:projects && pnpm secrets:scan && pnpm lint:all && pnpm test:all && pnpm build:all",
     "secrets:scan": "secretlint \"**/*\""
   },
   "devDependencies": {

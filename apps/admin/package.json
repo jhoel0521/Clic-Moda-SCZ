@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "echo \"admin: pendiente de scaffolding\"",
     "build": "echo \"admin: pendiente de scaffolding\"",
-    "lint": "echo \"admin: pendiente de scaffolding\""
+    "lint": "echo \"admin: pendiente de scaffolding\"",
+    "test": "echo \"admin: pendiente de scaffolding\""
   },
   "engines": {
     "node": ">=26",
