@@ -67,6 +67,9 @@ export interface StockQuery {
   readonly text?: string;
   // Solo variantes activas agotadas (disponible 0 o menos).
   readonly soldOut?: boolean;
+  // Paginar por PRODUCTO: cada página trae todas las variantes (que cumplan el filtro) de sus productos,
+  // y `total` cuenta productos. Así un producto nunca queda partido entre dos páginas.
+  readonly byProduct?: boolean;
 }
 
 export type LowStockQuery = StockQuery;

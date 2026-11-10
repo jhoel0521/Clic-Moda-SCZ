@@ -35,6 +35,10 @@ export const stockQuerySchema = z.object({
     .enum(['true', 'false'])
     .transform((value) => value === 'true')
     .optional(),
+  byProduct: z
+    .enum(['true', 'false'])
+    .transform((value) => value === 'true')
+    .optional(),
 });
 export type StockQueryDto = z.infer<typeof stockQuerySchema>;
 

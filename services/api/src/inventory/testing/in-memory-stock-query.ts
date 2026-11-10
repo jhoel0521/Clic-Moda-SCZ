@@ -17,6 +17,23 @@ const page = <T>(all: T[], query: { page: number; pageSize: number }) => ({
   pageSize: query.pageSize,
 });
 
+// Pagina por producto: cada página trae todas las variantes de sus productos (los productos ya vienen contiguos).
+const pagedByProduct = (rows: StockRow[], query: { page: number; pageSize: number }) => {
+  const names = [...new Set(rows.map((row) => row.productName))];
+  const chosen = new Set(
+    names.slice((query.page - 1) * query.pageSize, query.page * query.pageSize)
+  );
+  return {
+    items: rows.filter((row) => chosen.has(row.productName)),
+    total: names.length,
+    page: query.page,
+    pageSize: query.pageSize,
+  };
+};
+
+const paged = (rows: StockRow[], query: { page: number; pageSize: number; byProduct?: boolean }) =>
+  query.byProduct ? pagedByProduct(rows, query) : page(rows, query);
+
 const matches = (row: StockRow, text?: string): boolean => {
   if (!text) return true;
   const needle = text.toLowerCase();
@@ -32,14 +49,14 @@ export class InMemoryStockQuery implements StockQueryPort {
       .filter((row) => matches(row, query.text))
       .filter((row) => !query.soldOut || (row.active && row.available <= 0))
       .sort((a, b) => a.productName.localeCompare(b.productName) || a.sku.localeCompare(b.sku));
-    return page(rows, query);
+    return paged(rows, query);
   }
 
   async listLowStock(query: LowStockQuery): Promise<StockPage> {
     const rows = this.rows()
       .filter((row) => row.active && row.available <= row.reorderLevel && matches(row, query.text))
       .sort((a, b) => a.available - b.available || a.sku.localeCompare(b.sku));
-    return page(rows, query);
+    return paged(rows, query);
   }
 
   async listMovements(variantId: VariantId, query: MovementsQuery): Promise<MovementPage> {

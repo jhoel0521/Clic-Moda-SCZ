@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
+import { setVariantActive } from '../lib/active';
 import { deactivateVariants, listSoldOutVariants } from '../lib/bulk';
 import { api } from '../lib/client-api';
 import type { MovementKind, StockRow } from '../lib/stock';
 import { errorMessage, type Page } from '../lib/types';
 import MovementSheet from './MovementSheet';
-import StockCard from './StockCard';
+import ProductGroup, { groupByProduct, type RowActions } from './StockGroup';
 import { Badge, Button, EmptyState, ErrorBanner, Field } from './ui';
 
 type Tab = 'stock' | 'low' | 'out';
@@ -42,7 +43,7 @@ function useStock(view: View) {
     setData(null);
     void reload();
   }, [reload]);
-  return { data, error, reload, setError };
+  return { data, setData, error, reload, setError };
 }
 
 function usePending(trigger: unknown): number {
@@ -124,22 +125,13 @@ const EMPTY_TITLES: Record<Tab, string> = {
   out: 'No hay variantes agotadas',
 };
 
-interface ListProps {
-  data: Page<StockRow>;
-  tab: Tab;
-  canWrite: boolean;
-  canDeactivate: boolean;
-  onAction: (row: StockRow, kind: MovementKind) => void;
-  onDeactivate: (row: StockRow) => void;
-}
-
-function StockList({ data, tab, ...rest }: ListProps) {
+function StockList({ data, tab, ...actions }: RowActions & { data: Page<StockRow>; tab: Tab }) {
   if (data.items.length === 0) return <EmptyState title={EMPTY_TITLES[tab]} icon="warehouse" />;
   return (
     <ul className="flex flex-col gap-3">
-      {data.items.map((row) => (
-        <li key={row.variantId}>
-          <StockCard row={row} {...rest} />
+      {groupByProduct(data.items).map((group) => (
+        <li key={group.name}>
+          <ProductGroup name={group.name} rows={group.rows} {...actions} />
         </li>
       ))}
     </ul>
@@ -176,7 +168,7 @@ function Status({ error, loading }: { error: string | null; loading: boolean }) 
 async function bulkDeactivate(text: string): Promise<string | null> {
   const rows = await listSoldOutVariants(text);
   if (rows.length === 0) return 'No hay variantes activas agotadas.';
-  const ask = `¿Desactivar ${rows.length} variante(s) agotadas? Podrás reactivarlas desde Productos cuando vuelvan a tener stock.`;
+  const ask = `¿Desactivar ${rows.length} variante(s) agotadas? Podrás reactivarlas cuando vuelvan a tener stock.`;
   if (!window.confirm(ask)) return null;
   return `Listo: ${await deactivateVariants(rows)} variante(s) desactivadas.`;
 }
@@ -218,16 +210,6 @@ interface Action {
   kind: MovementKind;
 }
 
-interface BodyProps {
-  view: View;
-  data: Page<StockRow>;
-  canWrite: boolean;
-  canDeactivate: boolean;
-  reload: () => Promise<void>;
-  onPage: (page: number) => void;
-  onError: (message: string) => void;
-}
-
 function ActionSheet(props: { action: Action; reload: () => Promise<void>; onClose: () => void }) {
   const { action, reload, onClose } = props;
   return (
@@ -240,33 +222,61 @@ function ActionSheet(props: { action: Action; reload: () => Promise<void>; onClo
   );
 }
 
-function useDeactivate(reload: () => Promise<void>, onError: (message: string) => void) {
-  return (row: StockRow) => void deactivateVariants([row]).then(reload, (failure) => onError(errorMessage(failure)));
+interface Data {
+  data: Page<StockRow>;
+  setData: (page: Page<StockRow>) => void;
+  reload: () => Promise<void>;
+  onError: (message: string) => void;
 }
 
-function Body({ view, data, canWrite, canDeactivate, reload, onPage, onError }: BodyProps) {
+// Interruptor optimista de una variante: cambia al instante; si falla vuelve atrás y avisa.
+function useToggle({ data, setData, reload, onError }: Data) {
+  return (row: StockRow) => {
+    const mark = (active: boolean) =>
+      setData({
+        ...data,
+        items: data.items.map((item) => (item.variantId === row.variantId ? { ...item, active } : item)),
+      });
+    mark(!row.active);
+    setVariantActive(row.variantId, !row.active).then(reload, (failure) => {
+      mark(row.active);
+      onError(errorMessage(failure));
+    });
+  };
+}
+
+interface BodyProps extends Data {
+  view: View;
+  canWrite: boolean;
+  canDeactivate: boolean;
+  onPage: (page: number) => void;
+}
+
+function Body({ view, canWrite, canDeactivate, onPage, ...rest }: BodyProps) {
   const [action, setAction] = useState<Action | null>(null);
-  const deactivate = useDeactivate(reload, onError);
+  const onToggle = useToggle(rest);
   return (
     <>
-      {canDeactivate && view.tab === 'out' && <BulkVariants text={view.text} total={data.total} onDone={reload} />}
+      {canDeactivate && view.tab === 'out' && (
+        <BulkVariants text={view.text} total={rest.data.total} onDone={rest.reload} />
+      )}
       <StockList
-        data={data}
+        data={rest.data}
         tab={view.tab}
         canWrite={canWrite}
         canDeactivate={canDeactivate}
+        onToggle={onToggle}
         onAction={(row, kind) => setAction({ row, kind })}
-        onDeactivate={deactivate}
       />
-      <Pager page={view.page} total={data.total} onPage={onPage} />
-      {action && <ActionSheet action={action} reload={reload} onClose={() => setAction(null)} />}
+      <Pager page={view.page} total={rest.data.total} onPage={onPage} />
+      {action && <ActionSheet action={action} reload={rest.reload} onClose={() => setAction(null)} />}
     </>
   );
 }
 
 export default function StockManager({ canWrite, canDeactivate }: { canWrite: boolean; canDeactivate: boolean }) {
   const { view, change, setPage } = useView();
-  const { data, error, reload, setError } = useStock(view);
+  const { data, setData, error, reload, setError } = useStock(view);
   const pending = usePending(data);
   return (
     <div className="flex flex-col gap-4">
@@ -277,11 +287,12 @@ export default function StockManager({ canWrite, canDeactivate }: { canWrite: bo
         <Body
           view={view}
           data={data}
+          setData={setData}
+          reload={reload}
+          onError={setError}
           canWrite={canWrite}
           canDeactivate={canDeactivate}
-          reload={reload}
           onPage={setPage}
-          onError={setError}
         />
       )}
     </div>

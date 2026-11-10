@@ -175,6 +175,45 @@ function soldOutCases(make: Factory): void {
   });
 }
 
+function byProductCases(make: Factory): void {
+  it('byProduct pagina por producto: nunca parte un producto entre páginas y total cuenta productos', async () => {
+    const world = await make();
+    for (const [name, sizes] of [
+      ['Alfa', ['36', '37', '38']],
+      ['Beta', ['36', '37']],
+      ['Gama', ['40']],
+    ] as const) {
+      for (const size of sizes)
+        await world.newVariant({ sku: `${name}-${size}`.toUpperCase(), productName: name, size });
+    }
+    const first = await world.query.listStock({ page: 1, pageSize: 2, byProduct: true });
+    const second = await world.query.listStock({ page: 2, pageSize: 2, byProduct: true });
+
+    expect(first.total).toBe(3);
+    expect([...new Set(first.items.map((row) => row.productName))]).toEqual(['Alfa', 'Beta']);
+    expect(first.items).toHaveLength(5);
+    expect(second.items.map((row) => row.productName)).toEqual(['Gama']);
+  });
+}
+
+function byProductCases2(make: Factory): void {
+  it('con filtro, trae solo las variantes que cumplen pero todas las de la página', async () => {
+    const world = await make();
+    const a = await world.newVariant({ sku: 'AL-1', productName: 'Alfa', size: '36' });
+    await world.newVariant({ sku: 'AL-2', productName: 'Alfa', size: '37' });
+    await world.setLevel(a, { onHand: 4 });
+    const out = await world.query.listStock({
+      page: 1,
+      pageSize: 5,
+      soldOut: true,
+      byProduct: true,
+    });
+
+    expect(out.items.map((row) => row.sku)).toEqual(['AL-2']);
+    expect(out.total).toBe(1);
+  });
+}
+
 // Suite de contrato: toda implementación del puerto (fake en memoria y SQL) debe pasarla.
 export function stockQueryContract(label: string, make: Factory): void {
   describe(`StockQueryPort: ${label}`, () => {
@@ -184,6 +223,8 @@ export function stockQueryContract(label: string, make: Factory): void {
     lowStockCases(make);
     movementCases(make);
     soldOutCases(make);
+    byProductCases(make);
+    byProductCases2(make);
     movementCases2(make);
   });
 }

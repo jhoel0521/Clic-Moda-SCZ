@@ -10,19 +10,33 @@ import {
 import { Operator, Reason } from '../../src/inventory/domain/value-objects/stock-values.vo.js';
 import type { VariantInfo } from '../../src/inventory/testing/stock-query.contract.js';
 
-// Crea una categoría, un producto y una variante reales con SQL directo y devuelve el id de la variante.
-export async function insertVariant(db: DataSource, info: VariantInfo): Promise<VariantId> {
-  const [categoryId, productId, variantId] = [randomUUID(), randomUUID(), randomUUID()];
+// Devuelve el producto con ese nombre (lo crea con su categoría si no existe): varias variantes del mismo
+// nombre pertenecen al MISMO producto, como en el catálogo real.
+async function productNamed(db: DataSource, name: string): Promise<string> {
+  const found: { id: string }[] = await db.query(
+    'SELECT id FROM products WHERE name = $1 LIMIT 1',
+    [name]
+  );
+  if (found[0]) return found[0].id;
+  const [categoryId, productId] = [randomUUID(), randomUUID()];
+  const label = `cat-${categoryId}`;
   await db.query('INSERT INTO categories (id, name, slug) VALUES ($1, $2, $3)', [
     categoryId,
-    `cat-${categoryId}`,
-    `cat-${categoryId}`,
+    label,
+    label,
   ]);
   await db.query('INSERT INTO products (id, category_id, name) VALUES ($1, $2, $3)', [
     productId,
     categoryId,
-    info.productName,
+    name,
   ]);
+  return productId;
+}
+
+// Crea una variante real (y su producto si hace falta) con SQL directo y devuelve su id.
+export async function insertVariant(db: DataSource, info: VariantInfo): Promise<VariantId> {
+  const variantId = randomUUID();
+  const productId = await productNamed(db, info.productName);
   await db.query(
     `INSERT INTO product_variants (id, product_id, sku, size, color, price_cents, active)
      VALUES ($1, $2, $3, $4, $5, 10000, $6)`,

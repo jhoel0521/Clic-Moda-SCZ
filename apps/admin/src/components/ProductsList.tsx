@@ -1,15 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
+import { setProductActive } from '../lib/active';
 import { deactivateAll, listActiveWithoutStock } from '../lib/bulk';
 import { api } from '../lib/client-api';
 import { errorMessage, type Category, type Page, type Product } from '../lib/types';
-import Icon from './Icon';
-import { Badge, Button, Card, EmptyState, ErrorBanner, Field, SelectField } from './ui';
+import { Badge, Button, Card, EmptyState, ErrorBanner, Field, SelectField, Switch } from './ui';
 
 interface Filters {
   text: string;
   categoryId: string;
   active: string; // '', 'true' o 'false'
-  stock: string; // '', 'out' (sin stock) o 'in' (con stock)
+  stock: string; // '', 'out' (todo agotado), 'partial' (alguna agotada) o 'in' (con stock)
   page: number;
 }
 
@@ -42,7 +42,7 @@ function useProducts(filters: Filters) {
     setData(null);
     void reload();
   }, [reload]);
-  return { data, error, reload, setError };
+  return { data, setData, error, reload, setError };
 }
 
 function useCategoryNames(): Map<string, string> {
@@ -59,20 +59,17 @@ const priceRange = (product: Product): string => {
   return low === high ? `Bs ${low.toFixed(2)}` : `Bs ${low.toFixed(2)} – ${high.toFixed(2)}`;
 };
 
-function RowInfo({ product, categoryName }: { product: Product; categoryName: string }) {
-  const count = product.variants.length;
+// Una sola línea de stock por producto: lo disponible y, si hay, cuántas variantes están agotadas.
+function StockLine({ product }: { product: Product }) {
+  const units = product.available;
+  const soldOut = product.soldOutVariants ?? 0;
+  if (units === undefined) return null;
+  if (units === 0) return <p className="text-warning text-sm font-semibold">Todo agotado</p>;
+  const detail = soldOut > 0 ? ` · ${soldOut} de ${product.variants.length} variantes agotadas` : '';
   return (
-    <div className="flex min-w-0 flex-1 items-center gap-3">
-      <span className="bg-tint text-action flex size-12 shrink-0 items-center justify-center rounded-xl">
-        <Icon name="box" className="size-6" />
-      </span>
-      <div className="min-w-0">
-        <p className="truncate font-semibold">{product.name}</p>
-        <p className="text-muted truncate text-sm">
-          {categoryName} · {count} {count === 1 ? 'variante' : 'variantes'}
-        </p>
-      </div>
-    </div>
+    <p className={`text-sm ${soldOut > 0 ? 'text-warning font-medium' : 'text-muted'}`}>
+      {units} disponibles{detail}
+    </p>
   );
 }
 
@@ -83,28 +80,36 @@ interface RowProps {
   onToggle: (product: Product) => void;
 }
 
-function ProductCard({ product, categoryName, canWrite, onToggle }: RowProps) {
+function ProductInfo({ product, categoryName }: Pick<RowProps, 'product' | 'categoryName'>) {
   return (
-    <Card className="flex flex-col gap-3 p-4">
-      <div className="flex items-start justify-between gap-3">
-        <RowInfo product={product} categoryName={categoryName} />
-        <Badge tone={product.active ? 'success' : 'warning'}>{product.active ? 'Activo' : 'Inactivo'}</Badge>
-      </div>
-      <PriceAndStock product={product} />
-      {canWrite && (
-        <div className="grid grid-cols-2 gap-3">
-          <a
-            href={`/productos/${product.id}`}
-            className="border-border hover:bg-hover inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border font-semibold"
-          >
-            <Icon name="pencil" /> Editar
-          </a>
-          <Button variant="secondary" onClick={() => onToggle(product)}>
-            {product.active ? 'Desactivar' : 'Activar'}
-          </Button>
-        </div>
+    <>
+      <p className="truncate font-semibold">{product.name}</p>
+      <p className="text-muted truncate text-sm">
+        {categoryName} · {priceRange(product)}
+      </p>
+      <StockLine product={product} />
+    </>
+  );
+}
+
+// Una fila por producto: toca el nombre para editar y usa el interruptor para habilitar o deshabilitar.
+function ProductRow({ product, categoryName, canWrite, onToggle }: RowProps) {
+  const info = <ProductInfo product={product} categoryName={categoryName} />;
+  return (
+    <li className={`flex items-center gap-2 px-4 py-2 ${product.active ? '' : 'opacity-60'}`}>
+      {canWrite ? (
+        <a href={`/productos/${product.id}`} className="min-w-0 flex-1 py-2">
+          {info}
+        </a>
+      ) : (
+        <div className="min-w-0 flex-1 py-2">{info}</div>
       )}
-    </Card>
+      {canWrite ? (
+        <Switch checked={product.active} label={`${product.name}: activo`} onChange={() => onToggle(product)} />
+      ) : (
+        <Badge tone={product.active ? 'success' : 'neutral'}>{product.active ? 'Activo' : 'Inactivo'}</Badge>
+      )}
+    </li>
   );
 }
 
@@ -164,30 +169,23 @@ function SelectFilters({ filters, categories, onChange }: FilterBarProps) {
   );
 }
 
-// Precio y unidades disponibles de un producto (0 = sin stock, en naranja para verlo de un vistazo).
-function PriceAndStock({ product }: { product: Product }) {
-  const units = product.available;
-  const soldOut = product.soldOutVariants ?? 0;
+function FilterBar({ filters, categories, onChange }: FilterBarProps) {
+  const set = (changes: Partial<Filters>) => onChange({ ...changes, page: 1 });
   return (
-    <div className="flex flex-col gap-1">
-      <div className="flex items-center justify-between gap-3">
-        <p className="text-lg font-bold">{priceRange(product)}</p>
-        {units !== undefined && (
-          <Badge tone={units === 0 ? 'warning' : 'neutral'}>
-            {units === 0 ? 'Todo agotado' : `${units} disponibles`}
-          </Badge>
-        )}
-      </div>
-      {soldOut > 0 && units !== 0 && (
-        <p className="text-warning text-sm font-medium">
-          {soldOut} de {product.variants.length} variantes agotadas
-        </p>
-      )}
+    <div className="flex flex-col gap-3">
+      <Field
+        label="Buscar por nombre o SKU"
+        type="search"
+        enterKeyHint="search"
+        value={filters.text}
+        onChange={(e) => set({ text: e.target.value })}
+      />
+      <SelectFilters filters={filters} categories={categories} onChange={set} />
     </div>
   );
 }
 
-// Pide los activos sin stock, confirma con la cantidad real y los desactiva (no borra nada).
+// Pide los activos totalmente agotados, confirma con la cantidad real y los desactiva (no borra nada).
 async function bulkDeactivate(filters: Filters): Promise<string | null> {
   const found = await listActiveWithoutStock(filters);
   if (found.length === 0) return 'No hay productos activos sin stock.';
@@ -212,7 +210,7 @@ function useBulk(filters: Filters, onDone: () => Promise<void>) {
   return { message, busy, run };
 }
 
-// Con el filtro "Sin stock": desactiva de una vez todos los productos activos agotados.
+// Con el filtro "Todo agotado": desactiva de una vez todos los productos activos sin una sola unidad.
 function BulkDeactivate({ filters, onDone }: { filters: Filters; onDone: () => Promise<void> }) {
   const { message, busy, run } = useBulk(filters, onDone);
   return (
@@ -225,22 +223,6 @@ function BulkDeactivate({ filters, onDone }: { filters: Filters; onDone: () => P
           {message}
         </p>
       )}
-    </div>
-  );
-}
-
-function FilterBar({ filters, categories, onChange }: FilterBarProps) {
-  const set = (changes: Partial<Filters>) => onChange({ ...changes, page: 1 });
-  return (
-    <div className="flex flex-col gap-3">
-      <Field
-        label="Buscar por nombre o SKU"
-        type="search"
-        enterKeyHint="search"
-        value={filters.text}
-        onChange={(e) => set({ text: e.target.value })}
-      />
-      <SelectFilters filters={filters} categories={categories} onChange={set} />
     </div>
   );
 }
@@ -306,26 +288,49 @@ function EmptyProducts({ canWrite }: { canWrite: boolean }) {
 function Items({ items, names, canWrite, onToggle }: ItemsProps) {
   if (items.length === 0) return <EmptyProducts canWrite={canWrite} />;
   return (
-    <ul className="flex flex-col gap-3">
-      {items.map((product) => (
-        <li key={product.id}>
-          <ProductCard
+    <Card>
+      <ul className="divide-line divide-y">
+        {items.map((product) => (
+          <ProductRow
+            key={product.id}
             product={product}
             categoryName={names.get(product.categoryId) ?? '—'}
             canWrite={canWrite}
             onToggle={onToggle}
           />
-        </li>
-      ))}
-    </ul>
+        ))}
+      </ul>
+    </Card>
   );
 }
 
-function useToggle(reload: () => Promise<void>, setError: (message: string | null) => void) {
-  return (product: Product) =>
-    api('PATCH', `catalog/products/${product.id}/active`, { active: !product.active })
-      .then(reload)
-      .catch((failure) => setError(errorMessage(failure)));
+// Interruptor optimista: cambia al instante y, si el servidor falla, vuelve atrás y avisa.
+function useToggle(
+  data: Page<Product> | null,
+  setData: (page: Page<Product>) => void,
+  setError: (message: string | null) => void
+) {
+  return (product: Product) => {
+    if (!data) return;
+    const mark = (active: boolean) =>
+      setData({ ...data, items: data.items.map((item) => (item.id === product.id ? { ...item, active } : item)) });
+    mark(!product.active);
+    setProductActive(product.id, !product.active).catch((failure) => {
+      mark(product.active);
+      setError(errorMessage(failure));
+    });
+  };
+}
+
+function ListStatus({ error, loading }: { error: string | null; loading: boolean }) {
+  if (error) return <ErrorBanner>{error}</ErrorBanner>;
+  return loading ? <p className="text-muted">Cargando…</p> : null;
+}
+
+function useFilters() {
+  const [filters, setFilters] = useState<Filters>(INITIAL);
+  const merge = (changes: Partial<Filters>) => setFilters({ ...filters, ...changes });
+  return { filters, setFilters, merge };
 }
 
 interface BodyProps {
@@ -346,22 +351,11 @@ function Body({ filters, data, names, canWrite, onFilters, onToggle }: BodyProps
   );
 }
 
-function ListStatus({ error, loading }: { error: string | null; loading: boolean }) {
-  if (error) return <ErrorBanner>{error}</ErrorBanner>;
-  return loading ? <p className="text-muted">Cargando…</p> : null;
-}
-
-function useFilters() {
-  const [filters, setFilters] = useState<Filters>(INITIAL);
-  const merge = (changes: Partial<Filters>) => setFilters({ ...filters, ...changes });
-  return { filters, setFilters, merge };
-}
-
 export default function ProductsList({ canWrite }: { canWrite: boolean }) {
   const { filters, setFilters, merge } = useFilters();
-  const { data, error, reload, setError } = useProducts(filters);
+  const { data, setData, error, reload, setError } = useProducts(filters);
   const names = useCategoryNames();
-  const toggle = useToggle(reload, setError);
+  const toggle = useToggle(data, setData, setError);
   return (
     <div className="flex flex-col gap-4">
       <FilterBar filters={filters} categories={names} onChange={merge} />
@@ -374,7 +368,7 @@ export default function ProductsList({ canWrite }: { canWrite: boolean }) {
           names={names}
           canWrite={canWrite}
           onFilters={setFilters}
-          onToggle={(p) => void toggle(p)}
+          onToggle={toggle}
         />
       )}
     </div>

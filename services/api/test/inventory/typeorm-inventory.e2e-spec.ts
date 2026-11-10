@@ -29,7 +29,7 @@ interface Ctx {
 const variantFor = (ctx: Ctx, info: Partial<VariantInfo> = {}) =>
   insertVariant(ctx.db(), {
     sku: `SKU-${Math.random().toString(36).slice(2, 8)}`,
-    productName: 'Producto',
+    productName: `Producto ${Math.random().toString(36).slice(2, 8)}`,
     ...info,
   });
 
