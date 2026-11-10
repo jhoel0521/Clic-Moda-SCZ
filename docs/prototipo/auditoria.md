@@ -2,7 +2,7 @@
 
 > Fuente: tag `demo-aprobada` (commit `bff10c1`), leído desde un `git worktree` fuera del repositorio. Es una lectura del **código**: no se levantó la demo ni se tomaron capturas de pantalla (la hoja de ruta las menciona; quedan pendientes si el cliente las pide).
 >
-> Las columnas **Decisión**, **Rebanada** y **Pregunta al cliente** son una **propuesta** pendiente de revisión y aprobación (tarea 8.2 de `platform-foundation`).
+> Documento **vivo y no vinculante**: las columnas **Decisión**, **Rebanada** y **Pregunta al cliente** son una guía inicial, corregida con las respuestas del cliente (sección 5). Cada decisión se revisa al abrir su rebanada; lo que queda en shop, pasa al admin o va a la API se decide al implementarlo, y algunas piezas pueden quedar a medias.
 
 **Leyenda de decisión:** **Conservar** (misma idea y comportamiento), **Mejorar** (la idea sirve, la implementación no), **Descartar** (no se lleva al producto).
 
@@ -108,4 +108,4 @@ Cada endpoint del prototipo se reemplaza por uno de `services/api` con roles. Ni
 - **Pasarela de pagos, NIT y banners**: fuera de alcance por ahora; el diseño de puertos permite agregarlos.
 - Para el punto 7: empezar con zapatos como **catálogo inicial** es razonable y simplifica (tallas numéricas, sin medidas de tela), siempre que el modelo de producto no quede atado a zapatos. Es una decisión de negocio tuya; el cambio técnico es pequeño.
 
-**Estado:** respuestas incorporadas. La tarea 8.2 se cierra cuando confirmes que las columnas de decisión de las secciones 2 a 4 reflejan esto.
+**Estado:** respuestas incorporadas. Sin aprobación final: se ajusta a medida que se implementa.
