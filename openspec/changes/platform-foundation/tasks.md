@@ -56,7 +56,7 @@
 
 ## 8. Auditoría del prototipo
 
-- [ ] 8.1 Levantar el prototipo desde el tag con `git worktree add` fuera del repo y crear `docs/prototipo/auditoria.md` con el inventario de rutas, pantallas y flujos; verificar que cada ruta bajo `src/app` del tag aparece en la tabla.
+- [x] 8.1 Levantar el prototipo desde el tag con `git worktree add` fuera del repo y crear `docs/prototipo/auditoria.md` con el inventario de rutas, pantallas y flujos; verificar que cada ruta bajo `src/app` del tag aparece en la tabla.
 - [ ] 8.2 Completar para cada funcionalidad la decisión (conservar, mejorar, descartar), el motivo, la rebanada destino y las preguntas para el cliente; verificar que el usuario la revisa y la aprueba o corrige.
 
 ## 9. Integración
