@@ -4,7 +4,9 @@ import type { Env } from '../config/env.schema.js';
 
 type DbEnv = Pick<Env, 'DB_HOST' | 'DB_PORT' | 'DB_USER' | 'DB_PASSWORD' | 'DB_NAME'>;
 
-// Desde el JS compilado (dist) cargan los .js; desde las fuentes (pruebas) cargan los .ts.
+// Desde el JS compilado (dist) cargan los .js. Desde las fuentes (pruebas) las migraciones .ts se
+// importan directamente, pero las entidades llevan decoradores, que el cargador nativo de Node no
+// soporta: ahí las registra Nest (autoLoadEntities) y el glob de entidades no se usa.
 const ext = import.meta.filename.endsWith('.ts') ? 'ts' : 'js';
 const glob = (...parts: string[]) =>
   join(import.meta.dirname, ...parts)
@@ -22,7 +24,7 @@ export function buildDataSourceOptions(env: DbEnv): DataSourceOptions {
     username: env.DB_USER,
     password: env.DB_PASSWORD,
     database: env.DB_NAME,
-    entities: [glob(...SRC, '**', `*.orm-entity.${ext}`)],
+    entities: ext === 'js' ? [glob(...SRC, '**', '*.orm-entity.js')] : [],
     migrations: [glob('migrations', `*.${ext}`)],
     synchronize: false,
   };

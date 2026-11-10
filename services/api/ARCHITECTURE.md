@@ -122,6 +122,15 @@ HTTP (400, 404, 409, 403). Ninguna otra capa conoce códigos HTTP.
 | `infrastructure` | e2e con Postgres real (`pnpm test:e2e`, base `clic_moda_test`) |
 | Puertos | **Prueba de contrato**: una misma suite (`xxxContract(factory)`) se ejecuta contra el *fake* y contra la implementación real, de modo que el fake no puede divergir |
 
+Los **fakes en memoria y las suites de contrato** viven en `src/<contexto>/testing/` (fuera de las
+tres capas, por eso pueden importar de todas). La suite `xxxRepositoryContract(label, make)` se
+registra desde un `*.spec.ts` (contra el fake) y desde un `test/**/*.e2e-spec.ts` (contra la
+implementación real). Cada llamada a `make` debe devolver un repositorio **vacío**.
+
+Las migraciones generadas con `pnpm migration:generate` hay que revisarlas y cambiar su primera
+línea a `import type { MigrationInterface, QueryRunner } from 'typeorm'`: en las e2e se cargan
+directamente desde TypeScript y los tipos no existen en ejecución.
+
 ## 9. Nombres de archivo
 
 `*.entity.ts`, `*.vo.ts`, `*.error.ts` (dominio) · `*.port.ts` · `*.use-case.ts` ·
