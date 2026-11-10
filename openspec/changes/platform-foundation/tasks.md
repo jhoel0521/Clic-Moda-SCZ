@@ -1,6 +1,6 @@
 # Tasks
 
-> Supuesto: ORM TypeORM 1.1.2 (ver `design.md`, Open Questions). Todas las tareas de código llevan sus pruebas dentro del mismo grupo; el último grupo es solo integración.
+> Supuesto: ORM TypeORM 1.1.2 (ver `design.md`, Open Questions). Todas las tareas de código llevan sus pruebas dentro del mismo grupo; el último grupo es solo integración. El orquestador solo conoce `lint`, `test`, `build`, `format` y el escáner de secretos.
 
 ## 1. Retirada del prototipo
 
@@ -20,31 +20,31 @@
 
 ## 4. Chore inicial de `services/api` (NestJS 12.4.2)
 
-- [ ] 4.1 Generar con `nest new -p pnpm --skip-git --strict` en `services/api`, fijar `@nestjs/*` en 12.4.2, `packageManager` pnpm 12.18.0 y `engines` Node ≥ 26, y definir los scripts `dev`, `build`, `lint`, `test`, `test:e2e`; verificar `pnpm --dir services/api build`, `test` y una petición al servidor de desarrollo.
-- [ ] 4.2 Configurar la regla `max-lines-per-function` (25) como `error` y Prettier; verificar que una función de 26 líneas de prueba falla el lint y que `lint` queda en verde sin ella.
-- [ ] 4.3 Añadir `@nestjs/config` con validación de variables, el endpoint `GET /health` y la documentación OpenAPI en `/docs` (`@nestjs/swagger` 12.1.1); verificar con una prueba unitaria y una e2e del endpoint de salud, y que `/docs` responde 200.
+- [ ] 4.1 Generar con `nest new -p pnpm --skip-git --strict` en un directorio temporal, traerlo a `services/api` conservando ESM, Vitest, oxlint y el `AGENTS.md` del template, fijar `@nestjs/*` en 12.4.2, `packageManager` pnpm 12.18.0 y `engines` Node ≥ 26, y añadir el script `format` y `prettier --check` dentro de `lint`; verificar `pnpm --dir services/api build`, `test` y una petición al servidor de desarrollo.
+- [ ] 4.2 Configurar `max-lines-per-function` (25, `skipBlankLines` y `skipComments`) como `error` en `.oxlintrc.json`; verificar que una función de 26 líneas de prueba falla `lint`, que pasa sin ella y que `pnpm verify:projects` marca `services/api` como ✔.
+- [ ] 4.3 Añadir `@nestjs/config` con validación de variables con Zod, `GET /health` con `@nestjs/terminus` 12.1.0 y la documentación OpenAPI en `/docs` (`@nestjs/swagger` 12.1.1); verificar con una prueba unitaria y una e2e del endpoint de salud, y que `/docs` responde 200.
 
 ## 5. Base de datos y pruebas e2e
 
 - [ ] 5.1 Crear `docker-compose.yml` con PostgreSQL (versión mayor fijada tras `docker pull`) y un script que crea `clic_moda` y `clic_moda_test`, más `.env.example`; verificar con `docker compose up -d` y `pg_isready` que ambas bases existen.
-- [ ] 5.2 Configurar TypeORM 1.1.2 + `@nestjs/typeorm` 12.0.3 con `DataSource` para la CLI, `synchronize: false` y scripts de migración; crear la migración inicial de `staff_users` y `login_attempts`; verificar que `migration:run` y `migration:revert` funcionan sobre ambas bases.
+- [ ] 5.2 Configurar TypeORM 1.1.2 + `@nestjs/typeorm` 12.0.3 con `DataSource` para la CLI, `synchronize: false` y scripts de migración; verificar que `migration:run` y `migration:revert` funcionan sobre ambas bases.
 - [ ] 5.3 Crear el soporte de pruebas e2e (arranque de la base de prueba, migraciones y limpieza de tablas entre casos); verificar que `pnpm --dir services/api test:e2e` ejecuta la prueba de salud contra Postgres real.
 
-## 6. Acceso del personal
+## 6. Acceso del personal (paquetes oficiales de Nest)
 
-- [ ] 6.1 Implementar el hash de contraseñas con `crypto.scrypt` (sal por usuario, `timingSafeEqual`); verificar con pruebas unitarias que dos cuentas con la misma contraseña tienen hashes distintos y que la verificación acepta la correcta y rechaza la errónea.
-- [ ] 6.2 Crear la entidad de personal y el comando idempotente `seed:manager` (falla nombrando `INITIAL_MANAGER_EMAIL` o `INITIAL_MANAGER_PASSWORD` si faltan y no crea nada); verificar con pruebas de primer arranque, de ejecución repetida y de configuración ausente.
-- [ ] 6.3 Implementar `POST /auth/login` con token de 8 h que lleva `sub` y `role`, y respuesta genérica idéntica para email desconocido o contraseña errónea; verificar con pruebas e2e de credenciales válidas y de ambos fallos comparando las respuestas.
-- [ ] 6.4 Implementar el límite de intentos (5 fallos en 15 min bloquean incluso con la contraseña correcta; un acceso correcto reinicia el contador, y los emails inexistentes también cuentan); verificar con pruebas unitarias con reloj simulado y una e2e.
-- [ ] 6.5 Implementar `AuthGuard`, `RolesGuard` y el decorador `@Roles()` con los roles Gerente, Despacho y Atención, y una ruta protegida de ejemplo; verificar con pruebas e2e de sin token, token vencido, rol insuficiente (403) y rol permitido.
-- [ ] 6.6 Comprobar que ninguna respuesta ni línea de log contiene contraseñas o hashes; verificar con una prueba que inspecciona las respuestas de login y los logs capturados.
+- [ ] 6.1 Crear la entidad `users` (email único, `email_verified`, `roles`, hash de contraseña nulo permitido) y su `UsersRepository`, con la migración correspondiente; verificar con pruebas de creación, de email duplicado y de lectura de roles.
+- [ ] 6.2 Configurar `@nestjs/authentication` 0.1.5 (versión exacta) con inicio de sesión por contraseña, tokens de acceso con refresh rotativo, techo de sesión de 8 horas y `TypeOrmAuthenticationStore`, generando y revisando la migración de sus 8 tablas; verificar que pasan las pruebas de contrato del almacén (`authenticationStoreContract()`) contra Postgres y con una e2e de inicio de sesión válido (credenciales con el rol, vigencia ≤ 8 h) y de fallo con la misma respuesta para email desconocido y contraseña errónea.
+- [ ] 6.3 Implementar el comando idempotente `seed:manager` con `PasswordHasher` (falla nombrando `INITIAL_MANAGER_EMAIL` o `INITIAL_MANAGER_PASSWORD` si faltan y no crea nada); verificar con pruebas de primer arranque, de ejecución repetida y de configuración ausente.
+- [ ] 6.4 Aplicar `@nestjs/throttler` 6.7.1 al inicio de sesión (clave email + IP, 5 intentos por 15 minutos, sin distinguir el resultado); verificar con una e2e que el sexto intento recibe "demasiadas peticiones" incluso con la contraseña correcta y que otro email no se ve afectado.
+- [ ] 6.5 Implementar el `RolesGuard` y el decorador `@Roles()` con los roles Gerente, Despacho y Atención, y una ruta protegida de ejemplo; verificar con pruebas e2e de sin credenciales, credenciales vencidas, rol insuficiente (403) y rol permitido.
+- [ ] 6.6 Comprobar que ninguna respuesta ni línea de log contiene contraseñas o hashes; verificar con una prueba que inspecciona las respuestas de inicio de sesión y los logs capturados.
 
 ## 7. Puertas de calidad y documentación
 
-- [ ] 7.1 Añadir en la raíz los scripts `dev:*`, `test:all`, `test:e2e`, `check` y `check:full`, y extender `.husky/pre-commit` para correr lint-staged, `lint:all`, `test:all` y `build:all` en los tres proyectos; verificar que `pnpm check` pasa y que, con un test roto a propósito, `sh .husky/pre-commit` falla nombrando el subproyecto y el paso.
+- [ ] 7.1 Completar los scripts de la raíz (`test:e2e` y `check:full`; ya existen `dev:*`, `test:all`, `verify:projects` y `check`) y confirmar el hook; verificar que con un test roto a propósito `sh .husky/pre-commit` falla nombrando el subproyecto y el paso.
 - [ ] 7.2 Actualizar `.secretlintignore` para `dist`, `.astro` y artefactos nuevos y comprobar que el escáner sigue detectando un token falso en los tres proyectos; verificar con `pnpm secrets:scan` y un archivo de prueba temporal.
 - [ ] 7.3 Crear un Dockerfile por proyecto (`node:26-alpine`, pnpm) sin dependencias de desarrollo en la imagen final; verificar con `docker build` del de `services/api` y de uno de los Astro.
-- [ ] 7.4 Actualizar README (estructura, comandos, requisitos, Docker), los `.env.example` y `docs/database.dbml` (tablas de personal y de intentos), y volver a ejecutar `ux-init` en modo sync; verificar ejecutando los comandos del README tal cual y que `detect.mjs` lista shop y admin.
+- [ ] 7.4 Actualizar README (estructura, comandos, requisitos, Docker, contrato de proyectos), los `.env.example` y `docs/database.dbml` (usuarios y tablas de autenticación), y volver a ejecutar `ux-init` en modo sync; verificar ejecutando los comandos del README tal cual y que `detect.mjs` lista shop y admin.
 
 ## 8. Auditoría del prototipo
 
@@ -59,5 +59,6 @@
 ## Workflow follow-up
 
 - Hacer `push` del tag `demo-aprobada` solo si el usuario lo aprueba.
+- Crear el change `account-identity` (login con correo, Google y TikTok y unificación de cuentas por correo verificado; TikTok no entrega correo, hay que verificarlo por enlace mágico). Requiere decidir el proveedor de correo y registrar las apps de Google y de TikTok.
 - Reescribir `store-branding-config` sobre esta base (Astro + NestJS) como rebanada 1.
 - Marcar el Paso 0 en `openspec/ROADMAP.md` y archivar el change tras la revisión.

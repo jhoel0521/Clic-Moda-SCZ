@@ -4,66 +4,71 @@
 
 Ver `proposal.md` (Why) y `specs/` (requisitos). Estado y datos verificados el 2026-11-10:
 
-- **Repo**: monorepo pnpm sin workspace compartido; `apps/shop` contiene la app Next.js; `apps/admin` y `services/api` solo tienen un `package.json` placeholder. El orquestador raíz ya tiene `husky` + `lint-staged` + `secretlint`; el hook corre lint-staged, `lint:all` y `build:all`.
-- **Versiones** (npm, vigentes): NestJS `12.4.2` (CLI `12.0.12`, Node ≥ 20), `@nestjs/typeorm 12.0.3` (acepta `typeorm ^1.0.0-dev`, por tanto 1.1.2), `@nestjs/jwt 12.0.4`, `@nestjs/swagger 12.1.1`, `@nestjs/config 12.1.1`, TypeORM `1.1.2`, `pg 8.23.1`, Astro `7.4.8` (Node ≥ 22.23.4), `@astrojs/node 11.1.11` (pide Astro ^7.2.1), `@astrojs/react 7.1.5`, `@tailwindcss/vite 4.3.5`, Vitest `5.1.0`, Jest `30.5.2`, Playwright `1.65.0`.
-- **Astro no tiene canal LTS** en npm: solo `latest`, `beta`, `rc` y `legacy` (4.16.19).
-- **Prisma**: su tag `latest` apunta a `8.0.0-rc.33` (release candidate) mientras el cliente estable es `7.10.1`; un `pnpm add prisma` sin versión instalaría el RC.
-- **Generadores**: `nest new` admite `-p pnpm`, `--skip-git`, `--skip-install`, `--strict`; `create-astro` (5.3.1) admite `--template`, `--add`, `--no-git`, `--no-install`, `--no-ai`, `--yes`.
+- **Repo**: monorepo pnpm sin workspace compartido. `apps/shop` y `apps/admin` ya son proyectos Astro 7.4.8 (commits `7a55149` y `2550864`); `services/api` sigue siendo un placeholder. El hook de commit corre `verify:projects`, secretlint, `lint:all`, `test:all` y `build:all`.
+- **Versiones** (npm): NestJS `12.4.2` (CLI `12.0.12`), `@nestjs/typeorm 12.0.3` (acepta `typeorm ^1.0.0-dev`, por tanto 1.1.2), `@nestjs/swagger 12.1.1`, `@nestjs/config 12.1.1`, `@nestjs/terminus 12.1.0`, `@nestjs/throttler 6.7.1`, **`@nestjs/authentication 0.1.5`** y **`@nestjs/authorization 0.1.3`** (oficiales, aún pre-1.0), TypeORM `1.1.2`, `pg 8.23.1`, Vitest `5.1.0` en Astro y `^4.1.2` en el template de Nest.
+- **El generador de Nest 12 produce** (verificado): proyecto **solo ESM** (`"type": "module"`, imports con `.js`, sin `__dirname`), pruebas con **Vitest** (no Jest), lint con **oxlint** type-aware (no ESLint), un `AGENTS.md` con guía para agentes y la lista de paquetes oficiales que conviene usar antes de escribir código propio. oxlint soporta `max-lines-per-function` con `skipBlankLines` y `skipComments` (probado: cuenta 28 líneas donde corresponde).
+- **`@nestjs/authentication`** (documentación oficial): contraseña con `scrypt` (`PasswordHasher`), Google por OIDC (`oidc.providers`), enlaces mágicos, verificación de correo y recuperación de contraseña, tokens de acceso JWT con refresh rotativo (`TokenService`) y sesión por cookie. **No vincula cuentas entre proveedores** (eso lo decide la aplicación con `OidcAccountResolver`), no incluye límite de intentos (lo hace `@nestjs/throttler`) ni roles (son datos de la app). En producción exige un almacén persistente: ofrece `TypeOrmAuthenticationStore` con 8 tablas. Para enviar correos hace falta un transporte real (`LogMailTransport` solo sirve en desarrollo).
+- **TikTok** (documentación oficial del endpoint de usuario): devuelve `open_id`, `union_id`, nombre y fotos; **no tiene ningún campo de correo ni de teléfono**.
+- **Astro no tiene canal LTS** en npm (solo `latest`, `beta`, `rc`, `legacy`). **Prisma**: su tag `latest` es un RC (8.0.0-rc.33), el estable es 7.10.1.
 - **Entorno**: Windows 11, Node 26.13.0, pnpm 12.18.0, Docker 29.8.1, sin PostgreSQL local.
-- **Prototipo**: sin control de acceso en `/api/*`, sin pruebas, ~75 funciones sobre 25 líneas.
 
 ## Goals / Non-Goals
 
 **Goals:**
-- Tres proyectos que arrancan, compilan, pasan lint y tienen al menos una prueba real cada uno.
-- Un único comando raíz que ejecuta todas las puertas de calidad, reutilizable por CI.
-- Acceso del personal funcionando de punta a punta contra Postgres real.
-- Poder recuperar cualquier pantalla o flujo del prototipo sin conservarlo en el árbol de trabajo.
+- Tres proyectos que arrancan, compilan, pasan lint y tienen pruebas reales.
+- Un contrato mínimo y **agnóstico de herramientas**: el orquestador solo llama a `lint`, `test`, `build`, `format` y al escáner de secretos.
+- Acceso del personal funcionando de punta a punta contra Postgres real, **preparado para añadir proveedores de identidad sin rehacer el modelo**.
+- Poder recuperar cualquier pantalla del prototipo sin conservarlo en el árbol de trabajo.
 
 **Non-Goals:**
-- Funcionalidad de negocio, auth de clientes, despliegue, CI hospedada (solo se deja el comando listo).
+- Login con Google y TikTok y la unificación de cuentas por correo (change `account-identity`, ver D12).
+- Funcionalidad de negocio, auth de clientes, despliegue, CI hospedada.
 - Portar código del prototipo.
 
 ## Decisions
 
-**D1. Orden estricto de la retirada del prototipo.** (1) crear el tag local `demo-aprobada` sobre el commit actual y verificar que `git show demo-aprobada:apps/shop/package.json` funciona; (2) comprobar `origin/demo/movil-first` y `origin/gh-pages`; (3) recién entonces `git rm -r apps/shop`. El tag es solo local hasta que el usuario apruebe hacer `push` (acción hacia afuera). *Alternativa descartada*: mover la app a `apps/shop-legacy` (deja la mezcla dentro del árbol, se cuela en lint y build). Para consultar el prototipo en marcha: `git worktree add ../clic-moda-prototipo demo-aprobada`, fuera del repo.
+**D1. Orden estricto de la retirada del prototipo.** Tag local `demo-aprobada` → verificar ramas de demo → `git rm` de `apps/shop`. El tag es local hasta que el usuario apruebe el `push`. Se consulta con `git show demo-aprobada:...` o con `git worktree add` fuera del repo. *(Hecho: tareas 1.1 y 1.2.)*
 
-**D2. Chore de Astro con generador y adaptador Node.** `create-astro` con `--template minimal --no-git --no-install --no-ai --yes`, luego `@astrojs/node` en modo servidor (SSR; la configuración de marca debe estar en el primer pintado) y `@tailwindcss/vite`. En `apps/admin` se añade `@astrojs/react`. TypeScript en `strict`. *Alternativa descartada*: salida estática (obligaría a reconstruir cada vez que cambie la configuración).
+**D2. Chore de Astro con generador y adaptador Node.** `create-astro` con `--template minimal --no-git --no-install --no-ai --yes`, `@astrojs/node` en modo servidor (SSR) y `@tailwindcss/vite`; admin añade `@astrojs/react`. TypeScript 6.0.3 (por el límite `<6.1.0` de `typescript-eslint`). `lint` incluye `prettier --check` y `astro check`, porque el build de Astro no revisa tipos. *(Hecho en shop y admin.)*
 
-**D3. Chore de Nest con generador.** `nest new -p pnpm --skip-git --strict` dentro de `services/api`. Se conserva el ejecutor de pruebas por defecto de Nest (Jest + `supertest` + `@nestjs/testing`) por ser el idiomático del framework; Astro usa Vitest. *Alternativa descartada*: unificar en Vitest (más fricción con los decoradores y `@nestjs/testing`).
+**D3. Chore de Nest con generador, respetando sus valores por defecto.** `nest new -p pnpm --skip-git --strict` en un directorio temporal y se trae a `services/api`. Se conservan ESM, **Vitest** (el mismo que Astro, lo que unifica) y **oxlint** type-aware. Validación de entrada con **Zod** mediante `StandardSchemaValidationPipe` (sin decoradores ni `class-validator`). Se conserva el `AGENTS.md` del template. *Alternativas descartadas*: Jest (ya no es el default), ESLint solo para la API (el contrato lo hace innecesario).
 
-**D4. PostgreSQL en Docker, dos bases.** `services/api/docker-compose.yml` con la imagen de PostgreSQL fijada por versión mayor (se comprueba con `docker pull` al implementar) y un script de inicialización que crea `clic_moda` y `clic_moda_test`. Las pruebas e2e usan la segunda, aplican las migraciones y limpian tablas entre casos.
+**D4. PostgreSQL en Docker, dos bases.** `services/api/docker-compose.yml` con la imagen fijada por versión mayor (se comprueba con `docker pull`) y un script que crea `clic_moda` y `clic_moda_test`. Las e2e usan la segunda, aplican migraciones y limpian tablas entre casos.
 
-**D5. TypeORM con migraciones.** `synchronize: false`, `DataSource` propio para la CLI, migraciones versionadas en el repo, entidades con nombres de tabla en `snake_case`. *Por qué no Prisma*: el RC en `latest` (ver Context); queda anotado como reversible si el usuario lo prefiere.
+**D5. TypeORM con migraciones.** `synchronize: false`, `DataSource` propio para la CLI, entidades en `snake_case`. Las 8 tablas del almacén de autenticación (`sessions`, `refresh_tokens`, `mfa_authenticators`, `mfa_recovery_codes`, `mfa_failures`, `magic_links`, `oidc_logins`, `email_tokens`) se generan con `migration:generate` y se revisan antes de aplicarlas.
 
-**D6. Auth propia y mínima.** `@nestjs/jwt` (sin Passport) con un `AuthGuard` y un `RolesGuard` + decorador `@Roles()`. Token de acceso de 8 h con `sub` y `role`. Contraseñas con `crypto.scrypt` (sal por usuario, comparación con `timingSafeEqual`), sin dependencias nativas. Roles como enumeración: `GERENTE`, `DESPACHO`, `ATENCION`. Respuesta genérica idéntica para email desconocido o contraseña errónea.
+**D6. Autenticación con el paquete oficial.** `@nestjs/authentication` (versión **exacta**, es 0.1.x) con inicio de sesión por contraseña, `PasswordHasher` (scrypt) y `TypeOrmAuthenticationStore`. El admin (Astro SSR) usa **tokens de acceso con refresh rotativo** desde su servidor y los guarda en una cookie `httpOnly` propia, sin exponerlos a JavaScript del navegador. El techo de 8 horas del spec se configura en el paquete (`session`/`accessToken`) y, si no hay opción que lo garantice, se hace cumplir con una comprobación propia. Se ejecutan las pruebas de contrato del almacén (`authenticationStoreContract()`) contra Postgres. *Alternativa descartada*: JWT y hash propios (más código que mantener y probar).
 
-**D7. Límite de intentos en base de datos.** Tabla `login_attempts(email, failed_count, window_started_at)`: cubre también emails inexistentes (no revela cuáles existen) y sobrevive a reinicios. 5 fallos en 15 min bloquean; un acceso correcto reinicia el contador. *Alternativa descartada*: memoria del proceso (se pierde al reiniciar y no escala a varias instancias).
+**D7. Roles con guard propio.** El paquete no impone roles. Se define `Role` (`GERENTE`, `DESPACHO`, `ATENCION`) como dato del usuario y un `RolesGuard` + `@Roles()` mínimos. `@nestjs/authorization` (0.1.3) queda para evaluarse en una rebanada con permisos más finos.
 
-**D8. Usuario inicial por comando idempotente.** `pnpm --dir services/api seed:manager` lee `INITIAL_MANAGER_EMAIL` e `INITIAL_MANAGER_PASSWORD`; si falta alguna, falla nombrándolas y no crea nada; si ya existe un Gerente, no hace nada. Los valores viven en `.env` (ignorado por git) y `.env.example` solo documenta los nombres. Nunca hay contraseña por defecto en el repo.
+**D8. Límite de intentos con `@nestjs/throttler`.** Receta oficial de límite por cuenta: clave email + IP, 5 intentos por 15 minutos, **sin distinguir el resultado** (así cambió el spec: es más simple y más seguro que contar solo fallos). Almacenamiento en memoria mientras haya una sola instancia; Redis cuando haya varias.
 
-**D9. Puertas de calidad.** Scripts raíz: `test:all` (pruebas **unitarias y de componente, sin servicios externos**) y `check` = `secrets:scan` + `lint:all` + `test:all` + `build:all`. El hook de commit ejecuta lint-staged + `lint:all` + `test:all` + `build:all`. Las pruebas **e2e** (necesitan Docker/Postgres y navegador) quedan en `test:e2e`, que no corre en el hook para no hacerlo frágil ni lento; se ejecutan con `pnpm check:full` y en CI. Regla `max-lines-per-function` (`max: 25`, sin blancos ni comentarios) como `error` en los tres proyectos; `lint-staged` ya activa Prettier + ESLint por proyecto al existir su `eslint.config.*`, por lo que cada proyecto instala su propio Prettier (Astro con `prettier-plugin-astro`).
+**D9. Usuario inicial por comando idempotente.** `seed:manager` lee `INITIAL_MANAGER_EMAIL` e `INITIAL_MANAGER_PASSWORD`, falla nombrándolas si faltan y no hace nada si ya existe un Gerente. Usa `PasswordHasher`. Los valores viven en `.env` (ignorado por git).
 
-**D10. Auditoría del prototipo como documento.** `docs/prototipo/auditoria.md`: una fila por funcionalidad con *qué hace hoy*, *decisión* (conservar, mejorar, descartar), *motivo* y *rebanada destino*. Se elabora leyendo el tag y ejecutando el prototipo en el worktree de D1, y es la entrada de los specs de cada rebanada.
+**D10. Contrato agnóstico y puertas de calidad.** Cada proyecto expone los scripts `lint`, `test`, `build` y `format`, y la regla `max-lines-per-function` (25, sin blancos ni comentarios) como `error` en **su** linter (ESLint en Astro, oxlint en la API). `scripts/verify-projects.mjs` lo verifica sin conocer el motor. El hook ejecuta: `verify:projects` → secretlint sobre lo staged → `lint:all` → `test:all` → `build:all`. `lint-staged` solo conoce secretlint. Las e2e (Docker y navegador) quedan en `test:e2e` / `check:full`, fuera del hook. *(Hecho en los commits `56787c9` y `e88a1c0`.)*
 
-**D11. `.ux/` tras el cambio.** Se vuelve a ejecutar `ux-init` en modo sync para que detecte shop y admin nuevos. `tokens.json` se conserva como referencia del prototipo hasta que la rebanada 1 defina el tema real de la nueva shop; `config.yaml` queda con `theme: null` para las apps nuevas.
+**D11. Auditoría del prototipo y `.ux/`.** `docs/prototipo/auditoria.md` (qué hace, decisión, motivo, rebanada destino). `ux-init` en modo sync al terminar; `tokens.json` se conserva como referencia hasta que la rebanada 1 defina el tema real.
+
+**D12. Modelo de usuario listo para múltiples identidades.** La tabla `users` guarda `email` único, `email_verified`, `roles` y el hash de contraseña (puede ser nulo). No se crea aún la tabla de identidades externas; se hará en `account-identity`. **Restricción ya conocida**: TikTok no entrega correo, de modo que ese change tendrá que verificar un correo por enlace mágico antes de vincular o crear la cuenta, y solo vincular cuando el correo esté verificado en ambos lados (la política que el propio paquete recomienda).
 
 ## Risks / Trade-offs
 
-- **Versiones mayores muy recientes** (Nest 12, TypeORM 1.x, Astro 7) → verificar que cada generador arranca y compila antes de seguir; fijar versiones exactas; si algo falla, anotarlo y abrir issue o buscar la versión estable previa.
-- **Sin tienda funcional durante la reconstrucción** → la demo publicada y el tag cubren las presentaciones; el cliente no debe usar la nueva shop hasta la rebanada 4.
-- **Hook más lento** (tests en cada commit) → solo unitarias; si molesta, mover `test:all` a `pre-push` sin perder la puerta.
-- **Docker obligatorio para e2e** → documentado en README; sin Docker solo se pierden las pruebas e2e.
-- **Borrado irreversible por descuido** → el orden de D1 (tag y verificación antes de `git rm`) es parte de las tareas, y `git checkout demo-aprobada -- apps/shop` lo revierte.
-- **Contador de intentos en BD** → añade una escritura por intento fallido; irrelevante a esta escala.
+- **Paquetes de autenticación pre-1.0 (0.1.x)** → versión exacta, pruebas de contrato del almacén, revisar el changelog antes de actualizar; si fallan, el plan B es D6 anterior (JWT propio).
+- **Versiones mayores muy recientes** (Nest 12, TypeORM 1.x, Astro 7) → verificar que cada generador compila antes de seguir; fijar versiones exactas.
+- **Correo saliente**: verificación de correo, recuperación y enlaces mágicos necesitan un proveedor real; en desarrollo se usa el transporte de log → decisión pendiente para producción.
+- **Throttler en memoria** → se reinicia con el proceso y no se comparte entre instancias; aceptable con una instancia, Redis después.
+- **Sin tienda funcional durante la reconstrucción** → la demo publicada y el tag cubren las presentaciones.
+- **Hook más lento** → solo unitarias; si molesta, mover `test:all` a `pre-push`.
+- **Docker obligatorio para e2e** → documentado; sin Docker solo se pierden las e2e.
 
 ## Migration Plan
 
-1. Tag y verificación del prototipo (D1) → 2. retirada de `apps/shop` → 3. chores de los tres proyectos → 4. Postgres y migraciones → 5. auth y seed → 6. puertas de calidad y documentación → 7. auditoría del prototipo.
-*Rollback*: antes del paso 2, nada cambia; después, `git checkout demo-aprobada -- apps/shop` restaura la shop Next.js completa. No hay datos que migrar.
+1. Retirada y chores de shop y admin *(hecho)* → 2. chore de la API → 3. Postgres y migraciones → 4. autenticación, límite de intentos y roles → 5. puertas de calidad restantes, Dockerfiles y documentación → 6. auditoría del prototipo.
+*Rollback*: `git checkout demo-aprobada -- apps/shop` restaura la shop Next.js. No hay datos que migrar.
 
 ## Open Questions
 
+- Proveedor de correo para producción (Resend, SMTP, otro) y desde qué dominio.
 - Confirmar TypeORM frente a Prisma 7.10.1 fijada.
 - Versión mayor de PostgreSQL de la imagen (se fija al implementar, tras `docker pull`).
-- ¿Se hace `push` del tag `demo-aprobada` al remoto? (acción hacia afuera; decide el usuario)
+- ¿Se hace `push` del tag `demo-aprobada` al remoto?

@@ -58,7 +58,7 @@ Deja los tres proyectos vacíos pero vivos, con las herramientas ya exigidas. **
 - [ ] 0.4 Chore inicial de `apps/admin` con Astro 7.4.8 (mismas bases + islas React).
 - [ ] 0.5 Chore inicial de `services/api` con NestJS 12.4.2 (`nest new -p pnpm --skip-git`), endpoint de salud, OpenAPI, regla de 25 líneas como `error`.
 - [ ] 0.6 PostgreSQL en `docker compose` (desarrollo y pruebas), TypeORM con migraciones (sin `synchronize`), variables de entorno documentadas.
-- [ ] 0.7 Auth de personal: login con JWT y guard de roles (Gerente, Despacho, Atención), contraseñas con `crypto.scrypt`, usuario Gerente de semilla.
+- [ ] 0.7 Auth de personal con los paquetes oficiales de Nest (`@nestjs/authentication`, `@nestjs/throttler`): correo y contraseña, roles (Gerente, Despacho, Atención), límite de intentos por correo y Gerente de semilla; modelo de usuario preparado para más proveedores.
 - [ ] 0.8 Orquestador y hooks: scripts `dev:*`, `build:*`, `lint:*`, `test:*` de los 3 proyectos, `lint-staged` extendido, `.ux/` re-sincronizado (`ux-init`), Dockerfiles y README.
 - [ ] 0.9 Auditoría del prototipo: inventario de lo que hace la demo (con captura de pantallas y flujos) y decisión conservar / mejorar / descartar por funcionalidad; es la base de los specs de las rebanadas siguientes.
 
@@ -78,11 +78,13 @@ Productos, categorías, etiquetas, tallas, stock por talla, medidas, imágenes. 
 
 - **API:** CRUD y búsqueda/filtros, almacenamiento de imágenes. **Admin:** gestión de productos y stock. **Shop:** catálogo y detalle móvil-first.
 
-## Rebanada 3 — Clientes y sesión
+## Rebanada 3 — Identidad de cuentas (`account-identity`)
 
-Registro y login de clientes, perfil, favoritos. *Auditar:* si hace falta registro obligatorio o basta nombre + teléfono.
+Login con **correo, Google y TikTok**, con **una sola cuenta por persona**: si las tres identidades usan el mismo correo, se agrupan en vez de crear tres cuentas. Perfil y favoritos. *Auditar:* si hace falta registro obligatorio o basta nombre + teléfono.
 
-- **API:** auth de clientes (y verificación por teléfono si se valida). **Admin:** consulta de clientes. **Shop:** login, perfil.
+- **Restricción verificada:** TikTok **no entrega correo ni teléfono** (solo `open_id`, `union_id`, nombre y foto). Para unificar, quien entra con TikTok debe verificar un correo por enlace mágico, y solo se vincula a una cuenta existente cuando el correo está verificado en ambos lados; si no, se crea una cuenta nueva.
+- **API:** tabla de identidades externas, vinculación por correo verificado, Google por OIDC (preset del paquete oficial), TikTok como proveedor propio (OAuth de TikTok Login Kit; hay que comprobar si es compatible con OIDC), enlaces mágicos y verificación de correo. **Admin:** consulta de clientes. **Shop:** login y perfil.
+- **Necesita fuera del código:** proveedor de correo saliente, una app de Google (OAuth) y una app de TikTok for Developers aprobada, con dominio y HTTPS.
 
 ## Rebanada 4 — Carrito y checkout
 
@@ -137,3 +139,5 @@ Catálogo con filtros y stock por talla; carrito persistente con cupones; checko
 | 5 | Orden de las rebanadas 2–7 según prioridad del cliente | Todas |
 | 6 | Hosting concreto (proveedor, región) y presupuesto mensual | Producción |
 | 7 | Almacenamiento de imágenes (S3-compatible / CDN) | Rebanada 2 |
+| 8 | Proveedor de correo saliente (verificación, recuperación, enlaces mágicos) y dominio remitente | Paso 0 (dev) / Rebanada 3 |
+| 9 | Registrar las apps de Google (OAuth) y de TikTok for Developers (Login Kit, requiere revisión): ¿a nombre de quién, con qué dominio? | Rebanada 3 |
