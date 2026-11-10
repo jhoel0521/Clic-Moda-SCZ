@@ -49,6 +49,11 @@ export class User {
     return new User({ ...props, roles: uniqueRoles(props.roles) });
   }
 
+  // Reemplaza el hash de la contraseña (restablecimiento hecho por quien administra el servidor).
+  changePasswordHash(hash: PasswordHash): void {
+    this.props = { ...this.props, passwordHash: hash };
+  }
+
   get id(): UserId {
     return this.props.id;
   }

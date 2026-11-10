@@ -1,0 +1,24 @@
+---
+import '../styles/global.css';
+import LoginForm from '../components/LoginForm';
+
+if (Astro.locals.session) return Astro.redirect('/');
+const next = Astro.url.searchParams.get('next') ?? undefined;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Iniciar sesión · Clic Moda</title>
+  </head>
+  <body class="flex min-h-screen items-center justify-center px-4">
+    <main class="w-full max-w-sm rounded-xl border border-line bg-surface p-6 shadow-sm">
+      <h1 class="mb-1 text-2xl font-bold text-action">Clic Moda</h1>
+      <p class="mb-6 text-muted">Panel de administración</p>
+      <LoginForm client:load next={next} />
+    </main>
+  </body>
+</html>

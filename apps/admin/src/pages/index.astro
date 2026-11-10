@@ -1,17 +1,26 @@
 ---
-import Greeting from '../components/Greeting';
-import '../styles/global.css';
+import AdminLayout from '../layouts/AdminLayout.astro';
+
+const name = Astro.locals.session?.user.name ?? '';
+const cards = [
+  { href: '/categorias', title: 'Categorías', text: 'Organiza los productos por tipo.' },
+  { href: '/productos', title: 'Productos', text: 'Registra productos y sus tallas y colores.' },
+  { href: '/almacen', title: 'Almacén', text: 'Stock, ingresos, ajustes y movimientos.' },
+];
 ---
 
-<html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>Administración</title>
-  </head>
-  <body class="bg-white text-neutral-900">
-    <Greeting client:load name="Gerente" />
-  </body>
-</html>
+<AdminLayout title={`Hola, ${name}`}>
+  <ul class="grid gap-4 sm:grid-cols-3">
+    {cards.map((card) => (
+      <li>
+        <a
+          href={card.href}
+          class="block h-full rounded-xl border border-line bg-surface p-5 hover:border-action"
+        >
+          <h2 class="text-lg font-semibold">{card.title}</h2>
+          <p class="mt-1 text-muted">{card.text}</p>
+        </a>
+      </li>
+    ))}
+  </ul>
+</AdminLayout>

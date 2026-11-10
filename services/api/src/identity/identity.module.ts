@@ -8,6 +8,7 @@ import { ACCESS_TOKEN_ISSUER } from './application/ports/access-token-issuer.por
 import { PASSWORD_HASHER } from './application/ports/password-hasher.port.js';
 import { AssignRolesUseCase } from './application/use-cases/assign-roles.use-case.js';
 import { AuthenticateStaffUseCase } from './application/use-cases/authenticate-staff.use-case.js';
+import { ResetPasswordUseCase } from './application/use-cases/reset-password.use-case.js';
 import { SearchUsersUseCase } from './application/use-cases/search-users.use-case.js';
 import { SeedManagerUseCase } from './application/use-cases/seed-manager.use-case.js';
 import { ROLE_EVENTS_REPOSITORY } from './domain/role-events.repository.port.js';
@@ -71,6 +72,7 @@ const AUTH_STORAGE_REGISTRATION = Symbol('AuthStorageRegistration');
     SeedManagerUseCase,
     AssignRolesUseCase,
     SearchUsersUseCase,
+    ResetPasswordUseCase,
   ],
   exports: [
     USERS_REPOSITORY,
@@ -78,6 +80,7 @@ const AUTH_STORAGE_REGISTRATION = Symbol('AuthStorageRegistration');
     SeedManagerUseCase,
     AssignRolesUseCase,
     SearchUsersUseCase,
+    ResetPasswordUseCase,
   ],
 })
 export class IdentityModule {}

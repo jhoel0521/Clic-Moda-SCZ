@@ -23,6 +23,7 @@
     "db:seed": "node scripts/orchestrate.mjs db seed",
     "db:fresh": "node scripts/orchestrate.mjs db fresh",
     "db:fresh:seed": "node scripts/orchestrate.mjs db fresh-seed",
+    "password:reset": "node scripts/orchestrate.mjs run api -- pnpm --dir services/api password:reset",
     "preflight": "node scripts/orchestrate.mjs preflight",
     "dev": "pnpm preflight && concurrently -k -n api,admin,shop -c blue,magenta,green \"pnpm dev:api\" \"pnpm dev:admin\" \"pnpm dev:shop\"",
     "dev:api": "node scripts/orchestrate.mjs run api -- pnpm --dir services/api dev",

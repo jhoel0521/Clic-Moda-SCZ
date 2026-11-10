@@ -1,1 +1,28 @@
 @import 'tailwindcss';
+
+/* Tokens de .ux/standard/tokens.json con los pares de contraste verificados (AA):
+   texto 16.8:1, texto atenuado 6.2:1, acción con texto blanco 5.25:1, borde de campos 3.9:1. */
+@theme {
+  --color-bg: #fff9fb;
+  --color-surface: #ffffff;
+  --color-text: #24151c;
+  --color-muted: #6b5a64;
+  --color-action: #c7305a;
+  --color-action-hover: #b0284f;
+  --color-on-action: #ffffff;
+  --color-border: #8a7a84;
+  --color-line: #ede7e9;
+  --color-danger: #b91c1c;
+  --color-success: #15803d;
+  --color-warning: #92400e;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-action);
+  outline-offset: 2px;
+}
