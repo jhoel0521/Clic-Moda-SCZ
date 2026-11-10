@@ -45,3 +45,18 @@ The system SHALL provide a single command at the repository root that runs the f
 #### Scenario: Run all gates on demand
 - **WHEN** a developer runs the single root command
 - **THEN** secrets, lint, tests and build run for every subproject and the command fails if any of them fails
+
+### Requirement: API layer boundaries are enforced
+The system MUST make lint fail when a file in a domain layer of `services/api` imports a framework, a persistence or HTTP library, or code from the application or infrastructure layers, and when a file in an application layer imports infrastructure code or a persistence or HTTP library. The error SHALL name the file and the forbidden import.
+
+#### Scenario: Domain imports a framework
+- **WHEN** a file under a domain folder imports a Nest package
+- **THEN** lint reports an error naming the file and the import, and the commit is rejected
+
+#### Scenario: Application imports infrastructure
+- **WHEN** a file under an application folder imports code from an infrastructure folder or the TypeORM library
+- **THEN** lint reports an error naming the file and the import, and the commit is rejected
+
+#### Scenario: Allowed dependencies
+- **WHEN** infrastructure code imports domain and application code, and application code imports domain code and the dependency-injection decorators of `@nestjs/common`
+- **THEN** lint reports no boundary error

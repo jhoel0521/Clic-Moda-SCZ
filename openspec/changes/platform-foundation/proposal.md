@@ -12,6 +12,7 @@ La shop actual (Next.js) es una mezcla de decisiones del proyecto universitario,
 - Chore inicial de `services/api` con **NestJS 12.4.2**, con endpoint de salud y documentación OpenAPI.
 - PostgreSQL en `docker compose` para desarrollo y pruebas, con TypeORM 1.1.2 y migraciones (sin sincronización automática).
 - Acceso del personal con los **paquetes oficiales de Nest** (`@nestjs/authentication`, `@nestjs/throttler`): inicio de sesión con correo y contraseña, roles (Gerente, Despacho, Atención al Cliente), límite de intentos por correo y un Gerente inicial de semilla. Un usuario puede tener **varios roles**, y un comando de servidor (`node dist/cli/assign-roles.js`, sin depender del gestor de paquetes) permite asignarlos en casos extremos con búsqueda, confirmación y selección múltiple, dejando registro y protegiendo al último Gerente. El modelo de usuario queda preparado para sumar proveedores de identidad.
+- **Arquitectura hexagonal como estándar del API** (`services/api/ARCHITECTURE.md`): dominio, aplicación e infraestructura separados, DTOs por capa, objetos de valor, interfaces (puertos) frente a implementaciones (adaptadores) y pruebas de contrato; los límites de capa los hace cumplir el linter y se reubica el código ya construido. Es la forma de construir todo lo que venga después.
 - Herramientas de calidad en los tres proyectos con un **contrato agnóstico del motor de lint**: cada uno expone `lint`, `test`, `build` y `format`, con la regla de 25 líneas por función como error (ESLint en Astro, oxlint en la API); el hook de commit corre secretos, lint, pruebas y build de todo.
 - Orquestador y documentación actualizados (`dev:*`, `build:*`, `lint:*`, `test:*`, README, Dockerfiles) y `.ux/` re-sincronizado.
 - Auditoría del prototipo como entregable: inventario de lo que hace la demo con decisión conservar / mejorar / descartar, que alimenta los specs de las rebanadas siguientes.
@@ -20,7 +21,7 @@ La shop actual (Next.js) es una mezcla de decisiones del proyecto universitario,
 
 ### New Capabilities
 - `staff-auth`: inicio y cierre de sesión del personal, roles y protección de rutas de la API por rol.
-- `repo-quality-gates`: puertas de calidad automáticas de cada commit (secretos, formato, lint, pruebas y build) sobre todos los subproyectos y límites de tamaño de función.
+- `repo-quality-gates`: puertas de calidad automáticas de cada commit (secretos, formato, lint, pruebas y build) sobre todos los subproyectos, límites de tamaño de función y **límites de capa del API** (dominio, aplicación e infraestructura).
 
 ### Modified Capabilities
 <!-- Ninguna: openspec/specs/ está vacío. -->
@@ -29,7 +30,8 @@ La shop actual (Next.js) es una mezcla de decisiones del proyecto universitario,
 
 - **`apps/shop`**: se elimina todo el código actual (Next.js, 15 menciones de marca, rutas `/api/*` sin protección) y queda un esqueleto Astro. Hasta que existan las rebanadas de catálogo y checkout, la tienda real es solo el prototipo publicado.
 - **`apps/admin` y `services/api`**: pasan de placeholders a proyectos reales.
-- **Raíz**: `package.json`, `.lintstagedrc.mjs`, `.husky/pre-commit`, README, `.ux/`, `openspec/config.yaml`.
+- **Raíz**: `package.json`, `.lintstagedrc.mjs`, `.husky/pre-commit`, README, `.ux/`, `openspec/config.yaml` (el contexto y las reglas exigen el estándar hexagonal a todo change de API).
+- **`services/api`**: se reorganiza en `src/<contexto>/{domain,application,infrastructure}` y `src/shared/`; nuevos `ARCHITECTURE.md` y reglas de lint por capa; `config`, `database`, `docs` y `health` cambian de ubicación sin cambiar su comportamiento.
 - **Dependencias nuevas**: NestJS 12.4.2 (+ `@nestjs/typeorm` 12.0.3, `@nestjs/authentication` 0.1.5, `@nestjs/throttler` 6.7.1, `@nestjs/terminus` 12.1.0, `@nestjs/swagger` 12.1.1, `@nestjs/config` 12.1.1), TypeORM 1.1.2, `pg`, Zod, oxlint, Astro 7.4.8 (+ `@astrojs/node` 11.1.11, `@astrojs/react` 7.1.5), Tailwind v4 (`@tailwindcss/vite`), Vitest (Astro y API) y Playwright.
 - **Infraestructura local**: Docker (ya disponible, 29.8.1) para PostgreSQL.
 - **Fase del roadmap**: Paso 0 (Fundación) de `openspec/ROADMAP.md`.
@@ -41,4 +43,6 @@ La shop actual (Next.js) es una mezcla de decisiones del proyecto universitario,
 - ORM: TypeORM 1.1.2. Prisma queda descartado porque su tag `latest` instala un release candidate (8.0.0-rc.33) en lugar del estable 7.10.1. Pendiente de confirmación del usuario.
 - Los paquetes oficiales de autenticación son pre-1.0 (0.1.x): se fijan en versión exacta y, si resultan inestables, el plan B es JWT y hash propios con `crypto.scrypt`.
 - TikTok no entrega correo ni teléfono (documentación oficial del endpoint de usuario): la unificación por correo con TikTok exigirá verificar un correo por enlace mágico, y se diseña en `account-identity`.
+- En la capa de aplicación se permiten solo los decoradores de inyección de `@nestjs/common` (`@Injectable`, `@Inject`); el dominio no importa ningún framework y la infraestructura puede importar todo (confirmado por el usuario).
+- El estándar hexagonal aplica al API; las apps Astro no lo adoptan en este change.
 - Los tres proyectos siguen siendo independientes (cada uno con su `package.json`, lockfile y `node_modules`).

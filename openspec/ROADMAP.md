@@ -31,7 +31,7 @@ Cada funcionalidad se entrega de punta a punta y en este orden, con pruebas en c
 5) Validación con el cliente
 ```
 
-**Reglas transversales:** Node 26 (LTS) y pnpm 12; funciones de máximo 25 líneas (`error` en proyectos nuevos); hook de commit con secretos, lint y build en todos los subproyectos; UI conforme a `.ux/` (`ux-plan-review` antes de aprobar, `ux-check` al terminar); nunca `--no-verify`.
+**Reglas transversales:** **API con arquitectura hexagonal** (`src/<contexto>/{domain,application,infrastructure}`, DTOs por capa, objetos de valor, puertos frente a adaptadores, pruebas de contrato; límites de capa verificados por el linter; ver `services/api/ARCHITECTURE.md`); Node 26 (LTS) y pnpm 12; funciones de máximo 25 líneas (`error` en proyectos nuevos); hook de commit con secretos, lint y build en todos los subproyectos; UI conforme a `.ux/` (`ux-plan-review` antes de aprobar, `ux-check` al terminar); nunca `--no-verify`.
 
 ## Arquitectura objetivo
 
@@ -57,6 +57,7 @@ Deja los tres proyectos vacíos pero vivos, con las herramientas ya exigidas. **
 - [ ] 0.3 **Chore inicial de `apps/shop` con Astro 7.4.8** (`create-astro --no-ai`, adaptador Node, TypeScript estricto, Tailwind v4, pnpm, regla de 25 líneas como `error`).
 - [ ] 0.4 Chore inicial de `apps/admin` con Astro 7.4.8 (mismas bases + islas React).
 - [ ] 0.5 Chore inicial de `services/api` con NestJS 12.4.2 (`nest new -p pnpm --skip-git`), endpoint de salud, OpenAPI, regla de 25 líneas como `error`.
+- [ ] 0.5b **Estándar hexagonal del API**: documento `ARCHITECTURE.md`, reglas de lint por capa, núcleo compartido (`DomainError`, `ValueObject`, `UseCase`, filtro HTTP) y reubicación del código existente.
 - [ ] 0.6 PostgreSQL en `docker compose` (desarrollo y pruebas), TypeORM con migraciones (sin `synchronize`), variables de entorno documentadas.
 - [ ] 0.7 Auth de personal con los paquetes oficiales de Nest (`@nestjs/authentication`, `@nestjs/throttler`): correo y contraseña, roles (Gerente, Despacho, Atención), límite de intentos por correo y Gerente de semilla; modelo de usuario preparado para más proveedores.
 - [ ] 0.8 Orquestador y hooks: scripts `dev:*`, `build:*`, `lint:*`, `test:*` de los 3 proyectos, `lint-staged` extendido, `.ux/` re-sincronizado (`ux-init`), Dockerfiles y README.
