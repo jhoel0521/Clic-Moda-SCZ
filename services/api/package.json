@@ -25,10 +25,10 @@
     "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
     "dev": "nest start --watch",
     "db:cli": "node --env-file-if-exists=.env node_modules/typeorm/cli.js",
-    "migration:run": "pnpm build && pnpm db:cli migration:run -d dist/database/data-source.js",
-    "migration:revert": "pnpm build && pnpm db:cli migration:revert -d dist/database/data-source.js",
-    "migration:show": "pnpm build && pnpm db:cli migration:show -d dist/database/data-source.js",
-    "migration:generate": "pnpm build && pnpm db:cli migration:generate --esm -d dist/database/data-source.js"
+    "migration:run": "pnpm build && pnpm db:cli migration:run -d dist/shared/infrastructure/database/data-source.js",
+    "migration:revert": "pnpm build && pnpm db:cli migration:revert -d dist/shared/infrastructure/database/data-source.js",
+    "migration:show": "pnpm build && pnpm db:cli migration:show -d dist/shared/infrastructure/database/data-source.js",
+    "migration:generate": "pnpm build && pnpm db:cli migration:generate --esm -d dist/shared/infrastructure/database/data-source.js"
   },
   "dependencies": {
     "@nestjs/common": "12.4.2",

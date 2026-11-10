@@ -11,6 +11,9 @@ const glob = (...parts: string[]) =>
     .split(sep)
     .join('/');
 
+// Raíz de src: este archivo está en src/shared/infrastructure/database.
+const SRC = ['..', '..', '..'];
+
 export function buildDataSourceOptions(env: DbEnv): DataSourceOptions {
   return {
     type: 'postgres',
@@ -19,7 +22,7 @@ export function buildDataSourceOptions(env: DbEnv): DataSourceOptions {
     username: env.DB_USER,
     password: env.DB_PASSWORD,
     database: env.DB_NAME,
-    entities: [glob('..', '**', `*.entity.${ext}`)],
+    entities: [glob(...SRC, '**', `*.orm-entity.${ext}`)],
     migrations: [glob('migrations', `*.${ext}`)],
     synchronize: false,
   };

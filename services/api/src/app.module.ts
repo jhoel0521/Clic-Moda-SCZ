@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { envSchema } from './config/env.schema.js';
-import { DatabaseModule } from './database/database.module.js';
-import { HealthModule } from './health/health.module.js';
+import { envSchema } from './shared/infrastructure/config/env.schema.js';
+import { DatabaseModule } from './shared/infrastructure/database/database.module.js';
+import { HealthModule } from './health/infrastructure/http/health.module.js';
 
 @Module({
   imports: [

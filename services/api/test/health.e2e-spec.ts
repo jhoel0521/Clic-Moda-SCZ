@@ -4,7 +4,7 @@ import request from 'supertest';
 import type { App } from 'supertest/types.js';
 import { DataSource } from 'typeorm';
 import { AppModule } from '../src/app.module.js';
-import { setupDocs } from '../src/docs.setup.js';
+import { setupDocs } from '../src/shared/infrastructure/docs/docs.setup.js';
 
 describe('Salud y documentación (e2e)', () => {
   let app: INestApplication<App>;

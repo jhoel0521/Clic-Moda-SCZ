@@ -1,6 +1,6 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
-import { envSchema } from '../src/config/env.schema.js';
+import { envSchema } from '../src/shared/infrastructure/config/env.schema.js';
 
 // forRoot valida las variables en el momento de llamarlo, por eso se invoca dentro de cada prueba.
 const compileConfig = () =>

@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm';
-import { envSchema } from '../../src/config/env.schema.js';
-import { buildDataSourceOptions } from '../../src/database/database.config.js';
+import { envSchema } from '../../src/shared/infrastructure/config/env.schema.js';
+import { buildDataSourceOptions } from '../../src/shared/infrastructure/database/database.config.js';
 import { useTestDatabase } from './test-db.js';
 
 // Se ejecuta una vez antes de todas las e2e: deja la base de pruebas con las migraciones aplicadas.

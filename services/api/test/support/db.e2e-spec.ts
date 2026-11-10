@@ -1,8 +1,8 @@
 import { Test } from '@nestjs/testing';
 import { DataSource } from 'typeorm';
 import { AppModule } from '../../src/app.module.js';
-import { envSchema } from '../../src/config/env.schema.js';
-import { buildDataSourceOptions } from '../../src/database/database.config.js';
+import { envSchema } from '../../src/shared/infrastructure/config/env.schema.js';
+import { buildDataSourceOptions } from '../../src/shared/infrastructure/database/database.config.js';
 import { truncateAll } from './db.js';
 
 const PROBE = 'create table if not exists harness_probe (id serial primary key, v text)';

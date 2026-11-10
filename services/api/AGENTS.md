@@ -1,5 +1,10 @@
 # AGENTS.md
 
+## Arquitectura (obligatoria)
+
+Este API sigue una **arquitectura hexagonal** (dominio, aplicación e infraestructura separados, DTOs por capa, objetos de valor, puertos frente a adaptadores). Antes de crear o mover código lee [`ARCHITECTURE.md`](./ARCHITECTURE.md): los límites de capa los hace cumplir el linter y un commit que los viole se rechaza.
+
+
 ## NestJS
 
 This app's version of NestJS is likely newer than what you know. https://docs.nestjs.com/llms.txt indexes its documentation, with a markdown page per chapter.
