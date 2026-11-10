@@ -50,8 +50,8 @@
 ## 7. Puertas de calidad y documentación
 
 - [x] 7.1 Completar los scripts de la raíz y el orquestador (D15): `docker:*`, `db:*` (con combos `fresh` y `fresh:seed`), `dev` en paralelo, `preflight`, `ports`, `test:e2e` y `check:full`, con `ports.json` como fuente única de puertos (infra 10001-10009, apps 10010-10020); y dejar el hook con `set -e` y pasos numerados; verificado levantando Postgres en 10001, migrando, sembrando y arrancando api/admin/shop en 10010-10012, probando que las salvaguardas rechazan borrar en producción o con host remoto, y que con un test roto a propósito el hook falla solo nombrando el paso y el subproyecto.
-- [ ] 7.2 Actualizar `.secretlintignore` para `dist`, `.astro` y artefactos nuevos y comprobar que el escáner sigue detectando un token falso en los tres proyectos; verificar con `pnpm secrets:scan` y un archivo de prueba temporal.
-- [ ] 7.3 Crear un Dockerfile por proyecto (`node:26-alpine`, pnpm) sin dependencias de desarrollo en la imagen final; verificar con `docker build` del de `services/api` y de uno de los Astro.
+- [x] 7.2 Actualizar `.secretlintignore` para `dist`, `.astro` y artefactos nuevos y comprobar que el escáner sigue detectando un token falso en los tres proyectos; verificar con `pnpm secrets:scan` y un archivo de prueba temporal.
+- [x] 7.3 Crear un Dockerfile por proyecto (`node:26-alpine`, pnpm) sin dependencias de desarrollo en la imagen final; verificar con `docker build` del de `services/api` y de uno de los Astro.
 - [ ] 7.4 Actualizar README (estructura, comandos, requisitos, Docker y su limitación con la unidad `J:`, contrato de proyectos y enlace a `ARCHITECTURE.md`), los `.env.example` y `docs/database.dbml` (usuarios, roles, eventos y tablas de autenticación), y volver a ejecutar `ux-init` en modo sync; verificar ejecutando los comandos del README tal cual y que `detect.mjs` lista shop y admin.
 
 ## 8. Auditoría del prototipo
