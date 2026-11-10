@@ -66,14 +66,25 @@ function assertSafeToDrop() {
   }
 }
 
-// Si no hay contraseña de Gerente configurada, se genera una al azar y se muestra UNA vez
-// (nunca hay una contraseña por defecto en el repositorio).
-function seedEnv() {
-  if (process.env.INITIAL_MANAGER_PASSWORD) return {};
-  const password = randomBytes(15).toString('base64url');
+// Si no hay contraseña de Gerente configurada, se genera una al azar. Solo se muestra si el Gerente
+// se creó de verdad (si ya existía, la contraseña generada no sirve y mostrarla engañaría).
+function seedManager() {
+  const given = Boolean(process.env.INITIAL_MANAGER_PASSWORD);
+  const password = given ? undefined : randomBytes(15).toString('base64url');
   const email = process.env.INITIAL_MANAGER_EMAIL || 'gerente@clicmoda.local';
-  console.log(`Gerente de desarrollo → ${email} / ${password}   (solo se muestra ahora)`);
-  return { INITIAL_MANAGER_EMAIL: email, INITIAL_MANAGER_PASSWORD: password };
+  const env = given ? envFor('api') : { ...envFor('api'), INITIAL_MANAGER_EMAIL: email, INITIAL_MANAGER_PASSWORD: password };
+  const result = spawnSync('pnpm', ['--dir', 'services/api', 'seed:manager'], {
+    cwd: ROOT,
+    encoding: 'utf8',
+    shell: process.platform === 'win32',
+    env: { ...process.env, ...env },
+  });
+  process.stdout.write(result.stdout ?? '');
+  process.stderr.write(result.stderr ?? '');
+  if (result.status === 0 && password && /Gerente creado/.test(result.stdout)) {
+    console.log(`Gerente de desarrollo → ${email} / ${password}   (solo se muestra ahora)`);
+  }
+  return result.status ?? 1;
 }
 
 function db(action) {
@@ -82,9 +93,9 @@ function db(action) {
     migrate: () => api('migration:run'),
     revert: () => api('migration:revert'),
     status: () => api('migration:show'),
-    seed: () => api('seed:manager', seedEnv()),
+    seed: () => seedManager(),
     fresh: () => (assertSafeToDrop(), api('db:drop') || api('migration:run')),
-    'fresh-seed': () => (assertSafeToDrop(), api('db:drop') || api('migration:run') || api('seed:manager', seedEnv())),
+    'fresh-seed': () => (assertSafeToDrop(), api('db:drop') || api('migration:run') || seedManager()),
   };
   if (!steps[action]) fail(`db: acción desconocida "${action}" (${Object.keys(steps).join(', ')})`);
   return steps[action]();

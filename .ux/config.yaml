@@ -14,11 +14,17 @@ platforms: [web]         # default for all apps: web | android | ios | macos | w
 apps:                   # synced from code
   - name: shop
     path: apps/shop
-    stack: next + react + tailwind-v4
+    stack: astro + tailwind-v4
     platforms: [web]     # uso real: movil-first (TikTok/Instagram); confirmar en ux-discover
-    theme: apps/shop/tailwind.config.ts
+    theme: apps/shop/src/styles/global.css   # solo importa tailwindcss: aun no define valores
     # users: pendiente (ux-discover)
-  # apps/admin y services/api: placeholders sin codigo; re-ejecutar ux-init al scaffoldearlos
+  - name: admin
+    path: apps/admin
+    stack: astro + react + tailwind-v4
+    platforms: [web]
+    theme: apps/admin/src/styles/global.css  # solo importa tailwindcss: aun no define valores
+    # users: personal (Gerente, Despacho, Atencion); confirmar en ux-discover
+  # services/api: sin UI, no se agrega
 
 accessibility:
   standard: wcag-2.2
