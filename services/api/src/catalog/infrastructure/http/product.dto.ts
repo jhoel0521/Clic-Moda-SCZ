@@ -48,6 +48,7 @@ export const searchProductsSchema = z.object({
   pageSize: z.coerce.number().int().default(20),
   text: z.string().max(100).optional(),
   categoryId: z.string().max(60).optional(),
+  stock: z.enum(['out', 'in']).optional(),
   active: z
     .enum(['true', 'false'])
     .transform((value) => value === 'true')
@@ -72,6 +73,7 @@ export interface ProductResponseDto {
   description: string | null;
   active: boolean;
   variants: VariantResponseDto[];
+  available?: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -93,6 +95,7 @@ export const toProductResponse = (product: ProductResult): ProductResponseDto =>
   description: product.description,
   active: product.active,
   variants: product.variants.map(toVariantResponse),
+  available: product.available,
   createdAt: product.createdAt,
   updatedAt: product.updatedAt,
 });

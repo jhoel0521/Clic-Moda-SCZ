@@ -79,3 +79,18 @@ El sistema MUST rechazar con 403 a Despacho y Atención al registrar o editar pr
 #### Scenario: Other role tries to edit
 - **WHEN** un usuario con rol Atención intenta editar un producto
 - **THEN** el sistema responde prohibido y no cambia nada
+
+### Requirement: Products can be filtered by stock and out-of-stock ones deactivated in bulk
+El sistema SHALL permitir filtrar el listado de productos por stock («sin stock» o «con stock») y SHALL informar las unidades disponibles de cada producto del listado. El disponible de un producto MUST ser la suma de `físico − reservado` de sus variantes activas; «sin stock» MUST significar un disponible de 0 o menos. El panel SHALL permitir al Gerente desactivar de una vez todos los productos activos sin stock que cumplan el filtro, pidiendo confirmación con la cantidad real y sin borrar nada.
+
+#### Scenario: Filter products without stock
+- **WHEN** el personal filtra el listado por «sin stock»
+- **THEN** recibe solo los productos cuyo disponible es 0 o menos, cada uno con sus unidades disponibles
+
+#### Scenario: Inactive variants do not count
+- **WHEN** un producto tiene una variante inactiva con unidades y una activa sin unidades
+- **THEN** el producto cuenta como «sin stock»
+
+#### Scenario: Deactivate all out-of-stock products
+- **WHEN** el Gerente usa «desactivar todos los agotados» y confirma
+- **THEN** todos los productos activos sin stock quedan inactivos, conservan sus variantes y se pueden reactivar

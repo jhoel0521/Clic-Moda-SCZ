@@ -16,6 +16,11 @@ import { ProductOrmEntity } from './product.orm-entity.js';
 import { VariantOrmEntity } from './variant.orm-entity.js';
 
 const UNIQUE_VIOLATION = '23505';
+
+// Disponible de un producto: suma de (físico - reservado) de sus variantes activas. Lectura de solo
+// lectura sobre las tablas de inventario: `catalog` no importa código de `inventory`.
+const AVAILABLE_SQL = `COALESCE((SELECT SUM(s.on_hand - s.reserved) FROM product_variants v
+  JOIN stock_levels s ON s.variant_id = v.id WHERE v.product_id = p.id AND v.active), 0)`;
 const escapeLike = (term: string): string => term.replace(/[\\%_]/g, (char) => `\\${char}`);
 
 @Injectable()
@@ -53,7 +58,21 @@ export class TypeOrmProductsRepository implements ProductsRepository {
       .offset((filter.page - 1) * filter.pageSize)
       .limit(filter.pageSize)
       .getRawMany<{ id: string }>();
-    return { items: await this.loadInOrder(ids.map((row) => row.id)), total };
+    const found = ids.map((row) => row.id);
+    return {
+      items: await this.loadInOrder(found),
+      total,
+      available: await this.availability(found),
+    };
+  }
+
+  private async availability(ids: string[]): Promise<Record<string, number>> {
+    if (ids.length === 0) return {};
+    const rows: { id: string; available: string }[] = await this.dataSource.query(
+      `SELECT p.id, ${AVAILABLE_SQL} AS available FROM products p WHERE p.id = ANY($1)`,
+      [ids]
+    );
+    return Object.fromEntries(rows.map((row) => [row.id, Number(row.available)]));
   }
 
   countByCategory(categoryId: CategoryId): Promise<number> {
@@ -81,6 +100,7 @@ export class TypeOrmProductsRepository implements ProductsRepository {
       );
     }
     if (filter.categoryId) query.andWhere('p.category_id = :cat', { cat: filter.categoryId.value });
+    if (filter.stock) query.andWhere(`${AVAILABLE_SQL} ${filter.stock === 'out' ? '<= 0' : '> 0'}`);
     if (filter.active !== undefined)
       query.andWhere('p.active = :active', { active: filter.active });
     return query;

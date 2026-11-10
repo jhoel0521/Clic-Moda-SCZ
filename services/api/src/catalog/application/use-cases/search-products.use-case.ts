@@ -31,7 +31,12 @@ export class SearchProductsUseCase implements UseCase<SearchProductsQuery, Produ
       text: query.text?.trim() || undefined,
       categoryId: query.categoryId ? CategoryId.of(query.categoryId) : undefined,
       active: query.active,
+      stock: query.stock,
     });
-    return { items: found.items.map(toProductResult), total: found.total, page, pageSize };
+    const items = found.items.map((product) => ({
+      ...toProductResult(product),
+      available: found.available[product.id.value] ?? 0,
+    }));
+    return { items, total: found.total, page, pageSize };
   }
 }

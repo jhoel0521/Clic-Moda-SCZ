@@ -11,7 +11,10 @@ import { Money } from '../../src/catalog/domain/value-objects/money.vo.js';
 import { CategoryName, ProductName } from '../../src/catalog/domain/value-objects/names.vo.js';
 import { Size, Sku } from '../../src/catalog/domain/value-objects/variant-attributes.vo.js';
 import { categoriesRepositoryContract } from '../../src/catalog/testing/categories-repository.contract.js';
-import { productsRepositoryContract } from '../../src/catalog/testing/products-repository.contract.js';
+import {
+  type ProductsWorld,
+  productsRepositoryContract,
+} from '../../src/catalog/testing/products-repository.contract.js';
 import {
   type MovementsWorld,
   variantHasMovementsContract,
@@ -54,6 +57,19 @@ function movementsWorld(moduleRef: TestingModule): MovementsWorld {
   };
 }
 
+const SET_STOCK =
+  'INSERT INTO stock_levels (variant_id, on_hand) VALUES ($1, $2) ON CONFLICT (variant_id) DO UPDATE SET on_hand = $2';
+
+function productsWorld(moduleRef: TestingModule): ProductsWorld {
+  return {
+    categories: moduleRef.get(CATEGORIES_REPOSITORY),
+    products: moduleRef.get(PRODUCTS_REPOSITORY),
+    setAvailable: async (variantId, units) => {
+      await moduleRef.get(DataSource).query(SET_STOCK, [variantId.value, units]);
+    },
+  };
+}
+
 describe('Catálogo sobre Postgres (e2e)', () => {
   let moduleRef: TestingModule;
 
@@ -75,10 +91,7 @@ describe('Catálogo sobre Postgres (e2e)', () => {
 
   productsRepositoryContract('TypeORM + Postgres', async () => {
     await reset();
-    return {
-      categories: moduleRef.get(CATEGORIES_REPOSITORY),
-      products: moduleRef.get(PRODUCTS_REPOSITORY),
-    };
+    return productsWorld(moduleRef);
   });
 
   variantHasMovementsContract('SQL + Postgres', async () => {

@@ -12,6 +12,8 @@ import { Color, Size, Sku } from '../domain/value-objects/variant-attributes.vo.
 export interface ProductsWorld {
   categories: CategoriesRepository;
   products: ProductsRepository;
+  // Fija las unidades disponibles de una variante (en la base real, su fila de stock).
+  setAvailable(variantId: VariantId, units: number): Promise<void>;
 }
 type Factory = () => Promise<ProductsWorld> | ProductsWorld;
 
@@ -161,6 +163,44 @@ function countCases(make: Factory): void {
   });
 }
 
+function stockCases(make: Factory): void {
+  it('filtra por stock y informa las unidades disponibles de cada producto', async () => {
+    const world = await make();
+    const botas = await newCategory(world, 'Botas');
+    const withStock = product(botas, 'Con stock', [variant('CS-1', '38'), variant('CS-2', '39')]);
+    const without = product(botas, 'Sin stock', [variant('SS-1', '38')]);
+    for (const item of [withStock, without]) await world.products.save(item);
+    await world.setAvailable(withStock.variants[0]!.id, 3);
+    await world.setAvailable(withStock.variants[1]!.id, 4);
+    const names = async (stock?: 'out' | 'in') =>
+      (await world.products.search({ page: 1, pageSize: 10, stock })).items.map(
+        (p) => p.name.value
+      );
+
+    expect(await names('out')).toEqual(['Sin stock']);
+    expect(await names('in')).toEqual(['Con stock']);
+    const all = await world.products.search({ page: 1, pageSize: 10 });
+    expect([all.available[withStock.id.value], all.available[without.id.value]]).toEqual([7, 0]);
+  });
+}
+
+function stockCases2(make: Factory): void {
+  it('las variantes inactivas no suman al disponible del producto', async () => {
+    const world = await make();
+    const saved = product(await newCategory(world, 'Botas'), 'Bota', [
+      variant('B-1', '38'),
+      variant('B-2', '39'),
+    ]);
+    saved.variants[1]!.setActive(false);
+    await world.products.save(saved);
+    await world.setAvailable(saved.variants[0]!.id, 2);
+    await world.setAvailable(saved.variants[1]!.id, 50);
+
+    const page = await world.products.search({ page: 1, pageSize: 10 });
+    expect(page.available[saved.id.value]).toBe(2);
+  });
+}
+
 // Suite de contrato: toda implementación del puerto (fake en memoria y TypeORM) debe pasarla.
 export function productsRepositoryContract(label: string, make: Factory): void {
   describe(`ProductsRepository: ${label}`, () => {
@@ -169,6 +209,8 @@ export function productsRepositoryContract(label: string, make: Factory): void {
     writeCases(make);
     atomicityCases(make);
     searchCases(make);
+    stockCases(make);
+    stockCases2(make);
     countCases(make);
   });
 }

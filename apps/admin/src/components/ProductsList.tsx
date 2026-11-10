@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { deactivateAll, listActiveWithoutStock } from '../lib/bulk';
 import { api } from '../lib/client-api';
 import { errorMessage, type Category, type Page, type Product } from '../lib/types';
 import Icon from './Icon';
@@ -8,17 +9,19 @@ interface Filters {
   text: string;
   categoryId: string;
   active: string; // '', 'true' o 'false'
+  stock: string; // '', 'out' (sin stock) o 'in' (con stock)
   page: number;
 }
 
 const PAGE_SIZE = 10;
-const INITIAL: Filters = { text: '', categoryId: '', active: '', page: 1 };
+const INITIAL: Filters = { text: '', categoryId: '', active: '', stock: '', page: 1 };
 
 function queryOf(filters: Filters): string {
   const params = new URLSearchParams({ page: String(filters.page), pageSize: String(PAGE_SIZE) });
   if (filters.text.trim()) params.set('text', filters.text.trim());
   if (filters.categoryId) params.set('categoryId', filters.categoryId);
   if (filters.active) params.set('active', filters.active);
+  if (filters.stock) params.set('stock', filters.stock);
   return params.toString();
 }
 
@@ -85,7 +88,7 @@ function ProductCard({ product, categoryName, canWrite, onToggle }: RowProps) {
         <RowInfo product={product} categoryName={categoryName} />
         <Badge tone={product.active ? 'success' : 'warning'}>{product.active ? 'Activo' : 'Inactivo'}</Badge>
       </div>
-      <p className="text-lg font-bold">{priceRange(product)}</p>
+      <PriceAndStock product={product} />
       {canWrite && (
         <div className="grid grid-cols-2 gap-3">
           <a
@@ -114,17 +117,14 @@ const STATES = [
   { value: 'false', label: 'Inactivos' },
 ];
 
-function SelectFilters({ filters, categories, onChange }: FilterBarProps) {
-  const options = [...categories].map(([value, label]) => ({ value, label }));
+const STOCK = [
+  { value: 'out', label: 'Sin stock' },
+  { value: 'in', label: 'Con stock' },
+];
+
+function StateFilters({ filters, onChange }: Pick<FilterBarProps, 'filters' | 'onChange'>) {
   return (
-    <div className="grid grid-cols-2 gap-3">
-      <SelectField
-        label="Categoría"
-        value={filters.categoryId}
-        options={options}
-        placeholder="Todas"
-        onChange={(e) => onChange({ categoryId: e.target.value })}
-      />
+    <>
       <SelectField
         label="Estado"
         value={filters.active}
@@ -132,6 +132,86 @@ function SelectFilters({ filters, categories, onChange }: FilterBarProps) {
         placeholder="Todos"
         onChange={(e) => onChange({ active: e.target.value })}
       />
+      <SelectField
+        label="Stock"
+        value={filters.stock}
+        options={STOCK}
+        placeholder="Todos"
+        onChange={(e) => onChange({ stock: e.target.value })}
+      />
+    </>
+  );
+}
+
+function SelectFilters({ filters, categories, onChange }: FilterBarProps) {
+  const options = [...categories].map(([value, label]) => ({ value, label }));
+  return (
+    <div className="grid grid-cols-2 gap-3">
+      <div className="col-span-2">
+        <SelectField
+          label="Categoría"
+          value={filters.categoryId}
+          options={options}
+          placeholder="Todas"
+          onChange={(e) => onChange({ categoryId: e.target.value })}
+        />
+      </div>
+      <StateFilters filters={filters} onChange={onChange} />
+    </div>
+  );
+}
+
+// Precio y unidades disponibles de un producto (0 = sin stock, en naranja para verlo de un vistazo).
+function PriceAndStock({ product }: { product: Product }) {
+  const units = product.available;
+  return (
+    <div className="flex items-center justify-between gap-3">
+      <p className="text-lg font-bold">{priceRange(product)}</p>
+      {units !== undefined && (
+        <Badge tone={units === 0 ? 'warning' : 'neutral'}>{units === 0 ? 'Sin stock' : `${units} disponibles`}</Badge>
+      )}
+    </div>
+  );
+}
+
+// Pide los activos sin stock, confirma con la cantidad real y los desactiva (no borra nada).
+async function bulkDeactivate(filters: Filters): Promise<string | null> {
+  const found = await listActiveWithoutStock(filters);
+  if (found.length === 0) return 'No hay productos activos sin stock.';
+  const ask = `¿Desactivar ${found.length} producto(s) sin stock? Podrás reactivarlos cuando vuelvan a tener.`;
+  if (!window.confirm(ask)) return null;
+  return `Listo: ${await deactivateAll(found)} producto(s) desactivados.`;
+}
+
+function useBulk(filters: Filters, onDone: () => Promise<void>) {
+  const [message, setMessage] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const run = async () => {
+    setBusy(true);
+    try {
+      setMessage(await bulkDeactivate(filters));
+      await onDone();
+    } catch (failure) {
+      setMessage(errorMessage(failure));
+    }
+    setBusy(false);
+  };
+  return { message, busy, run };
+}
+
+// Con el filtro "Sin stock": desactiva de una vez todos los productos activos agotados.
+function BulkDeactivate({ filters, onDone }: { filters: Filters; onDone: () => Promise<void> }) {
+  const { message, busy, run } = useBulk(filters, onDone);
+  return (
+    <div className="flex flex-col gap-2">
+      <Button variant="danger" block icon="trash" disabled={busy} onClick={() => void run()}>
+        {busy ? 'Desactivando…' : 'Desactivar todos los agotados'}
+      </Button>
+      {message && (
+        <p role="status" className="text-center font-medium">
+          {message}
+        </p>
+      )}
     </div>
   );
 }
@@ -273,6 +353,7 @@ export default function ProductsList({ canWrite }: { canWrite: boolean }) {
     <div className="flex flex-col gap-4">
       <FilterBar filters={filters} categories={names} onChange={merge} />
       <ListStatus error={error} loading={data === null} />
+      {canWrite && filters.stock === 'out' && <BulkDeactivate filters={filters} onDone={reload} />}
       {data && (
         <Body
           filters={filters}

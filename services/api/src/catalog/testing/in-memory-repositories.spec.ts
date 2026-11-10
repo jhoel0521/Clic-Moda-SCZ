@@ -20,7 +20,11 @@ variantHasMovementsContract('doble en memoria', () => {
   };
 });
 
-productsRepositoryContract('fake en memoria', () => ({
-  categories: new InMemoryCategoriesRepository(),
-  products: new InMemoryProductsRepository(),
-}));
+productsRepositoryContract('fake en memoria', () => {
+  const products = new InMemoryProductsRepository();
+  return {
+    categories: new InMemoryCategoriesRepository(),
+    products,
+    setAvailable: async (variantId, units) => products.setAvailable(variantId, units),
+  };
+});

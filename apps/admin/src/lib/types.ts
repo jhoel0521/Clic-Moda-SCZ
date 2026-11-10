@@ -16,7 +16,9 @@ export interface Variant {
   active: boolean;
 }
 
+// `available`: unidades disponibles (suma de las variantes activas); solo viene en los listados.
 export interface Product {
+  available?: number;
   id: string;
   categoryId: string;
   name: string;

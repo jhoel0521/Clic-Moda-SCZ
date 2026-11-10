@@ -83,6 +83,8 @@
 - [ ] 12.7 Instalar y configurar Playwright en `apps/admin` (versión fijada, proyectos de escritorio y móvil de 360 px, arranque de la API y Docker desde la prueba, datos de prueba por flujo); verificar con una prueba mínima que abre el inicio de sesión.
 - [ ] 12.8 Flujos e2e con Playwright contra la API real: el Gerente registra un producto, Despacho ingresa stock y ve "Aplicado", una salida mayor al stock se muestra rechazada, y Atención no ve los botones de modificar.
 
+- [x] 12.9 Filtro de stock ("Sin stock" / "Con stock") en la API y el listado de productos, unidades disponibles en cada tarjeta y botón para desactivar de una vez los productos agotados (con confirmación y cantidad real); verificado en un iPhone emulado y con pruebas de contrato contra Postgres.
+
 ## 13. Cierre y verificación
 
 - [ ] 13.1 `ux-check` sobre todas las pantallas nuevas (contraste AA, objetivos táctiles de 44 px, foco, estados, 360 px sin desplazamiento horizontal) y corregir lo que reporte.

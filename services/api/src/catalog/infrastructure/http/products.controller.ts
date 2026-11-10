@@ -47,9 +47,9 @@ export class ProductsController {
   async list(
     @Query({ schema: searchProductsSchema }) query: SearchProductsDto
   ): Promise<ProductPageResponseDto> {
-    const { page, pageSize, text, categoryId, active } = query;
+    const { page, pageSize, text, categoryId, active, stock } = query;
     const found = await this.search.execute(
-      new SearchProductsQuery(page, pageSize, text, categoryId, active)
+      new SearchProductsQuery(page, pageSize, text, categoryId, active, stock)
     );
     return toProductPageResponse(found);
   }

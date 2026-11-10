@@ -33,6 +33,17 @@ const matchesText = (product: Product, text: string): boolean => {
 // que se comporta igual que la implementación real con Postgres.
 export class InMemoryProductsRepository implements ProductsRepository {
   private readonly store = new Map<string, Product>();
+  private readonly stock = new Map<string, number>(); // disponible por variante (lo fija la prueba)
+
+  setAvailable(id: VariantId, units: number): void {
+    this.stock.set(id.value, units);
+  }
+
+  private availableOf(product: Product): number {
+    return product.variants
+      .filter((variant) => variant.active)
+      .reduce((total, variant) => total + (this.stock.get(variant.id.value) ?? 0), 0);
+  }
 
   async findById(id: ProductId): Promise<Product | null> {
     const found = this.store.get(id.value);
@@ -53,11 +64,15 @@ export class InMemoryProductsRepository implements ProductsRepository {
       .filter((p) => !filter.text || matchesText(p, filter.text))
       .filter((p) => !filter.categoryId || p.categoryId.equals(filter.categoryId))
       .filter((p) => filter.active === undefined || p.active === filter.active)
+      .filter((p) => !filter.stock || this.availableOf(p) > 0 === (filter.stock === 'in'))
       .sort((a, b) => a.name.value.localeCompare(b.name.value));
     const start = (filter.page - 1) * filter.pageSize;
     return {
       items: matching.slice(start, start + filter.pageSize).map(copy),
       total: matching.length,
+      available: Object.fromEntries(
+        matching.slice(start, start + filter.pageSize).map((p) => [p.id.value, this.availableOf(p)])
+      ),
     };
   }
 
