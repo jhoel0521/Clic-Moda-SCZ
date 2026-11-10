@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { deactivateVariants, listSoldOutVariants } from '../lib/bulk';
 import { api } from '../lib/client-api';
 import type { MovementKind, StockRow } from '../lib/stock';
 import { errorMessage, type Page } from '../lib/types';
@@ -6,7 +7,7 @@ import MovementSheet from './MovementSheet';
 import StockCard from './StockCard';
 import { Badge, Button, EmptyState, ErrorBanner, Field } from './ui';
 
-type Tab = 'stock' | 'low';
+type Tab = 'stock' | 'low' | 'out';
 const PAGE_SIZE = 10;
 
 interface View {
@@ -15,10 +16,13 @@ interface View {
   page: number;
 }
 
+const PATHS: Record<Tab, string> = { stock: 'inventory/stock', low: 'inventory/stock/low', out: 'inventory/stock' };
+
 function urlOf({ tab, text, page }: View): string {
   const query = new URLSearchParams({ page: String(page), pageSize: String(PAGE_SIZE) });
   if (text.trim()) query.set('text', text.trim());
-  return `inventory/stock${tab === 'low' ? '/low' : ''}?${query.toString()}`;
+  if (tab === 'out') query.set('soldOut', 'true');
+  return `${PATHS[tab]}?${query.toString()}`;
 }
 
 function useStock(view: View) {
@@ -33,10 +37,12 @@ function useStock(view: View) {
       setError(errorMessage(failure));
     }
   }, [url]);
+  // Al cambiar de vista o de filtro se descartan los datos anteriores: no se muestran listas ni totales viejos.
   useEffect(() => {
+    setData(null);
     void reload();
   }, [reload]);
-  return { data, error, reload };
+  return { data, error, reload, setError };
 }
 
 function usePending(trigger: unknown): number {
@@ -50,19 +56,39 @@ function usePending(trigger: unknown): number {
   return pending;
 }
 
+const TABS: { tab: Tab; label: string }[] = [
+  { tab: 'stock', label: 'Todo' },
+  { tab: 'low', label: 'Stock bajo' },
+  { tab: 'out', label: 'Agotadas' },
+];
+
+function TabButton({
+  item,
+  active,
+  onTab,
+}: {
+  item: (typeof TABS)[number];
+  active: boolean;
+  onTab: (tab: Tab) => void;
+}) {
+  return (
+    <Button
+      className="px-2"
+      variant={active ? 'primary' : 'ghost'}
+      aria-pressed={active}
+      onClick={() => onTab(item.tab)}
+    >
+      {item.label}
+    </Button>
+  );
+}
+
 function Tabs({ tab, onTab }: { tab: Tab; onTab: (tab: Tab) => void }) {
   return (
-    <div className="bg-hover grid grid-cols-2 gap-2 rounded-2xl p-1" role="group" aria-label="Vista">
-      <Button
-        variant={tab === 'stock' ? 'primary' : 'ghost'}
-        aria-pressed={tab === 'stock'}
-        onClick={() => onTab('stock')}
-      >
-        Todo el stock
-      </Button>
-      <Button variant={tab === 'low' ? 'primary' : 'ghost'} aria-pressed={tab === 'low'} onClick={() => onTab('low')}>
-        Stock bajo
-      </Button>
+    <div className="bg-hover grid grid-cols-3 gap-2 rounded-2xl p-1" role="group" aria-label="Vista">
+      {TABS.map((item) => (
+        <TabButton key={item.tab} item={item} active={tab === item.tab} onTab={onTab} />
+      ))}
     </div>
   );
 }
@@ -92,32 +118,32 @@ function Pager({ page, total, onPage }: { page: number; total: number; onPage: (
   );
 }
 
+const EMPTY_TITLES: Record<Tab, string> = {
+  stock: 'No hay variantes con esa búsqueda',
+  low: 'Nada por reponer: todo tiene stock suficiente',
+  out: 'No hay variantes agotadas',
+};
+
 interface ListProps {
   data: Page<StockRow>;
   tab: Tab;
   canWrite: boolean;
+  canDeactivate: boolean;
   onAction: (row: StockRow, kind: MovementKind) => void;
+  onDeactivate: (row: StockRow) => void;
 }
 
-function StockList({ data, tab, canWrite, onAction }: ListProps) {
-  if (data.items.length === 0) {
-    const title = tab === 'low' ? 'Nada por reponer: todo tiene stock suficiente' : 'No hay variantes con esa búsqueda';
-    return <EmptyState title={title} icon="warehouse" />;
-  }
+function StockList({ data, tab, ...rest }: ListProps) {
+  if (data.items.length === 0) return <EmptyState title={EMPTY_TITLES[tab]} icon="warehouse" />;
   return (
     <ul className="flex flex-col gap-3">
       {data.items.map((row) => (
         <li key={row.variantId}>
-          <StockCard row={row} canWrite={canWrite} onAction={onAction} />
+          <StockCard row={row} {...rest} />
         </li>
       ))}
     </ul>
   );
-}
-
-interface Action {
-  row: StockRow;
-  kind: MovementKind;
 }
 
 function useView() {
@@ -146,10 +172,101 @@ function Status({ error, loading }: { error: string | null; loading: boolean }) 
   return loading ? <p className="text-muted">Cargando…</p> : null;
 }
 
-export default function StockManager({ canWrite }: { canWrite: boolean }) {
-  const { view, change, setPage } = useView();
+// Con la pestaña "Agotadas": desactiva de una vez todas las variantes activas agotadas (no borra nada).
+async function bulkDeactivate(text: string): Promise<string | null> {
+  const rows = await listSoldOutVariants(text);
+  if (rows.length === 0) return 'No hay variantes activas agotadas.';
+  const ask = `¿Desactivar ${rows.length} variante(s) agotadas? Podrás reactivarlas desde Productos cuando vuelvan a tener stock.`;
+  if (!window.confirm(ask)) return null;
+  return `Listo: ${await deactivateVariants(rows)} variante(s) desactivadas.`;
+}
+
+function useBulk(text: string, onDone: () => Promise<void>) {
+  const [message, setMessage] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const run = async () => {
+    setBusy(true);
+    try {
+      setMessage(await bulkDeactivate(text));
+      await onDone();
+    } catch (failure) {
+      setMessage(errorMessage(failure));
+    }
+    setBusy(false);
+  };
+  return { message, busy, run };
+}
+
+function BulkVariants({ text, total, onDone }: { text: string; total: number; onDone: () => Promise<void> }) {
+  const { message, busy, run } = useBulk(text, onDone);
+  return (
+    <div className="flex flex-col gap-2">
+      <Button variant="danger" block icon="trash" disabled={busy || total === 0} onClick={() => void run()}>
+        {busy ? 'Desactivando…' : `Desactivar las ${total} agotadas`}
+      </Button>
+      {message && (
+        <p role="status" className="text-center font-medium">
+          {message}
+        </p>
+      )}
+    </div>
+  );
+}
+
+interface Action {
+  row: StockRow;
+  kind: MovementKind;
+}
+
+interface BodyProps {
+  view: View;
+  data: Page<StockRow>;
+  canWrite: boolean;
+  canDeactivate: boolean;
+  reload: () => Promise<void>;
+  onPage: (page: number) => void;
+  onError: (message: string) => void;
+}
+
+function ActionSheet(props: { action: Action; reload: () => Promise<void>; onClose: () => void }) {
+  const { action, reload, onClose } = props;
+  return (
+    <MovementSheet
+      key={action.row.variantId + action.kind}
+      {...action}
+      onClose={onClose}
+      onDone={() => void reload()}
+    />
+  );
+}
+
+function useDeactivate(reload: () => Promise<void>, onError: (message: string) => void) {
+  return (row: StockRow) => void deactivateVariants([row]).then(reload, (failure) => onError(errorMessage(failure)));
+}
+
+function Body({ view, data, canWrite, canDeactivate, reload, onPage, onError }: BodyProps) {
   const [action, setAction] = useState<Action | null>(null);
-  const { data, error, reload } = useStock(view);
+  const deactivate = useDeactivate(reload, onError);
+  return (
+    <>
+      {canDeactivate && view.tab === 'out' && <BulkVariants text={view.text} total={data.total} onDone={reload} />}
+      <StockList
+        data={data}
+        tab={view.tab}
+        canWrite={canWrite}
+        canDeactivate={canDeactivate}
+        onAction={(row, kind) => setAction({ row, kind })}
+        onDeactivate={deactivate}
+      />
+      <Pager page={view.page} total={data.total} onPage={onPage} />
+      {action && <ActionSheet action={action} reload={reload} onClose={() => setAction(null)} />}
+    </>
+  );
+}
+
+export default function StockManager({ canWrite, canDeactivate }: { canWrite: boolean; canDeactivate: boolean }) {
+  const { view, change, setPage } = useView();
+  const { data, error, reload, setError } = useStock(view);
   const pending = usePending(data);
   return (
     <div className="flex flex-col gap-4">
@@ -157,15 +274,14 @@ export default function StockManager({ canWrite }: { canWrite: boolean }) {
       {pending > 0 && <Badge tone="brand">{pending} en cola</Badge>}
       <Status error={error} loading={data === null} />
       {data && (
-        <StockList data={data} tab={view.tab} canWrite={canWrite} onAction={(row, kind) => setAction({ row, kind })} />
-      )}
-      {data && <Pager page={view.page} total={data.total} onPage={setPage} />}
-      {action && (
-        <MovementSheet
-          key={action.row.variantId + action.kind}
-          {...action}
-          onClose={() => setAction(null)}
-          onDone={() => void reload()}
+        <Body
+          view={view}
+          data={data}
+          canWrite={canWrite}
+          canDeactivate={canDeactivate}
+          reload={reload}
+          onPage={setPage}
+          onError={setError}
         />
       )}
     </div>

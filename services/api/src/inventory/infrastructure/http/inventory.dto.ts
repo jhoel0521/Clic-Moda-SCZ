@@ -28,7 +28,14 @@ const paging = {
   pageSize: z.coerce.number().int().default(20),
 };
 
-export const stockQuerySchema = z.object({ ...paging, text: z.string().max(100).optional() });
+export const stockQuerySchema = z.object({
+  ...paging,
+  text: z.string().max(100).optional(),
+  soldOut: z
+    .enum(['true', 'false'])
+    .transform((value) => value === 'true')
+    .optional(),
+});
 export type StockQueryDto = z.infer<typeof stockQuerySchema>;
 
 export const movementsQuerySchema = z.object({

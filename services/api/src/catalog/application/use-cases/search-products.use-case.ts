@@ -36,6 +36,7 @@ export class SearchProductsUseCase implements UseCase<SearchProductsQuery, Produ
     const items = found.items.map((product) => ({
       ...toProductResult(product),
       available: found.available[product.id.value] ?? 0,
+      soldOutVariants: found.soldOutVariants[product.id.value] ?? 0,
     }));
     return { items, total: found.total, page, pageSize };
   }

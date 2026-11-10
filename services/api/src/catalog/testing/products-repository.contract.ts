@@ -201,6 +201,30 @@ function stockCases2(make: Factory): void {
   });
 }
 
+function soldOutCases(make: Factory): void {
+  it('cuenta las variantes agotadas y filtra los productos con alguna agotada aunque tengan stock', async () => {
+    const world = await make();
+    const botas = await newCategory(world, 'Botas');
+    const mixed = product(botas, 'Mixto', [
+      variant('M-1', '38'),
+      variant('M-2', '39'),
+      variant('M-3', '40'),
+    ]);
+    const full = product(botas, 'Completo', [variant('C-1', '38')]);
+    for (const item of [mixed, full]) await world.products.save(item);
+    await world.setAvailable(mixed.variants[0]!.id, 5);
+    await world.setAvailable(full.variants[0]!.id, 2);
+    const page = await world.products.search({ page: 1, pageSize: 10 });
+    const partial = await world.products.search({ page: 1, pageSize: 10, stock: 'partial' });
+
+    expect([page.soldOutVariants[mixed.id.value], page.soldOutVariants[full.id.value]]).toEqual([
+      2, 0,
+    ]);
+    expect(partial.items.map((p) => p.name.value)).toEqual(['Mixto']);
+    expect(page.available[mixed.id.value]).toBe(5);
+  });
+}
+
 // Suite de contrato: toda implementación del puerto (fake en memoria y TypeORM) debe pasarla.
 export function productsRepositoryContract(label: string, make: Factory): void {
   describe(`ProductsRepository: ${label}`, () => {
@@ -210,6 +234,7 @@ export function productsRepositoryContract(label: string, make: Factory): void {
     atomicityCases(make);
     searchCases(make);
     stockCases(make);
+    soldOutCases(make);
     stockCases2(make);
     countCases(make);
   });

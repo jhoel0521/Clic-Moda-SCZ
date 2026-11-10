@@ -37,7 +37,9 @@ function useProducts(filters: Filters) {
       setError(errorMessage(failure));
     }
   }, [query]);
+  // Al cambiar de vista o de filtro se descartan los datos anteriores: no se muestran listas ni totales viejos.
   useEffect(() => {
+    setData(null);
     void reload();
   }, [reload]);
   return { data, error, reload, setError };
@@ -118,7 +120,8 @@ const STATES = [
 ];
 
 const STOCK = [
-  { value: 'out', label: 'Sin stock' },
+  { value: 'out', label: 'Todo agotado' },
+  { value: 'partial', label: 'Alguna agotada' },
   { value: 'in', label: 'Con stock' },
 ];
 
@@ -164,11 +167,21 @@ function SelectFilters({ filters, categories, onChange }: FilterBarProps) {
 // Precio y unidades disponibles de un producto (0 = sin stock, en naranja para verlo de un vistazo).
 function PriceAndStock({ product }: { product: Product }) {
   const units = product.available;
+  const soldOut = product.soldOutVariants ?? 0;
   return (
-    <div className="flex items-center justify-between gap-3">
-      <p className="text-lg font-bold">{priceRange(product)}</p>
-      {units !== undefined && (
-        <Badge tone={units === 0 ? 'warning' : 'neutral'}>{units === 0 ? 'Sin stock' : `${units} disponibles`}</Badge>
+    <div className="flex flex-col gap-1">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-lg font-bold">{priceRange(product)}</p>
+        {units !== undefined && (
+          <Badge tone={units === 0 ? 'warning' : 'neutral'}>
+            {units === 0 ? 'Todo agotado' : `${units} disponibles`}
+          </Badge>
+        )}
+      </div>
+      {soldOut > 0 && units !== 0 && (
+        <p className="text-warning text-sm font-medium">
+          {soldOut} de {product.variants.length} variantes agotadas
+        </p>
       )}
     </div>
   );

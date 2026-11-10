@@ -85,6 +85,8 @@
 
 - [x] 12.9 Filtro de stock ("Sin stock" / "Con stock") en la API y el listado de productos, unidades disponibles en cada tarjeta y botón para desactivar de una vez los productos agotados (con confirmación y cantidad real); verificado en un iPhone emulado y con pruebas de contrato contra Postgres.
 
+- [x] 12.10 Nivel de variante coherente en ambas pantallas: pestaña "Agotadas" en el almacén (variantes activas en 0), desactivación individual y en bloque de variantes, "X de Y variantes agotadas" y filtro "alguna agotada" en productos, y sin datos viejos al cambiar de vista; verificado en un iPhone emulado con los datos de la demo.
+
 ## 13. Cierre y verificación
 
 - [ ] 13.1 `ux-check` sobre todas las pantallas nuevas (contraste AA, objetivos táctiles de 44 px, foco, estados, 360 px sin desplazamiento horizontal) y corregir lo que reporte.

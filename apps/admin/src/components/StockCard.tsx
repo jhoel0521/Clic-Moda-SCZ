@@ -6,11 +6,13 @@ import { Badge, Button, Card } from './ui';
 interface Props {
   row: StockRow;
   canWrite: boolean;
+  canDeactivate: boolean;
   onAction: (row: StockRow, kind: MovementKind) => void;
+  onDeactivate: (row: StockRow) => void;
 }
 
 function Numbers({ row }: { row: StockRow }) {
-  const low = row.available <= row.reorderLevel;
+  const low = row.active && row.available <= row.reorderLevel;
   return (
     <div className="flex items-end justify-between gap-3">
       <div>
@@ -26,6 +28,12 @@ function Numbers({ row }: { row: StockRow }) {
   );
 }
 
+function Status({ row }: { row: StockRow }) {
+  if (!row.active) return <Badge tone="neutral">Inactiva</Badge>;
+  if (row.available <= 0) return <Badge tone="warning">Agotada</Badge>;
+  return row.available <= row.reorderLevel ? <Badge tone="warning">Stock bajo</Badge> : null;
+}
+
 function Title({ row }: { row: StockRow }) {
   const detail = [`Talla ${row.size}`, row.color].filter(Boolean).join(' · ');
   return (
@@ -36,7 +44,7 @@ function Title({ row }: { row: StockRow }) {
           {detail} · {row.sku}
         </p>
       </div>
-      {row.available <= row.reorderLevel && <Badge tone="warning">Stock bajo</Badge>}
+      <Status row={row} />
     </div>
   );
 }
@@ -57,13 +65,19 @@ function Actions({ row, onAction }: Pick<Props, 'row' | 'onAction'>) {
   );
 }
 
-export default function StockCard({ row, canWrite, onAction }: Props) {
+export default function StockCard({ row, canWrite, canDeactivate, onAction, onDeactivate }: Props) {
   const [showHistory, setShowHistory] = useState(false);
+  const soldOut = row.active && row.available <= 0;
   return (
     <Card className="flex flex-col gap-3 p-4">
       <Title row={row} />
       <Numbers row={row} />
       {canWrite && <Actions row={row} onAction={onAction} />}
+      {canDeactivate && soldOut && (
+        <Button variant="secondary" icon="trash" onClick={() => onDeactivate(row)}>
+          Desactivar esta variante
+        </Button>
+      )}
       <Button
         variant="ghost"
         icon={showHistory ? 'left' : 'right'}

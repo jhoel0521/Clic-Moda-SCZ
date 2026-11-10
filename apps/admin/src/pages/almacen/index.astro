@@ -4,8 +4,9 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
 import { can } from '../../lib/session';
 
 const canWrite = can(Astro.locals.session, 'stock:write');
+const canDeactivate = can(Astro.locals.session, 'catalog:write');
 ---
 
 <AdminLayout title="Almacén" subtitle="Stock por variante, ingresos, salidas y ajustes">
-  <StockManager client:load canWrite={canWrite} />
+  <StockManager client:load canWrite={canWrite} canDeactivate={canDeactivate} />
 </AdminLayout>

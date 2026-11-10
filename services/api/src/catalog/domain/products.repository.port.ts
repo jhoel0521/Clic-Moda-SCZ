@@ -8,7 +8,8 @@ export interface ProductSearchFilter {
   categoryId?: CategoryId;
   active?: boolean;
   // Disponible total (físico menos reservado, solo variantes activas): 'out' = 0 o menos, 'in' = más de 0.
-  stock?: 'out' | 'in';
+  // 'partial' = al menos una variante activa agotada (aunque el producto tenga stock en otras).
+  stock?: 'out' | 'in' | 'partial';
   page: number; // desde 1
   pageSize: number;
 }
@@ -18,6 +19,8 @@ export interface ProductPage {
   total: number; // total que cumple el filtro, sin paginar
   // Unidades disponibles de cada producto de la página (clave: id del producto).
   available: Readonly<Record<string, number>>;
+  // Cuántas variantes activas de cada producto están agotadas (disponible 0 o menos).
+  soldOutVariants: Readonly<Record<string, number>>;
 }
 
 // Puerto de repositorio: pertenece al dominio; la implementación vive en infrastructure/persistence.

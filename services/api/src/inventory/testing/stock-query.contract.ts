@@ -163,6 +163,18 @@ function movementCases2(make: Factory): void {
   });
 }
 
+function soldOutCases(make: Factory): void {
+  it('soldOut lista solo las variantes activas agotadas (con o sin fila de stock)', async () => {
+    const world = await make();
+    await seed(world);
+    await world.newVariant({ sku: 'NOROW-1', productName: 'Sin fila' });
+    const out = await world.query.listStock({ ...paging, soldOut: true });
+
+    expect(out.items.map((row) => row.sku)).toEqual(['NOROW-1']);
+    expect(out.items.every((row) => row.active && row.available <= 0)).toBe(true);
+  });
+}
+
 // Suite de contrato: toda implementación del puerto (fake en memoria y SQL) debe pasarla.
 export function stockQueryContract(label: string, make: Factory): void {
   describe(`StockQueryPort: ${label}`, () => {
@@ -171,6 +183,7 @@ export function stockQueryContract(label: string, make: Factory): void {
     stockCases3(make);
     lowStockCases(make);
     movementCases(make);
+    soldOutCases(make);
     movementCases2(make);
   });
 }

@@ -39,6 +39,16 @@ export class InMemoryProductsRepository implements ProductsRepository {
     this.stock.set(id.value, units);
   }
 
+  private soldOutOf(product: Product): number {
+    return product.variants.filter((v) => v.active && (this.stock.get(v.id.value) ?? 0) <= 0)
+      .length;
+  }
+
+  private matchesStock(product: Product, stock: 'out' | 'in' | 'partial'): boolean {
+    if (stock === 'partial') return this.soldOutOf(product) > 0;
+    return this.availableOf(product) > 0 === (stock === 'in');
+  }
+
   private availableOf(product: Product): number {
     return product.variants
       .filter((variant) => variant.active)
@@ -64,7 +74,7 @@ export class InMemoryProductsRepository implements ProductsRepository {
       .filter((p) => !filter.text || matchesText(p, filter.text))
       .filter((p) => !filter.categoryId || p.categoryId.equals(filter.categoryId))
       .filter((p) => filter.active === undefined || p.active === filter.active)
-      .filter((p) => !filter.stock || this.availableOf(p) > 0 === (filter.stock === 'in'))
+      .filter((p) => !filter.stock || this.matchesStock(p, filter.stock))
       .sort((a, b) => a.name.value.localeCompare(b.name.value));
     const start = (filter.page - 1) * filter.pageSize;
     return {
@@ -72,6 +82,9 @@ export class InMemoryProductsRepository implements ProductsRepository {
       total: matching.length,
       available: Object.fromEntries(
         matching.slice(start, start + filter.pageSize).map((p) => [p.id.value, this.availableOf(p)])
+      ),
+      soldOutVariants: Object.fromEntries(
+        matching.slice(start, start + filter.pageSize).map((p) => [p.id.value, this.soldOutOf(p)])
       ),
     };
   }

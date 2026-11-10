@@ -19,6 +19,7 @@ export interface Variant {
 // `available`: unidades disponibles (suma de las variantes activas); solo viene en los listados.
 export interface Product {
   available?: number;
+  soldOutVariants?: number; // variantes activas agotadas (solo en los listados)
   id: string;
   categoryId: string;
   name: string;

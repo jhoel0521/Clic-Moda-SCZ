@@ -53,7 +53,8 @@ export class TypeOrmStockQueries implements StockQueryPort {
   constructor(private readonly dataSource: DataSource) {}
 
   listStock(query: StockQuery): Promise<StockPage> {
-    return this.stock(query, '', 'p.name ASC, v.sku ASC');
+    const soldOut = query.soldOut ? `AND v.active AND ${AVAILABLE} <= 0` : '';
+    return this.stock(query, soldOut, 'p.name ASC, v.sku ASC');
   }
 
   listLowStock(query: LowStockQuery): Promise<StockPage> {

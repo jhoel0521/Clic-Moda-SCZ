@@ -65,6 +65,8 @@ export interface StockQuery {
   readonly page: number;
   readonly pageSize: number;
   readonly text?: string;
+  // Solo variantes activas agotadas (disponible 0 o menos).
+  readonly soldOut?: boolean;
 }
 
 export type LowStockQuery = StockQuery;

@@ -65,7 +65,7 @@ export class SearchProductsQuery {
     readonly text?: string,
     readonly categoryId?: string,
     readonly active?: boolean,
-    readonly stock?: 'out' | 'in'
+    readonly stock?: 'out' | 'in' | 'partial'
   ) {}
 }
 
@@ -91,6 +91,8 @@ export interface ProductResult {
   readonly variants: readonly VariantResult[];
   // Unidades disponibles (solo en los listados): suma de las variantes activas.
   readonly available?: number;
+  // Variantes activas agotadas (solo en los listados).
+  readonly soldOutVariants?: number;
   readonly createdAt: string;
   readonly updatedAt: string;
 }

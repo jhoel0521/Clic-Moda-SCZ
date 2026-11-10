@@ -21,6 +21,15 @@ const UNIQUE_VIOLATION = '23505';
 // lectura sobre las tablas de inventario: `catalog` no importa código de `inventory`.
 const AVAILABLE_SQL = `COALESCE((SELECT SUM(s.on_hand - s.reserved) FROM product_variants v
   JOIN stock_levels s ON s.variant_id = v.id WHERE v.product_id = p.id AND v.active), 0)`;
+// Variantes activas agotadas de un producto (sin fila de stock cuenta como 0).
+const SOLD_OUT_SQL = `(SELECT count(*) FROM product_variants v LEFT JOIN stock_levels s ON s.variant_id = v.id
+  WHERE v.product_id = p.id AND v.active AND COALESCE(s.on_hand - s.reserved, 0) <= 0)`;
+
+const STOCK_CONDITION = {
+  out: `${AVAILABLE_SQL} <= 0`,
+  in: `${AVAILABLE_SQL} > 0`,
+  partial: `${SOLD_OUT_SQL} > 0`,
+} as const;
 const escapeLike = (term: string): string => term.replace(/[\\%_]/g, (char) => `\\${char}`);
 
 @Injectable()
@@ -63,7 +72,17 @@ export class TypeOrmProductsRepository implements ProductsRepository {
       items: await this.loadInOrder(found),
       total,
       available: await this.availability(found),
+      soldOutVariants: await this.soldOutVariants(found),
     };
+  }
+
+  private async soldOutVariants(ids: string[]): Promise<Record<string, number>> {
+    if (ids.length === 0) return {};
+    const rows: { id: string; sold_out: string }[] = await this.dataSource.query(
+      `SELECT p.id, ${SOLD_OUT_SQL} AS sold_out FROM products p WHERE p.id = ANY($1)`,
+      [ids]
+    );
+    return Object.fromEntries(rows.map((row) => [row.id, Number(row.sold_out)]));
   }
 
   private async availability(ids: string[]): Promise<Record<string, number>> {
@@ -100,7 +119,7 @@ export class TypeOrmProductsRepository implements ProductsRepository {
       );
     }
     if (filter.categoryId) query.andWhere('p.category_id = :cat', { cat: filter.categoryId.value });
-    if (filter.stock) query.andWhere(`${AVAILABLE_SQL} ${filter.stock === 'out' ? '<= 0' : '> 0'}`);
+    if (filter.stock) query.andWhere(STOCK_CONDITION[filter.stock]);
     if (filter.active !== undefined)
       query.andWhere('p.active = :active', { active: filter.active });
     return query;

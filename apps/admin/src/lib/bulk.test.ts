@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { deactivateAll, listActiveWithoutStock } from './bulk';
+import { deactivateAll, deactivateVariants, listActiveWithoutStock, listSoldOutVariants } from './bulk';
 import type { Product } from './types';
 
 const product = (id: string): Product => ({
@@ -24,6 +24,20 @@ function stubFetch(responses: unknown[]) {
 }
 
 afterEach(() => vi.unstubAllGlobals());
+
+const row = (variantId: string) => ({
+  variantId,
+  sku: variantId,
+  productName: 'P',
+  size: 'M',
+  color: null,
+  active: true,
+  onHand: 0,
+  reserved: 0,
+  available: 0,
+  location: null,
+  reorderLevel: 0,
+});
 
 describe('listActiveWithoutStock', () => {
   it('pide solo los activos sin stock y respeta el texto y la categoría', async () => {
@@ -58,5 +72,29 @@ describe('deactivateAll', () => {
 
     expect(await deactivateAll([])).toBe(0);
     expect(calls).toEqual([]);
+  });
+});
+
+describe('variantes agotadas', () => {
+  it('lista solo las variantes activas agotadas, con la búsqueda', async () => {
+    const calls = stubFetch([{ items: [row('v1')], total: 1, page: 1, pageSize: 100 }]);
+
+    const found = await listSoldOutVariants(' blusa ');
+
+    expect(found.map((r) => r.variantId)).toEqual(['v1']);
+    const url = decodeURIComponent(calls[0]!.url);
+    for (const part of ['inventory/stock', 'soldOut=true', 'pageSize=100', 'text=blusa']) expect(url).toContain(part);
+  });
+});
+
+describe('variantes agotadas (2)', () => {
+  it('desactiva cada variante en el catálogo con PATCH', async () => {
+    const calls = stubFetch([{}, {}]);
+
+    expect(await deactivateVariants([row('v1'), row('v2')])).toBe(2);
+    expect(calls.map((c) => [c.method, c.url])).toEqual([
+      ['PATCH', '/api/catalog/variants/v1/active'],
+      ['PATCH', '/api/catalog/variants/v2/active'],
+    ]);
   });
 });

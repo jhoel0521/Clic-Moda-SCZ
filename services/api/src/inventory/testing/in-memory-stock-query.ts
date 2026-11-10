@@ -30,6 +30,7 @@ export class InMemoryStockQuery implements StockQueryPort {
   async listStock(query: StockQuery): Promise<StockPage> {
     const rows = this.rows()
       .filter((row) => matches(row, query.text))
+      .filter((row) => !query.soldOut || (row.active && row.available <= 0))
       .sort((a, b) => a.productName.localeCompare(b.productName) || a.sku.localeCompare(b.sku));
     return page(rows, query);
   }
