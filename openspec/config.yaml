@@ -5,24 +5,36 @@ context: |
   All artifacts must be written in es.
   Keep OpenSpec structural headings and SHALL/MUST keywords in English.
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always state what is out of scope
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+  # Proyecto
+  Clic Moda SCZ: tienda de moda de Santa Cruz (Bolivia), canal principal TikTok/Instagram.
+  Diferenciador: venta en vivo (Live) con reserva en tiempo real de prendas con numero de
+  serie; quien reserva primero la gana por un tiempo (TTL) y confirma por WhatsApp.
+  La tienda normal usa el mismo motor de reservas. Sin pasarela de pago por ahora
+  (QR/transferencia con confirmacion manual). Presupuesto acotado, mercado movil-first.
+  Hoja de ruta: openspec/ROADMAP.md. Modelo de datos actual: docs/database.dbml.
 
-# Per-operation guidance (optional)
-# Add advisory guidance for how apply and archive work should be conducted.
-# This is separate from artifact rules above.
-# Example:
-#   operations:
-#     apply:
-#       guidance:
-#         - Keep test summaries concise
-#     archive:
-#       guidance:
-#         - Summarize the archive outcome before finishing
+  # Monorepo (cada proyecto es independiente: su package.json, lockfile y node_modules)
+  - apps/shop      Next.js 16 + React 19 + Tailwind v4 (MVP actual, usa JSON mock en data/db.json)
+  - apps/admin     Panel de administracion y consola del Live (pendiente de scaffolding)
+  - services/api   NestJS + PostgreSQL + WebSocket (Socket.io), unica fuente de verdad (pendiente)
+  - Orquestador en la raiz: pnpm dev:shop, pnpm build:all, pnpm lint:all, pnpm secrets:scan
+
+  # Convenciones
+  - Node 26 (LTS) y pnpm 12; nunca npm/yarn.
+  - Funciones de maximo 25 lineas (eslint max-lines-per-function: "warn" en la shop heredada,
+    "error" en proyectos nuevos).
+  - Hook pre-commit (husky): secretlint + prettier/eslint + lint:all + build:all en todos los
+    subproyectos. No usar --no-verify. Nunca commitear secretos ni .env*.
+  - El servidor es el unico arbitro de reservas: orden por reloj del servidor, UPDATE atomico
+    en BD (nunca doble venta), vencimientos persistidos en BD.
+  - apps/shop usa Next.js con cambios incompatibles: leer node_modules/next/dist/docs/ antes
+    de escribir codigo (ver AGENTS.md).
+  - Cambios de UI: seguir el estandar de .ux/ (ux-kit) y correr ux-check al terminar.
+
+rules:
+  proposal:
+    - Indicar siempre que queda fuera de alcance
+    - Indicar a que fase de openspec/ROADMAP.md pertenece el cambio
+  tasks:
+    - Dividir en tareas de maximo 2 horas
+    - Incluir una tarea de pruebas (concurrencia si toca reservas)
