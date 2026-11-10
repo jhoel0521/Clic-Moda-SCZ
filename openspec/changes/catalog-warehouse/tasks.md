@@ -9,9 +9,9 @@
 
 ## 2. Catálogo — dominio (capa domain)
 
-- [ ] 2.1 Objetos de valor `CategoryName`, `Slug` (derivado del nombre, sin tildes ni símbolos) y `ProductName` con sus errores de valor; pruebas unitarias de límites y normalización (ñ, tildes, espacios).
-- [ ] 2.2 Objetos de valor `Money` (centavos enteros, 0 < x ≤ 10 000 000, conversión exacta desde decimales de dos cifras, rechazo de más decimales), `Sku`, `Size` y `Color`; pruebas unitarias incluyendo `349.90` sin pérdida de precisión.
-- [ ] 2.3 Entidades `Category`, `Variant` y `Product` (raíz: exige al menos una variante, no permite SKU repetido dentro del producto, activar/desactivar, agregar variante) y servicio `SkuGenerator`; pruebas unitarias puras de invariantes y de generación.
+- [x] 2.1 Objetos de valor `CategoryName`, `Slug` (derivado del nombre, sin tildes ni símbolos) y `ProductName` con sus errores de valor; pruebas unitarias de límites y normalización (ñ, tildes, espacios).
+- [x] 2.2 Objetos de valor `Money` (centavos enteros, 0 < x ≤ 10 000 000, conversión exacta desde decimales de dos cifras, rechazo de más decimales), `Sku`, `Size` y `Color`; pruebas unitarias incluyendo `349.90` sin pérdida de precisión.
+- [x] 2.3 Entidades `Category`, `Variant` y `Product` (raíz: exige al menos una variante, no permite SKU repetido dentro del producto, activar/desactivar, agregar variante) y servicio `SkuGenerator`; pruebas unitarias puras de invariantes y de generación.
 - [ ] 2.4 Puertos `CategoriesRepository` y `ProductsRepository` con sus tokens, y las suites de contrato `categoriesRepositoryContract` y `productsRepositoryContract` más sus implementaciones en memoria; verificar que la suite pasa contra la implementación en memoria (alta atómica, SKU y nombre duplicados, búsqueda, paginación, conteo por categoría).
 
 ## 3. Catálogo — aplicación (capa application)
