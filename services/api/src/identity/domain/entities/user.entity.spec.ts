@@ -68,3 +68,12 @@ describe('User: permisos por rol', () => {
     ]).toEqual([true, false]);
   });
 });
+
+describe('User: orden de los roles', () => {
+  it('devuelve siempre los roles en el mismo orden, sin importar el de asignación', () => {
+    const user = newUser();
+    user.assignRoles([Role.ATENCION, Role.GERENTE, Role.DESPACHO]);
+
+    expect(user.roles.map((role) => role.value)).toEqual(['GERENTE', 'DESPACHO', 'ATENCION']);
+  });
+});

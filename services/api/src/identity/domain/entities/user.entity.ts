@@ -1,7 +1,7 @@
 import type { Email } from '../value-objects/email.vo.js';
 import type { PasswordHash } from '../value-objects/password-hash.vo.js';
 import type { PersonName } from '../value-objects/person-name.vo.js';
-import type { Role } from '../value-objects/role.vo.js';
+import { ROLE_VALUES, type Role } from '../value-objects/role.vo.js';
 import { UserId } from '../value-objects/user-id.vo.js';
 
 export interface UserProps {
@@ -19,9 +19,15 @@ export interface NewUser {
   passwordHash?: PasswordHash | null;
 }
 
-// Un usuario puede tener varios roles; sin duplicados.
+// Un usuario puede tener varios roles; sin duplicados y SIEMPRE en el mismo orden (el de ROLE_VALUES),
+// para que ninguna respuesta dependa del orden en que la base de datos los devuelva.
+const canonicalOrder = (a: Role, b: Role): number =>
+  ROLE_VALUES.indexOf(a.value) - ROLE_VALUES.indexOf(b.value);
+
 const uniqueRoles = (roles: readonly Role[]): Role[] =>
-  roles.filter((role, index) => roles.findIndex((other) => other.equals(role)) === index);
+  roles
+    .filter((role, index) => roles.findIndex((other) => other.equals(role)) === index)
+    .sort(canonicalOrder);
 
 // Entidad: se identifica por su id, no por sus valores.
 export class User {

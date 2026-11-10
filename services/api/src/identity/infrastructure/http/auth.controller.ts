@@ -1,7 +1,9 @@
-import { Public } from '@nestjs/authentication';
-import { Body, Controller, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
+import { CurrentUser, Public } from '@nestjs/authentication';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import { AuthenticateStaffCommand } from '../../application/dtos/authenticate-staff.command.js';
 import { AuthenticateStaffUseCase } from '../../application/use-cases/authenticate-staff.use-case.js';
+import type { User } from '../../domain/entities/user.entity.js';
+import { type CurrentStaffDto, toCurrentStaff } from './current-staff.dto.js';
 import { LoginThrottlerGuard } from './login-throttler.guard.js';
 import {
   type LoginRequestDto,
@@ -26,5 +28,11 @@ export class AuthController {
       new AuthenticateStaffCommand(body.email, body.password)
     );
     return toLoginResponse(result);
+  }
+
+  // Perfil del usuario autenticado (cualquier rol): el admin lo usa para comprobar la sesión.
+  @Get('me')
+  me(@CurrentUser() user: User): CurrentStaffDto {
+    return toCurrentStaff(user);
   }
 }
