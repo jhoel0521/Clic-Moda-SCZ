@@ -15,8 +15,8 @@
 
 ## 3. Chore inicial de `apps/admin` (Astro 7.4.8)
 
-- [ ] 3.1 Generar el proyecto igual que la shop, con `@astrojs/node`, `@tailwindcss/vite` y `@astrojs/react` 7.1.5 (React 19), y una isla de ejemplo; verificar con `build` y una prueba de componente de Vitest que la isla se renderiza.
-- [ ] 3.2 Configurar ESLint, Prettier, Vitest y la regla de 25 líneas como `error`; verificar `lint` y `test` en verde y que una función de 26 líneas de prueba falla el lint.
+- [x] 3.1 Generar el proyecto igual que la shop, con `@astrojs/node`, `@tailwindcss/vite` y `@astrojs/react` 7.1.5 (React 19), y una isla de ejemplo; verificar con `build` y una prueba de componente de Vitest que la isla se renderiza.
+- [x] 3.2 Configurar ESLint, Prettier, Vitest y la regla de 25 líneas como `error`; verificar `lint` y `test` en verde y que una función de 26 líneas de prueba falla el lint.
 
 ## 4. Chore inicial de `services/api` (NestJS 12.4.2)
 

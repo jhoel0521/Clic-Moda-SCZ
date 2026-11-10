@@ -1,0 +1,10 @@
+/// <reference types="vitest/config" />
+import { getViteConfig } from 'astro/config';
+
+export default getViteConfig({
+  test: {
+    include: ['src/**/*.test.{ts,tsx}'],
+    environment: 'jsdom',
+    setupFiles: ['./vitest.setup.ts'],
+  },
+});
