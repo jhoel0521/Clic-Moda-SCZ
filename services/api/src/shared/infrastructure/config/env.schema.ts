@@ -16,6 +16,9 @@ export const envSchema = z.object({
   AUTH_JWT_AUDIENCE: z.string().min(1).default('clic-moda'),
   // Costo de scrypt (2^N). 17 es el valor recomendado; las pruebas lo bajan para ir más rápido.
   AUTH_SCRYPT_LOG_N: z.coerce.number().int().min(10).max(20).default(17),
+  // Procesador de la cola de stock: "off" lo desactiva (otro proceso o pruebas) y POLL_MS es la espera sin trabajo.
+  STOCK_QUEUE_WORKER: z.enum(['on', 'off']).default('on'),
+  STOCK_QUEUE_POLL_MS: z.coerce.number().int().min(20).max(10000).default(200),
 });
 
 export type Env = z.infer<typeof envSchema>;

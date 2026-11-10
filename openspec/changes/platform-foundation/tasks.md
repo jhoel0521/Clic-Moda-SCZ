@@ -62,7 +62,7 @@
 ## 9. Integración
 
 - [x] 9.1 Ejecutar `pnpm check:full` con Docker levantado y comprobar que lint (incluidos los límites de capa), pruebas unitarias, e2e y build pasan en los tres proyectos.
-- [ ] 9.2 Verificar el criterio de la hoja de ruta: `dev:api`, `dev:admin` y `dev:shop` levantan, y un Gerente inicia sesión contra la API y accede a una ruta restringida mientras otro rol recibe 403.
+- [x] 9.2 Verificar el criterio de la hoja de ruta: `dev:api`, `dev:admin` y `dev:shop` levantan, y un Gerente inicia sesión contra la API y accede a una ruta restringida mientras otro rol recibe 403.
 
 ## Workflow follow-up
 

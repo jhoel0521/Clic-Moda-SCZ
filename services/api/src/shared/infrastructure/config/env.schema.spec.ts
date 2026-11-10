@@ -17,6 +17,8 @@ describe('envSchema: valores por defecto y obligatorios', () => {
       AUTH_JWT_ISSUER: 'clic-moda-api',
       AUTH_JWT_AUDIENCE: 'clic-moda',
       AUTH_SCRYPT_LOG_N: 17,
+      STOCK_QUEUE_WORKER: 'on',
+      STOCK_QUEUE_POLL_MS: 200,
     });
   });
 

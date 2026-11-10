@@ -11,4 +11,6 @@ export function useTestDatabase(): void {
   // Solo para pruebas: clave fija no secreta y scrypt barato (las e2e hashean contraseñas).
   process.env.AUTH_JWT_KEY ??= 'clave-solo-para-pruebas-e2e-0123456789abcdef';
   process.env.AUTH_SCRYPT_LOG_N = '10';
+  // Las pruebas invocan el procesamiento de la cola de forma determinista, no con el temporizador.
+  process.env.STOCK_QUEUE_WORKER = 'off';
 }

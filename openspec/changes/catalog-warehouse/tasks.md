@@ -42,17 +42,17 @@
 
 ## 7. Inventario — infraestructura (capa infrastructure)
 
-- [ ] 7.1 Entidades ORM y mappers de stock, movimientos y comandos; `TypeOrmStockLevelsRepository` y `SqlVariantLookup`; ejecutar las suites de contrato correspondientes contra la base real.
-- [ ] 7.2 `TypeOrmStockCommandsRepository`: encolado con `pg_advisory_xact_lock(NS_ENQUEUE, …)` por variante, `INSERT … ON CONFLICT DO NOTHING` para la idempotencia y reintentos; ejecutar `stockCommandsRepositoryContract` contra la base real y verificar que `seq` respeta el orden de confirmación con encolados simultáneos.
-- [ ] 7.3 `TypeOrmStockProcessingAdapter`: una transacción por comando (reclamo con `pg_try_advisory_xact_lock(NS_PROCESS, …)` y `SKIP LOCKED`, solo el más antiguo de la variante sin filtrar por `available_at`, actualización condicional, movimiento y estado final); ejecutar la suite de contrato de `StockCommandProcessingPort` contra la base real y verificar con una caída simulada a mitad de transacción que el comando sigue `PENDING` y el stock no cambia; verificar con un encolado simultáneo que un encolado no espera a un procesamiento en curso de la misma variante.
-- [ ] 7.4 Política de reintentos (`attempts` incrementado en su propia transacción confirmada antes de procesar, espera creciente, máximo 5, `PROCESSING_FAILED`) y `TypeOrmStockQueries` (stock, bajo stock, movimientos paginados, estado de la cola); pruebas de integración de reintentos agotados, de un comando que tumba el proceso y se agota entre reinicios, y de cada consulta.
+- [x] 7.1 Entidades ORM y mappers de stock, movimientos y comandos; `TypeOrmStockLevelsRepository` y `SqlVariantLookup`; ejecutar las suites de contrato correspondientes contra la base real.
+- [x] 7.2 `TypeOrmStockCommandsRepository`: encolado con `pg_advisory_xact_lock(NS_ENQUEUE, …)` por variante, `INSERT … ON CONFLICT DO NOTHING` para la idempotencia y reintentos; ejecutar `stockCommandsRepositoryContract` contra la base real y verificar que `seq` respeta el orden de confirmación con encolados simultáneos.
+- [x] 7.3 `TypeOrmStockProcessingAdapter`: una transacción por comando (reclamo con `pg_try_advisory_xact_lock(NS_PROCESS, …)` y `SKIP LOCKED`, solo el más antiguo de la variante sin filtrar por `available_at`, actualización condicional, movimiento y estado final); ejecutar la suite de contrato de `StockCommandProcessingPort` contra la base real y verificar con una caída simulada a mitad de transacción que el comando sigue `PENDING` y el stock no cambia; verificar con un encolado simultáneo que un encolado no espera a un procesamiento en curso de la misma variante.
+- [x] 7.4 Política de reintentos (`attempts` incrementado en su propia transacción confirmada antes de procesar, espera creciente, máximo 5, `PROCESSING_FAILED`) y `TypeOrmStockQueries` (stock, bajo stock, movimientos paginados, estado de la cola); pruebas de integración de reintentos agotados, de un comando que tumba el proceso y se agota entre reinicios, y de cada consulta.
 - [ ] 7.5 `StockCommandProcessor` (sondeo configurable `STOCK_QUEUE_POLL_MS`, despertar tras encolar, `STOCK_QUEUE_WORKER`, apagado ordenado) registrado en el ciclo de vida de Nest, con variables en `env.schema.ts` y `.env.example`; verificar que arranca con la API, procesa comandos y termina el comando en curso al apagar.
 
 ## 8. Inventario — HTTP y roles (capa infrastructure)
 
-- [ ] 8.1 Controladores y DTOs HTTP (Zod): `POST /inventory/commands` (202, `Location`, cabecera `Idempotency-Key`), `GET /inventory/commands/:id` y `GET /inventory/queue` con `@Roles`; `inventory.module.ts` registrado en `AppModule`; prueba e2e del 202 y de la consulta del resultado tras `drain`.
-- [ ] 8.2 Rutas de lectura y ajustes (`/inventory/stock`, `/stock/low`, `/variants/:id/movements`, `PATCH /stock/:variantId/settings`) con `@Roles`; prueba e2e por rol (Gerente y Despacho escriben, Atención 403 y solo lee, 401 sin sesión).
-- [ ] 8.3 Cerrar la tarea 9.2 de `platform-foundation` con una prueba e2e sobre una ruta real: el Gerente inicia sesión y recibe 200, Despacho recibe 403 en una ruta solo de Gerente; marcarla como hecha en esa lista.
+- [x] 8.1 Controladores y DTOs HTTP (Zod): `POST /inventory/commands` (202, `Location`, cabecera `Idempotency-Key`), `GET /inventory/commands/:id` y `GET /inventory/queue` con `@Roles`; `inventory.module.ts` registrado en `AppModule`; prueba e2e del 202 y de la consulta del resultado tras `drain`.
+- [x] 8.2 Rutas de lectura y ajustes (`/inventory/stock`, `/stock/low`, `/variants/:id/movements`, `PATCH /stock/:variantId/settings`) con `@Roles`; prueba e2e por rol (Gerente y Despacho escriben, Atención 403 y solo lee, 401 sin sesión).
+- [x] 8.3 Cerrar la tarea 9.2 de `platform-foundation` con una prueba e2e sobre una ruta real: el Gerente inicia sesión y recibe 200, Despacho recibe 403 en una ruta solo de Gerente; marcarla como hecha en esa lista.
 
 ## 9. Pruebas de concurrencia y de carga (capa infrastructure)
 
