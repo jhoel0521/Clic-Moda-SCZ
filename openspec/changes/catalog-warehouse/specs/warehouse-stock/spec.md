@@ -68,12 +68,15 @@ Gerente y Despacho SHALL poder registrar ingresos, salidas y ajustes y cambiar u
 - **WHEN** un usuario con rol Atención intenta ajustar el stock
 - **THEN** el sistema responde prohibido y no encola ni cambia nada
 
-### Requirement: Sold-out variants are listed and can be deactivated
-El sistema SHALL listar las variantes activas agotadas (disponible 0 o menos, incluidas las que aún no tienen fila de stock), distintas de «stock bajo», que además incluye las que están en el umbral de reposición. Cada producto del listado de productos SHALL informar cuántas de sus variantes activas están agotadas, de modo que un producto con stock en unas variantes y agotado en otras se vea como tal en ambas pantallas. El Gerente SHALL poder desactivar una variante agotada o todas las agotadas de una vez, sin borrar nada.
+### Requirement: Sold-out variants are listed apart from low stock
+El sistema SHALL listar las variantes activas agotadas (disponible 0 o menos, incluidas las que aún no tienen fila de stock), distintas de «stock bajo», que además incluye las que están en el umbral de reposición. Cada producto del listado de productos SHALL informar cuántas de sus variantes activas están agotadas.
 
 #### Scenario: Product with some variants sold out
 - **WHEN** un producto tiene 12 variantes, 7 en 0 y 5 con stock
 - **THEN** el listado de productos informa «7 de 12 variantes agotadas» con su disponible total, el filtro «alguna agotada» lo incluye, «todo agotado» no, y las 7 aparecen en la lista de agotadas del almacén
+
+### Requirement: Sold-out variants can be deactivated
+El Gerente SHALL poder desactivar una variante agotada o todas las agotadas de una vez, y el sistema MUST conservar su historial sin borrar nada.
 
 #### Scenario: Deactivate sold-out variants
 - **WHEN** el Gerente desactiva una variante agotada, o todas las agotadas, y confirma
