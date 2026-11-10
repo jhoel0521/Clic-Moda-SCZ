@@ -1,5 +1,6 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { Roles } from '../../../identity/infrastructure/http/roles.decorator.js';
+import { GetInventorySummaryUseCase } from '../../application/use-cases/get-inventory-summary.use-case.js';
 import { ListLowStockUseCase } from '../../application/use-cases/list-low-stock.use-case.js';
 import {
   ListMovementsQuery,
@@ -24,8 +25,16 @@ export class StockController {
   constructor(
     private readonly listStock: ListStockUseCase,
     private readonly listLow: ListLowStockUseCase,
-    private readonly listMovements: ListMovementsUseCase
+    private readonly listMovements: ListMovementsUseCase,
+    private readonly inventorySummary: GetInventorySummaryUseCase
   ) {}
+
+  // Indicadores de la cabecera: modelos, unidades, variantes agotadas y con stock bajo.
+  @Roles('GERENTE', 'DESPACHO', 'ATENCION')
+  @Get('summary')
+  summary() {
+    return this.inventorySummary.execute();
+  }
 
   @Roles('GERENTE', 'DESPACHO', 'ATENCION')
   @Get('stock')

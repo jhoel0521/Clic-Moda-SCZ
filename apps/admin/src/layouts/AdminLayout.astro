@@ -16,8 +16,7 @@ const path = Astro.url.pathname;
 const links: { href: string; label: string; icon: IconName }[] = [
   { href: '/', label: 'Inicio', icon: 'home' },
   { href: '/categorias', label: 'Categorías', icon: 'tag' },
-  { href: '/productos', label: 'Productos', icon: 'box' },
-  { href: '/almacen', label: 'Almacén', icon: 'warehouse' },
+  { href: '/productos', label: 'Inventario', icon: 'warehouse' },
 ];
 const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 const readOnly = !can(session, 'catalog:write') && !can(session, 'stock:write');

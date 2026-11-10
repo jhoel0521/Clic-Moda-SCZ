@@ -3,16 +3,24 @@ import type { UseCase } from '../../../shared/application/use-case.js';
 import { ValidationError } from '../../../shared/domain/errors/domain.error.js';
 import {
   PRODUCTS_REPOSITORY,
+  type ProductPage,
   type ProductsRepository,
 } from '../../domain/products.repository.port.js';
 import { CategoryId } from '../../domain/value-objects/ids.vo.js';
 import {
   type ProductPageResult,
+  type ProductResult,
   type SearchProductsQuery,
   toProductResult,
 } from '../dtos/product.dtos.js';
 
 const MAX_PAGE_SIZE = 100;
+
+// Suma a cada variante su stock disponible, ubicación y umbral (lectura del inventario).
+const withVariantStock = (
+  variants: ProductResult['variants'],
+  stock: ProductPage['variantStock']
+): ProductResult['variants'] => variants.map((variant) => ({ ...variant, ...stock[variant.id] }));
 
 @Injectable()
 export class SearchProductsUseCase implements UseCase<SearchProductsQuery, ProductPageResult> {
@@ -35,6 +43,7 @@ export class SearchProductsUseCase implements UseCase<SearchProductsQuery, Produ
     });
     const items = found.items.map((product) => ({
       ...toProductResult(product),
+      variants: withVariantStock(toProductResult(product).variants, found.variantStock),
       available: found.available[product.id.value] ?? 0,
       soldOutVariants: found.soldOutVariants[product.id.value] ?? 0,
     }));

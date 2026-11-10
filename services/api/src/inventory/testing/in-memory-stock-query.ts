@@ -1,5 +1,6 @@
 import type { StockQueryPort } from '../application/ports/inventory.ports.js';
 import type {
+  InventorySummary,
   LowStockQuery,
   MovementPage,
   MovementsQuery,
@@ -50,6 +51,17 @@ export class InMemoryStockQuery implements StockQueryPort {
       .filter((row) => !query.soldOut || (row.active && row.available <= 0))
       .sort((a, b) => a.productName.localeCompare(b.productName) || a.sku.localeCompare(b.sku));
     return paged(rows, query);
+  }
+
+  async summary(): Promise<InventorySummary> {
+    const rows = this.rows().filter((row) => row.active);
+    return {
+      models: new Set(rows.map((row) => row.productName)).size,
+      units: rows.reduce((total, row) => total + row.available, 0),
+      soldOutVariants: rows.filter((row) => row.available <= 0).length,
+      lowStockVariants: rows.filter((row) => row.available > 0 && row.available <= row.reorderLevel)
+        .length,
+    };
   }
 
   async listLowStock(query: LowStockQuery): Promise<StockPage> {

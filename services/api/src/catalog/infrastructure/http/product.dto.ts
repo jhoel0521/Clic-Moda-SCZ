@@ -40,6 +40,9 @@ export const updateVariantSchema = z.object({
 });
 export type UpdateVariantDto = z.infer<typeof updateVariantSchema>;
 
+export const priceSchema = z.object({ price: z.union([z.string().max(20), z.number()]) });
+export type PriceDto = z.infer<typeof priceSchema>;
+
 export const activeSchema = z.object({ active: z.boolean() });
 export type ActiveDto = z.infer<typeof activeSchema>;
 
@@ -64,6 +67,9 @@ export interface VariantResponseDto {
   color: string | null;
   price: string;
   active: boolean;
+  available?: number;
+  location?: string | null;
+  reorderLevel?: number;
 }
 
 export interface ProductResponseDto {

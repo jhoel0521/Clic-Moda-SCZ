@@ -4,6 +4,7 @@ import type { StockMovement } from '../../domain/entities/stock-movement.entity.
 import type { StockDecision } from '../../domain/stock-policy.js';
 import type { VariantId } from '../../domain/value-objects/ids.vo.js';
 import type {
+  InventorySummary,
   LowStockQuery,
   MovementPage,
   MovementsQuery,
@@ -49,5 +50,6 @@ export interface StockQueryPort {
   listStock(query: StockQuery): Promise<StockPage>;
   listLowStock(query: LowStockQuery): Promise<StockPage>;
   listMovements(variantId: VariantId, query: MovementsQuery): Promise<MovementPage>;
+  summary(): Promise<InventorySummary>;
 }
 export const STOCK_QUERY = Symbol('StockQueryPort');

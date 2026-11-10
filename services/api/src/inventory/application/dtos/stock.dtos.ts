@@ -119,6 +119,14 @@ export interface MovementPage {
   readonly pageSize: number;
 }
 
+// Indicadores de la cabecera del inventario (solo variantes y modelos activos).
+export interface InventorySummary {
+  readonly models: number;
+  readonly units: number;
+  readonly soldOutVariants: number;
+  readonly lowStockVariants: number;
+}
+
 export interface QueueStatusResult {
   readonly pending: number;
   readonly oldestPendingAgeSeconds: number | null;

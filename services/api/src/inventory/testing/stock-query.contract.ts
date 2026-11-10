@@ -175,6 +175,16 @@ function soldOutCases(make: Factory): void {
   });
 }
 
+function summaryCases(make: Factory): void {
+  it('resume modelos, unidades, agotadas y stock bajo solo de lo activo', async () => {
+    const world = await make();
+    await seed(world);
+    const summary = await world.query.summary();
+
+    expect(summary).toEqual({ models: 2, units: 27, soldOutVariants: 0, lowStockVariants: 1 });
+  });
+}
+
 function byProductCases(make: Factory): void {
   it('byProduct pagina por producto: nunca parte un producto entre páginas y total cuenta productos', async () => {
     const world = await make();
@@ -224,6 +234,7 @@ export function stockQueryContract(label: string, make: Factory): void {
     movementCases(make);
     soldOutCases(make);
     byProductCases(make);
+    summaryCases(make);
     byProductCases2(make);
     movementCases2(make);
   });

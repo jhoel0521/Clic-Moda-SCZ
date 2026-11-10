@@ -6,6 +6,7 @@ import {
   VARIANT_LOOKUP,
 } from './application/ports/inventory.ports.js';
 import { EnqueueStockCommandUseCase } from './application/use-cases/enqueue-stock-command.use-case.js';
+import { GetInventorySummaryUseCase } from './application/use-cases/get-inventory-summary.use-case.js';
 import { GetQueueStatusUseCase } from './application/use-cases/get-queue-status.use-case.js';
 import { GetStockCommandUseCase } from './application/use-cases/get-stock-command.use-case.js';
 import { ListLowStockUseCase } from './application/use-cases/list-low-stock.use-case.js';
@@ -26,6 +27,7 @@ import { TypeOrmStockQueries } from './infrastructure/persistence/typeorm-stock-
 import { StockCommandProcessor } from './infrastructure/queue/stock-command-processor.js';
 
 const USE_CASES = [
+  GetInventorySummaryUseCase,
   EnqueueStockCommandUseCase,
   ProcessNextStockCommandUseCase,
   GetStockCommandUseCase,

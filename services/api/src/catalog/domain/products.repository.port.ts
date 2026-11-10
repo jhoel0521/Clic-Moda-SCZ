@@ -14,6 +14,13 @@ export interface ProductSearchFilter {
   pageSize: number;
 }
 
+// Stock de una variante tal como lo necesita la matriz de inventario (lectura del inventario).
+export interface VariantStock {
+  readonly available: number;
+  readonly location: string | null;
+  readonly reorderLevel: number;
+}
+
 export interface ProductPage {
   items: Product[]; // ordenados por nombre
   total: number; // total que cumple el filtro, sin paginar
@@ -21,6 +28,8 @@ export interface ProductPage {
   available: Readonly<Record<string, number>>;
   // Cuántas variantes activas de cada producto están agotadas (disponible 0 o menos).
   soldOutVariants: Readonly<Record<string, number>>;
+  // Stock de cada variante de la página (clave: id de la variante).
+  variantStock: Readonly<Record<string, VariantStock>>;
 }
 
 // Puerto de repositorio: pertenece al dominio; la implementación vive en infrastructure/persistence.

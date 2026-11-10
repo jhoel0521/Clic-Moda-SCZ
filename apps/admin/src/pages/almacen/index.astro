@@ -1,12 +1,4 @@
 ---
-import StockManager from '../../components/StockManager';
-import AdminLayout from '../../layouts/AdminLayout.astro';
-import { can } from '../../lib/session';
-
-const canWrite = can(Astro.locals.session, 'stock:write');
-const canDeactivate = can(Astro.locals.session, 'catalog:write');
+// El almacén y los productos se unieron en una sola pantalla de inventario.
+return Astro.redirect('/productos', 301);
 ---
-
-<AdminLayout title="Almacén" subtitle="Stock por variante, ingresos, salidas y ajustes">
-  <StockManager client:load canWrite={canWrite} canDeactivate={canDeactivate} />
-</AdminLayout>

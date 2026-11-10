@@ -201,6 +201,22 @@ function stockCases2(make: Factory): void {
   });
 }
 
+function variantStockCases(make: Factory): void {
+  it('informa el stock disponible de cada variante de la página', async () => {
+    const world = await make();
+    const saved = product(await newCategory(world, 'Botas'), 'Bota', [
+      variant('B-1', '38'),
+      variant('B-2', '39'),
+    ]);
+    await world.products.save(saved);
+    await world.setAvailable(saved.variants[0]!.id, 6);
+    const page = await world.products.search({ page: 1, pageSize: 10 });
+    const stock = (index: number) => page.variantStock[saved.variants[index]!.id.value]?.available;
+
+    expect([stock(0), stock(1)]).toEqual([6, 0]);
+  });
+}
+
 function soldOutCases(make: Factory): void {
   it('cuenta las variantes agotadas y filtra los productos con alguna agotada aunque tengan stock', async () => {
     const world = await make();
@@ -235,6 +251,7 @@ export function productsRepositoryContract(label: string, make: Factory): void {
     searchCases(make);
     stockCases(make);
     soldOutCases(make);
+    variantStockCases(make);
     stockCases2(make);
     countCases(make);
   });

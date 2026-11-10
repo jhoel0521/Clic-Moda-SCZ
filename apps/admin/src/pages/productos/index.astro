@@ -1,20 +1,21 @@
 ---
-import ProductsList from '../../components/ProductsList';
+import InventoryBoard from '../../components/InventoryBoard';
 import AdminLayout from '../../layouts/AdminLayout.astro';
 import Icon from '../../components/Icon.astro';
 import { can } from '../../lib/session';
 
-const canWrite = can(Astro.locals.session, 'catalog:write');
+const canWrite = can(Astro.locals.session, 'stock:write');
+const canDeactivate = can(Astro.locals.session, 'catalog:write');
 ---
 
-<AdminLayout title="Productos" subtitle="Lo que vendes, con sus tallas y precios">
-  {canWrite && (
+<AdminLayout title="Inventario" subtitle="Cada modelo con sus colores y tallas en una sola matriz">
+  {canDeactivate && (
     <a
       href="/productos/nuevo"
       class="mb-4 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-action px-5 font-semibold text-on-action shadow-brand md:w-auto"
     >
-      <Icon name="plus" class="size-5" /> Registrar producto
+      <Icon name="plus" class="size-5" /> Registrar modelo
     </a>
   )}
-  <ProductsList client:load canWrite={canWrite} />
+  <InventoryBoard client:load canWrite={canWrite} canDeactivate={canDeactivate} />
 </AdminLayout>

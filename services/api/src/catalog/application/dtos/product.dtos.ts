@@ -80,6 +80,10 @@ export interface VariantResult {
   readonly color: string | null;
   readonly price: string; // "349.90"
   readonly active: boolean;
+  // Stock de la variante (solo en los listados de productos).
+  readonly available?: number;
+  readonly location?: string | null;
+  readonly reorderLevel?: number;
 }
 
 export interface ProductResult {

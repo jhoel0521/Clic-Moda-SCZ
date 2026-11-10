@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import type {
+  InventorySummary,
   LowStockQuery,
   MovementPage,
   MovementsQuery,
@@ -59,6 +60,22 @@ export class TypeOrmStockQueries implements StockQueryPort {
   listStock(query: StockQuery): Promise<StockPage> {
     const soldOut = query.soldOut ? `AND v.active AND ${AVAILABLE} <= 0` : '';
     return this.stock(query, soldOut, 'p.name ASC, v.sku ASC');
+  }
+
+  async summary(): Promise<InventorySummary> {
+    const [row] = await this.dataSource.query(`
+      SELECT count(DISTINCT p.id) FILTER (WHERE p.active AND v.active)::int AS models,
+             COALESCE(sum(${AVAILABLE}) FILTER (WHERE v.active AND p.active), 0)::int AS units,
+             count(*) FILTER (WHERE v.active AND p.active AND ${AVAILABLE} <= 0)::int AS sold_out,
+             count(*) FILTER (WHERE v.active AND p.active AND ${AVAILABLE} > 0
+                              AND ${AVAILABLE} <= COALESCE(s.reorder_level, 0))::int AS low
+      ${FROM}`);
+    return {
+      models: row.models,
+      units: row.units,
+      soldOutVariants: row.sold_out,
+      lowStockVariants: row.low,
+    };
   }
 
   listLowStock(query: LowStockQuery): Promise<StockPage> {

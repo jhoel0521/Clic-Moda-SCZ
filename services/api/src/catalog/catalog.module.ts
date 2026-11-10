@@ -8,6 +8,7 @@ import { GetProductUseCase } from './application/use-cases/get-product.use-case.
 import { ListCategoriesUseCase } from './application/use-cases/list-categories.use-case.js';
 import { RegisterProductUseCase } from './application/use-cases/register-product.use-case.js';
 import { SearchProductsUseCase } from './application/use-cases/search-products.use-case.js';
+import { SetProductPriceUseCase } from './application/use-cases/set-product-price.use-case.js';
 import { SetProductActiveUseCase } from './application/use-cases/set-product-active.use-case.js';
 import { SetVariantActiveUseCase } from './application/use-cases/set-variant-active.use-case.js';
 import { UpdateCategoryUseCase } from './application/use-cases/update-category.use-case.js';
@@ -33,6 +34,7 @@ const USE_CASES = [
   RegisterProductUseCase,
   UpdateProductUseCase,
   SetProductActiveUseCase,
+  SetProductPriceUseCase,
   AddVariantUseCase,
   UpdateVariantUseCase,
   SetVariantActiveUseCase,

@@ -83,10 +83,22 @@ export class InMemoryProductsRepository implements ProductsRepository {
       available: Object.fromEntries(
         matching.slice(start, start + filter.pageSize).map((p) => [p.id.value, this.availableOf(p)])
       ),
+      variantStock: this.variantStockOf(matching.slice(start, start + filter.pageSize)),
       soldOutVariants: Object.fromEntries(
         matching.slice(start, start + filter.pageSize).map((p) => [p.id.value, this.soldOutOf(p)])
       ),
     };
+  }
+
+  private variantStockOf(products: Product[]): ProductPage['variantStock'] {
+    const stock = (id: string) => ({
+      available: this.stock.get(id) ?? 0,
+      location: null,
+      reorderLevel: 0,
+    });
+    return Object.fromEntries(
+      products.flatMap((p) => p.variants).map((v) => [v.id.value, stock(v.id.value)])
+    );
   }
 
   async countByCategory(categoryId: CategoryId): Promise<number> {

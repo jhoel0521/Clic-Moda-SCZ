@@ -14,6 +14,10 @@ export interface Variant {
   color: string | null;
   price: string; // "349.90"
   active: boolean;
+  // Stock de la variante (solo en los listados de productos).
+  available?: number;
+  location?: string | null;
+  reorderLevel?: number;
 }
 
 // `available`: unidades disponibles (suma de las variantes activas); solo viene en los listados.

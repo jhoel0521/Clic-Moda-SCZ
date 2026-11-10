@@ -12,11 +12,17 @@ import { GetProductUseCase } from '../../application/use-cases/get-product.use-c
 import { RegisterProductUseCase } from '../../application/use-cases/register-product.use-case.js';
 import { SearchProductsUseCase } from '../../application/use-cases/search-products.use-case.js';
 import { SetProductActiveUseCase } from '../../application/use-cases/set-product-active.use-case.js';
+import {
+  SetProductPriceCommand,
+  SetProductPriceUseCase,
+} from '../../application/use-cases/set-product-price.use-case.js';
 import { UpdateProductUseCase } from '../../application/use-cases/update-product.use-case.js';
 import { Roles } from '../../../identity/infrastructure/http/roles.decorator.js';
 import {
   type ActiveDto,
   activeSchema,
+  type PriceDto,
+  priceSchema,
   type ProductPageResponseDto,
   type ProductResponseDto,
   type RegisterProductDto,
@@ -37,6 +43,7 @@ export class ProductsController {
     private readonly register: RegisterProductUseCase,
     private readonly update: UpdateProductUseCase,
     private readonly setActive: SetProductActiveUseCase,
+    private readonly setPrice: SetProductPriceUseCase,
     private readonly addVariant: AddVariantUseCase,
     private readonly search: SearchProductsUseCase,
     private readonly get: GetProductUseCase
@@ -91,6 +98,18 @@ export class ProductsController {
   ): Promise<ProductResponseDto> {
     return toProductResponse(
       await this.setActive.execute(new SetProductActiveCommand(id, body.active))
+    );
+  }
+
+  // Un solo precio por modelo: se aplica a todas sus variantes a la vez.
+  @Roles('GERENTE')
+  @Patch(':id/price')
+  async price(
+    @Param('id') id: string,
+    @Body({ schema: priceSchema }) body: PriceDto
+  ): Promise<ProductResponseDto> {
+    return toProductResponse(
+      await this.setPrice.execute(new SetProductPriceCommand(id, body.price))
     );
   }
 

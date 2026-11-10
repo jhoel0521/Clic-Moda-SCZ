@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { setProductActive, setVariantActive } from './active';
+import { setProductActive, setProductPrice, setVariantActive } from './active';
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -34,5 +34,15 @@ describe('activar y desactivar', () => {
     await setVariantActive('v9', false);
 
     expect(calls).toEqual([{ url: '/api/catalog/variants/v9/active', method: 'PATCH', body: { active: false } }]);
+  });
+});
+
+describe('precio único', () => {
+  it('el precio del modelo se envía con PATCH a su ruta', async () => {
+    const calls = stubFetch();
+
+    await setProductPrice('p1', '349.90');
+
+    expect(calls).toEqual([{ url: '/api/catalog/products/p1/price', method: 'PATCH', body: { price: '349.90' } }]);
   });
 });

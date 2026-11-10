@@ -6,6 +6,7 @@ import type { Product } from '../../domain/entities/product.entity.js';
 import { DuplicateSkuError } from '../../domain/errors/catalog.errors.js';
 import type {
   ProductPage,
+  VariantStock,
   ProductSearchFilter,
   ProductsRepository,
 } from '../../domain/products.repository.port.js';
@@ -73,7 +74,34 @@ export class TypeOrmProductsRepository implements ProductsRepository {
       total,
       available: await this.availability(found),
       soldOutVariants: await this.soldOutVariants(found),
+      variantStock: await this.variantStock(found),
     };
+  }
+
+  private async variantStock(ids: string[]): Promise<Record<string, VariantStock>> {
+    if (ids.length === 0) return {};
+    const rows: {
+      id: string;
+      available: string;
+      location: string | null;
+      reorder_level: number;
+    }[] = await this.dataSource.query(
+      `SELECT v.id, COALESCE(s.on_hand - s.reserved, 0) AS available, s.location,
+                COALESCE(s.reorder_level, 0) AS reorder_level
+         FROM product_variants v LEFT JOIN stock_levels s ON s.variant_id = v.id
+         WHERE v.product_id = ANY($1)`,
+      [ids]
+    );
+    return Object.fromEntries(
+      rows.map((row) => [
+        row.id,
+        {
+          available: Number(row.available),
+          location: row.location,
+          reorderLevel: row.reorder_level,
+        },
+      ])
+    );
   }
 
   private async soldOutVariants(ids: string[]): Promise<Record<string, number>> {
