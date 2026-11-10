@@ -31,7 +31,7 @@
 - [x] 5.1 Objetos de valor `Quantity`, `Reason` (3–200), `IdempotencyKey` (8–64), `CommandId`, `MovementType` y `CommandStatus`; pruebas unitarias de límites.
 - [x] 5.2 Entidades `StockLevel` (disponible = físico − reservado, invariantes), `StockMovement` y `StockCommand` con la máquina de estados `PENDING → APPLIED | REJECTED`; pruebas unitarias de cada transición válida, de las inválidas y de la inmutabilidad de los estados finales.
 - [x] 5.3 `StockPolicy.decide(command, level)` (`INSUFFICIENT_STOCK`, `BELOW_RESERVED`, delta del ajuste por conteo) con pruebas unitarias por tipo de comando, incluido el borde de stock exacto.
-- [ ] 5.4 Puertos `StockCommandsRepository` y `StockLevelsRepository` con tokens, implementaciones en memoria y las suites de contrato `stockCommandsRepositoryContract` (encolado, idempotencia y orden) y `stockLevelsRepositoryContract`; verificar que pasan en memoria.
+- [x] 5.4 Puertos `StockCommandsRepository` y `StockLevelsRepository` con tokens, implementaciones en memoria y las suites de contrato `stockCommandsRepositoryContract` (encolado, idempotencia y orden) y `stockLevelsRepositoryContract`; verificar que pasan en memoria.
 
 ## 6. Inventario — aplicación (capa application)
 
