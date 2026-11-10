@@ -8,6 +8,11 @@ export class InMemoryStockStore {
   readonly commands = new Map<string, StockCommand>();
   readonly levels = new Map<string, StockLevel>();
   readonly movements: StockMovement[] = [];
+  // Directorio de variantes (lo que `catalog` conoce): lo usa el modelo de lectura para unir datos.
+  readonly variants = new Map<
+    string,
+    { sku: string; productName: string; size: string; color: string | null; active: boolean }
+  >();
   private seq = 0;
 
   nextSeq(): number {

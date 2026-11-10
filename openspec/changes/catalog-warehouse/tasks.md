@@ -35,10 +35,10 @@
 
 ## 6. Inventario — aplicación (capa application)
 
-- [ ] 6.1 Puertos `VariantLookupPort`, `ClockPort`, `StockCommandProcessingPort` y `StockQueryPort` con tokens y sus dobles en memoria; suites de contrato de `VariantLookupPort`, `StockQueryPort` y `StockCommandProcessingPort` (reclamo del más antiguo por variante, que un comando en espera de reintento bloquea a los posteriores de su variante, y reversión completa si falla a mitad); verificar que pasan contra los dobles en memoria.
-- [ ] 6.2 Caso de uso `EnqueueStockCommand` (variante inexistente o inactiva, validación, idempotencia con huella, respuesta `PENDING`); pruebas unitarias de aceptación, reintento con la misma clave y conflicto con otra huella.
-- [ ] 6.3 Caso de uso `ProcessNextStockCommand` (usa `StockCommandProcessingPort` y `StockPolicy`; devuelve resultado o `null` si no hay trabajo) y `GetStockCommand`; pruebas unitarias con el procesamiento en memoria, incluidos 100 comandos sobre 3 unidades con el resultado esperado.
-- [ ] 6.4 Casos de uso de lectura `ListStock`, `ListLowStock`, `ListMovements`, `GetQueueStatus` y `UpdateStockSettings` (ubicación y umbral, síncrono); pruebas unitarias.
+- [x] 6.1 Puertos `VariantLookupPort`, `ClockPort`, `StockCommandProcessingPort` y `StockQueryPort` con tokens y sus dobles en memoria; suites de contrato de `VariantLookupPort`, `StockQueryPort` y `StockCommandProcessingPort` (reclamo del más antiguo por variante, que un comando en espera de reintento bloquea a los posteriores de su variante, y reversión completa si falla a mitad); verificar que pasan contra los dobles en memoria.
+- [x] 6.2 Caso de uso `EnqueueStockCommand` (variante inexistente o inactiva, validación, idempotencia con huella, respuesta `PENDING`); pruebas unitarias de aceptación, reintento con la misma clave y conflicto con otra huella.
+- [x] 6.3 Caso de uso `ProcessNextStockCommand` (usa `StockCommandProcessingPort` y `StockPolicy`; devuelve resultado o `null` si no hay trabajo) y `GetStockCommand`; pruebas unitarias con el procesamiento en memoria, incluidos 100 comandos sobre 3 unidades con el resultado esperado.
+- [x] 6.4 Casos de uso de lectura `ListStock`, `ListLowStock`, `ListMovements`, `GetQueueStatus` y `UpdateStockSettings` (ubicación y umbral, síncrono); pruebas unitarias.
 
 ## 7. Inventario — infraestructura (capa infrastructure)
 
