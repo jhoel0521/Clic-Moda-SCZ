@@ -57,8 +57,9 @@ export class TypeOrmUsersRepository implements UsersRepository {
     }
   }
 
-  // Crea o actualiza el usuario y reemplaza su conjunto de roles, todo en una transacción.
-  private async persist(manager: EntityManager, user: User): Promise<void> {
+  // Crea o actualiza el usuario y reemplaza su conjunto de roles DENTRO de la transacción dada. Es
+  // público para que otros repositorios (p. ej. el de eventos de roles) la compartan.
+  async persist(manager: EntityManager, user: User): Promise<void> {
     const { user: row, roles } = UserMapper.toRows(user);
     await manager.save(UserOrmEntity, row);
     await manager.delete(UserRoleOrmEntity, { userId: row.id });

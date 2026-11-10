@@ -6,8 +6,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import type { Env } from '../shared/infrastructure/config/env.schema.js';
 import { ACCESS_TOKEN_ISSUER } from './application/ports/access-token-issuer.port.js';
 import { PASSWORD_HASHER } from './application/ports/password-hasher.port.js';
+import { AssignRolesUseCase } from './application/use-cases/assign-roles.use-case.js';
 import { AuthenticateStaffUseCase } from './application/use-cases/authenticate-staff.use-case.js';
+import { SearchUsersUseCase } from './application/use-cases/search-users.use-case.js';
 import { SeedManagerUseCase } from './application/use-cases/seed-manager.use-case.js';
+import { ROLE_EVENTS_REPOSITORY } from './domain/role-events.repository.port.js';
 import { USERS_REPOSITORY } from './domain/users.repository.port.js';
 import { AuthenticationAccessTokenIssuer } from './infrastructure/external/authentication-access-token-issuer.js';
 import { AuthenticationPasswordHasher } from './infrastructure/external/authentication-password-hasher.js';
@@ -18,7 +21,9 @@ import { StaffJwtAuth } from './infrastructure/http/staff-jwt-auth.provider.js';
 import { RefreshTokenOrmEntity } from './infrastructure/persistence/refresh-token.orm-entity.js';
 import { RevokedRefreshFamilyOrmEntity } from './infrastructure/persistence/revoked-refresh-family.orm-entity.js';
 import { TypeOrmRefreshTokenStore } from './infrastructure/persistence/typeorm-refresh-token.store.js';
+import { TypeOrmRoleEventsRepository } from './infrastructure/persistence/typeorm-role-events.repository.js';
 import { TypeOrmUsersRepository } from './infrastructure/persistence/typeorm-users.repository.js';
+import { UserRoleEventOrmEntity } from './infrastructure/persistence/user-role-event.orm-entity.js';
 import { UserOrmEntity } from './infrastructure/persistence/user.orm-entity.js';
 import { UserRoleOrmEntity } from './infrastructure/persistence/user-role.orm-entity.js';
 
@@ -32,6 +37,7 @@ const AUTH_STORAGE_REGISTRATION = Symbol('AuthStorageRegistration');
       UserRoleOrmEntity,
       RefreshTokenOrmEntity,
       RevokedRefreshFamilyOrmEntity,
+      UserRoleEventOrmEntity,
     ]),
     ThrottlerModule.forRoot(LOGIN_THROTTLER),
     AuthenticationModule.forRootAsync({
@@ -47,7 +53,9 @@ const AUTH_STORAGE_REGISTRATION = Symbol('AuthStorageRegistration');
   ],
   controllers: [AuthController],
   providers: [
-    { provide: USERS_REPOSITORY, useClass: TypeOrmUsersRepository },
+    TypeOrmUsersRepository,
+    { provide: USERS_REPOSITORY, useExisting: TypeOrmUsersRepository },
+    { provide: ROLE_EVENTS_REPOSITORY, useClass: TypeOrmRoleEventsRepository },
     { provide: PASSWORD_HASHER, useClass: AuthenticationPasswordHasher },
     { provide: ACCESS_TOKEN_ISSUER, useClass: AuthenticationAccessTokenIssuer },
     TypeOrmRefreshTokenStore,
@@ -61,7 +69,15 @@ const AUTH_STORAGE_REGISTRATION = Symbol('AuthStorageRegistration');
     StaffJwtAuth,
     AuthenticateStaffUseCase,
     SeedManagerUseCase,
+    AssignRolesUseCase,
+    SearchUsersUseCase,
   ],
-  exports: [USERS_REPOSITORY, AuthenticateStaffUseCase, SeedManagerUseCase],
+  exports: [
+    USERS_REPOSITORY,
+    AuthenticateStaffUseCase,
+    SeedManagerUseCase,
+    AssignRolesUseCase,
+    SearchUsersUseCase,
+  ],
 })
 export class IdentityModule {}
