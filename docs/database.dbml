@@ -58,7 +58,96 @@ Table revoked_refresh_families {
 }
 
 // ==========================================
-// CATÁLOGO Y PRODUCTOS
+// CATÁLOGO Y ALMACÉN (implementado: migraciones 1794400000001-4)
+// Reemplaza a las tablas PRODUCTO, CATEGORIA y relacionadas del prototipo.
+// ==========================================
+
+Table categories {
+  id uuid [pk]
+  name citext [unique, not null, note: '2 a 60 caracteres, sin distinguir mayúsculas']
+  slug text [unique, not null]
+  active boolean [not null, default: true]
+  created_at timestamptz [not null]
+  updated_at timestamptz [not null]
+}
+
+Table products {
+  id uuid [pk]
+  category_id uuid [not null, note: 'ON DELETE RESTRICT: una categoría con productos no se borra']
+  name varchar(120) [not null]
+  description varchar(2000)
+  active boolean [not null, default: true, note: 'los productos se desactivan, no se borran']
+  created_at timestamptz [not null]
+  updated_at timestamptz [not null]
+  Indexes {
+    category_id
+  }
+}
+
+Table product_variants {
+  id uuid [pk]
+  product_id uuid [not null]
+  sku citext [unique, not null]
+  size varchar(20) [not null]
+  color varchar(30)
+  price_cents integer [not null, note: 'centavos de Bs; CHECK > 0 y <= 10000000']
+  active boolean [not null, default: true]
+  created_at timestamptz [not null]
+  updated_at timestamptz [not null]
+  Note: 'Único (product_id, size, coalesce(color, ""))'
+}
+
+Table stock_levels {
+  variant_id uuid [pk]
+  on_hand integer [not null, default: 0, note: 'CHECK >= 0']
+  reserved integer [not null, default: 0, note: 'CHECK >= 0 y <= on_hand; la usan los pedidos (rebanadas 4 y 5)']
+  location varchar(40)
+  reorder_level integer [not null, default: 0]
+  updated_at timestamptz [not null]
+  Note: 'Disponible = on_hand - reserved. Sin fila = stock cero.'
+}
+
+Table stock_commands {
+  id uuid [pk]
+  seq bigint [unique, not null, note: 'orden de llegada (identidad de PostgreSQL)']
+  variant_id uuid [not null]
+  type varchar(10) [not null, note: 'RECEIVE | WITHDRAW | ADJUST']
+  quantity integer [not null]
+  reason varchar(200) [not null]
+  operator text [not null]
+  idempotency_key varchar(64) [unique]
+  request_hash char(64) [not null]
+  status varchar(10) [not null, default: 'PENDING', note: 'PENDING -> APPLIED | REJECTED']
+  reject_reason varchar(40)
+  attempts smallint [not null, default: 0]
+  available_at timestamptz [not null]
+  accepted_at timestamptz [not null]
+  resolved_at timestamptz [note: 'nulo si y solo si está PENDING']
+  movement_id uuid
+  Note: 'Cola de comandos de stock; se resuelve en una transacción por comando'
+}
+
+Table stock_movements {
+  id uuid [pk]
+  variant_id uuid [not null]
+  command_id uuid [unique, not null]
+  type varchar(10) [not null]
+  delta integer [not null, note: 'distinto de cero']
+  reason varchar(200) [not null]
+  operator text [not null]
+  occurred_at timestamptz [not null]
+  Note: 'Inmutable: un disparador impide UPDATE y DELETE'
+}
+
+Ref: categories.id < products.category_id
+Ref: products.id < product_variants.product_id [delete: cascade]
+Ref: product_variants.id - stock_levels.variant_id
+Ref: product_variants.id < stock_commands.variant_id
+Ref: product_variants.id < stock_movements.variant_id
+Ref: stock_commands.id - stock_movements.command_id
+
+// ==========================================
+// CATÁLOGO DEL PROTOTIPO (obsoleto, solo referencia)
 // ==========================================
 
 Table PRODUCTO {

@@ -2,10 +2,10 @@
 
 ## 1. Esquema de base de datos (capa shared/infrastructure)
 
-- [ ] 1.1 Migración `CreateCategories` (`categories`: id uuid, `name` citext único, `slug` único, `active`, fechas) y `CreateProducts` (`products` con FK `category_id ON DELETE RESTRICT`; `product_variants` con `sku` citext único, `size`, `color` nulo, `price_cents` con `CHECK > 0 AND <= 10000000`, `active`, único `(product_id, size, color)`), con `import type` y `down` completo; verificar subiendo y bajando con `pnpm db:migrate` / `db:revert` y que las restricciones rechazan datos inválidos con SQL directo.
-- [ ] 1.2 Migración `CreateStockTables` (`stock_levels` con los tres `CHECK`, `location` ≤ 40, `reorder_level` ≥ 0; `stock_movements` inmutable con `command_id` único, `type`, `delta`, `reason`, `operator`, `occurred_at`); verificar con SQL directo que un `on_hand` negativo y un `reserved > on_hand` son rechazados por la base.
-- [ ] 1.3 Migración `CreateStockCommands` (`stock_commands`: id, `seq` secuencia, `variant_id` FK, `type`, `quantity`, `reason`, `operator`, `idempotency_key` único nulo, `request_hash`, `status`, `reject_reason`, `attempts`, `available_at`, `accepted_at`, `resolved_at`, `movement_id`; índice parcial sobre `PENDING` por `(variant_id, seq)`); verificar con `EXPLAIN` que la consulta de reclamo usa el índice.
-- [ ] 1.4 Actualizar `docs/database.dbml` con las tablas nuevas y comprobar que cada columna coincide con las migraciones.
+- [x] 1.1 Migración `CreateCategories` (`categories`: id uuid, `name` citext único, `slug` único, `active`, fechas) y `CreateProducts` (`products` con FK `category_id ON DELETE RESTRICT`; `product_variants` con `sku` citext único, `size`, `color` nulo, `price_cents` con `CHECK > 0 AND <= 10000000`, `active`, único `(product_id, size, color)`), con `import type` y `down` completo; verificar subiendo y bajando con `pnpm db:migrate` / `db:revert` y que las restricciones rechazan datos inválidos con SQL directo.
+- [x] 1.2 Migración `CreateStockTables` (`stock_levels` con los tres `CHECK`, `location` ≤ 40, `reorder_level` ≥ 0; `stock_movements` inmutable con `command_id` único, `type`, `delta`, `reason`, `operator`, `occurred_at`); verificar con SQL directo que un `on_hand` negativo y un `reserved > on_hand` son rechazados por la base.
+- [x] 1.3 Migración `CreateStockCommands` (`stock_commands`: id, `seq` secuencia, `variant_id` FK, `type`, `quantity`, `reason`, `operator`, `idempotency_key` único nulo, `request_hash`, `status`, `reject_reason`, `attempts`, `available_at`, `accepted_at`, `resolved_at`, `movement_id`; índice parcial sobre `PENDING` por `(variant_id, seq)`); verificar con `EXPLAIN` que la consulta de reclamo usa el índice.
+- [x] 1.4 Actualizar `docs/database.dbml` con las tablas nuevas y comprobar que cada columna coincide con las migraciones.
 
 ## 2. Catálogo — dominio (capa domain)
 
