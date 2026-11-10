@@ -20,9 +20,9 @@
 
 ## 4. Chore inicial de `services/api` (NestJS 12.4.2)
 
-- [ ] 4.1 Generar con `nest new -p pnpm --skip-git --strict` en un directorio temporal, traerlo a `services/api` conservando ESM, Vitest, oxlint y el `AGENTS.md` del template, fijar `@nestjs/*` en 12.4.2, `packageManager` pnpm 12.18.0 y `engines` Node ≥ 26, y añadir el script `format` y `prettier --check` dentro de `lint`; verificar `pnpm --dir services/api build`, `test` y una petición al servidor de desarrollo.
-- [ ] 4.2 Configurar `max-lines-per-function` (25, `skipBlankLines` y `skipComments`) como `error` en `.oxlintrc.json`; verificar que una función de 26 líneas de prueba falla `lint`, que pasa sin ella y que `pnpm verify:projects` marca `services/api` como ✔.
-- [ ] 4.3 Añadir `@nestjs/config` con validación de variables con Zod, `GET /health` con `@nestjs/terminus` 12.1.0 y la documentación OpenAPI en `/docs` (`@nestjs/swagger` 12.1.1); verificar con una prueba unitaria y una e2e del endpoint de salud, y que `/docs` responde 200.
+- [x] 4.1 Generar con `nest new -p pnpm --skip-git --strict` en un directorio temporal, traerlo a `services/api` conservando ESM, Vitest, oxlint y el `AGENTS.md` del template, fijar `@nestjs/*` en 12.4.2, `packageManager` pnpm 12.18.0 y `engines` Node ≥ 26, y añadir el script `format` y `prettier --check` dentro de `lint`; verificar `pnpm --dir services/api build`, `test` y una petición al servidor de desarrollo.
+- [x] 4.2 Configurar `max-lines-per-function` (25, `skipBlankLines` y `skipComments`) como `error` en `.oxlintrc.json`; verificar que una función de 26 líneas de prueba falla `lint`, que pasa sin ella y que `pnpm verify:projects` marca `services/api` como ✔.
+- [x] 4.3 Añadir `@nestjs/config` con validación de variables con Zod, `GET /health` con `@nestjs/terminus` 12.1.0 y la documentación OpenAPI en `/docs` (`@nestjs/swagger` 12.1.1); verificar con una prueba unitaria y una e2e del endpoint de salud, y que `/docs` responde 200.
 
 ## 5. Base de datos y pruebas e2e
 
@@ -32,12 +32,14 @@
 
 ## 6. Acceso del personal (paquetes oficiales de Nest)
 
-- [ ] 6.1 Crear la entidad `users` (email único, `email_verified`, `roles`, hash de contraseña nulo permitido) y su `UsersRepository`, con la migración correspondiente; verificar con pruebas de creación, de email duplicado y de lectura de roles.
+- [ ] 6.1 Crear la entidad `users` (email único, `email_verified`, hash de contraseña nulo permitido), la tabla `user_roles` (un usuario con varios roles) y su `UsersRepository`, con la migración correspondiente; verificar con pruebas de creación, de email duplicado, de usuario con dos roles y de lectura de roles.
 - [ ] 6.2 Configurar `@nestjs/authentication` 0.1.5 (versión exacta) con inicio de sesión por contraseña, tokens de acceso con refresh rotativo, techo de sesión de 8 horas y `TypeOrmAuthenticationStore`, generando y revisando la migración de sus 8 tablas; verificar que pasan las pruebas de contrato del almacén (`authenticationStoreContract()`) contra Postgres y con una e2e de inicio de sesión válido (credenciales con el rol, vigencia ≤ 8 h) y de fallo con la misma respuesta para email desconocido y contraseña errónea.
 - [ ] 6.3 Implementar el comando idempotente `seed:manager` con `PasswordHasher` (falla nombrando `INITIAL_MANAGER_EMAIL` o `INITIAL_MANAGER_PASSWORD` si faltan y no crea nada); verificar con pruebas de primer arranque, de ejecución repetida y de configuración ausente.
 - [ ] 6.4 Aplicar `@nestjs/throttler` 6.7.1 al inicio de sesión (clave email + IP, 5 intentos por 15 minutos, sin distinguir el resultado); verificar con una e2e que el sexto intento recibe "demasiadas peticiones" incluso con la contraseña correcta y que otro email no se ve afectado.
-- [ ] 6.5 Implementar el `RolesGuard` y el decorador `@Roles()` con los roles Gerente, Despacho y Atención, y una ruta protegida de ejemplo; verificar con pruebas e2e de sin credenciales, credenciales vencidas, rol insuficiente (403) y rol permitido.
+- [ ] 6.5 Implementar el `RolesGuard` y el decorador `@Roles()` (acepta al usuario si **alguno** de sus roles está permitido) con los roles Gerente, Despacho y Atención, y una ruta protegida de ejemplo; verificar con pruebas e2e de sin credenciales, credenciales vencidas, ningún rol permitido (403), un rol permitido y un usuario con varios roles.
 - [ ] 6.6 Comprobar que ninguna respuesta ni línea de log contiene contraseñas o hashes; verificar con una prueba que inspecciona las respuestas de inicio de sesión y los logs capturados.
+- [ ] 6.7 Implementar el servicio de asignación de roles (búsqueda de usuarios por parte del nombre o del correo, asignación que reemplaza el conjunto de roles, registro en `user_role_events` con el usuario del sistema operativo y rechazo de dejar el sistema sin Gerente), con su migración; verificar con pruebas unitarias y e2e de asignación de varios roles, del registro y de la negativa a quitar el último Gerente.
+- [ ] 6.8 Crear el comando `src/cli/assign-roles.ts` con la pantalla interactiva (`@inquirer/prompts` 8.7.5: búsqueda, confirmación y selección múltiple de roles) y el modo con opciones `--email`, `--roles` y `--yes`; verificar que tras `nest build` funciona con `node dist/cli/assign-roles.js` sin pnpm ni npx, que sin terminal y sin opciones falla con un mensaje claro, que declinar la confirmación no cambia nada y probando a mano el flujo interactivo completo.
 
 ## 7. Puertas de calidad y documentación
 
