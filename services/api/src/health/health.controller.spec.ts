@@ -1,12 +1,28 @@
 import { Test } from '@nestjs/testing';
+import { TerminusModule, TypeOrmHealthIndicator } from '@nestjs/terminus';
 import { HealthController } from './health.controller.js';
-import { HealthModule } from './health.module.js';
+
+const compile = (pingCheck: () => unknown) =>
+  Test.createTestingModule({ imports: [TerminusModule], controllers: [HealthController] })
+    .overrideProvider(TypeOrmHealthIndicator)
+    .useValue({ pingCheck })
+    .compile();
 
 describe('HealthController', () => {
-  it('informa estado ok cuando no hay indicadores que fallen', async () => {
-    const module = await Test.createTestingModule({ imports: [HealthModule] }).compile();
-    const controller = module.get(HealthController);
+  it('informa ok cuando la base de datos responde', async () => {
+    const moduleRef = await compile(() => ({ database: { status: 'up' } }));
 
-    await expect(controller.check()).resolves.toMatchObject({ status: 'ok' });
+    await expect(moduleRef.get(HealthController).check()).resolves.toMatchObject({
+      status: 'ok',
+      details: { database: { status: 'up' } },
+    });
+  });
+
+  it('falla cuando la base de datos no responde', async () => {
+    const moduleRef = await compile(() => {
+      throw new Error('sin conexión');
+    });
+
+    await expect(moduleRef.get(HealthController).check()).rejects.toThrow();
   });
 });

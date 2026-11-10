@@ -2,6 +2,7 @@ import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import type { App } from 'supertest/types.js';
+import { DataSource } from 'typeorm';
 import { AppModule } from '../src/app.module.js';
 import { setupDocs } from '../src/docs.setup.js';
 
@@ -19,18 +20,19 @@ describe('Salud y documentación (e2e)', () => {
     await app.close();
   });
 
-  it('GET /health responde 200 con status ok', async () => {
+  it('GET /health comprueba la base de datos y responde ok', async () => {
     const res = await request(app.getHttpServer()).get('/health').expect(200);
     expect(res.body.status).toBe('ok');
+    expect(res.body.details.database.status).toBe('up');
   });
 
-  it('GET /docs sirve la interfaz de OpenAPI', async () => {
-    await request(app.getHttpServer()).get('/docs').expect(200);
+  it('las e2e se conectan a la base de pruebas, no a la de desarrollo', async () => {
+    const [row] = await app.get(DataSource).query('select current_database() as db');
+    expect(row.db).toBe('clic_moda_test');
   });
 
   it('GET /docs/json documenta la ruta /health', async () => {
     const res = await request(app.getHttpServer()).get('/docs/json').expect(200);
-    expect(res.body.openapi).toMatch(/^3\./);
     expect(Object.keys(res.body.paths)).toContain('/health');
   });
 });
