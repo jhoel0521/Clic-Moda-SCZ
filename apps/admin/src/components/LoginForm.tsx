@@ -3,6 +3,14 @@ import { api, ApiError } from '../lib/client-api';
 import { safeNext } from '../lib/session';
 import { Button, ErrorBanner, Field } from './ui';
 
+// 429: la API limita los intentos por correo (5 cada 15 minutos).
+function loginMessage(failure: unknown): string {
+  if (!(failure instanceof ApiError)) return 'No se pudo conectar con el servidor';
+  if (failure.status === 429)
+    return 'Demasiados intentos. Espera unos minutos e inténtalo de nuevo.';
+  return failure.message;
+}
+
 function useLogin(next: string | undefined) {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -14,8 +22,7 @@ function useLogin(next: string | undefined) {
       await api('POST', 'login', { email, password });
       window.location.assign(safeNext(next));
     } catch (failure) {
-      const known = failure instanceof ApiError;
-      setError(known ? failure.message : 'No se pudo conectar con el servidor');
+      setError(loginMessage(failure));
       setBusy(false);
     }
   }
