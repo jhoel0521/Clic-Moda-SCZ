@@ -27,12 +27,36 @@ Ya están resueltos y funcionando:
 * **Persistencia local:** localStorage + cookie de sesión
 * **Validación:** ESLint + Prettier
 
-## Arquitectura
+## Estructura del repositorio (monorepo)
 
-El proyecto usa App Router y separa responsabilidades entre UI, dominio y servicios:
+Cada proyecto es **independiente** (su propio `package.json`, `pnpm-lock.yaml` y `node_modules`). La raíz solo los orquesta.
 
 ```text
-src/
+apps/shop       # Tienda (Next.js) — el MVP actual
+apps/admin      # Panel de administración — pendiente de scaffolding
+services/api    # API compartida + tiempo real (NestJS) — pendiente de scaffolding
+openspec/       # Specs y changes (OpenSpec) + ROADMAP.md
+docs/           # Documentación (esquema de datos)
+```
+
+Hoja de ruta hacia producción: [`openspec/ROADMAP.md`](openspec/ROADMAP.md).
+
+### Primeros pasos
+
+Requiere Node 26 (LTS) y pnpm 12 (versiones fijadas en `.nvmrc` y `packageManager`).
+
+```bash
+pnpm install:all     # instala cada proyecto por separado
+pnpm dev:shop        # levanta la tienda en http://localhost:3000
+pnpm build:all       # compila todo
+```
+
+## Arquitectura de la tienda (`apps/shop`)
+
+La tienda usa App Router y separa responsabilidades entre UI, dominio y servicios:
+
+```text
+apps/shop/src/
 	app/            # Rutas, layouts y páginas
 	backend/        # Servicios de negocio y acceso a datos simulados
 	core/           # Modelos, contratos, stores, guards y constantes
@@ -91,22 +115,24 @@ Esto permite:
 
 ## Scripts
 
+Desde la raíz (`pnpm dev:shop`, `pnpm build:shop`, `pnpm lint:all`, …) o dentro de `apps/shop`:
+
 ```bash
-npm run dev
-npm run build
-npm run start
-npm run lint
-npm run format
-npm run pre-commit
+pnpm dev
+pnpm build
+pnpm start
+pnpm lint
+pnpm format
+pnpm pre-commit
 ```
 
 ## Validación
 
 El flujo actual se valida con:
 
-* `npm run lint`
-* `npm run build`
-* `npm run pre-commit`
+* `pnpm lint`
+* `pnpm build`
+* `pnpm pre-commit`
 
 ## Próximos pasos
 
