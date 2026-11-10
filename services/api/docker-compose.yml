@@ -1,0 +1,41 @@
+# PostgreSQL para desarrollo y pruebas. Las credenciales salen de .env (ignorado por git).
+#
+# - Postgres 18: el volumen se monta en /var/lib/postgresql (no en .../data como en versiones previas).
+# - El script de inicialización va en línea (configs.content) y no como montaje de una carpeta del
+#   host: en algunos equipos Windows Docker Desktop no comparte ciertas unidades (p. ej. J:) y el
+#   montaje llega vacío.
+# - Solo se ejecuta la primera vez que se crea el volumen; para repetirlo: docker compose down -v.
+configs:
+  init-test-db:
+    content: |
+      CREATE DATABASE clic_moda_test;
+
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: clic-moda-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-clic_moda}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Define DB_PASSWORD en services/api/.env}
+      POSTGRES_DB: clic_moda
+    ports:
+      - '${DB_PORT:-5432}:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql
+    configs:
+      - source: init-test-db
+        target: /docker-entrypoint-initdb.d/01-create-test-db.sql
+    healthcheck:
+      # Sano solo cuando la inicialización terminó: existe también la base de pruebas.
+      test:
+        - CMD-SHELL
+        - >-
+          pg_isready -U ${DB_USER:-clic_moda} -d clic_moda &&
+          psql -U ${DB_USER:-clic_moda} -d clic_moda_test -Atc 'select 1' > /dev/null
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  pgdata:

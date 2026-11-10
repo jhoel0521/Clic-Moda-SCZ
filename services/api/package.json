@@ -23,7 +23,12 @@
     "test:cov": "vitest run --coverage",
     "test:debug": "vitest --inspect-brk --no-file-parallelism",
     "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
-    "dev": "nest start --watch"
+    "dev": "nest start --watch",
+    "db:cli": "node --env-file-if-exists=.env node_modules/typeorm/cli.js",
+    "migration:run": "pnpm build && pnpm db:cli migration:run -d dist/database/data-source.js",
+    "migration:revert": "pnpm build && pnpm db:cli migration:revert -d dist/database/data-source.js",
+    "migration:show": "pnpm build && pnpm db:cli migration:show -d dist/database/data-source.js",
+    "migration:generate": "pnpm build && pnpm db:cli migration:generate --esm -d dist/database/data-source.js"
   },
   "dependencies": {
     "@nestjs/common": "12.4.2",
@@ -32,8 +37,11 @@
     "@nestjs/platform-express": "12.4.2",
     "@nestjs/swagger": "12.1.1",
     "@nestjs/terminus": "12.1.0",
+    "@nestjs/typeorm": "12.0.3",
+    "pg": "8.23.1",
     "reflect-metadata": "0.2.2",
     "rxjs": "7.8.2",
+    "typeorm": "1.1.2",
     "zod": "4.6.7"
   },
   "devDependencies": {

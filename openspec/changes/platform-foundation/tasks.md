@@ -26,8 +26,8 @@
 
 ## 5. Base de datos y pruebas e2e
 
-- [ ] 5.1 Crear `docker-compose.yml` con PostgreSQL (versión mayor fijada tras `docker pull`) y un script que crea `clic_moda` y `clic_moda_test`, más `.env.example`; verificar con `docker compose up -d` y `pg_isready` que ambas bases existen.
-- [ ] 5.2 Configurar TypeORM 1.1.2 + `@nestjs/typeorm` 12.0.3 con `DataSource` para la CLI, `synchronize: false` y scripts de migración; verificar que `migration:run` y `migration:revert` funcionan sobre ambas bases.
+- [x] 5.1 Crear `docker-compose.yml` con PostgreSQL (versión mayor fijada tras `docker pull`) y un script que crea `clic_moda` y `clic_moda_test`, más `.env.example`; verificar con `docker compose up -d` y `pg_isready` que ambas bases existen.
+- [x] 5.2 Configurar TypeORM 1.1.2 + `@nestjs/typeorm` 12.0.3 con `DataSource` para la CLI, `synchronize: false` y scripts de migración; verificar que `migration:run` y `migration:revert` funcionan sobre ambas bases.
 - [ ] 5.3 Crear el soporte de pruebas e2e (arranque de la base de prueba, migraciones y limpieza de tablas entre casos); verificar que `pnpm --dir services/api test:e2e` ejecuta la prueba de salud contra Postgres real.
 
 ## 6. Acceso del personal (paquetes oficiales de Nest)

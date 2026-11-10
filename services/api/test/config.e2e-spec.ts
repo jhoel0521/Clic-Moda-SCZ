@@ -8,12 +8,20 @@ const compileConfig = () =>
     imports: [ConfigModule.forRoot({ validationSchema: envSchema, ignoreEnvFile: true })],
   }).compile();
 
+const KEYS = ['PORT', 'DB_PASSWORD'] as const;
+
 describe('Configuración (e2e)', () => {
-  const original = process.env.PORT;
+  const saved = Object.fromEntries(KEYS.map((key) => [key, process.env[key]]));
+
+  beforeEach(() => {
+    process.env.DB_PASSWORD = 'secreto';
+  });
 
   afterEach(() => {
-    if (original === undefined) delete process.env.PORT;
-    else process.env.PORT = original;
+    for (const key of KEYS) {
+      if (saved[key] === undefined) delete process.env[key];
+      else process.env[key] = saved[key];
+    }
   });
 
   it('lee un PORT válido ya convertido a número', async () => {
@@ -25,6 +33,12 @@ describe('Configuración (e2e)', () => {
 
   it('no arranca si PORT no es un puerto válido', async () => {
     process.env.PORT = 'abc';
+
+    await expect(compileConfig()).rejects.toThrow();
+  });
+
+  it('no arranca si falta DB_PASSWORD', async () => {
+    delete process.env.DB_PASSWORD;
 
     await expect(compileConfig()).rejects.toThrow();
   });
