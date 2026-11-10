@@ -29,9 +29,11 @@
     "migration:revert": "pnpm build && pnpm db:cli migration:revert -d dist/shared/infrastructure/database/data-source.js",
     "migration:show": "pnpm build && pnpm db:cli migration:show -d dist/shared/infrastructure/database/data-source.js",
     "migration:generate": "pnpm build && pnpm db:cli migration:generate --esm -d dist/shared/infrastructure/database/data-source.js",
-    "seed:manager": "pnpm build && node --env-file-if-exists=.env dist/identity/infrastructure/cli/seed-manager.js"
+    "seed:manager": "pnpm build && node --env-file-if-exists=.env dist/identity/infrastructure/cli/seed-manager.js",
+    "roles:assign": "pnpm build && node --env-file-if-exists=.env dist/identity/infrastructure/cli/assign-roles.js"
   },
   "dependencies": {
+    "@inquirer/prompts": "8.7.5",
     "@nestjs/authentication": "0.1.5",
     "@nestjs/common": "12.4.2",
     "@nestjs/config": "12.1.1",
@@ -48,6 +50,7 @@
     "zod": "4.6.7"
   },
   "devDependencies": {
+    "@inquirer/testing": "3.3.16",
     "@nestjs/cli": "12.0.12",
     "@nestjs/schematics": "12.0.13",
     "@nestjs/testing": "12.4.2",
