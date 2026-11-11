@@ -1,4 +1,4 @@
-import { ValidationError } from '../../../shared/domain/errors/domain.error.js';
+import { NotFoundError, ValidationError } from '../../../shared/domain/errors/domain.error.js';
 
 export class InvalidMediaIdError extends ValidationError {
   constructor(raw: string) {
@@ -39,5 +39,35 @@ export class InvalidImageDimensionsError extends ValidationError {
 export class InvalidRevisionError extends ValidationError {
   constructor() {
     super('La revisión debe ser un entero mayor o igual a 1');
+  }
+}
+
+export class MediaNotFoundError extends NotFoundError {
+  constructor() {
+    super('La imagen no existe');
+  }
+}
+
+export class UnsupportedImageError extends ValidationError {
+  constructor() {
+    super('El archivo no es una imagen JPEG, PNG o WebP válida');
+  }
+}
+
+export class ImageTooHeavyError extends ValidationError {
+  constructor(maxMb: number) {
+    super(`La imagen pesa más de ${String(maxMb)} MB`);
+  }
+}
+
+export class ImageTooLargeError extends ValidationError {
+  constructor(maxMegapixels: number) {
+    super(`La imagen tiene más de ${String(maxMegapixels)} megapíxeles`);
+  }
+}
+
+export class ImageTooSmallError extends ValidationError {
+  constructor(minSide: number) {
+    super(`El lado corto de la imagen debe medir al menos ${String(minSide)} px`);
   }
 }

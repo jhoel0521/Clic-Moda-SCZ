@@ -11,10 +11,10 @@
 
 ## 3. Aplicacion
 
-- [ ] 3.1 (application) Puertos `MediaStoragePort` e `ImageProcessorPort` con tokens
-- [ ] 3.2 (application) Caso de uso `UploadMedia` (validacion, normalizacion, variantes, revision 1)
-- [ ] 3.3 (application) Casos de uso `ChangeFocalPoint`, `DeleteMedia`, `ListMedia`, `GetPublicVariant`
-- [ ] 3.4 (application) Limpieza de revisiones con mas de 30 dias que no son la vigente
+- [x] 3.1 (application) Puertos `MediaStoragePort` e `ImageProcessorPort` con tokens
+- [x] 3.2 (application) Caso de uso `UploadMedia` (validacion, normalizacion, variantes, revision 1)
+- [x] 3.3 (application) Casos de uso `ChangeFocalPoint`, `DeleteMedia`, `ListMedia`, `GetPublicVariant`
+- [x] 3.4 (application) Limpieza de revisiones con mas de 30 dias que no son la vigente
 
 ## 4. Infraestructura (API)
 
