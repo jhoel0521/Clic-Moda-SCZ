@@ -157,6 +157,19 @@ describe('redes sociales', () => {
   });
 });
 
+describe('accesibilidad de la estructura', () => {
+  it('ofrece "Saltar al contenido" y el contenido principal tiene su ancla', async () => {
+    withApi();
+
+    const html = await render(Index);
+
+    expect(html).toContain('href="#contenido"');
+    expect(html).toContain('id="contenido"');
+    expect(html).toContain('<main');
+    expect(html).toContain('aria-label="Principal"');
+  });
+});
+
 describe('contacto', () => {
   it('muestra WhatsApp, almacén, horario y mapa de la configuración', async () => {
     withApi();

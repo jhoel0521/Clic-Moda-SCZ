@@ -55,8 +55,17 @@ const brandVars = `--brand:${color.primary};--brand-dark:${color.dark};--brand-l
     <slot name="head" />
   </head>
   <body class="flex min-h-dvh flex-col bg-white text-ink">
+    <a
+      href="#contenido"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-30 focus:rounded-xl focus:bg-white focus:px-4 focus:py-3 focus:font-semibold focus:text-brand-dark"
+    >
+      Saltar al contenido
+    </a>
     <StoreHeader settings={settings} />
-    <main class:list={['mx-auto w-full max-w-5xl flex-1 px-4 py-8', bar && 'pb-28 md:pb-8']}>
+    <main
+      id="contenido"
+      class:list={['mx-auto w-full max-w-5xl flex-1 px-4 py-8', bar && 'pb-28 md:pb-8']}
+    >
       <slot />
     </main>
     <StoreFooter settings={settings} />

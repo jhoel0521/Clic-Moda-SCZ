@@ -80,8 +80,19 @@ Se adelantó porque sin productos y stock reales no hay nada que vender ni que c
 
 - **API:** categorías; modelos con variantes de color y talla (SKU generado); **un solo precio por modelo**; búsqueda y filtros; stock por variante que entra por una **cola de comandos** (ingreso, salida y ajuste, con idempotencia y orden por variante); resumen del inventario. Probado con unitarias, contratos, e2e con Postgres real y un laboratorio de carga.
 - **Admin (móvil primero):** categorías, formulario de modelo, y una sola pantalla de **Inventario** con la matriz color × talla de cada modelo (movimientos, historial, interruptores de activo, precio y estante por modelo). Flujos con Playwright.
-- **Diferido:** fotos en el catálogo (el módulo `media` ya existe: change `media-share-formats`), etiquetas y medidas; catálogo y detalle en la **shop**; reservas de stock para el pago manual (rebanadas 4, 5 y 8); alta de personal desde el panel; modo oscuro; prueba de estrés hasta el punto de quiebre.
+- **Hecho después (change `shop-catalog`):** fotos del producto, lectura pública del catálogo y catálogo y detalle en la **shop** con consulta por WhatsApp y SEO por producto.
+- **Diferido:** etiquetas y medidas; reservas de stock para el pago manual (rebanadas 4, 5 y 8); alta de personal desde el panel; modo oscuro; prueba de estrés hasta el punto de quiebre.
 - **Verificación al desplegar (viene de `media-share-formats`):** con una URL pública, comprobar una imagen y una página de la tienda con los depuradores de WhatsApp y Facebook; probar «Compartir» (Web Share) en un celular real.
+
+## Decisión de producto (2026-11-12): cuentas, carrito y favoritos
+
+Confirmada por el usuario al planificar `shop-catalog`:
+
+- **Comprar y armar el carrito no necesitan cuenta.** El carrito vive en el navegador y el servidor revalida el stock al crear el mensaje o la reserva; no se guardan datos personales.
+- **Favoritos en el teléfono (`localStorage`)** con un aviso claro: «si cambias de teléfono o borras los datos, se pierden: crea una cuenta para conservarlos y recibir avisos de promociones y descuentos». Al crear una cuenta o iniciar sesión, los favoritos locales **se pasan a la cuenta**; iniciar sesión en otro dispositivo trae los de la cuenta.
+- **Compartir el carrito por un enlace** (por ejemplo, para que otra persona lo compre): se diseña en `reservations-whatsapp-checkout`, sin datos personales.
+- La **cuenta es opcional**: la rebanada 3 (identidad de cuentas) deja de estar en el camino crítico y se planifica después de vender.
+- Para reservar sin cuenta (rebanada de reservas) hará falta un código de reserva en el mensaje de WhatsApp, un vencimiento corto, un tope por dispositivo y confirmación del equipo; lo guardado debe ser mínimo y purgarse al vencer.
 
 ## Rebanada 3 — Identidad de cuentas (`account-identity`)
 
@@ -131,7 +142,7 @@ Catálogo con filtros y stock por talla; carrito persistente con cupones; checko
 
 ## Orden y camino crítico
 
-`Paso 0 (hecho) → Rebanada 2 (en curso) → 1 → 3 → 4 → 5 → 6 → 7 → (8)`. Las rebanadas 4 y 5 son el mínimo para vender; 6 y 7 pueden ir en paralelo a ellas. Para mostrar valor pronto al cliente: Paso 0 + Rebanada 1 + Rebanada 2 ya dan una tienda configurable con catálogo real.
+`Paso 0 (hecho) → Rebanadas 2 y 1 (hechas) → catálogo en la tienda (hecho) → reservas y cierre por WhatsApp (4, 5 y 8) → producción → 3 (cuentas, opcional) → 6 → 7`. Las rebanadas 4 y 5 son el mínimo para vender; 6 y 7 pueden ir en paralelo a ellas. Para mostrar valor pronto al cliente: Paso 0 + Rebanada 1 + Rebanada 2 ya dan una tienda configurable con catálogo real.
 
 ## Decisiones abiertas
 

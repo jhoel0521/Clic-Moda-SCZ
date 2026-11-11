@@ -75,7 +75,8 @@ Para añadir un servicio, agrégalo a `ports.json` en el rango que le toca: el o
 
 **Configuración de la tienda.** El Gerente cambia nombre, eslogan, color, logo, imagen de compartir, WhatsApp, almacén, horario y redes desde el panel (`/configuracion`). La API la sirve en `GET /store-settings` (público, con `ETag` y caché de 15 s) y la tienda la lee en el servidor con otra caché de 15 s, así que un cambio se ve en 30 s como máximo y sin volver a desplegar. El color se rechaza si el texto blanco encima no llega a 4,5:1 (AA) y se ofrece el color cercano que sí cumple. No se guardan datos de pago. Para dejar los datos de arranque ("Clic Moda SC") en la base: `pnpm --dir services/api seed:catalog`.
 
-## Pruebas de flujos y de carga
+**Catálogo en la tienda.** El Gerente elige hasta 8 fotos por modelo en el panel (`/productos/<id>`, sección Fotos; la primera es la principal). La API publica solo lo vendible (producto, categoría y variante activos) en `GET /public/catalog` (listado con filtros, `/products/<slug>`, `/filters`, `/slugs`), sin costos, ubicaciones ni cantidades: la disponibilidad es un estado (`Disponible`, `Últimas unidades`, `Agotada`). La tienda lo muestra en `/catalogo` y `/p/<slug>`; la talla y el color elegidos viajan en la URL (`?talla=38&color=Negro`) y el botón de WhatsApp lleva el producto, la talla, el color y el código. Un enlace con `?ref=live-nov` recuerda el código (cookie de sesión, sin datos personales) y lo agrega al mensaje como «Ref»: así se mide qué enlace del Live vende. `sitemap.xml` y `robots.txt` los genera la tienda con `SITE_URL`. Los cambios de stock o precio se ven en 30 s como máximo (caché de 15 s en la API y de 15 s en la tienda).
+
 
 | Comando | Qué hace |
 |---|---|

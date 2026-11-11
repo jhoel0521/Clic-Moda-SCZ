@@ -47,6 +47,6 @@
 
 ## 7. Cierre
 
-- [ ] 7.0 Completar un glosario minimo en `.ux/standard/users.md` (Modelo, Talla, Color, Agotada, Consultar) con ux-discover, solo la parte de usuarios, antes de escribir los textos de la tienda; linea de privacidad en el pie
-- [ ] 7.1 ux-check de la tienda (catalogo y detalle) y ux-plan-review del change antes de aplicar
-- [ ] 7.2 README, `ARCHITECTURE.md` de la API (patron de lectura publica y fotos), ROADMAP (carrito, favoritos y cuentas como decision registrada) y `.ux` si cambia algun token
+- [x] 7.0 Completar un glosario minimo en `.ux/standard/users.md` (Modelo, Talla, Color, Agotada, Consultar) con ux-discover, solo la parte de usuarios, antes de escribir los textos de la tienda; linea de privacidad en el pie
+- [x] 7.1 ux-check de la tienda (catalogo y detalle) y ux-plan-review del change antes de aplicar
+- [x] 7.2 README, `ARCHITECTURE.md` de la API (patron de lectura publica y fotos), ROADMAP (carrito, favoritos y cuentas como decision registrada) y `.ux` si cambia algun token
