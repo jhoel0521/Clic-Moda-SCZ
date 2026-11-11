@@ -1,0 +1,12 @@
+---
+import ProductForm from '../../components/ProductForm';
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { can } from '../../lib/session';
+
+if (!can(Astro.locals.session, 'catalog:write')) return Astro.redirect('/productos');
+const { id } = Astro.params;
+---
+
+<AdminLayout title="Editar producto">
+  <ProductForm client:load productId={id} />
+</AdminLayout>

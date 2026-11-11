@@ -1,0 +1,12 @@
+---
+import ProductForm from '../../components/ProductForm';
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { can } from '../../lib/session';
+
+// Solo el Gerente registra productos: los demás roles vuelven al listado.
+if (!can(Astro.locals.session, 'catalog:write')) return Astro.redirect('/productos');
+---
+
+<AdminLayout title="Registrar producto" subtitle="Agrega sus tallas, colores y precios">
+  <ProductForm client:load />
+</AdminLayout>

@@ -1,0 +1,60 @@
+schema: spec-driven
+
+context: |
+  Language: es
+  All artifacts must be written in es.
+  Keep OpenSpec structural headings and SHALL/MUST keywords in English.
+
+  # Proyecto
+  Clic Moda SCZ: tienda de calzado de Santa Cruz (Bolivia). Nacio como proyecto universitario; hoy se
+  convierte en producto para un posible primer cliente al que le gusto la demo (la demo es solo un
+  prototipo; el producto se reconstruye con un backend administrable). Se empieza solo con zapatos.
+  Modelo de venta (hechos del cliente):
+  - Se vende en vivo (Live) en TikTok/Instagram y todo se cierra por WhatsApp: delivery o recojo en
+    el almacen (que tambien hace de showroom: estantes con cajas de zapatos).
+  - Pago manual (sin pasarela ni NIT); ventas de menos de 5 mil Bs al mes.
+  - 3 personas: una hace el Live, las otras responden y confirman (hoy usan un cuaderno).
+  - Hay que reservar stock mientras se confirma el pago manual (nunca vender dos veces el mismo par).
+  - Compra sin cuenta obligatoria; medir ventas por enlace; buen SEO; cupones por Live; sin banners.
+  - Marca, logo, textos y redes se configuran desde un modulo de configuracion (semilla "Clic Moda SC").
+  Cuentas por correo: pendiente de decidir (issue #1); queda fuera de alcance hasta entonces.
+  Hoja de ruta: openspec/ROADMAP.md. Modelo de datos actual: docs/database.dbml.
+
+  # Monorepo (cada proyecto es independiente: su package.json, lockfile y node_modules)
+  - apps/shop      Astro 7.4.8 (SSR, adaptador Node) + Tailwind v4, recreada desde cero; el prototipo
+                   Next.js esta en el tag demo-aprobada
+  - apps/admin     Astro 7.4.8 (SSR) + islas React: panel de administracion y consola del Live
+  - services/api   NestJS 12 + TypeORM + PostgreSQL 18 (Docker), unica fuente de verdad, con
+                   arquitectura hexagonal (ver services/api/ARCHITECTURE.md)
+  - Orquestador en la raiz: pnpm dev:*, build:all, lint:all, test:all, verify:projects, check
+
+  # Convenciones
+  - Node 26 (LTS) y pnpm 12; nunca npm/yarn.
+  - Funciones de maximo 25 lineas (max-lines-per-function como "error" en los tres proyectos).
+  - Contrato de cada proyecto (el orquestador no conoce ESLint/oxlint): scripts lint, test, build
+    y format. Hook pre-commit (husky): verify:projects + secretlint + lint:all + test:all +
+    build:all. No usar --no-verify. Nunca commitear secretos ni .env*.
+  - ARQUITECTURA DEL API (estandar para todo change de services/api): hexagonal, con
+    src/<contexto>/{domain,application,infrastructure} y src/shared. Dependencias hacia adentro
+    (infrastructure -> application -> domain). El dominio no importa frameworks; la aplicacion
+    solo puede usar @Injectable/@Inject de @nestjs/common; la infraestructura puede todo.
+    Puertos = interface + token Symbol (los de repositorio en domain, los de servicios externos en
+    application); objetos de valor inmutables y autovalidados; DTOs distintos por capa con mappers;
+    un caso de uso por clase; errores de dominio traducidos a HTTP por un unico filtro; pruebas de
+    contrato por puerto. Los limites de capa los hace cumplir el lint (.oxlintrc.json).
+  - El servidor es el unico arbitro de reservas: orden por reloj del servidor, UPDATE atomico
+    en BD (nunca doble venta), vencimientos persistidos en BD.
+  - Cambios de UI: seguir el estandar de .ux/ (ux-kit) y correr ux-check al terminar.
+
+rules:
+  proposal:
+    - Indicar siempre que queda fuera de alcance
+    - Indicar a que fase de openspec/ROADMAP.md pertenece el cambio
+  design:
+    - Si el change toca services/api, ubicar cada pieza (entidad, objeto de valor, puerto, caso de uso,
+      DTO, adaptador) en domain, application o infrastructure segun services/api/ARCHITECTURE.md
+    - Nombrar los puertos nuevos y su implementacion, y decir que prueba de contrato los cubre
+  tasks:
+    - Dividir en tareas de maximo 2 horas
+    - Incluir una tarea de pruebas (concurrencia si toca reservas)
+    - En services/api, cada tarea indica su capa (domain, application, infrastructure o shared)

@@ -1,0 +1,18 @@
+# Se valida en TODOS los subproyectos (apps/shop, apps/admin, services/api).
+# `set -e`: el primer paso que falle detiene el hook y rechaza el commit, sin importar cómo se ejecute.
+set -e
+
+echo "▶ [1/5] Contrato de los subproyectos (scripts lint/test/build/format, regla de 25 líneas)"
+pnpm verify:projects
+
+echo "▶ [2/5] Secretos en los archivos en staging"
+pnpm exec lint-staged
+
+echo "▶ [3/5] Lint de cada subproyecto (incluye formato y tipos donde aplique)"
+pnpm lint:all
+
+echo "▶ [4/5] Pruebas unitarias de cada subproyecto (sin servicios externos)"
+pnpm test:all
+
+echo "▶ [5/5] Build de cada subproyecto (incluye chequeo de tipos)"
+pnpm build:all

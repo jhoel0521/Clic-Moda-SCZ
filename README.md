@@ -1,116 +1,95 @@
 # 🛍️ Clic Moda SCZ
 
-Plataforma de fast fashion pensada para venta ágil en Santa Cruz. El objetivo no es montar un e-commerce pesado, sino una experiencia visual y rápida que permita explorar productos, revisar tallas exactas, gestionar carrito y concretar pedidos por WhatsApp con un ticket claro.
+Plataforma de fast fashion pensada para venta ágil en Santa Cruz: una experiencia visual y rápida para explorar productos, revisar tallas exactas, gestionar el carrito y concretar pedidos por WhatsApp con un ticket claro.
 
-## Estado Actual
+## Estado actual
 
-El proyecto ya es un **MVP viable**.
+El prototipo universitario (Next.js con datos simulados) está conservado en el tag `demo-aprobada`. El producto real se **reconstruye desde cero** por rebanadas verticales, con un backend administrable (hoja de ruta: [`openspec/ROADMAP.md`](openspec/ROADMAP.md)). Hoy existe la base de plataforma (API con inicio de sesión del personal —Gerente, Despacho, Atención—, base de datos, orquestador y controles de calidad) y, encima, el **catálogo con inventario**: categorías, modelos con colores y tallas, un solo precio por modelo y stock que entra por una cola de movimientos. El **panel de administración** (móvil primero) tiene una pantalla de Inventario con la matriz color × talla de cada modelo.
 
-Ya están resueltos y funcionando:
+## Stack
 
-* Catálogo dinámico con filtros y tarjetas de producto.
-* Detalle de producto con tallas, colores, medidas y stock por talla.
-* Carrito persistente con cupones.
-* Checkout con validación y creación de orden.
-* Confirmación de pedido con ticket.
-* Autenticación con validación de sesión en hidración.
-* Panel de administración con productos, pedidos, cupones, banners y reseñas.
-* Inventario por talla con validación atómica al comprar.
+* **API:** NestJS 12 + TypeORM + PostgreSQL 18 (Docker), arquitectura hexagonal (ver [`services/api/ARCHITECTURE.md`](services/api/ARCHITECTURE.md)).
+* **Admin y tienda:** Astro 7 (SSR con adaptador Node); islas React donde hay formularios.
+* **Calidad:** lint + Prettier, Vitest, secretlint y Husky; funciones de 25 líneas como máximo.
+* **Runtime:** Node 26 y pnpm 12 (fijados en `.nvmrc` y `packageManager`).
 
-## Stack Tecnológico
+## Estructura del repositorio (monorepo)
 
-* **Framework:** Next.js 16.2.4
-* **UI:** React 19.2.4 + TypeScript
-* **Estilos:** Tailwind CSS v4 + Lucide React
-* **Estado global:** Zustand
-* **Formularios:** React Hook Form + Zod
-* **Persistencia local:** localStorage + cookie de sesión
-* **Validación:** ESLint + Prettier
-
-## Arquitectura
-
-El proyecto usa App Router y separa responsabilidades entre UI, dominio y servicios:
+Cada proyecto es **independiente** (su propio `package.json`, `pnpm-lock.yaml` y `node_modules`). La raíz solo los orquesta.
 
 ```text
-src/
-	app/            # Rutas, layouts y páginas
-	backend/        # Servicios de negocio y acceso a datos simulados
-	core/           # Modelos, contratos, stores, guards y constantes
-	infrastructure/ # Fábricas y adaptadores
-	shared/         # Componentes y hooks reutilizables
-	services/       # Facade de servicios consumidos por la UI
-	routes/         # Centralización de rutas
-data/db.json      # Base de datos simulada
-docs/database.dbml# Documentación de esquema
+apps/shop       # Tienda (Astro)
+apps/admin      # Panel de administración (Astro + React)
+services/api    # API (NestJS, hexagonal)
+agent/skills/   # Skills de los agentes (fuente única; pnpm skills:link)
+openspec/       # Specs y changes (OpenSpec) + ROADMAP.md
+docs/           # Esquema de datos (database.dbml) e histórico
+scripts/        # Orquestador, mapa de puertos y contrato de proyectos
+.ux/            # Estándar de UX/UI (ux-kit)
 ```
 
-## Funcionalidades Principales
+**Contrato de proyectos:** cada subproyecto expone los scripts `lint`, `test`, `build` y `format` y aplica la regla de funciones de 25 líneas como error. `pnpm verify:projects` lo comprueba sin importar el framework.
 
-### Cliente
+## Primeros pasos
 
-* Landing page con propuesta de valor.
-* Catálogo con filtros por talla, categoría, etiqueta y precio.
-* Tarjetas que muestran stock total y estado agotado.
-* Detalle de producto con stock por talla y selector de cantidad limitado.
-* Carrito con persistencia.
-* Checkout con validación de stock y generación de orden.
-* Confirmación de pedido con ticket y enlace a WhatsApp.
-
-### Autenticación
-
-* Login y registro.
-* Validación de sesión al cargar la app para evitar redirecciones erróneas.
-* Protección de rutas en cliente y en proxy.
-
-### Administración
-
-* Dashboard con métricas básicas.
-* CRUD de productos.
-* Gestión de pedidos.
-* Moderación de reseñas.
-* Cupones, banners y ventas flash.
-
-## Inventario por Talla
-
-El stock de productos ya no es un número único. Ahora se maneja como un objeto por talla, por ejemplo:
-
-```json
-{
-	"S": 3,
-	"M": 4,
-	"L": 3,
-	"XL": 3
-}
-```
-
-Esto permite:
-
-* Mostrar stock real por talla seleccionada.
-* Evitar compras de tallas sin existencia.
-* Descontar inventario de forma atómica al crear la orden.
-
-## Scripts
+Requiere Node 26, pnpm 12 y Docker para la base de datos. Copia `services/api/.env.example` a `services/api/.env` y completa `DB_PASSWORD` y `AUTH_JWT_KEY` (el archivo explica cómo generarla).
 
 ```bash
-npm run dev
-npm run build
-npm run start
-npm run lint
-npm run format
-npm run pre-commit
+pnpm install:all       # instala cada proyecto por separado
+pnpm docker:up         # levanta la infraestructura (Postgres) y espera a que esté sana
+pnpm db:migrate        # aplica las migraciones
+pnpm db:seed           # crea el primer Gerente (si no hay contraseña configurada, genera una y la muestra una vez)
+pnpm dev               # levanta api, admin y shop en paralelo
 ```
 
-## Validación
+**Infraestructura y base de datos**
 
-El flujo actual se valida con:
+| Comando | Qué hace |
+|---|---|
+| `pnpm docker:up` / `docker:down` | Levanta / detiene la infraestructura (conserva los datos) |
+| `pnpm docker:logs` / `docker:status` | Sigue los registros / muestra el estado |
+| `pnpm docker:reset --yes` | Detiene y **borra los datos** de desarrollo (exige `--yes`) |
+| `pnpm db:migrate` / `db:revert` / `db:status` | Aplica / revierte la última / lista las migraciones |
+| `pnpm db:seed` | Crea el primer Gerente |
+| `pnpm db:seed:catalog` | Carga la demo de zapatos (categorías, modelos y stock; se puede repetir sin duplicar) |
+| `pnpm password:reset --email <correo> --password "<nueva>"` | Cambia la contraseña de una cuenta del personal (mínimo 12 caracteres) |
+| `pnpm db:fresh` / `db:fresh:seed` | Borra todo y migra (y siembra). Se niega fuera de desarrollo local |
+| `pnpm dev:api` / `dev:admin` / `dev:shop` | Levanta un solo servidor |
+| `pnpm ports` / `preflight` | Muestra el mapa de puertos / comprueba que Postgres responde y que los puertos están libres |
 
-* `npm run lint`
-* `npm run build`
-* `npm run pre-commit`
+**Puertos** (fuente única: [`ports.json`](ports.json), pensados para no chocar con otros proyectos en paralelo):
 
-## Próximos pasos
+| Rango | Servicio | Puerto |
+|---|---|---|
+| Infraestructura `10001–10009` | PostgreSQL | `10001` |
+| Apps y servicios `10010–10020` | API (NestJS) | `10010` |
+| | Admin (Astro) | `10011` |
+| | Shop (Astro) | `10012` |
 
-* Completar documentación visual de arquitectura y flujo UX.
-* Preparar el backend real si el proyecto evoluciona fuera del mock.
-* Mejorar analítica y control de inventario avanzado.
- 
+Para añadir un servicio, agrégalo a `ports.json` en el rango que le toca: el orquestador valida que ningún puerto salga de su rango ni se repita.
+
+**Roles:** `pnpm --dir services/api roles:assign` abre una pantalla interactiva para asignar roles (también acepta `--email --roles --yes`). Siempre debe quedar al menos un Gerente.
+
+## Pruebas de flujos y de carga
+
+| Comando | Qué hace |
+|---|---|
+| `pnpm test:e2e` | e2e del API contra Postgres real (base `clic_moda_test`) |
+| `pnpm test:flows` | Flujos del panel con Playwright (escritorio, iPhone y 360 px) contra la API real, con su propia base `clic_moda_flows`. Necesita `pnpm docker:up` y los navegadores (`pnpm --dir apps/admin exec playwright install chromium webkit`). Usa los puertos privados 10018 y 10019 |
+| `pnpm load [read\|write\|all]` | Laboratorio de carga con k6 **dentro de Docker** (base, API y k6, cada uno con 0.5 CPU y 250 MB; cambia `LOAD_CPUS` y `LOAD_MEM` para otros tamaños). Muestra p50, p90, p95 y p99 y el consumo de cada contenedor |
+| `pnpm load:down` | Borra los contenedores, la red y el volumen del laboratorio |
+
+Las pruebas que cruzan varias apps viven en [`e2e/`](e2e/) (hoy: `e2e/load`).
+
+## Comprobaciones
+
+* `pnpm check`: contrato de proyectos, secretos, lint, pruebas unitarias y build de todo. Es lo que corre el hook de commit.
+* `pnpm check:full`: lo anterior más las pruebas e2e del API y los flujos del panel, que necesitan `pnpm docker:up`. Usan bases aparte (`clic_moda_test` y `clic_moda_flows`) y se niegan a borrar cualquier otra.
+
+## Docker en Windows con la unidad `J:`
+
+Docker Desktop no comparte la unidad `J:`: los montajes de carpetas del repositorio llegan vacíos al contenedor. Por eso `docker-compose.dev.yml` lleva sus configuraciones en línea (no monta archivos del repo) y los datos van en un volumen con nombre (`clic-moda_pgdata`). En otra unidad, o en Linux y macOS, funciona igual.
+
+## Prototipo anterior
+
+Para ver el prototipo: `git worktree add ../clic-moda-demo demo-aprobada`. Su auditoría funcional (qué conservar, mejorar o descartar) irá en `docs/prototipo/auditoria.md`.

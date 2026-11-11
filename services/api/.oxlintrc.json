@@ -1,0 +1,45 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "rules": {
+    "typescript/no-explicit-any": "off",
+    "typescript/no-floating-promises": "error",
+    "max-lines-per-function": ["error", { "max": 25, "skipBlankLines": true, "skipComments": true }]
+  },
+  "env": {
+    "node": true
+  },
+  "overrides": [
+    {
+      "files": ["src/**/domain/**/*.ts"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["@nestjs/*", "typeorm", "zod", "express", "pg", "**/application/**", "**/infrastructure/**"],
+                "message": "Dominio: no puede importar frameworks, librerías ni las capas application o infrastructure (ver ARCHITECTURE.md)."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/**/application/**/*.ts"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["@nestjs/*", "!@nestjs/common", "typeorm", "zod", "express", "pg", "**/infrastructure/**"],
+                "message": "Aplicación: solo puede usar @nestjs/common y el dominio; nunca infraestructura ni librerías de persistencia o HTTP (ver ARCHITECTURE.md)."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

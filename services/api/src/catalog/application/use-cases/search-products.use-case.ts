@@ -1,0 +1,52 @@
+import { Inject, Injectable } from '@nestjs/common';
+import type { UseCase } from '../../../shared/application/use-case.js';
+import { ValidationError } from '../../../shared/domain/errors/domain.error.js';
+import {
+  PRODUCTS_REPOSITORY,
+  type ProductPage,
+  type ProductsRepository,
+} from '../../domain/products.repository.port.js';
+import { CategoryId } from '../../domain/value-objects/ids.vo.js';
+import {
+  type ProductPageResult,
+  type ProductResult,
+  type SearchProductsQuery,
+  toProductResult,
+} from '../dtos/product.dtos.js';
+
+const MAX_PAGE_SIZE = 100;
+
+// Suma a cada variante su stock disponible, ubicación y umbral (lectura del inventario).
+const withVariantStock = (
+  variants: ProductResult['variants'],
+  stock: ProductPage['variantStock']
+): ProductResult['variants'] => variants.map((variant) => ({ ...variant, ...stock[variant.id] }));
+
+@Injectable()
+export class SearchProductsUseCase implements UseCase<SearchProductsQuery, ProductPageResult> {
+  constructor(@Inject(PRODUCTS_REPOSITORY) private readonly products: ProductsRepository) {}
+
+  async execute(query: SearchProductsQuery): Promise<ProductPageResult> {
+    const { page, pageSize } = query;
+    if (!Number.isInteger(page) || page < 1)
+      throw new ValidationError('La página debe ser 1 o más');
+    if (!Number.isInteger(pageSize) || pageSize < 1 || pageSize > MAX_PAGE_SIZE) {
+      throw new ValidationError(`El tamaño de página debe estar entre 1 y ${MAX_PAGE_SIZE}`);
+    }
+    const found = await this.products.search({
+      page,
+      pageSize,
+      text: query.text?.trim() || undefined,
+      categoryId: query.categoryId ? CategoryId.of(query.categoryId) : undefined,
+      active: query.active,
+      stock: query.stock,
+    });
+    const items = found.items.map((product) => ({
+      ...toProductResult(product),
+      variants: withVariantStock(toProductResult(product).variants, found.variantStock),
+      available: found.available[product.id.value] ?? 0,
+      soldOutVariants: found.soldOutVariants[product.id.value] ?? 0,
+    }));
+    return { items, total: found.total, page, pageSize };
+  }
+}

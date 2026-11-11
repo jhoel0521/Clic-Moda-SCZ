@@ -1,0 +1,11 @@
+---
+import CategoriesManager from '../components/CategoriesManager';
+import AdminLayout from '../layouts/AdminLayout.astro';
+import { can } from '../lib/session';
+
+const canWrite = can(Astro.locals.session, 'catalog:write');
+---
+
+<AdminLayout title="Categorías" subtitle="Ordena tu catálogo por tipo">
+  <CategoriesManager client:load canWrite={canWrite} />
+</AdminLayout>

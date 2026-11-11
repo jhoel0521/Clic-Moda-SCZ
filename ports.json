@@ -1,0 +1,15 @@
+{
+  "$comment": "Mapa de puertos de desarrollo: UNICA fuente de verdad. Evita choques con otros proyectos en paralelo. Infra: 10001-10009. Apps y servicios: 10010-10020 (el 10010 solo lo usa la API; la infra no pasa del 10009).",
+  "ranges": {
+    "infra": [10001, 10009],
+    "apps": [10010, 10020]
+  },
+  "infra": {
+    "postgres": 10001
+  },
+  "apps": {
+    "api": 10010,
+    "admin": 10011,
+    "shop": 10012
+  }
+}
