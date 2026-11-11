@@ -15,7 +15,7 @@ Las ventas nacen en enlaces compartidos (chat de WhatsApp, Facebook, X) y en pie
 
 **D3. Recorte puro compartido.** `computeCrop(src, format, focal, mode)` devuelve `{x, y, w, h}` o `{fit, background}`; vive en `shared/` del API y se copia como modulo puro con pruebas identicas en el admin (misma geometria, no mismos bytes). Modo `contain` para logos y fotos horizontales en `story`.
 
-**D4. Entrega por la tienda.** `GET /m/:id/:formato-:rev.:ext` en Astro reenvia por red interna a `GET /media/:id/:formato-:rev.:ext` de la API, que lee de SeaweedFS. La tienda agrega nada: pasa cabeceras de cache. Es algo mas lento que servir directo, se compensa con `immutable` y `ETag`, y con Cloudflare gratuito delante si hace falta; a cambio no hay CORS, ni dominio extra, ni almacenamiento expuesto. Un proxy delante (Caddy/Nginx) que reenvie `/m/*` directo a la API es una variante futura sin cambiar ninguna URL.
+**D4. Entrega por la tienda.** `GET /m/:id/:formato-:rev.:ext` en Astro reenvia por red interna a `GET /public/media/:id/:formato-:rev.:ext` de la API (la administración vive en `/media`, solo Gerente), que lee de SeaweedFS. La tienda agrega nada: pasa cabeceras de cache. Es algo mas lento que servir directo, se compensa con `immutable` y `ETag`, y con Cloudflare gratuito delante si hace falta; a cambio no hay CORS, ni dominio extra, ni almacenamiento expuesto. Un proxy delante (Caddy/Nginx) que reenvie `/m/*` directo a la API es una variante futura sin cambiar ninguna URL.
 
 **D5. SeaweedFS aislado.** Servicio en la red interna de Docker con bucket privado; en desarrollo publica `127.0.0.1:10002` (rango de infra de `ports.json`); en produccion no publica puertos. Credenciales en `.env` (nunca commiteadas). Cliente `@aws-sdk/client-s3`.
 

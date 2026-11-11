@@ -18,17 +18,17 @@
 
 ## 4. Infraestructura (API)
 
-- [ ] 4.1 (infrastructure) Migracion `media_asset` y `media_variant` y `TypeOrmMediaAssetRepository`
-- [ ] 4.2 (infrastructure) `SharpImageProcessor` (limitInputPixels, autoorient, sin EXIF, JPEG/WebP, tope de 300 KB en `link`)
-- [ ] 4.3 (infrastructure) `S3MediaStorage` y `DiskMediaStorage`
-- [ ] 4.4 (infrastructure) `MediaAdminController` (solo Gerente, multipart 12 MB) y DTOs HTTP con mappers
-- [ ] 4.5 (infrastructure) `MediaPublicController` con `Cache-Control` inmutable, `ETag`, 304 y 404 para lo no publicado
-- [ ] 4.6 (infrastructure) Modulo `media` registrado y limites de capa verificados por el lint
+- [x] 4.1 (infrastructure) Migracion `media_asset` y `media_variant` y `TypeOrmMediaAssetRepository`
+- [x] 4.2 (infrastructure) `SharpImageProcessor` (limitInputPixels, autoorient, sin EXIF, JPEG/WebP, tope de 300 KB en `link`)
+- [x] 4.3 (infrastructure) `S3MediaStorage` y `DiskMediaStorage`
+- [x] 4.4 (infrastructure) `MediaAdminController` (solo Gerente, multipart 12 MB) y DTOs HTTP con mappers
+- [x] 4.5 (infrastructure) `MediaPublicController` con `Cache-Control` inmutable, `ETag`, 304 y 404 para lo no publicado
+- [x] 4.6 (infrastructure) Modulo `media` registrado y limites de capa verificados por el lint
 
 ## 5. Pruebas del API
 
-- [ ] 5.1 Contratos de `MediaStoragePort` (fake, disco y S3 contra SeaweedFS real) y de `ImageProcessorPort`, `MediaAssetRepository`
-- [ ] 5.2 e2e: subir, rechazos (tipo, peso, tamano, sin alt), EXIF/GPS eliminado, permiso solo Gerente, entrega publica y 304
+- [x] 5.1 Contratos de `MediaStoragePort` (fake, disco y S3 contra SeaweedFS real) y de `ImageProcessorPort`, `MediaAssetRepository`
+- [x] 5.2 e2e: subir, rechazos (tipo, peso, tamano, sin alt), EXIF/GPS eliminado, permiso solo Gerente, entrega publica y 304
 
 ## 6. Tienda
 
