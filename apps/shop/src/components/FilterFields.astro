@@ -1,0 +1,88 @@
+---
+import type { Filters } from '../lib/catalog';
+import { SORT_LABELS, type CatalogState } from '../lib/catalog-url';
+
+interface Props {
+  state: CatalogState;
+  filters: Filters;
+  /** Prefijo de los ids: el formulario se dibuja dos veces (teléfono y escritorio). */
+  id: string;
+}
+
+const { state, filters, id } = Astro.props;
+const field = 'min-h-12 w-full rounded-xl border border-neutral-400 bg-white px-3 text-base';
+---
+
+<form method="get" action="/catalogo" class="flex flex-col gap-4">
+  <div class="flex flex-col gap-1.5">
+    <label for={`${id}-q`} class="text-sm font-semibold">
+      Buscar
+    </label>
+    <input
+      id={`${id}-q`}
+      name="q"
+      type="search"
+      value={state.q ?? ''}
+      maxlength="100"
+      class={field}
+    />
+  </div>
+  <div class="flex flex-col gap-1.5">
+    <label for={`${id}-cat`} class="text-sm font-semibold">
+      Categoría
+    </label>
+    <select id={`${id}-cat`} name="categoria" class={field}>
+      <option value="">Todas</option>
+      {filters.categories.map((c) => (
+        <option value={c.slug} selected={c.slug === state.category}>
+          {c.name} ({c.count})
+        </option>
+      ))}
+    </select>
+  </div>
+  <div class="flex flex-col gap-1.5">
+    <label for={`${id}-size`} class="text-sm font-semibold">
+      Talla
+    </label>
+    <select id={`${id}-size`} name="talla" class={field}>
+      <option value="">Todas</option>
+      {filters.sizes.map((s) => (
+        <option value={s} selected={s === state.size}>
+          {s}
+        </option>
+      ))}
+    </select>
+  </div>
+  <div class="flex flex-col gap-1.5">
+    <label for={`${id}-sort`} class="text-sm font-semibold">
+      Ordenar por
+    </label>
+    <select id={`${id}-sort`} name="orden" class={field}>
+      <option value="" selected={state.sort === 'new'}>
+        {SORT_LABELS.new}
+      </option>
+      <option value="precio-asc" selected={state.sort === 'price_asc'}>
+        {SORT_LABELS.price_asc}
+      </option>
+      <option value="precio-desc" selected={state.sort === 'price_desc'}>
+        {SORT_LABELS.price_desc}
+      </option>
+    </select>
+  </div>
+  <label class="flex min-h-12 items-center gap-3 font-medium">
+    <input
+      type="checkbox"
+      name="disponibles"
+      value="1"
+      checked={state.available}
+      class="size-6 accent-brand-dark"
+    />
+    Solo disponibles
+  </label>
+  <button
+    type="submit"
+    class="inline-flex min-h-12 items-center justify-center rounded-xl bg-brand px-5 font-semibold text-on-brand"
+  >
+    Aplicar filtros
+  </button>
+</form>

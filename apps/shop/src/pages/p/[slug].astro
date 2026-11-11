@@ -1,0 +1,145 @@
+---
+import AvailabilityBadge from '../../components/AvailabilityBadge.astro';
+import InquiryCta from '../../components/InquiryCta.astro';
+import ProductGallery from '../../components/ProductGallery.astro';
+import VariantPicker from '../../components/VariantPicker.astro';
+import StoreLayout from '../../layouts/StoreLayout.astro';
+import { CatalogUnavailableError, catalog, type Product } from '../../lib/catalog';
+import { formatBs } from '../../lib/format';
+import {
+  inquiryLink,
+  inquiryMessage,
+  productPath,
+  restockMessage,
+  selectVariant,
+} from '../../lib/inquiry';
+import { productJsonLd, safeJsonLd } from '../../lib/json-ld';
+import { siteOrigin } from '../../lib/seo';
+import { getSettings } from '../../lib/settings';
+import { hasWhatsapp } from '../../lib/whatsapp';
+
+const { slug = '' } = Astro.params;
+const settings = await getSettings();
+let product: Product | null = null;
+try {
+  product = await catalog.product(slug);
+  if (!product) Astro.response.status = 404;
+} catch (error) {
+  if (!(error instanceof CatalogUnavailableError)) throw error;
+  Astro.response.status = 503;
+}
+
+// La elección de talla y color vive en la URL: el servidor arma el botón de WhatsApp con ella.
+const origin = siteOrigin(Astro.url.origin);
+const size = Astro.url.searchParams.get('talla');
+const color = Astro.url.searchParams.get('color');
+const chosen = product ? selectVariant(product.variants, size, color) : null;
+const canAsk = !!product && hasWhatsapp(settings.contact.whatsapp);
+const state =
+  product?.availability === 'out'
+    ? 'restock'
+    : chosen && chosen.availability !== 'out'
+      ? 'ready'
+      : 'pick';
+const message =
+  product && state === 'restock'
+    ? restockMessage({ product, origin, ref: Astro.locals.ref })
+    : product
+      ? inquiryMessage({ product, origin, variant: chosen, ref: Astro.locals.ref })
+      : '';
+const href = canAsk && state !== 'pick' ? inquiryLink(settings.contact.whatsapp, message) : null;
+const mainPhoto = product?.photos[0];
+const description = product
+  ? (product.description?.slice(0, 160) ??
+    `${product.name} en ${product.category.name} por ${formatBs(product.price)}.`)
+  : undefined;
+---
+
+{product ? (
+  <StoreLayout
+    title={product.name}
+    description={description}
+    path={productPath(product.slug)}
+    kind="product"
+    image={
+      mainPhoto
+        ? {
+            path: mainPhoto.link,
+            alt: mainPhoto.alt || product.name,
+            width: 1200,
+            height: 630,
+            type: 'image/jpeg',
+          }
+        : undefined
+    }
+    bar={canAsk}
+  >
+    <script
+      slot="head"
+      type="application/ld+json"
+      set:html={safeJsonLd(productJsonLd(product, origin))}
+    />
+    <!-- Teléfono: nombre y precio primero, luego la foto y la elección. Escritorio: foto a la izquierda. -->
+    <div class="grid gap-x-8 gap-y-5 md:grid-cols-2 md:grid-rows-[auto_1fr]">
+      <div class="order-1 md:col-start-2 md:row-start-1">
+        <a
+          href={`/catalogo?categoria=${encodeURIComponent(product.category.slug)}`}
+          class="text-sm font-medium text-muted underline"
+        >
+          {product.category.name}
+        </a>
+        <h1 class="mt-1 text-2xl font-bold leading-tight wrap-anywhere md:text-3xl">
+          {product.name}
+        </h1>
+        <p class="mt-2 text-2xl font-bold text-brand-dark">{formatBs(product.price)}</p>
+        <div class="mt-2">
+          <AvailabilityBadge availability={product.availability} />
+        </div>
+      </div>
+      <div class="order-2 md:col-start-1 md:row-span-2 md:row-start-1">
+        <ProductGallery photos={product.photos} name={product.name} />
+      </div>
+      <div class="order-3 flex flex-col gap-5 md:col-start-2 md:row-start-2 md:self-start">
+        {product.description && (
+          <p class="whitespace-pre-line text-muted wrap-anywhere">{product.description}</p>
+        )}
+        <VariantPicker product={product} size={size} color={color} />
+        {canAsk && (
+          <div class="hidden flex-col gap-2 md:flex">
+            <InquiryCta state={state} href={href} />
+            <p class="text-sm text-muted">
+              Cerramos tu compra por WhatsApp: entrega a domicilio o recojo en el almacén.
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+    {canAsk && (
+      <div
+        slot="bar"
+        class="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-white p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] md:hidden"
+      >
+        <InquiryCta state={state} href={href} />
+      </div>
+    )}
+  </StoreLayout>
+) : (
+  <StoreLayout title="Producto no encontrado" path={`/p/${encodeURIComponent(slug)}`}>
+    <h1 class="text-3xl font-bold text-brand-dark">
+      {Astro.response.status === 503
+        ? 'El catálogo no está disponible por ahora'
+        : 'No encontramos este producto'}
+    </h1>
+    <p class="mt-2 text-muted">
+      {Astro.response.status === 503
+        ? 'Intenta de nuevo en un minuto.'
+        : 'Puede que ya no esté a la venta.'}
+    </p>
+    <a
+      href="/catalogo"
+      class="mt-6 inline-flex min-h-12 items-center rounded-xl bg-brand px-5 font-semibold text-on-brand"
+    >
+      Ver el catálogo
+    </a>
+  </StoreLayout>
+)}

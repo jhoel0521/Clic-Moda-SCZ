@@ -4,42 +4,62 @@ import SeoHead from '../components/SeoHead.astro';
 import StoreFooter from '../components/StoreFooter.astro';
 import StoreHeader from '../components/StoreHeader.astro';
 import { getSettings } from '../lib/settings';
+import type { SeoImage } from '../lib/seo';
 
 interface Props {
   /** Título de la página; sin él se usa el título de búsqueda de la configuración. */
   title?: string;
   description?: string;
-  /** Ruta de la página (p. ej. /contacto). */
+  /** Ruta canónica de la página (p. ej. /contacto): sin parámetros de filtro, talla, color ni ref. */
   path: string;
+  kind?: 'website' | 'product';
+  /** Imagen de compartir propia de la página (si no, la de la configuración). */
+  image?: SeoImage;
+  /** Deja espacio para una barra fija inferior (detalle de producto en teléfono). */
+  bar?: boolean;
 }
 
 const settings = await getSettings();
-const { title = settings.seo.title, description = settings.seo.description, path } = Astro.props;
+const {
+  title = settings.seo.title,
+  description = settings.seo.description,
+  path,
+  kind,
+  image,
+  bar = false,
+} = Astro.props;
 const { color } = settings;
 // Los colores de la marca como variables CSS: la tienda cambia de marca sin recompilar.
 const brandVars = `--brand:${color.primary};--brand-dark:${color.dark};--brand-light:${color.light};--brand-soft:${color.soft};--on-brand:${color.onPrimary}`;
 ---
 
-<html lang="es-BO" style={brandVars}>
+<html lang="es-BO" style={brandVars} class={bar ? 'scroll-pb-28' : undefined}>
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content={color.primary} />
     <meta name="generator" content={Astro.generator} />
+    <!-- Marca que hay JavaScript antes de pintar: los controles de mejora progresiva solo se muestran entonces. -->
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
     <SeoHead
       siteName={settings.brandName}
       title={title}
       description={description}
       path={path}
-      image={settings.seo.shareImage ?? undefined}
+      kind={kind}
+      image={image ?? settings.seo.shareImage ?? undefined}
     />
+    <slot name="head" />
   </head>
   <body class="flex min-h-dvh flex-col bg-white text-ink">
     <StoreHeader settings={settings} />
-    <main class="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
+    <main class:list={['mx-auto w-full max-w-5xl flex-1 px-4 py-8', bar && 'pb-28 md:pb-8']}>
       <slot />
     </main>
     <StoreFooter settings={settings} />
+    <slot name="bar" />
   </body>
 </html>

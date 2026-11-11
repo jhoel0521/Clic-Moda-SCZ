@@ -1,0 +1,29 @@
+---
+import SocialIcon from './SocialIcon.astro';
+
+interface Props {
+  /** ready: consultar con la talla elegida · restock: todo agotado · pick: falta elegir talla. */
+  state: 'ready' | 'restock' | 'pick';
+  href: string | null;
+  class?: string;
+}
+
+const { state, href, class: className = '' } = Astro.props;
+const base =
+  'inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl px-5 font-semibold';
+---
+
+{state === 'pick' ? (
+  <a
+    href="#talla"
+    data-pick-size
+    class:list={[base, 'border-2 border-brand-dark text-brand-dark', className]}
+  >
+    Elige tu talla
+  </a>
+) : (
+  <a href={href ?? '#'} rel="noreferrer" class:list={[base, 'bg-brand text-on-brand', className]}>
+    <SocialIcon network="whatsapp" />
+    {state === 'restock' ? 'Preguntar cuándo vuelve' : 'Consultar por WhatsApp'}
+  </a>
+)}

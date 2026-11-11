@@ -1,11 +1,44 @@
 ---
+import ProductCard from '../components/ProductCard.astro';
 import StoreLayout from '../layouts/StoreLayout.astro';
+import { CatalogUnavailableError, catalog, type CardProduct } from '../lib/catalog';
 import { getSettings } from '../lib/settings';
 
 const { brandName, tagline } = await getSettings();
+let newest: CardProduct[] = [];
+try {
+  newest = (await catalog.list({ sort: 'new' })).items.slice(0, 4);
+} catch (error) {
+  // La portada se ve igual sin las novedades si el catálogo no responde.
+  if (!(error instanceof CatalogUnavailableError)) throw error;
+}
 ---
 
 <StoreLayout path="/">
   <h1 class="text-3xl font-bold wrap-anywhere text-brand-dark">{brandName}</h1>
   {tagline && <p class="mt-2 text-lg text-muted">{tagline}</p>}
+  <a
+    href="/catalogo"
+    class="mt-5 inline-flex min-h-12 items-center rounded-xl bg-brand px-6 font-semibold text-on-brand"
+  >
+    Ver el catálogo
+  </a>
+  {newest.length > 0 && (
+    <section class="mt-10" aria-labelledby="novedades">
+      <h2 id="novedades" class="text-xl font-bold">
+        Novedades
+      </h2>
+      <ul class="mt-4 grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-4">
+        {newest.map((product, index) => (
+          <ProductCard product={product} priority={index < 2} />
+        ))}
+      </ul>
+      <a
+        href="/catalogo"
+        class="mt-6 inline-flex min-h-12 items-center font-semibold text-brand-dark underline"
+      >
+        Ver todo el catálogo
+      </a>
+    </section>
+  )}
 </StoreLayout>

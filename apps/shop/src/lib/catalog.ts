@@ -154,4 +154,9 @@ export function createCatalogClient({ fetcher, now, base }: Deps) {
   };
 }
 
-export const catalog = createCatalogClient({ fetcher: fetch, now: Date.now, base: apiBase });
+// `fetch` se busca en cada llamada (no se guarda su referencia): así las pruebas pueden sustituirlo.
+export const catalog = createCatalogClient({
+  fetcher: (url, init) => fetch(url, init),
+  now: Date.now,
+  base: apiBase,
+});

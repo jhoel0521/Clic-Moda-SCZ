@@ -15,28 +15,37 @@ const whatsapp = hasWhatsapp(contact.whatsapp)
 ---
 
 <header class="border-b border-brand-soft bg-white">
-  <div class="mx-auto flex w-full max-w-5xl items-center justify-between gap-3 px-4 py-3">
-    <a href="/" class="min-w-0" aria-label={`${brandName}, ir al inicio`}>
+  <div class="mx-auto flex w-full max-w-5xl items-center gap-2 px-4 py-3">
+    <a href="/" class="mr-auto min-w-0" aria-label={`${brandName}, ir al inicio`}>
       {logo ? (
         <img
           src={logo.path}
           alt={brandName}
           width="160"
           height="80"
-          class="h-10 w-auto max-w-[55vw] object-contain"
+          class="h-10 w-auto max-w-[45vw] object-contain"
         />
       ) : (
         <span class="block truncate text-lg font-bold text-brand-dark">{brandName}</span>
       )}
     </a>
+    <nav aria-label="Principal">
+      <a
+        href="/catalogo"
+        class="inline-flex min-h-12 items-center rounded-xl px-3 font-semibold text-brand-dark hover:bg-brand-soft"
+      >
+        Catálogo
+      </a>
+    </nav>
     {whatsapp && (
       <a
         href={whatsapp}
         rel="noreferrer"
-        class="inline-flex min-h-12 shrink-0 items-center rounded-xl bg-brand px-4 font-semibold text-on-brand"
+        aria-label="WhatsApp"
+        class="inline-flex min-h-12 min-w-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-brand px-3 font-semibold text-on-brand sm:px-4"
       >
-        <SocialIcon network="whatsapp" class="mr-2 size-5" />
-        WhatsApp
+        <SocialIcon network="whatsapp" class="size-5" />
+        <span class="hidden sm:inline">WhatsApp</span>
       </a>
     )}
   </div>

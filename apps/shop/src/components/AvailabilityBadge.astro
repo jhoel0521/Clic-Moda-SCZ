@@ -1,0 +1,43 @@
+---
+import { AVAILABILITY_LABEL } from '../lib/format';
+import type { Availability } from '../lib/catalog';
+
+interface Props {
+  availability: Availability;
+  /** En las tarjetas solo se avisa de lo que importa: "Disponible" no se repite en cada una. */
+  quiet?: boolean;
+}
+
+const { availability, quiet = false } = Astro.props;
+const STYLE = {
+  in_stock: 'bg-green-50 text-success',
+  low: 'bg-amber-50 text-warning',
+  out: 'bg-neutral-100 text-ink',
+} as const;
+// Siempre texto e ícono además del color (el color solo no basta).
+const ICON = {
+  in_stock: 'M20 6 9 17l-5-5',
+  low: 'M12 8v4l3 3M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z',
+  out: 'M18.4 5.6 5.6 18.4M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z',
+} as const;
+---
+
+{!(quiet && availability === 'in_stock') && (
+  <span
+    class={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${STYLE[availability]}`}
+  >
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+      class="size-3.5"
+    >
+      <path d={ICON[availability]} />
+    </svg>
+    {AVAILABILITY_LABEL[availability]}
+  </span>
+)}

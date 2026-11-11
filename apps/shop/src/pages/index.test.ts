@@ -1,13 +1,15 @@
+import { catalog } from '../lib/catalog';
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { FALLBACK_SETTINGS, settingsStore, type StoreSettings } from '../lib/settings';
+import { card, page, stubApi } from '../test/api-stub';
 import Contacto from './contacto.astro';
 import Index from './index.astro';
 
 const LOGO = '0a1b2c3d-0000-4000-8000-000000000001';
 
 const withApi = (over: Partial<StoreSettings> = {}) => {
-  const body: StoreSettings = {
+  const settings: StoreSettings = {
     ...FALLBACK_SETTINGS,
     brandName: 'Verashoe',
     color: {
@@ -25,15 +27,15 @@ const withApi = (over: Partial<StoreSettings> = {}) => {
     },
     ...over,
   };
-  vi.stubGlobal(
-    'fetch',
-    vi.fn(() => Promise.resolve(Response.json(body)))
-  );
+  stubApi({ settings, list: page([card()]) });
 };
 
 const render = async (page: typeof Index) => (await AstroContainer.create()).renderToString(page);
 
-beforeEach(() => settingsStore.reset());
+beforeEach(() => {
+  settingsStore.reset();
+  catalog.reset();
+});
 afterEach(() => vi.unstubAllGlobals());
 
 describe('inicio: marca desde la configuración', () => {

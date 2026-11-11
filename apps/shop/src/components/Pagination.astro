@@ -1,0 +1,35 @@
+---
+interface Props {
+  page: number;
+  pages: number;
+  /** Enlaces ya armados (conservan los filtros). */
+  prevHref: string | null;
+  nextHref: string | null;
+}
+
+const { page, pages, prevHref, nextHref } = Astro.props;
+const button =
+  'inline-flex min-h-12 items-center rounded-xl border border-brand-dark px-5 font-semibold text-brand-dark';
+---
+
+{pages > 1 && (
+  <nav aria-label="Páginas del catálogo" class="mt-8 flex items-center justify-between gap-3">
+    {prevHref ? (
+      <a href={prevHref} rel="prev" class={button}>
+        Anterior
+      </a>
+    ) : (
+      <span class="min-w-24" />
+    )}
+    <p class="text-sm text-muted">
+      Página {page} de {pages}
+    </p>
+    {nextHref ? (
+      <a href={nextHref} rel="next" class={button}>
+        Siguiente
+      </a>
+    ) : (
+      <span class="min-w-24" />
+    )}
+  </nav>
+)}

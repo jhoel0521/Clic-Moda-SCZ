@@ -38,12 +38,12 @@
 
 ## 6. Tienda: paginas (apps/shop)
 
-- [ ] 6.1 (apps/shop) Componentes: tarjeta de producto (foto 4:5 reservada, precio "Bs 349,90", "Ultimas unidades"/"Agotada" con texto), selector de talla y color como `fieldset` con `legend` y opciones de 44 px (formulario GET), galeria con botones anterior/siguiente, miniaturas, `alt` y anuncio de posicion, y recuadro sin foto
-- [ ] 6.2 (apps/shop) `/catalogo` con filtros por URL (categoria, talla, solo disponibles, orden) en panel plegable "Filtrar (N)" con chips que se quitan, conteo de productos, paginacion con `rel=prev/next` que conserva filtros, estado vacio y mensaje de reintento si la API falla
-- [ ] 6.3 (apps/shop) `/p/[slug]`: galeria, descripcion, precio en Bs, seleccion en la URL, boton de WhatsApp ("Preguntar cuando vuelve" si todo esta agotado) y barra inferior fija en telefono con margen inferior y `scroll-padding-bottom`; ancla "Elige tu talla" que mueve el foco; 404 con enlace al catalogo
-- [ ] 6.4 (apps/shop) SEO por producto: titulo, descripcion de respaldo, canonical sin parametros, `og:image` `link`, JSON-LD `Product`
-- [ ] 6.5 (apps/shop) `/sitemap.xml` (con `ListPublishedSlugs`) y `/robots.txt`; portada con los productos mas nuevos y enlaces al catalogo en cabecera y pie
-- [ ] 6.6 (apps/shop) Pruebas de paginas con el contenedor de Astro (HTML del servidor, escape, canonical, JSON-LD) y revision en navegador real a 360 px con un nombre de 60 caracteres (sin desborde, objetivos de 44 px)
+- [x] 6.1 (apps/shop) Componentes: tarjeta de producto (foto 4:5 reservada, precio "Bs 349,90", "Ultimas unidades"/"Agotada" con texto), selector de talla y color como `fieldset` con `legend` y opciones de 44 px (formulario GET), galeria con botones anterior/siguiente, miniaturas, `alt` y anuncio de posicion, y recuadro sin foto
+- [x] 6.2 (apps/shop) `/catalogo` con filtros por URL (categoria, talla, solo disponibles, orden) en panel plegable "Filtrar (N)" con chips que se quitan, conteo de productos, paginacion con `rel=prev/next` que conserva filtros, estado vacio y mensaje de reintento si la API falla
+- [x] 6.3 (apps/shop) `/p/[slug]`: galeria, descripcion, precio en Bs, seleccion en la URL, boton de WhatsApp ("Preguntar cuando vuelve" si todo esta agotado) y barra inferior fija en telefono con margen inferior y `scroll-padding-bottom`; ancla "Elige tu talla" que mueve el foco; 404 con enlace al catalogo
+- [x] 6.4 (apps/shop) SEO por producto: titulo, descripcion de respaldo, canonical sin parametros, `og:image` `link`, JSON-LD `Product`
+- [x] 6.5 (apps/shop) `/sitemap.xml` (con `ListPublishedSlugs`) y `/robots.txt`; portada con los productos mas nuevos y enlaces al catalogo en cabecera y pie
+- [x] 6.6 (apps/shop) Pruebas de paginas con el contenedor de Astro (HTML del servidor, escape, canonical, JSON-LD) y revision en navegador real a 360 px con un nombre de 60 caracteres (sin desborde, objetivos de 44 px)
 
 ## 7. Cierre
 
