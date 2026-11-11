@@ -13,7 +13,7 @@ El sistema SHALL mostrar el nombre configurado en todo lugar donde la tienda se 
 
 #### Scenario: Long name on a phone
 - **WHEN** el nombre tiene 24 caracteres y la pantalla mide 360 px
-- **THEN** la cabecera no se rompe ni genera desplazamiento horizontal
+- **THEN** la cabecera no genera desplazamiento horizontal y el nombre se recorta con puntos suspensivos o pasa a una segunda linea sin tapar los botones
 
 ### Requirement: The logo is uploaded and optional
 El sistema SHALL usar como logo una imagen subida por el modulo de medios (no una URL externa) y, sin logo o si la imagen falla, MUST mostrar el nombre como texto sin romper el diseno.
