@@ -57,6 +57,22 @@ function assetCases(make: Factory): void {
   });
 }
 
+function bulkCases(make: Factory): void {
+  it('findByIds devuelve solo las que existen, en una sola llamada', async () => {
+    const [repo, a, b] = [await make(), asset(), asset()];
+    await repo.save(a);
+    await repo.save(b);
+
+    const found = await repo.findByIds([a.id, MediaId.generate(), b.id]);
+
+    expect(found.map((item) => item.id.value).sort()).toEqual([a.id.value, b.id.value].sort());
+  });
+
+  it('findByIds sin identificadores devuelve una lista vacía', async () => {
+    expect(await (await make()).findByIds([])).toEqual([]);
+  });
+}
+
 function assetUpdateCases(make: Factory): void {
   it('save actualiza por id: reencuadrar sube la revisión', async () => {
     const [repo, saved] = [await make(), asset()];
@@ -155,6 +171,7 @@ export function mediaAssetsRepositoryContract(label: string, make: Factory): voi
   describe(`MediaAssetsRepository: ${label}`, () => {
     assetCases(make);
     assetUpdateCases(make);
+    bulkCases(make);
     variantCases(make);
     variantReplaceCases(make);
     obsoleteCases(make);

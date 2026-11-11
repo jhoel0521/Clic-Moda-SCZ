@@ -1,16 +1,18 @@
-import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import {
   AddVariantCommand,
   GetProductQuery,
   RegisterProductCommand,
   SearchProductsQuery,
   SetProductActiveCommand,
+  SetProductPhotosCommand,
   UpdateProductCommand,
 } from '../../application/dtos/product.dtos.js';
 import { AddVariantUseCase } from '../../application/use-cases/add-variant.use-case.js';
 import { GetProductUseCase } from '../../application/use-cases/get-product.use-case.js';
 import { RegisterProductUseCase } from '../../application/use-cases/register-product.use-case.js';
 import { SearchProductsUseCase } from '../../application/use-cases/search-products.use-case.js';
+import { SetProductPhotosUseCase } from '../../application/use-cases/set-product-photos.use-case.js';
 import { SetProductActiveUseCase } from '../../application/use-cases/set-product-active.use-case.js';
 import {
   SetProductPriceCommand,
@@ -23,6 +25,8 @@ import {
   activeSchema,
   type PriceDto,
   priceSchema,
+  type PhotosDto,
+  photosSchema,
   type ProductPageResponseDto,
   type ProductResponseDto,
   type RegisterProductDto,
@@ -46,7 +50,8 @@ export class ProductsController {
     private readonly setPrice: SetProductPriceUseCase,
     private readonly addVariant: AddVariantUseCase,
     private readonly search: SearchProductsUseCase,
-    private readonly get: GetProductUseCase
+    private readonly get: GetProductUseCase,
+    private readonly setPhotos: SetProductPhotosUseCase
   ) {}
 
   @Roles('GERENTE', 'DESPACHO', 'ATENCION')
@@ -98,6 +103,18 @@ export class ProductsController {
   ): Promise<ProductResponseDto> {
     return toProductResponse(
       await this.setActive.execute(new SetProductActiveCommand(id, body.active))
+    );
+  }
+
+  // Reemplaza todas las fotos del producto (la primera es la principal). Solo el Gerente.
+  @Roles('GERENTE')
+  @Put(':id/photos')
+  async photos(
+    @Param('id') id: string,
+    @Body({ schema: photosSchema }) body: PhotosDto
+  ): Promise<ProductResponseDto> {
+    return toProductResponse(
+      await this.setPhotos.execute(new SetProductPhotosCommand(id, body.mediaIds))
     );
   }
 

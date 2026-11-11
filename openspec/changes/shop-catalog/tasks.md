@@ -7,11 +7,11 @@
 
 ## 2. Fotos del producto (services/api)
 
-- [ ] 2.1 (domain) `ProductPhotos` (0 a 8, sin repetidos, la primera es la principal) dentro de `Product`; pruebas de limites
-- [ ] 2.2 (application) Puerto `MediaReferencesPort` del contexto catalog con `findByIds` (un solo viaje) y caso de uso `SetProductPhotos` (Gerente); errores por imagen
-- [ ] 2.3 (media) `findByIds` en `MediaAssetsRepository` (fake y Postgres) con prueba de contrato
-- [ ] 2.4 (infrastructure) Migracion `product_photos (product_id, position, media_id)`, repositorio y adaptador hacia `media` (sin clave foranea; se omiten las imagenes borradas)
-- [ ] 2.5 (infrastructure) `PUT /catalog/products/:id/photos` solo Gerente; el detalle administrativo incluye las fotos; e2e de permisos, orden, duplicados, maximo y borrado de la imagen principal
+- [x] 2.1 (domain) `ProductPhotos` (0 a 8, sin repetidos, la primera es la principal) dentro de `Product`; pruebas de limites
+- [x] 2.2 (application) Puerto `MediaReferencesPort` del contexto catalog con `findByIds` (un solo viaje) y caso de uso `SetProductPhotos` (Gerente); errores por imagen
+- [x] 2.3 (media) `findByIds` en `MediaAssetsRepository` (fake y Postgres) con prueba de contrato
+- [x] 2.4 (infrastructure) Migracion `product_photos (product_id, position, media_id)`, repositorio y adaptador hacia `media` (sin clave foranea; se omiten las imagenes borradas)
+- [x] 2.5 (infrastructure) `PUT /catalog/products/:id/photos` solo Gerente; el detalle administrativo incluye las fotos; e2e de permisos, orden, duplicados, maximo y borrado de la imagen principal
 
 ## 3. Lectura publica (services/api)
 

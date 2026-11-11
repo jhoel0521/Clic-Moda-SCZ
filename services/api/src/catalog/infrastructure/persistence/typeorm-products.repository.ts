@@ -14,6 +14,7 @@ import { type CategoryId, ProductId, type VariantId } from '../../domain/value-o
 import type { Slug } from '../../domain/value-objects/names.vo.js';
 import type { Sku } from '../../domain/value-objects/variant-attributes.vo.js';
 import { ProductMapper } from './catalog.mapper.js';
+import { ProductPhotoOrmEntity } from './product-photo.orm-entity.js';
 import { ProductOrmEntity } from './product.orm-entity.js';
 import { VariantOrmEntity } from './variant.orm-entity.js';
 
@@ -45,7 +46,7 @@ export class TypeOrmProductsRepository implements ProductsRepository {
   async findById(id: ProductId): Promise<Product | null> {
     const row = await this.products.findOne({
       where: { id: id.value },
-      relations: { variants: true },
+      relations: { variants: true, photos: true },
     });
     return row ? ProductMapper.toDomain(row) : null;
   }
@@ -62,7 +63,7 @@ export class TypeOrmProductsRepository implements ProductsRepository {
   async findBySlug(slug: Slug): Promise<Product | null> {
     const row = await this.products.findOne({
       where: { slug: slug.value },
-      relations: { variants: true },
+      relations: { variants: true, photos: true },
     });
     return row ? ProductMapper.toDomain(row) : null;
   }
@@ -140,11 +141,14 @@ export class TypeOrmProductsRepository implements ProductsRepository {
   }
 
   async save(product: Product): Promise<void> {
-    const { product: row, variants } = ProductMapper.toRows(product);
+    const { product: row, variants, photos } = ProductMapper.toRows(product);
     try {
       await this.dataSource.transaction(async (manager) => {
         await manager.save(ProductOrmEntity, row);
         await manager.save(VariantOrmEntity, variants);
+        // Las fotos se reemplazan completas: se borran las del producto y se insertan las nuevas.
+        await manager.delete(ProductPhotoOrmEntity, { productId: row.id });
+        await manager.save(ProductPhotoOrmEntity, photos);
       });
     } catch (error) {
       throw this.translate(error);
@@ -170,7 +174,7 @@ export class TypeOrmProductsRepository implements ProductsRepository {
     if (ids.length === 0) return [];
     const rows = await this.products.find({
       where: { id: In(ids) },
-      relations: { variants: true },
+      relations: { variants: true, photos: true },
     });
     const byId = new Map(rows.map((row) => [row.id, row]));
     return ids.map((id) => ProductMapper.toDomain(byId.get(id) as ProductOrmEntity));

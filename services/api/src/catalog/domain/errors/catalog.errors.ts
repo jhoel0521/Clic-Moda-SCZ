@@ -63,3 +63,21 @@ export class VariantNotFoundError extends NotFoundError {
     super('La variante no existe');
   }
 }
+
+export class InvalidPhotoError extends ValidationError {
+  constructor(raw: string) {
+    super(`"${raw}" no es un identificador de imagen válido`);
+  }
+}
+
+export class TooManyPhotosError extends ValidationError {
+  constructor(max: number) {
+    super(`Un producto admite como máximo ${String(max)} fotos`);
+  }
+}
+
+export class DuplicatePhotoError extends ValidationError {
+  constructor() {
+    super('La misma foto no puede repetirse en un producto');
+  }
+}

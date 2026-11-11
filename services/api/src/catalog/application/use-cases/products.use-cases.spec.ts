@@ -10,6 +10,7 @@ import {
 import { CategoryId, ProductId, VariantId } from '../../domain/value-objects/ids.vo.js';
 import { InMemoryCategoriesRepository } from '../../testing/in-memory-categories.repository.js';
 import { InMemoryProductsRepository } from '../../testing/in-memory-products.repository.js';
+import { FakeMediaReferences } from '../../testing/fake-media-references.js';
 import { InMemoryVariantHasMovements } from '../../testing/in-memory-variant-has-movements.js';
 import {
   AddVariantCommand,
@@ -50,7 +51,7 @@ async function setup() {
     updateVariant: new UpdateVariantUseCase(products, movements),
     setVariantActive: new SetVariantActiveUseCase(products),
     search: new SearchProductsUseCase(products),
-    get: new GetProductUseCase(products),
+    get: new GetProductUseCase(products, new FakeMediaReferences()),
   };
 }
 type World = Awaited<ReturnType<typeof setup>>;

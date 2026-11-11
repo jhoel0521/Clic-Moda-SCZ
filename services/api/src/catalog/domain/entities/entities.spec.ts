@@ -8,6 +8,7 @@ import {
 import { CategoryId, VariantId } from '../value-objects/ids.vo.js';
 import { Money } from '../value-objects/money.vo.js';
 import { CategoryName, ProductName } from '../value-objects/names.vo.js';
+import { PhotoRef, ProductPhotos } from '../value-objects/product-photos.vo.js';
 import { Color, Size, Sku } from '../value-objects/variant-attributes.vo.js';
 import { Category } from './category.entity.js';
 import { Product } from './product.entity.js';
@@ -146,5 +147,28 @@ describe('Product: datos', () => {
     expect(product.description).toBe('Suela de goma');
     product.update({ description: null });
     expect(product.description).toBeNull();
+  });
+});
+
+describe('Product: fotos y slug', () => {
+  const photo = (n: number) =>
+    PhotoRef.of(`0a1b2c3d-0000-4000-8000-${String(n).padStart(12, '0')}`);
+
+  it('nace sin fotos y setPhotos reemplaza toda la lista y mueve la fecha', () => {
+    const product = register([variant('Z-1', '40')]);
+
+    product.setPhotos(ProductPhotos.of([photo(1), photo(2)]), new Date('2026-03-01'));
+    product.setPhotos(ProductPhotos.of([photo(2)]), new Date('2026-03-02'));
+
+    expect(product.photos.ids).toEqual([photo(2).value]);
+    expect(product.updatedAt).toEqual(new Date('2026-03-02'));
+  });
+
+  it('renombrar no cambia el slug', () => {
+    const product = register([variant('Z-1', '40')]);
+
+    product.update({ name: ProductName.of('Otro nombre') });
+
+    expect(product.slug.value).toBe('zapatilla-runner');
   });
 });

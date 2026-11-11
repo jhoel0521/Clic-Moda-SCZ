@@ -16,6 +16,7 @@ const copy = (product: Product): Product =>
     categoryId: product.categoryId,
     name: product.name,
     slug: product.slug,
+    photos: product.photos,
     description: product.description,
     active: product.active,
     variants: product.variants.map((variant) => Variant.restore(variantProps(variant))),

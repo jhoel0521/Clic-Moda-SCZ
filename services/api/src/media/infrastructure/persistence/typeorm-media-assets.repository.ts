@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import type { MediaAsset } from '../../domain/entities/media-asset.entity.js';
 import type { MediaVariant } from '../../domain/entities/media-variant.entity.js';
 import type { MediaAssetsRepository } from '../../domain/media-assets.repository.port.js';
@@ -21,6 +21,12 @@ export class TypeOrmMediaAssetsRepository implements MediaAssetsRepository {
   async findById(id: MediaId): Promise<MediaAsset | null> {
     const row = await this.assets.findOneBy({ id: id.value });
     return row ? MediaAssetMapper.toDomain(row) : null;
+  }
+
+  async findByIds(ids: MediaId[]): Promise<MediaAsset[]> {
+    if (ids.length === 0) return [];
+    const rows = await this.assets.findBy({ id: In(ids.map((id) => id.value)) });
+    return rows.map((row) => MediaAssetMapper.toDomain(row));
   }
 
   async list(): Promise<MediaAsset[]> {

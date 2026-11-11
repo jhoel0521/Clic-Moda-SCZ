@@ -7,6 +7,7 @@ import type { ProductsRepository } from '../domain/products.repository.port.js';
 import { ProductId, VariantId } from '../domain/value-objects/ids.vo.js';
 import { Money } from '../domain/value-objects/money.vo.js';
 import { CategoryName, ProductName, Slug } from '../domain/value-objects/names.vo.js';
+import { PhotoRef, ProductPhotos } from '../domain/value-objects/product-photos.vo.js';
 import { Color, Size, Sku } from '../domain/value-objects/variant-attributes.vo.js';
 
 export interface ProductsWorld {
@@ -270,6 +271,55 @@ function slugCases(make: Factory): void {
   });
 }
 
+const photoId = (n: number): string => `0a1b2c3d-0000-4000-8000-${String(n).padStart(12, '0')}`;
+const photos = (...ns: number[]): ProductPhotos =>
+  ProductPhotos.of(ns.map((n) => PhotoRef.of(photoId(n))));
+
+function photoCases(make: Factory): void {
+  it('guarda las fotos en orden y las devuelve igual (la primera es la principal)', async () => {
+    const world = await make();
+    const botas = await newCategory(world, 'Botas');
+    const saved = product(botas, 'Bota Fotos', [variant('BF-1', '38')]);
+    saved.setPhotos(photos(3, 1, 2));
+    await world.products.save(saved);
+
+    const found = await world.products.findById(saved.id);
+
+    expect(found?.photos.ids).toEqual([photoId(3), photoId(1), photoId(2)]);
+    expect(found?.photos.main?.value).toBe(photoId(3));
+  });
+}
+
+function photoReplaceCases(make: Factory): void {
+  it('guardar de nuevo reemplaza la lista completa y permite dejarla vacía', async () => {
+    const world = await make();
+    const botas = await newCategory(world, 'Botas');
+    const saved = product(botas, 'Bota Reemplazo', [variant('BR-1', '38')]);
+    saved.setPhotos(photos(1, 2, 3));
+    await world.products.save(saved);
+
+    saved.setPhotos(photos(2));
+    await world.products.save(saved);
+    expect((await world.products.findById(saved.id))?.photos.ids).toEqual([photoId(2)]);
+
+    saved.setPhotos(ProductPhotos.empty());
+    await world.products.save(saved);
+    expect((await world.products.findById(saved.id))?.photos.ids).toEqual([]);
+  });
+
+  it('el producto de una búsqueda también trae sus fotos', async () => {
+    const world = await make();
+    const botas = await newCategory(world, 'Botas');
+    const saved = product(botas, 'Bota Lista', [variant('BL-1', '38')]);
+    saved.setPhotos(photos(5, 4));
+    await world.products.save(saved);
+
+    const page = await world.products.search({ page: 1, pageSize: 10 });
+
+    expect(page.items[0]?.photos.ids).toEqual([photoId(5), photoId(4)]);
+  });
+}
+
 // Suite de contrato: toda implementación del puerto (fake en memoria y TypeORM) debe pasarla.
 export function productsRepositoryContract(label: string, make: Factory): void {
   describe(`ProductsRepository: ${label}`, () => {
@@ -284,5 +334,7 @@ export function productsRepositoryContract(label: string, make: Factory): void {
     stockCases2(make);
     countCases(make);
     slugCases(make);
+    photoCases(make);
+    photoReplaceCases(make);
   });
 }

@@ -7,6 +7,8 @@ import type { Revision } from './value-objects/image-values.vo.js';
 // Puerto de repositorio: pertenece al dominio; la implementación vive en infrastructure/persistence.
 export interface MediaAssetsRepository {
   findById(id: MediaId): Promise<MediaAsset | null>;
+  // Varias imágenes en UNA consulta (sin orden garantizado). Las que no existen simplemente no vienen.
+  findByIds(ids: MediaId[]): Promise<MediaAsset[]>;
   // De la más reciente a la más antigua.
   list(): Promise<MediaAsset[]>;
   // Crea o actualiza (por id).
