@@ -28,8 +28,8 @@ function watchConsole(page: Page): string[] {
   return problems;
 }
 
-// El SKU se genera con las primeras letras del nombre y la base de flujos se conserva entre corridas: un
-// prefijo aleatorio evita agotar los SKU de un nombre repetido.
+// El SKU se genera con las primeras letras del nombre: un
+// prefijo aleatorio evita chocar con los SKU de otros nombres de la misma corrida.
 const randomLetters = (): string =>
   Array.from({ length: 3 }, () => String.fromCharCode(97 + Math.floor(Math.random() * 26))).join('');
 

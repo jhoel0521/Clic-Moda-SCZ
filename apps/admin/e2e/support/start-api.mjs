@@ -2,6 +2,7 @@
 // del proyecto: nunca toca los datos de desarrollo. Lo ejecuta Playwright como webServer.
 //   Requiere: pnpm docker:up  (Postgres arriba)  y services/api/.env
 import { spawn, spawnSync } from 'node:child_process';
+import { rmSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -45,7 +46,11 @@ function ensureDatabase() {
   });
   if (exists.status !== 0)
     throw new Error('Docker no responde: ejecuta "pnpm docker:up" antes de las pruebas de flujos.');
-  if (!exists.stdout.trim()) run('docker', [...psql, '-c', `CREATE DATABASE ${DB}`]);
+  // La base de flujos se recrea LIMPIA en cada corrida: si se conservara, los SKU generados a partir de nombres
+  // repetidos ("Bota…") se agotarían con el tiempo y las pruebas fallarían sin que el código estuviera mal.
+  if (exists.stdout.trim()) run('docker', [...psql, '-c', `DROP DATABASE ${DB} WITH (FORCE)`]);
+  run('docker', [...psql, '-c', `CREATE DATABASE ${DB}`]);
+  rmSync(join(api, '.media-flows'), { recursive: true, force: true });
 }
 
 // La CLI solo siembra al Gerente (aún no hay alta de personal): Despacho y Atención se crean con la misma
