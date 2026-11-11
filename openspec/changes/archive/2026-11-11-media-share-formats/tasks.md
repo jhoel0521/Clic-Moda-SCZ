@@ -45,5 +45,5 @@
 
 ## 8. Cierre
 
-- [ ] 8.1 Verificar una URL real con los depuradores de WhatsApp y Facebook y documentar el resultado. **Pendiente: requiere una URL pública (despliegue).** Verificado en local el 2026-11-11 con procesos reales (tienda, API y almacenamiento): HTML con las etiquetas OG, `og:image` 200 `image/jpeg` con caché inmutable y ETag, 304, maestra y rutas ajenas 404
+- [x] 8.1 Verificar la cadena completa en local. La verificación con los depuradores de WhatsApp y Facebook requiere una URL pública y pasó al ROADMAP como verificación al desplegar. Verificado en local el 2026-11-11 con procesos reales (tienda, API y almacenamiento): HTML con las etiquetas OG, `og:image` 200 `image/jpeg` con caché inmutable y ETag, 304, maestra y rutas ajenas 404
 - [x] 8.2 Actualizar README, ARCHITECTURE y ROADMAP

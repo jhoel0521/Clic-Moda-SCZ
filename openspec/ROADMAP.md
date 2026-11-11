@@ -81,6 +81,7 @@ Se adelantó porque sin productos y stock reales no hay nada que vender ni que c
 - **API:** categorías; modelos con variantes de color y talla (SKU generado); **un solo precio por modelo**; búsqueda y filtros; stock por variante que entra por una **cola de comandos** (ingreso, salida y ajuste, con idempotencia y orden por variante); resumen del inventario. Probado con unitarias, contratos, e2e con Postgres real y un laboratorio de carga.
 - **Admin (móvil primero):** categorías, formulario de modelo, y una sola pantalla de **Inventario** con la matriz color × talla de cada modelo (movimientos, historial, interruptores de activo, precio y estante por modelo). Flujos con Playwright.
 - **Diferido:** fotos en el catálogo (el módulo `media` ya existe: change `media-share-formats`), etiquetas y medidas; catálogo y detalle en la **shop**; reservas de stock para el pago manual (rebanadas 4, 5 y 8); alta de personal desde el panel; modo oscuro; prueba de estrés hasta el punto de quiebre.
+- **Verificación al desplegar (viene de `media-share-formats`):** con una URL pública, comprobar una imagen y una página de la tienda con los depuradores de WhatsApp y Facebook; probar «Compartir» (Web Share) en un celular real.
 
 ## Rebanada 3 — Identidad de cuentas (`account-identity`)
 
