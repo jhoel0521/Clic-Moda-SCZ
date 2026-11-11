@@ -1,28 +1,28 @@
 ## 0. Medios: formato de logo
 
-- [ ] 0.1 (media, domain+infra) Formato `logo` (WebP con transparencia, 640x320 `contain` sin fondo), servido por la ruta publica existente; pruebas de dominio, de contrato y e2e con un PNG transparente
+- [x] 0.1 (media, domain+infra) Formato `logo` (WebP con transparencia, 640x320 `contain` sin fondo), servido por la ruta publica existente; pruebas de dominio, de contrato y e2e con un PNG transparente
 
 ## 1. Dominio (services/api, contexto settings)
 
-- [ ] 1.1 (domain) Objetos de valor `BrandName`, `Tagline`, `SeoTitle`, `SeoDescription`, `WhatsAppNumber` (solo digitos, 8-15), `SocialUrl`, `MapUrl` (https, 300), `Address` (160) y `PickupHours` (120) con pruebas de limites
-- [ ] 1.2 (domain) `BrandColor`, `derivePalette` y comprobacion de contraste AA con color cercano sugerido (mismo matiz, luminosidad decreciente)
-- [ ] 1.3 (domain) Entidad `StoreSettings` con semilla "Clic Moda SC" y puerto `StoreSettingsRepository`
+- [x] 1.1 (domain) Objetos de valor `BrandName`, `Tagline`, `SeoTitle`, `SeoDescription`, `WhatsAppNumber` (solo digitos, 10-15), `SocialUrl`, `MapUrl` (https, 300), `Address` (160) y `PickupHours` (120) con pruebas de limites
+- [x] 1.2 (domain) `BrandColor`, `derivePalette` y comprobacion de contraste AA con color cercano sugerido (mismo matiz, luminosidad decreciente)
+- [x] 1.3 (domain) Entidad `StoreSettings` con semilla "Clic Moda SC" y puerto `StoreSettingsRepository`
 
 ## 2. Aplicacion
 
-- [ ] 2.1 (application) Caso de uso `GetPublicSettings` y su DTO publico (sin campos de pago)
-- [ ] 2.2 (application) Caso de uso `UpdateSettings` con validacion completa, errores por campo y comprobacion de que `logoMediaId` y `shareMediaId` existen y estan listos
+- [x] 2.1 (application) Caso de uso `GetPublicSettings` y su DTO publico (sin campos de pago)
+- [x] 2.2 (application) Caso de uso `UpdateSettings` con validacion completa, errores por campo y comprobacion de que `logoMediaId` y `shareMediaId` existen y estan listos
 
 ## 3. Infraestructura (API)
 
-- [ ] 3.1 (infrastructure) Migracion `store_settings` (una fila) y `TypeOrmStoreSettingsRepository`
-- [ ] 3.2 (infrastructure) `StoreSettingsController`: `GET` con `@Public()`, `ETag` fuerte (hash del cuerpo) y `Cache-Control: public, max-age=15`; `PUT` con `@Roles('GERENTE')`, 401/403/422 y cuerpo de 16 KB como maximo
-- [ ] 3.3 (infrastructure) Semilla de configuracion en `db:seed` y modulo registrado
+- [x] 3.1 (infrastructure) Migracion `store_settings` (una fila) y `TypeOrmStoreSettingsRepository`
+- [x] 3.2 (infrastructure) `StoreSettingsController`: `GET` con `@Public()`, `ETag` fuerte (hash del cuerpo) y `Cache-Control: public, max-age=15`; `PUT` con `@Roles('GERENTE')`, 401/403/422 y tope de tamano por campo en el esquema HTTP
+- [x] 3.3 (infrastructure) Semilla de configuracion en `db:seed` y modulo registrado
 
 ## 4. Pruebas del API
 
-- [ ] 4.1 Contrato del repositorio (fake y Postgres)
-- [ ] 4.2 e2e: lectura anonima, 304 con `If-None-Match`, `PUT` permitido solo al Gerente, rechazos por campo y por contraste, asset inexistente y cambio visible en la siguiente lectura
+- [x] 4.1 Contrato del repositorio (fake y Postgres)
+- [x] 4.2 e2e: lectura anonima, 304 con `If-None-Match`, `PUT` permitido solo al Gerente, rechazos por campo y por contraste, asset inexistente y cambio visible en la siguiente lectura
 
 ## 5. Admin
 

@@ -188,3 +188,24 @@ describe('SharpImageProcessor.render: modo contain', () => {
     expect([(data[0] ?? 0) > 200, (data[1] ?? 255) < 60]).toEqual([true, true]);
   });
 });
+
+describe('SharpImageProcessor.render: logo', () => {
+  it('conserva la transparencia y no recorta', async () => {
+    const png = await sharp({
+      create: {
+        width: 400,
+        height: 400,
+        channels: 4,
+        background: { r: 199, g: 48, b: 90, alpha: 0.5 },
+      },
+    })
+      .png()
+      .toBuffer();
+    const format = MediaFormat.of('logo');
+    const plan = computeCrop(ImageDimensions.of(400, 400), format, Framing.default());
+
+    const out = await sharp(await processor.render(png, format, plan)).metadata();
+
+    expect([out.format, out.width, out.height, out.hasAlpha]).toEqual(['webp', 640, 320, true]);
+  });
+});

@@ -10,6 +10,7 @@ describe('MediaFormat', () => {
     ['story', 1080, 1920, 'image/jpeg', 'jpg'],
     ['thumb', 320, 320, 'image/webp', 'webp'],
     ['card', 800, 1000, 'image/webp', 'webp'],
+    ['logo', 640, 320, 'image/webp', 'webp'],
   ])('%s mide %ix%i en %s', (name, width, height, mime, extension) => {
     const format = MediaFormat.of(name);
 
@@ -28,7 +29,7 @@ describe('MediaFormat: peso y catálogo', () => {
     expect(MediaFormat.of('story').maxBytes).toBeUndefined();
   });
 
-  it('all() devuelve los seis formatos', () => {
+  it('all() devuelve los siete formatos', () => {
     expect(MediaFormat.all().map((f) => f.name)).toEqual(MEDIA_FORMAT_NAMES);
   });
 

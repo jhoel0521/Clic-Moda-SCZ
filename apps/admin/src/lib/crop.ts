@@ -1,7 +1,7 @@
 // Geometría del recorte: COPIA de services/api/src/media/domain/crop.ts (misma fórmula, mismos casos de
 // prueba) para que la vista previa del panel muestre exactamente lo que genera la API. Si uno cambia,
 // debe cambiar el otro: los casos fijos de crop.test.ts son idénticos en ambos proyectos.
-export type FormatName = 'link' | 'square' | 'portrait' | 'story' | 'thumb' | 'card';
+export type FormatName = 'link' | 'square' | 'portrait' | 'story' | 'thumb' | 'card' | 'logo';
 export type FitMode = 'cover' | 'contain';
 
 export interface Size {
@@ -27,6 +27,7 @@ export const FORMAT_SIZES: Record<FormatName, Size> = {
   story: { width: 1080, height: 1920 },
   thumb: { width: 320, height: 320 },
   card: { width: 800, height: 1000 },
+  logo: { width: 640, height: 320 },
 };
 
 const clamp = (n: number, min: number, max: number): number => Math.min(Math.max(n, min), max);
@@ -51,6 +52,7 @@ function containPlan(src: Size, out: Size, background: string): CropPlan {
 
 export function computeCrop(src: Size, format: FormatName, framing: Framing): CropPlan {
   const out = FORMAT_SIZES[format];
+  if (format === 'logo') return containPlan(src, out, 'transparent');
   return framing.fit === 'contain' ? containPlan(src, out, framing.background) : coverPlan(src, out, framing);
 }
 

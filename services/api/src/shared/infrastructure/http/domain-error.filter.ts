@@ -3,6 +3,7 @@ import type { Response } from 'express';
 import {
   ConflictError,
   DomainError,
+  FieldValidationError,
   ForbiddenError,
   NotFoundError,
   UnauthenticatedError,
@@ -13,6 +14,7 @@ type ErrorClass = abstract new (...args: never[]) => DomainError;
 
 const STATUS_BY_ERROR: [ErrorClass, HttpStatus][] = [
   [ValidationError, HttpStatus.BAD_REQUEST],
+  [FieldValidationError, HttpStatus.UNPROCESSABLE_ENTITY],
   [UnauthenticatedError, HttpStatus.UNAUTHORIZED],
   [ForbiddenError, HttpStatus.FORBIDDEN],
   [NotFoundError, HttpStatus.NOT_FOUND],
@@ -28,10 +30,16 @@ export class DomainErrorFilter implements ExceptionFilter<DomainError> {
   catch(error: DomainError, host: ArgumentsHost): void {
     const status = statusFor(error);
     const message = status === HttpStatus.INTERNAL_SERVER_ERROR ? 'Error interno' : error.message;
-    host.switchToHttp().getResponse<Response>().status(status).json({
-      statusCode: status,
-      error: error.code,
-      message,
-    });
+    const issues = error instanceof FieldValidationError ? { issues: error.issues } : {};
+    host
+      .switchToHttp()
+      .getResponse<Response>()
+      .status(status)
+      .json({
+        statusCode: status,
+        error: error.code,
+        message,
+        ...issues,
+      });
   }
 }

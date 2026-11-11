@@ -23,11 +23,11 @@ const upload = (world: ReturnType<typeof setup>, file = photo()) =>
   world.upload.execute(new UploadMediaCommand(file, 'Bota Andes coñac de perfil'));
 
 describe('UploadMediaUseCase: éxito', () => {
-  it('crea la imagen con sus seis variantes en la revisión 1', async () => {
+  it('crea la imagen con sus siete variantes en la revisión 1', async () => {
     const result = await upload(setup());
 
     expect(result.variants.map((v) => v.format).sort()).toEqual(
-      ['card', 'link', 'portrait', 'square', 'story', 'thumb'].sort()
+      ['card', 'link', 'logo', 'portrait', 'square', 'story', 'thumb'].sort()
     );
     expect(result.revision).toBe(1);
   });
@@ -37,7 +37,7 @@ describe('UploadMediaUseCase: éxito', () => {
     const result = await upload(world);
 
     expect(world.storage.keys()).toContain(`m/${result.id}/master.jpg`);
-    expect(world.storage.keys()).toHaveLength(7);
+    expect(world.storage.keys()).toHaveLength(8);
   });
 });
 

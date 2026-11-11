@@ -27,3 +27,17 @@ export class ForbiddenError extends DomainError {
 export class UnauthenticatedError extends DomainError {
   readonly code = 'UNAUTHENTICATED';
 }
+
+export interface FieldIssue {
+  readonly field: string;
+  readonly message: string;
+}
+
+// Varios campos inválidos a la vez: el formulario puede marcar cada uno (HTTP 422).
+export class FieldValidationError extends DomainError {
+  readonly code = 'FIELD_VALIDATION';
+
+  constructor(readonly issues: readonly FieldIssue[]) {
+    super('Hay campos inválidos');
+  }
+}

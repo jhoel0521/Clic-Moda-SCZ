@@ -19,6 +19,9 @@ interface Box {
   height: number;
 }
 
+// Fondo de los formatos que conservan la transparencia (logo).
+export const TRANSPARENT = 'transparent';
+
 const clamp = (n: number, min: number, max: number): number => Math.min(Math.max(n, min), max);
 
 // Ventana (en píxeles de la foto) con la proporción del formato, centrada en el enfoque y sin salirse.
@@ -43,6 +46,7 @@ function containPlan(src: Box, out: Box, background: string): CropPlan {
 
 export function computeCrop(src: ImageDimensions, format: MediaFormat, framing: Framing): CropPlan {
   const out = { width: format.width, height: format.height };
+  if (format.wholeOnTransparent) return containPlan(src, out, TRANSPARENT);
   if (framing.fit === 'contain') return containPlan(src, out, framing.background);
   return coverPlan(src, out, framing.focal);
 }

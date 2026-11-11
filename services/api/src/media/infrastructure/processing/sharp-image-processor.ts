@@ -5,7 +5,7 @@ import type {
   ImageProcessorPort,
   NormalizedImage,
 } from '../../application/ports/image-processor.port.js';
-import type { CropPlan } from '../../domain/crop.js';
+import { TRANSPARENT, type CropPlan } from '../../domain/crop.js';
 import { ImageDimensions } from '../../domain/value-objects/image-values.vo.js';
 import type { MediaFormat } from '../../domain/value-objects/media-format.vo.js';
 
@@ -56,9 +56,15 @@ export class SharpImageProcessor implements ImageProcessorPort {
       return sharp(master).extract(region).resize(format.width, format.height);
     }
     const inner = await sharp(master).resize(plan.width, plan.height).toBuffer();
-    const background = plan.background;
+    const transparent = plan.background === TRANSPARENT;
+    const background = transparent ? { r: 0, g: 0, b: 0, alpha: 0 } : plan.background;
     return sharp({
-      create: { width: format.width, height: format.height, channels: 3, background },
+      create: {
+        width: format.width,
+        height: format.height,
+        channels: transparent ? 4 : 3,
+        background,
+      },
     }).composite([{ input: inner, left: plan.left, top: plan.top }]);
   }
 

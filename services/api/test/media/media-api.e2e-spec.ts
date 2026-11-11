@@ -56,10 +56,10 @@ describe('Imágenes: permisos', () => {
 });
 
 describe('Imágenes: subida', () => {
-  it('crea la imagen con sus seis variantes y rutas públicas', async () => {
+  it('crea la imagen con sus siete variantes y rutas públicas', async () => {
     const body = (await upload(tokens.gerente, await jpeg()).expect(201)).body;
 
-    expect(body.variants).toHaveLength(6);
+    expect(body.variants).toHaveLength(7);
     expect(body.variants.map((v: { url: string }) => v.url)).toContain(`/m/${body.id}/link-1.jpg`);
   });
 
@@ -106,6 +106,46 @@ describe('Imágenes: entrega pública', () => {
       .expect(304);
 
     expect(res.body).toEqual({});
+  });
+});
+
+const transparentPng = () =>
+  sharp({
+    create: {
+      width: 1000,
+      height: 800,
+      channels: 4,
+      background: { r: 199, g: 48, b: 90, alpha: 0 },
+    },
+  })
+    .png()
+    .toBuffer();
+
+async function uploadLogo(): Promise<string> {
+  const req = request(app.getHttpServer())
+    .post('/media')
+    .set('Authorization', `Bearer ${tokens.gerente}`)
+    .field('alt', 'Logo de la tienda');
+  const file = await transparentPng();
+  const res = await req.attach('file', file, { filename: 'logo.png', contentType: 'image/png' });
+  return res.body.id;
+}
+
+describe('Imágenes: logo con transparencia', () => {
+  it('un PNG transparente se sirve como logo WebP con alfa, sin recortar', async () => {
+    const id = await uploadLogo();
+
+    const res = await request(app.getHttpServer())
+      .get(`/public/media/${id}/logo-1.webp`)
+      .expect(200);
+    const meta = await sharp(res.body).metadata();
+
+    expect([res.headers['content-type'], meta.width, meta.height, meta.hasAlpha]).toEqual([
+      'image/webp',
+      640,
+      320,
+      true,
+    ]);
   });
 });
 

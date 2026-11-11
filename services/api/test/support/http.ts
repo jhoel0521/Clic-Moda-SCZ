@@ -40,7 +40,7 @@ export async function seedTokens(app: INestApplication<App>): Promise<StaffToken
   return tokens as StaffTokens;
 }
 
-type Method = 'get' | 'post' | 'patch' | 'delete';
+type Method = 'get' | 'post' | 'put' | 'patch' | 'delete';
 
 // Llamada HTTP con token opcional y cuerpo opcional.
 export function call(

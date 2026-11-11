@@ -19,7 +19,7 @@ La API (NestJS, hexagonal) y el admin (Astro + React) ya existen con auth por ro
 
 **D5. Lectura publica.** `GET /store-settings` (ruta abierta con el decorador `@Public()` del proyecto) con `ETag` fuerte (hash del cuerpo) y `Cache-Control: public, max-age=15`, sin `stale-while-revalidate`; la tienda hace cache en memoria 15 s y usa el ultimo valor valido si la API falla. Peor caso 15 + 15 = 30 s, dentro de los 60 s. Si nunca hubo un valor valido, usa la semilla.
 
-**D5b. Errores y concurrencia.** `PUT` responde 401 sin sesion, 403 sin rol Gerente y 422 con errores por campo (`{ field, message }[]`); el cuerpo se limita a 16 KB; los textos se guardan sin etiquetas HTML y la tienda los escapa al pintar. Last write wins: es una sola fila editada por una persona (Gerente), y se documenta como riesgo aceptado.
+**D5b. Errores y concurrencia.** `PUT` responde 401 sin sesion, 403 sin rol Gerente y 422 con errores por campo (`{ field, message }[]`); cada campo tiene un tope de tamano en el esquema HTTP (el cuerpo no pasa de unos KB); los textos se guardan sin etiquetas HTML y la tienda los escapa al pintar. Last write wins: es una sola fila editada por una persona (Gerente), y se documenta como riesgo aceptado.
 
 **D6. Render en servidor.** El layout de Astro lee la configuracion en cada peticion SSR (con el cache de D5), inyecta variables CSS en `<html style>` y las etiquetas SEO en `<head>`; las de imagen usan `media-share-formats`.
 

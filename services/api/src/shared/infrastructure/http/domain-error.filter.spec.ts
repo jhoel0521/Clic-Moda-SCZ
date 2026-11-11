@@ -2,6 +2,7 @@ import type { ArgumentsHost } from '@nestjs/common';
 import {
   ConflictError,
   DomainError,
+  FieldValidationError,
   ForbiddenError,
   NotFoundError,
   UnauthenticatedError,
@@ -51,6 +52,17 @@ describe('DomainErrorFilter', () => {
     });
   });
 
+  it('los campos inválidos responden 422 con la lista por campo', () => {
+    const issues = [{ field: 'brandName', message: 'El nombre es muy corto' }];
+
+    expect(respond(new FieldValidationError(issues))).toMatchObject({
+      status: 422,
+      body: { error: 'FIELD_VALIDATION', issues },
+    });
+  });
+});
+
+describe('DomainErrorFilter: casos especiales', () => {
   it('un error de dominio sin traducción es 500 y no filtra su mensaje', () => {
     const { status, body } = respond(new Unmapped('detalle interno'));
 

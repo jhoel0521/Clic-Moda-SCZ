@@ -62,8 +62,9 @@ const MIN_VISIBLE = 0.5;
 
 // Las imágenes salen por el panel (que reenvía a la API); las públicas no necesitan sesión.
 export const masterUrl = (id: string): string => `/api/media/${id}/master`;
+const WEBP_FORMATS: FormatName[] = ['thumb', 'card', 'logo'];
 export const variantUrl = (item: MediaItem, format: FormatName): string =>
-  `/api/public/media/${item.id}/${format}-${item.revision}.${format === 'thumb' || format === 'card' ? 'webp' : 'jpg'}`;
+  `/api/public/media/${item.id}/${format}-${item.revision}.${WEBP_FORMATS.includes(format) ? 'webp' : 'jpg'}`;
 
 export const framingOf = (item: MediaItem): Framing => ({
   focalX: item.focal.x,

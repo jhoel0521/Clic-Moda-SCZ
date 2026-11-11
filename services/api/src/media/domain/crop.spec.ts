@@ -54,6 +54,21 @@ describe('computeCrop: contain', () => {
   });
 });
 
+describe('computeCrop: logo', () => {
+  it('entra completo y centrado sobre fondo transparente, aunque el encuadre sea cover', () => {
+    const plan = computeCrop(photo(1000, 1000), MediaFormat.of('logo'), Framing.default());
+
+    expect(plan).toEqual({
+      fit: 'contain',
+      background: 'transparent',
+      left: 160,
+      top: 0,
+      width: 320,
+      height: 320,
+    });
+  });
+});
+
 describe('visibleFraction', () => {
   it('avisa cuando el recorte muestra menos de la mitad', () => {
     const src = photo(3000, 2000);
