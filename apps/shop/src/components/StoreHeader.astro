@@ -1,0 +1,41 @@
+---
+import { hasWhatsapp, whatsappLink } from '../lib/whatsapp';
+import type { StoreSettings } from '../lib/settings';
+
+interface Props {
+  settings: StoreSettings;
+}
+
+const { settings } = Astro.props;
+const { logo, brandName, contact } = settings;
+const whatsapp = hasWhatsapp(contact.whatsapp)
+  ? whatsappLink(contact.whatsapp, `Hola ${brandName}, quiero información`)
+  : null;
+---
+
+<header class="border-b border-brand-soft bg-white">
+  <div class="mx-auto flex w-full max-w-5xl items-center justify-between gap-3 px-4 py-3">
+    <a href="/" class="min-w-0" aria-label={`${brandName}, ir al inicio`}>
+      {logo ? (
+        <img
+          src={logo.path}
+          alt={brandName}
+          width="160"
+          height="80"
+          class="h-10 w-auto max-w-[55vw] object-contain"
+        />
+      ) : (
+        <span class="block truncate text-lg font-bold text-brand-dark">{brandName}</span>
+      )}
+    </a>
+    {whatsapp && (
+      <a
+        href={whatsapp}
+        rel="noreferrer"
+        class="inline-flex min-h-12 shrink-0 items-center rounded-xl bg-brand px-4 font-semibold text-on-brand"
+      >
+        WhatsApp
+      </a>
+    )}
+  </div>
+</header>

@@ -72,7 +72,10 @@ export function buildSeo(input: SeoInput): SeoResult {
     ...(image ? imageTags(image, input.origin) : []),
     { name: 'twitter:card', content: image ? 'summary_large_image' : 'summary' },
   ];
-  const title = input.title === input.siteName ? input.title : `${input.title} · ${input.siteName}`;
+  // No se repite el nombre de la tienda si el título ya lo trae (p. ej. el título SEO de la configuración).
+  const title = input.title.includes(input.siteName)
+    ? input.title
+    : `${input.title} · ${input.siteName}`;
   return { title, canonical, meta };
 }
 

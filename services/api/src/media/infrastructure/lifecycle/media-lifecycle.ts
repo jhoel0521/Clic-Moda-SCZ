@@ -10,6 +10,7 @@ import {
   MEDIA_STORAGE,
   type MediaStoragePort,
 } from '../../application/ports/media-storage.port.js';
+import { BackfillMissingVariantsUseCase } from '../../application/use-cases/backfill-missing-variants.use-case.js';
 import { PurgeObsoleteMediaUseCase } from '../../application/use-cases/purge-obsolete-media.use-case.js';
 import { MEDIA_LIMITS } from '../../domain/media-limits.js';
 import { S3MediaStorage } from '../storage/s3-media-storage.js';
@@ -24,12 +25,14 @@ export class MediaLifecycle implements OnModuleInit, OnModuleDestroy {
 
   constructor(
     @Inject(MEDIA_STORAGE) private readonly storage: MediaStoragePort,
-    private readonly purge: PurgeObsoleteMediaUseCase
+    private readonly purge: PurgeObsoleteMediaUseCase,
+    private readonly backfill: BackfillMissingVariantsUseCase
   ) {}
 
   async onModuleInit(): Promise<void> {
     if (this.storage instanceof S3MediaStorage) await this.storage.ensureBucket();
     if (process.env.NODE_ENV === 'test') return;
+    await this.completeVariants();
     await this.purgeOld();
     this.timer = setInterval(() => void this.purgeOld(), DAY_MS);
     this.timer.unref();
@@ -37,6 +40,16 @@ export class MediaLifecycle implements OnModuleInit, OnModuleDestroy {
 
   onModuleDestroy(): void {
     clearInterval(this.timer);
+  }
+
+  // Imágenes anteriores a un formato nuevo (p. ej. `logo`) lo reciben al arrancar; no falla el arranque.
+  private async completeVariants(): Promise<void> {
+    try {
+      const created = await this.backfill.execute();
+      if (created > 0) this.logger.log(`Variantes de imágenes completadas: ${String(created)}`);
+    } catch (error) {
+      this.logger.error('No se pudieron completar las variantes faltantes', error as Error);
+    }
   }
 
   private async purgeOld(): Promise<void> {

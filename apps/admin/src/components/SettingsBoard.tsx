@@ -190,20 +190,18 @@ interface BodyProps {
   canWrite: boolean;
 }
 
+// No es un <form>: el selector de imágenes trae su propio formulario de subida y HTML no admite
+// formularios anidados. Guardar es un botón.
 function FormBody({ state, media, canWrite }: BodyProps) {
   const part = { form: state.form, errors: state.errors, patch: state.patch };
-  const submit = (event: { preventDefault: () => void }) => {
-    event.preventDefault();
-    void state.save();
-  };
   return (
-    <form onSubmit={submit} className="flex min-w-0 flex-col gap-4">
+    <div className="flex min-w-0 flex-col gap-4">
       <Sections part={part} media={media} />
       <Feedback message={state.message} />
-      <Button type="submit" icon="check" disabled={!canWrite || state.busy}>
+      <Button icon="check" disabled={!canWrite || state.busy} onClick={() => void state.save()}>
         {state.busy ? 'Guardando…' : 'Guardar cambios'}
       </Button>
-    </form>
+    </div>
   );
 }
 

@@ -4,6 +4,7 @@ import { envSchema } from '../shared/infrastructure/config/env.schema.js';
 import { readMediaConfig } from '../shared/infrastructure/config/media-config.js';
 import { IMAGE_PROCESSOR } from './application/ports/image-processor.port.js';
 import { MEDIA_STORAGE, type MediaStoragePort } from './application/ports/media-storage.port.js';
+import { BackfillMissingVariantsUseCase } from './application/use-cases/backfill-missing-variants.use-case.js';
 import { ChangeFocalPointUseCase } from './application/use-cases/change-focal-point.use-case.js';
 import { DeleteMediaUseCase } from './application/use-cases/delete-media.use-case.js';
 import { GetMediaMasterUseCase } from './application/use-cases/get-media-master.use-case.js';
@@ -32,6 +33,7 @@ const USE_CASES = [
   GetMediaMasterUseCase,
   GetPublicVariantUseCase,
   PurgeObsoleteMediaUseCase,
+  BackfillMissingVariantsUseCase,
 ];
 
 // El almacenamiento (SeaweedFS o disco) se elige por configuración; el resto no lo sabe.

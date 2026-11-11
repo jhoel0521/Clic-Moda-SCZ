@@ -44,6 +44,17 @@ const logo: MediaItem = {
 const open = (canWrite = true) => render(<SettingsBoard initial={initial} canWrite={canWrite} />);
 const type = (label: string, value: string) => fireEvent.change(screen.getByLabelText(label), { target: { value } });
 
+describe('Configuración: HTML válido', () => {
+  it('no anida formularios (la subida de imágenes trae el suyo) y el guardado es un botón', async () => {
+    fakeApi({ 'GET media': [] });
+    const { container } = open();
+
+    expect(container.querySelector('form form')).toBeNull();
+    expect(screen.getByRole('button', { name: 'Guardar cambios' })).toHaveAttribute('type', 'button');
+    await waitFor(() => expect(screen.queryByText('Cargando imágenes…')).not.toBeInTheDocument());
+  });
+});
+
 describe('Configuración: formulario', () => {
   it('muestra los valores actuales y los contadores de caracteres', async () => {
     fakeApi({ 'GET media': [] });

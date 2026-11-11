@@ -34,11 +34,11 @@
 
 ## 6. Tienda
 
-- [ ] 6.1 (apps/shop) Cliente de `GET /store-settings` con cache de 15 s, respaldo al ultimo valor valido y a la semilla si nunca hubo uno
-- [ ] 6.2 (apps/shop) Layout SSR con variables CSS, `lang="es-BO"`, `theme-color`, cabecera (logo o texto) y pie con contacto y redes
-- [ ] 6.3 (apps/shop) Pagina de contacto (WhatsApp, direccion, horario, mapa) y enlaces `wa.me` con mensaje, todos desde la configuracion
-- [ ] 6.4 (apps/shop) Reutilizar `SeoHead`/`seo.ts` con la imagen de compartir de la configuracion; prueba de nombre de 24 caracteres a 360 px y de la ventana de 60 s
+- [x] 6.1 (apps/shop) Cliente de `GET /store-settings` con cache de 15 s, respaldo al ultimo valor valido y a la semilla si nunca hubo uno
+- [x] 6.2 (apps/shop) Layout SSR con variables CSS, `lang="es-BO"`, `theme-color`, cabecera (logo o texto) y pie con contacto y redes
+- [x] 6.3 (apps/shop) Pagina de contacto (WhatsApp, direccion, horario, mapa) y enlaces `wa.me` con mensaje, todos desde la configuracion
+- [x] 6.4 (apps/shop) Reutilizar `SeoHead`/`seo.ts` con la imagen de compartir de la configuracion; prueba de nombre de 24 caracteres a 360 px y de la ventana de 60 s
 
 ## 7. Cierre
 
-- [ ] 7.1 Actualizar README, ROADMAP (quitar "datos de cobro" y el endpoint de validacion de la Rebanada 1) y `.ux` si cambia algun token
+- [x] 7.1 Actualizar README, ROADMAP (quitar "datos de cobro" y el endpoint de validacion de la Rebanada 1) y `.ux` si cambia algun token

@@ -29,11 +29,12 @@ async function renderOne(
   return variant;
 }
 
-// Genera y guarda todos los formatos de la revisión vigente de la imagen.
+// Genera y guarda los formatos pedidos de la revisión vigente de la imagen (todos por omisión).
 export async function renderVariants(
   deps: { processor: ImageProcessorPort; storage: MediaStoragePort },
   asset: MediaAsset,
-  master: Buffer
+  master: Buffer,
+  formats: MediaFormat[] = MediaFormat.all()
 ): Promise<MediaVariant[]> {
-  return Promise.all(MediaFormat.all().map((format) => renderOne(deps, asset, master, format)));
+  return Promise.all(formats.map((format) => renderOne(deps, asset, master, format)));
 }

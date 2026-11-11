@@ -33,6 +33,20 @@ test.describe('el Gerente: configuración de la tienda', () => {
   });
 });
 
+test.describe('el Gerente: consola limpia', () => {
+  test.use({ storageState: AUTH.gerente });
+
+  test('abrir la pantalla no produce errores de hidratación ni de HTML inválido', async ({ page }) => {
+    const problems: string[] = [];
+    page.on('console', (message) => message.type() === 'error' && problems.push(message.text()));
+    page.on('pageerror', (error) => problems.push(error.message));
+
+    await open(page);
+
+    expect(problems).toEqual([]);
+  });
+});
+
 test.describe('el Gerente: vista previa y móvil', () => {
   test.use({ storageState: AUTH.gerente });
 

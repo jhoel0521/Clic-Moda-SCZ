@@ -1,1 +1,39 @@
 @import 'tailwindcss';
+
+/* La marca llega en ejecución desde la configuración (GET /store-settings): el layout pisa estas
+   variables en <html style>. Los valores de abajo son el respaldo de la marca provisional. */
+:root {
+  --brand: #c7305a;
+  --brand-dark: #9e2647;
+  --brand-light: #db6988;
+  --brand-soft: #fbeef2;
+  --on-brand: #ffffff;
+}
+
+/* `inline`: las utilidades (bg-brand, text-brand-dark…) leen la variable en cada página, no la fijan al compilar. */
+@theme inline {
+  --color-brand: var(--brand);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-light: var(--brand-light);
+  --color-brand-soft: var(--brand-soft);
+  --color-on-brand: var(--on-brand);
+  --color-ink: #24151c;
+  --color-muted: #6b5a64;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Foco visible en todo lo interactivo (WCAG 2.4.7), con el color de la marca. */
+  :focus-visible {
+    outline: 3px solid var(--brand-dark);
+    outline-offset: 2px;
+  }
+}
