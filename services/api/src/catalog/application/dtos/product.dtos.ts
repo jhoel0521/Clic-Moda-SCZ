@@ -90,6 +90,7 @@ export interface ProductResult {
   readonly id: string;
   readonly categoryId: string;
   readonly name: string;
+  readonly slug: string;
   readonly description: string | null;
   readonly active: boolean;
   readonly variants: readonly VariantResult[];
@@ -121,6 +122,7 @@ export const toProductResult = (product: Product): ProductResult => ({
   id: product.id.value,
   categoryId: product.categoryId.value,
   name: product.name.value,
+  slug: product.slug.value,
   description: product.description,
   active: product.active,
   variants: product.variants.map(toVariantResult),

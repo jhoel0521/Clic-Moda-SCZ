@@ -1,5 +1,6 @@
 import type { Product } from './entities/product.entity.js';
 import type { CategoryId, ProductId, VariantId } from './value-objects/ids.vo.js';
+import type { Slug } from './value-objects/names.vo.js';
 import type { Sku } from './value-objects/variant-attributes.vo.js';
 
 export interface ProductSearchFilter {
@@ -37,6 +38,8 @@ export interface ProductsRepository {
   findById(id: ProductId): Promise<Product | null>;
   findByVariantId(id: VariantId): Promise<Product | null>;
   skuExists(sku: Sku): Promise<boolean>;
+  findBySlug(slug: Slug): Promise<Product | null>;
+  slugExists(slug: Slug): Promise<boolean>;
   search(filter: ProductSearchFilter): Promise<ProductPage>;
   countByCategory(categoryId: CategoryId): Promise<number>;
   // Crea o actualiza el producto con todas sus variantes de forma atómica (todo o nada).

@@ -11,6 +11,7 @@ import type {
   ProductsRepository,
 } from '../../domain/products.repository.port.js';
 import { type CategoryId, ProductId, type VariantId } from '../../domain/value-objects/ids.vo.js';
+import type { Slug } from '../../domain/value-objects/names.vo.js';
 import type { Sku } from '../../domain/value-objects/variant-attributes.vo.js';
 import { ProductMapper } from './catalog.mapper.js';
 import { ProductOrmEntity } from './product.orm-entity.js';
@@ -56,6 +57,18 @@ export class TypeOrmProductsRepository implements ProductsRepository {
 
   skuExists(sku: Sku): Promise<boolean> {
     return this.variants.existsBy({ sku: sku.value });
+  }
+
+  async findBySlug(slug: Slug): Promise<Product | null> {
+    const row = await this.products.findOne({
+      where: { slug: slug.value },
+      relations: { variants: true },
+    });
+    return row ? ProductMapper.toDomain(row) : null;
+  }
+
+  slugExists(slug: Slug): Promise<boolean> {
+    return this.products.existsBy({ slug: slug.value });
   }
 
   async search(filter: ProductSearchFilter): Promise<ProductPage> {

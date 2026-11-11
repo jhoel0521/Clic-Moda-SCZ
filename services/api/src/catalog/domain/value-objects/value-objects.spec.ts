@@ -139,3 +139,24 @@ describe('Identificadores', () => {
     expect(ProductId.of(value).equals(VariantId.of(value) as unknown as ProductId)).toBe(false);
   });
 });
+
+describe('Slug: sufijo y respaldo', () => {
+  it('withSuffix agrega -N', () => {
+    expect(Slug.of('bota-andes').withSuffix(2).value).toBe('bota-andes-2');
+  });
+
+  it('withSuffix recorta la base ANTES del sufijo para no pasar de 80 caracteres', () => {
+    const long = Slug.fromText('palabra '.repeat(30));
+
+    const suffixed = long.withSuffix(12);
+
+    expect(suffixed.value.length).toBeLessThanOrEqual(80);
+    expect(suffixed.value.endsWith('-12')).toBe(true);
+    expect(suffixed.value).not.toContain('--');
+  });
+
+  it('un texto sin letras ni dígitos da "producto" en vez de fallar', () => {
+    expect(Slug.fromTextOrDefault('★★★').value).toBe('producto');
+    expect(Slug.fromTextOrDefault('Bota Coñac').value).toBe('bota-conac');
+  });
+});

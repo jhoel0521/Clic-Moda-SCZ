@@ -76,6 +76,7 @@ export interface ProductResponseDto {
   id: string;
   categoryId: string;
   name: string;
+  slug: string;
   description: string | null;
   active: boolean;
   variants: VariantResponseDto[];
@@ -99,6 +100,7 @@ export const toProductResponse = (product: ProductResult): ProductResponseDto =>
   id: product.id,
   categoryId: product.categoryId,
   name: product.name,
+  slug: product.slug,
   description: product.description,
   active: product.active,
   variants: product.variants.map(toVariantResponse),

@@ -1,9 +1,9 @@
 ## 1. Slug de producto (services/api, contexto catalog)
 
-- [ ] 1.1 (domain) `Product` con `slug` (usa `Slug`): se calcula al registrar, no cambia al renombrar; pruebas de dominio (acentos, repetido, nombre largo recortado antes del sufijo)
-- [ ] 1.2 (application) Unicidad: `RegisterProduct` pide el siguiente slug libre (`-2`, `-3`) mediante el puerto de repositorio; pruebas de caso de uso
-- [ ] 1.3 (infrastructure) Migracion: columna `slug` con indice unico y relleno en TypeScript (`Slug.fromText`, orden `created_at`); prueba con nombres repetidos y con acentos
-- [ ] 1.4 Contrato del repositorio: `findBySlug` y `slugExists` (fake y Postgres)
+- [x] 1.1 (domain) `Product` con `slug` (usa `Slug`): se calcula al registrar, no cambia al renombrar; pruebas de dominio (acentos, repetido, nombre largo recortado antes del sufijo)
+- [x] 1.2 (application) Unicidad: `RegisterProduct` pide el siguiente slug libre (`-2`, `-3`) mediante el puerto de repositorio; pruebas de caso de uso
+- [x] 1.3 (infrastructure) Migracion: columna `slug` con indice unico y relleno en TypeScript (`Slug.fromText`, orden `created_at`); prueba con nombres repetidos y con acentos
+- [x] 1.4 Contrato del repositorio: `findBySlug` y `slugExists` (fake y Postgres)
 
 ## 2. Fotos del producto (services/api)
 

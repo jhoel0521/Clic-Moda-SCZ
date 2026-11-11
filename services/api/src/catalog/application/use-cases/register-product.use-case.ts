@@ -10,8 +10,9 @@ import {
   PRODUCTS_REPOSITORY,
   type ProductsRepository,
 } from '../../domain/products.repository.port.js';
+import { allocateSlug } from '../../domain/slug-allocator.js';
 import { CategoryId } from '../../domain/value-objects/ids.vo.js';
-import { ProductName } from '../../domain/value-objects/names.vo.js';
+import { ProductName, Slug } from '../../domain/value-objects/names.vo.js';
 import {
   type ProductResult,
   type RegisterProductCommand,
@@ -32,8 +33,11 @@ export class RegisterProductUseCase implements UseCase<RegisterProductCommand, P
     if (!(await this.categories.findById(categoryId))) throw new CategoryNotFoundError();
     const name = ProductName.of(command.name);
     const variants = await buildVariants(this.products, name, command.variants);
+    const slug = await allocateSlug(Slug.fromTextOrDefault(name.value), (candidate) =>
+      this.products.slugExists(candidate)
+    );
     const product = Product.register(
-      { categoryId, name, description: command.description },
+      { categoryId, name, description: command.description, slug },
       variants
     );
     await this.products.save(product);

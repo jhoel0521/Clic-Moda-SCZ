@@ -6,7 +6,7 @@ import { DuplicateSkuError } from '../domain/errors/catalog.errors.js';
 import type { ProductsRepository } from '../domain/products.repository.port.js';
 import { ProductId, VariantId } from '../domain/value-objects/ids.vo.js';
 import { Money } from '../domain/value-objects/money.vo.js';
-import { CategoryName, ProductName } from '../domain/value-objects/names.vo.js';
+import { CategoryName, ProductName, Slug } from '../domain/value-objects/names.vo.js';
 import { Color, Size, Sku } from '../domain/value-objects/variant-attributes.vo.js';
 
 export interface ProductsWorld {
@@ -241,6 +241,35 @@ function soldOutCases(make: Factory): void {
   });
 }
 
+function slugCases(make: Factory): void {
+  it('guarda el slug y lo encuentra por slug; slugExists dice si está en uso', async () => {
+    const world = await make();
+    const botas = await newCategory(world, 'Botas');
+    const saved = product(botas, 'Bota Andes Coñac', [variant('BAC-1', '38')]);
+    await world.products.save(saved);
+
+    const found = await world.products.findBySlug(Slug.of('bota-andes-conac'));
+
+    expect(found?.id.equals(saved.id)).toBe(true);
+    expect(await world.products.slugExists(Slug.of('bota-andes-conac'))).toBe(true);
+    expect(await world.products.slugExists(Slug.of('otra-cosa'))).toBe(false);
+    expect(await world.products.findBySlug(Slug.of('otra-cosa'))).toBeNull();
+  });
+
+  it('renombrar el producto no cambia su slug al volver a guardarlo', async () => {
+    const world = await make();
+    const botas = await newCategory(world, 'Botas');
+    const saved = product(botas, 'Bota Andes', [variant('BA-1', '38')]);
+    await world.products.save(saved);
+
+    saved.update({ name: ProductName.of('Bota Andes Nueva') });
+    await world.products.save(saved);
+
+    const found = await world.products.findById(saved.id);
+    expect([found?.name.value, found?.slug.value]).toEqual(['Bota Andes Nueva', 'bota-andes']);
+  });
+}
+
 // Suite de contrato: toda implementación del puerto (fake en memoria y TypeORM) debe pasarla.
 export function productsRepositoryContract(label: string, make: Factory): void {
   describe(`ProductsRepository: ${label}`, () => {
@@ -254,5 +283,6 @@ export function productsRepositoryContract(label: string, make: Factory): void {
     variantStockCases(make);
     stockCases2(make);
     countCases(make);
+    slugCases(make);
   });
 }

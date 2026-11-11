@@ -12,6 +12,9 @@ export class ProductOrmEntity {
   @Column({ type: 'varchar', length: 120 })
   name!: string;
 
+  @Column({ type: 'varchar', length: 80 })
+  slug!: string;
+
   @Column({ type: 'varchar', length: 2000, nullable: true })
   description!: string | null;
 

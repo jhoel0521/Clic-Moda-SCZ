@@ -48,9 +48,26 @@ export class Slug extends ValueObject<{ value: string }> {
     return Slug.of(value, raw);
   }
 
+  // Como fromText, pero un texto sin letras ni digitos (p. ej. solo símbolos) da "producto" en vez de fallar.
+  static fromTextOrDefault(raw: string, fallback = 'producto'): Slug {
+    try {
+      return Slug.fromText(raw);
+    } catch (error) {
+      if (error instanceof InvalidSlugError) return Slug.of(fallback);
+      throw error;
+    }
+  }
+
   static of(value: string, original: string = value): Slug {
     if (!SLUG_FORMAT.test(value)) throw new InvalidSlugError(original);
     return new Slug({ value });
+  }
+
+  // "bota-andes" → "bota-andes-2". Recorta la base ANTES de agregar el sufijo para no pasar del máximo.
+  withSuffix(n: number): Slug {
+    const tail = `-${String(n)}`;
+    const base = this.props.value.slice(0, MAX_SLUG - tail.length).replace(/-+$/g, '');
+    return Slug.of(`${base}${tail}`);
   }
 
   get value(): string {

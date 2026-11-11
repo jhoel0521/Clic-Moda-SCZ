@@ -7,6 +7,7 @@ import type {
   ProductsRepository,
 } from '../domain/products.repository.port.js';
 import type { CategoryId, ProductId, VariantId } from '../domain/value-objects/ids.vo.js';
+import type { Slug } from '../domain/value-objects/names.vo.js';
 import type { Sku } from '../domain/value-objects/variant-attributes.vo.js';
 
 const copy = (product: Product): Product =>
@@ -14,6 +15,7 @@ const copy = (product: Product): Product =>
     id: product.id,
     categoryId: product.categoryId,
     name: product.name,
+    slug: product.slug,
     description: product.description,
     active: product.active,
     variants: product.variants.map((variant) => Variant.restore(variantProps(variant))),
@@ -63,6 +65,15 @@ export class InMemoryProductsRepository implements ProductsRepository {
   async findByVariantId(id: VariantId): Promise<Product | null> {
     const found = this.all().find((p) => p.variants.some((variant) => variant.id.equals(id)));
     return found ? copy(found) : null;
+  }
+
+  async findBySlug(slug: Slug): Promise<Product | null> {
+    const found = this.all().find((product) => product.slug.equals(slug));
+    return found ? copy(found) : null;
+  }
+
+  async slugExists(slug: Slug): Promise<boolean> {
+    return this.all().some((product) => product.slug.equals(slug));
   }
 
   async skuExists(sku: Sku): Promise<boolean> {
