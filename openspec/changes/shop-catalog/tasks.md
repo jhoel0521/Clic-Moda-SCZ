@@ -31,10 +31,10 @@
 
 ## 5. Tienda: datos y utilidades (apps/shop)
 
-- [ ] 5.1 (apps/shop) Cliente del catalogo con cache en memoria de 15 s por URL y respaldo al ultimo valor valido; pruebas con reloj falso
-- [ ] 5.2 (apps/shop) Middleware de `ref` (minusculas, validacion, cookie de sesion) y su lectura; pruebas de formato, mayusculas y valores invalidos
-- [ ] 5.3 (apps/shop) Armado del mensaje de WhatsApp (producto, talla, color, SKU, URL canonica y "Ref") y de la URL canonica sin `talla`, `color` ni `ref`; pruebas
-- [ ] 5.4 (apps/shop) Serializador seguro de JSON-LD (`<` como `<`); prueba con un nombre `</script>` hostil
+- [x] 5.1 (apps/shop) Cliente del catalogo con cache en memoria de 15 s por URL y respaldo al ultimo valor valido; pruebas con reloj falso
+- [x] 5.2 (apps/shop) Middleware de `ref` (minusculas, validacion, cookie de sesion) y su lectura; pruebas de formato, mayusculas y valores invalidos
+- [x] 5.3 (apps/shop) Armado del mensaje de WhatsApp (producto, talla, color, SKU, URL canonica y "Ref") y de la URL canonica sin `talla`, `color` ni `ref`; pruebas
+- [x] 5.4 (apps/shop) Serializador seguro de JSON-LD (`<` como `<`); prueba con un nombre `</script>` hostil
 
 ## 6. Tienda: paginas (apps/shop)
 
