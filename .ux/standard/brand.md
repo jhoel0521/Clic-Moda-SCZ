@@ -8,9 +8,9 @@
 - **Personality / voice**: {{e.g. direct, professional, no jokes in errors}}
 
 ## Color
-- **Action color**: {{token}} — {{when to use}}
-- **Brand color as text?**: {{yes / no — use on-brand or dark variant}}
-- **Status colors**: success / warning / error / info → {{tokens}}
+- **Action color**: `semantic.light.color.action` (#c7305a) — botones, enlaces y elementos interactivos; el texto blanco encima (`on-action`) da 5.25:1.
+- **Brand color as text?**: no. El rosa de marca (#e63f6e, 3.96:1) solo va en lo decorativo (logo, degradados); para texto o botones se usa `action`.
+- **Status colors**: success (#15803d) / warning (#92400e) / error (#b91c1c) → `success`, `warning`, `danger`; info → {{por confirmar}}
 
 ## Typography
 - **Families**: {{…}} · **Scale ratio**: {{1.25}} · **Base**: {{16px}}

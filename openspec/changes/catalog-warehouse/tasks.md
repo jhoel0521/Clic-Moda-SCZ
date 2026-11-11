@@ -67,7 +67,7 @@
 
 ## 11. Admin — base (apps/admin)
 
-- [ ] 11.1 Resolver los tres pares de contraste que fallan en `tokens.json` mediante **ux-discover** (que es quien modifica el estándar y su CHANGELOG, con `contrast.mjs --suggest`) y volcar los tokens resultantes al tema del admin; verificar con `tokens.mjs` que todos los pares pasan.
+- [x] 11.1 Los pares de contraste que fallaban se resolvieron con **ux-discover** (estándar 0.2.0): los 9 pares pasan con `tokens.mjs` y el tema del admin ya usaba esos valores (informe en `.ux/reports/2026-11-11-ux-discover-contraste.md`).
 - [x] 11.2 Inicio de sesión: página, ruta `/api/login` que llama a la API y guarda el token en cookie `httpOnly`, y cierre de sesión; pruebas de integración de credenciales válidas, inválidas y cookie sin acceso desde JavaScript.
 - [x] 11.3 Protección de pantallas: middleware que exige sesión y redirige con el destino, y pantalla de acceso denegado por rol; pruebas de integración de cada caso.
 - [x] 11.4 Cliente de la API del lado del servidor y rutas `/api/*` que reenvían con el `Authorization` (sin exponer el token), manejo uniforme de errores del servidor y diseño base (navegación según el rol); pruebas unitarias con Vitest.

@@ -22,7 +22,7 @@ apps:                   # synced from code
     path: apps/admin
     stack: astro + react + tailwind-v4
     platforms: [web]
-    theme: apps/admin/src/styles/global.css  # solo importa tailwindcss: aun no define valores
+    theme: apps/admin/src/styles/global.css  # define los tokens (paleta rosa de la demo) en @theme
     # users: personal (Gerente, Despacho, Atencion); confirmar en ux-discover
   # services/api: sin UI, no se agrega
 
