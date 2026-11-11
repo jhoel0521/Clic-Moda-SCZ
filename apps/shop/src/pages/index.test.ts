@@ -149,7 +149,8 @@ describe('redes sociales', () => {
 
     const html = await render(Index);
 
-    expect(html.match(/<svg[^>]*aria-hidden="true"/g)?.length).toBe(3);
+    // WhatsApp y Contacto también llevan ícono: 3 redes + WhatsApp (cabecera y pie) + Contacto.
+    expect(html.match(/<svg[^>]*aria-hidden="true"/g)?.length).toBe(6);
     for (const name of ['Instagram', 'TikTok', 'Facebook']) expect(html).toContain(name);
   });
 });

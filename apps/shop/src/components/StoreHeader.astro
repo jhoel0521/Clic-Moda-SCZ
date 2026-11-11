@@ -1,5 +1,6 @@
 ---
 import { hasWhatsapp, whatsappLink } from '../lib/whatsapp';
+import SocialIcon from './SocialIcon.astro';
 import type { StoreSettings } from '../lib/settings';
 
 interface Props {
@@ -34,6 +35,7 @@ const whatsapp = hasWhatsapp(contact.whatsapp)
         rel="noreferrer"
         class="inline-flex min-h-12 shrink-0 items-center rounded-xl bg-brand px-4 font-semibold text-on-brand"
       >
+        <SocialIcon network="whatsapp" class="mr-2 size-5" />
         WhatsApp
       </a>
     )}

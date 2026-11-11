@@ -128,6 +128,30 @@ describe('Configuración: contraste y vista previa', () => {
   });
 });
 
+describe('Configuración: la vista previa muestra todo el pie', () => {
+  it('con redes, WhatsApp y mapa muestra cada enlace con su ícono y el lugar del mapa', async () => {
+    fakeApi({ 'GET media': [] });
+    render(
+      <SettingsBoard
+        initial={{
+          ...initial,
+          social: { instagram: 'https://www.instagram.com/x', tiktok: 'https://www.tiktok.com/@x', facebook: null },
+          contact: { ...initial.contact, mapUrl: 'https://maps.app.goo.gl/abc' },
+        }}
+        canWrite
+      />
+    );
+
+    const links = screen.getByRole('list', { name: 'Enlaces del pie' });
+
+    for (const name of ['WhatsApp', 'Contacto', 'Instagram', 'TikTok']) expect(links).toHaveTextContent(name);
+    expect(links).not.toHaveTextContent('Facebook');
+    expect(links.querySelectorAll('svg')).toHaveLength(4);
+    expect(screen.getByText(/Mapa de Google Maps/)).toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByText('Cargando imágenes…')).not.toBeInTheDocument());
+  });
+});
+
 describe('Configuración: vista previa', () => {
   it('la vista previa cambia de 360 px a 1280 px', async () => {
     fakeApi({ 'GET media': [logo] });
