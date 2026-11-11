@@ -1,69 +1,47 @@
-# Spec Delta
-
-## Purpose
-
-Define cómo la configuración de la tienda llega a los visitantes: lectura pública cacheada, aplicación sin parpadeos, valores por defecto ante fallos e invalidación al guardar, además de quién puede modificarla.
-
 ## ADDED Requirements
 
-### Requirement: Public branding settings are readable without authentication
-The system SHALL expose the store name, logo and palette to any visitor without requiring sign-in. The response MUST contain no secrets and no private customer data.
+### Requirement: Public settings are readable without authentication
+El sistema SHALL exponer `GET /store-settings` a cualquier visitante sin iniciar sesion, con nombre, eslogan, logo, paleta, SEO, contacto y redes, y MUST NOT incluir secretos ni datos privados.
 
 #### Scenario: Anonymous read
-- **WHEN** an anonymous client requests the public store settings
-- **THEN** the system returns the name, logo and palette
+- **WHEN** un cliente anonimo pide la configuracion publica
+- **THEN** recibe 200 con los datos publicos
 
-### Requirement: Settings reads are cached
-The system SHALL serve repeated reads of the public settings from a cache so that normal page views do not query the data source each time. A cached value MUST NOT be older than 60 seconds after a change has been saved.
-
-#### Scenario: Repeated reads
-- **WHEN** many visitors load pages within the same minute without any change
-- **THEN** the data source is read at most once for that minute
+### Requirement: Reads are cacheable with validators
+El sistema SHALL responder con `Cache-Control` y `ETag`, y MUST contestar 304 sin cuerpo cuando el validador coincide.
 
 #### Scenario: Conditional request
-- **WHEN** a client repeats a request with the validator of the version it already has and nothing changed
-- **THEN** the system answers that the content is unchanged and sends no body
+- **WHEN** un cliente repite la peticion con el `ETag` recibido y nada cambio
+- **THEN** recibe 304
 
 ### Requirement: Saved changes reach visitors within 60 seconds
-The system SHALL make a saved change visible to every visitor no later than 60 seconds after saving, without a new deployment.
+El sistema SHALL hacer visible un cambio guardado a todos los visitantes en menos de 60 segundos, sin nuevo despliegue.
 
 #### Scenario: Name edited
-- **WHEN** an administrator saves a new store name
-- **THEN** visitors who load a page more than 60 seconds later see the new name
+- **WHEN** el Gerente guarda un nombre nuevo
+- **THEN** quien cargue una pagina pasados 60 segundos ve el nombre nuevo
 
-#### Scenario: Palette edited
-- **WHEN** an administrator saves a new primary color
-- **THEN** pages loaded more than 60 seconds later use the new palette
-
-### Requirement: Branding is applied on first paint
-The system MUST render the configured palette and name in the initial page response so that visitors do not see the default colors or name change after load.
+### Requirement: Branding is rendered on the server
+La tienda MUST renderizar en el HTML inicial el nombre, la paleta y las etiquetas de SEO, sin depender de JavaScript, para evitar parpadeos y para los rastreadores.
 
 #### Scenario: No flash of default colors
-- **WHEN** a visitor loads any page while a non-default palette is configured
-- **THEN** the first rendered frame already uses the configured palette
+- **WHEN** un visitante carga una pagina con una paleta no predeterminada
+- **THEN** el primer cuadro ya usa esa paleta y el HTML contiene las etiquetas de titulo y descripcion
 
 ### Requirement: Defaults are used when settings are unavailable
-The system SHALL fall back to the last known valid settings and, if none exist, to the built-in defaults ("Verashoe" and the default palette) when the settings source cannot be read. The shop MUST keep working and MUST NOT show an error to the visitor.
+El sistema SHALL usar los ultimos valores validos y, si no hay, la semilla ("Clic Moda SC" y la paleta predeterminada) cuando la API no responda, sin mostrar un error al visitante.
 
-#### Scenario: Source unavailable with a previous value
-- **WHEN** the settings source fails after a valid value was served earlier
-- **THEN** the shop keeps showing that last valid value
+#### Scenario: API down
+- **WHEN** la API falla despues de haber servido un valor valido
+- **THEN** la tienda sigue mostrando ese valor
 
-#### Scenario: Source unavailable on first read
-- **WHEN** the settings source fails and no earlier value exists
-- **THEN** the shop shows the built-in defaults and remains usable
-
-### Requirement: Only authorized administrators can change settings
-The system MUST accept changes to the store settings only from a signed-in user with the manager role. Each change SHALL be validated as a whole and either saved completely or rejected with errors per field.
+### Requirement: Only the manager changes settings
+El sistema MUST aceptar `PUT /store-settings` solo de un Gerente con sesion iniciada, validar el cambio completo y guardarlo entero o rechazarlo con errores por campo.
 
 #### Scenario: Unauthorized write
-- **WHEN** an anonymous visitor or a customer tries to change the settings
-- **THEN** the system refuses the request and changes nothing
+- **WHEN** un visitante o una persona de Despacho o Atencion intenta guardar
+- **THEN** el sistema lo rechaza y no cambia nada
 
 #### Scenario: Invalid field
-- **WHEN** a manager submits a change with an invalid field
-- **THEN** the system saves nothing and returns an error naming that field
-
-#### Scenario: Valid change
-- **WHEN** a manager submits a valid change
-- **THEN** the system saves it and the previous values are replaced entirely
+- **WHEN** el Gerente envia un campo invalido
+- **THEN** no se guarda nada y la respuesta nombra el campo

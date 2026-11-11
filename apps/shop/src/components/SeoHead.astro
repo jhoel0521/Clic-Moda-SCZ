@@ -1,0 +1,20 @@
+---
+import { buildSeo, siteOrigin, type SeoInput } from '../lib/seo';
+
+// Todo lo que va en <head> para buscadores y vistas previas de enlaces. Se pasa el origen público
+// (SITE_URL); sin él se usa el de la petición.
+type Props = Omit<SeoInput, 'origin'> & { origin?: string };
+
+const { origin, ...rest } = Astro.props;
+const seo = buildSeo({ ...rest, origin: origin ?? siteOrigin(Astro.url.origin) });
+---
+
+<title>{seo.title}</title>
+<link rel="canonical" href={seo.canonical} />
+{seo.meta.map((tag) =>
+  tag.property ? (
+    <meta property={tag.property} content={tag.content} />
+  ) : (
+    <meta name={tag.name} content={tag.content} />
+  )
+)}

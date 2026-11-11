@@ -82,3 +82,48 @@ it('Proxy — rechaza rutas de la API que el panel no expone', async () => {
   expect(res.status).toBe(404);
   expect(fetchMock).not.toHaveBeenCalled();
 });
+
+const stubBinary = (status: number, body: BodyInit | null, headers: Record<string, string> = {}) => {
+  const fetchMock = vi.fn(async () => new Response(body, { status, headers }));
+  vi.stubGlobal('fetch', fetchMock);
+  return fetchMock;
+};
+
+it('Imágenes — reenvía la subida multipart con su tipo y el token, sin reinterpretarla', async () => {
+  const fetchMock = stubBinary(201, JSON.stringify({ id: 'm1' }), { 'content-type': 'application/json' });
+  const type = 'multipart/form-data; boundary=xyz';
+
+  const res = await proxied('media', {}, { method: 'POST', body: 'cuerpo-binario', headers: { 'Content-Type': type } });
+
+  const [url, init] = fetchMock.mock.calls[0] as unknown as [
+    string,
+    { headers: Record<string, string>; body: ArrayBuffer },
+  ];
+  expect([url.endsWith('/media'), init.headers.Authorization, init.headers['content-type']]).toEqual([
+    true,
+    'Bearer jwt-de-sesion',
+    type,
+  ]);
+  expect(new TextDecoder().decode(init.body)).toBe('cuerpo-binario');
+  expect(res.status).toBe(201);
+});
+
+it('Imágenes — devuelve los bytes y las cabeceras de caché tal cual', async () => {
+  stubBinary(200, new Uint8Array([1, 2, 3]), {
+    'content-type': 'image/jpeg',
+    'cache-control': 'public, immutable',
+    etag: '"e"',
+  });
+
+  const res = await proxied('public/media/abc/link-1.jpg', {}, { method: 'GET' });
+
+  expect([res.headers.get('content-type'), res.headers.get('etag')]).toEqual(['image/jpeg', '"e"']);
+  expect(new Uint8Array(await res.arrayBuffer())).toEqual(new Uint8Array([1, 2, 3]));
+});
+
+it('Imágenes — un borrado responde 204 sin cuerpo y no se exponen otras rutas con prefijo parecido', async () => {
+  stubBinary(204, null);
+
+  expect((await proxied('media/abc', {}, { method: 'DELETE' })).status).toBe(204);
+  expect((await proxied('mediaextra')).status).toBe(404);
+});

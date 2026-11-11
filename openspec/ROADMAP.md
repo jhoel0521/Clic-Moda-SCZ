@@ -80,7 +80,8 @@ Se adelantó porque sin productos y stock reales no hay nada que vender ni que c
 
 - **API:** categorías; modelos con variantes de color y talla (SKU generado); **un solo precio por modelo**; búsqueda y filtros; stock por variante que entra por una **cola de comandos** (ingreso, salida y ajuste, con idempotencia y orden por variante); resumen del inventario. Probado con unitarias, contratos, e2e con Postgres real y un laboratorio de carga.
 - **Admin (móvil primero):** categorías, formulario de modelo, y una sola pantalla de **Inventario** con la matriz color × talla de cada modelo (movimientos, historial, interruptores de activo, precio y estante por modelo). Flujos con Playwright.
-- **Diferido:** imágenes, etiquetas y medidas; catálogo y detalle en la **shop**; reservas de stock para el pago manual (rebanadas 4, 5 y 8); alta de personal desde el panel; modo oscuro; prueba de estrés hasta el punto de quiebre.
+- **Diferido:** fotos en el catálogo (el módulo `media` ya existe: change `media-share-formats`), etiquetas y medidas; catálogo y detalle en la **shop**; reservas de stock para el pago manual (rebanadas 4, 5 y 8); alta de personal desde el panel; modo oscuro; prueba de estrés hasta el punto de quiebre.
+- **Verificación al desplegar (viene de `media-share-formats`):** con una URL pública, comprobar una imagen y una página de la tienda con los depuradores de WhatsApp y Facebook; probar «Compartir» (Web Share) en un celular real.
 
 ## Rebanada 3 — Identidad de cuentas (`account-identity`)
 
@@ -142,6 +143,6 @@ Catálogo con filtros y stock por talla; carrito persistente con cupones; checko
 | 4 | ¿El cliente quiere Live y reservas con serie? Validarlo antes de invertir | Rebanada 8 |
 | 5 | Orden de las rebanadas 2–7 según prioridad del cliente | Todas |
 | 6 | Hosting concreto (proveedor, región) y presupuesto mensual | Producción |
-| 7 | Almacenamiento de imágenes (S3-compatible / CDN) | Rebanada 2 |
+| 7 | ~~Almacenamiento de imágenes~~ **Decidido:** SeaweedFS aislado (sin puertos públicos), entregado por la tienda en `/m/*` (change `media-share-formats`). Falta elegir el hosting de producción y si se pone Cloudflare delante | Producción |
 | 8 | Proveedor de correo saliente (verificación, recuperación, enlaces mágicos) y dominio remitente | Paso 0 (dev) / Rebanada 3 |
 | 9 | Registrar las apps de Google (OAuth) y de TikTok for Developers (Login Kit, requiere revisión): ¿a nombre de quién, con qué dominio? | Rebanada 3 |

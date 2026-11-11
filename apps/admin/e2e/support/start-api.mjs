@@ -16,7 +16,16 @@ const STAFF = [
   ['despacho@flows.local', 'Despacho', 'DESPACHO'],
   ['atencion@flows.local', 'Atención', 'ATENCION'],
 ];
-const env = { ...process.env, DB_NAME: DB, DB_HOST: 'localhost', PORT: '10018', INITIAL_MANAGER_PASSWORD: PASSWORD };
+// Las imágenes de los flujos van a disco (no a SeaweedFS): no mezclan archivos con los de desarrollo.
+const env = {
+  ...process.env,
+  DB_NAME: DB,
+  DB_HOST: 'localhost',
+  PORT: '10018',
+  INITIAL_MANAGER_PASSWORD: PASSWORD,
+  MEDIA_STORAGE: 'disk',
+  MEDIA_DISK_DIR: '.media-flows',
+};
 
 function run(command, args, options = {}) {
   const result = spawnSync(command, args, {

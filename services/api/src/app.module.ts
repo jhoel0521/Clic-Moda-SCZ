@@ -2,6 +2,7 @@ import { Module, StandardSchemaValidationPipe } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { CatalogModule } from './catalog/catalog.module.js';
+import { MediaModule } from './media/media.module.js';
 import { InventoryModule } from './inventory/inventory.module.js';
 import { HealthModule } from './health/infrastructure/http/health.module.js';
 import { IdentityModule } from './identity/identity.module.js';
@@ -16,6 +17,7 @@ import { DomainErrorFilter } from './shared/infrastructure/http/domain-error.fil
     IdentityModule,
     CatalogModule,
     InventoryModule,
+    MediaModule,
     HealthModule,
   ],
   providers: [

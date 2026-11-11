@@ -35,3 +35,18 @@ function safeJson(text: string): unknown {
     return { message: text };
   }
 }
+
+interface RawOptions {
+  method: string;
+  token?: string;
+  headers?: Record<string, string>;
+  body?: ArrayBuffer;
+}
+
+// Igual que callApi pero sin interpretar la respuesta: sirve para subir archivos (multipart) y para
+// devolver imágenes (binario) sin tocar los bytes.
+export async function fetchRaw(path: string, options: RawOptions): Promise<Response> {
+  const headers: Record<string, string> = { ...options.headers };
+  if (options.token) headers.Authorization = `Bearer ${options.token}`;
+  return fetch(`${apiBase()}${path}`, { method: options.method, headers, body: options.body });
+}

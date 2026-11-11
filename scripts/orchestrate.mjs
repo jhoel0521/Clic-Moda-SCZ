@@ -42,7 +42,8 @@ function printPorts(config) {
 
 function docker(action, flags) {
   if (!existsSync(API_ENV)) fail('Falta services/api/.env: cópialo de services/api/.env.example y completa DB_PASSWORD.');
-  const env = { DB_PORT: String(loadPorts().infra.postgres) };
+  const infra = loadPorts().infra;
+  const env = { DB_PORT: String(infra.postgres), S3_PORT: String(infra.seaweedfs) };
   const commands = {
     up: ['up', '-d', '--wait'],
     down: ['down'],
@@ -55,7 +56,9 @@ function docker(action, flags) {
     fail('docker:reset BORRA los datos de la base de desarrollo. Repite con --yes si es lo que quieres.');
   }
   const code = run('docker', [...COMPOSE, ...commands[action]], env);
-  if (code === 0 && action === 'up') console.log(`\n✔ Postgres en localhost:${env.DB_PORT}`);
+  if (code === 0 && action === 'up') {
+    console.log(`\n✔ Postgres en localhost:${env.DB_PORT} · SeaweedFS (S3) en 127.0.0.1:${env.S3_PORT}`);
+  }
   return code;
 }
 

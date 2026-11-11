@@ -1,0 +1,17 @@
+---
+import MediaBoard from '../components/MediaBoard';
+import AdminLayout from '../layouts/AdminLayout.astro';
+import { can } from '../lib/session';
+
+// Solo el Gerente administra imágenes. Dominio de la tienda para las vistas previas de enlaces.
+const allowed = can(Astro.locals.session, 'catalog:write');
+const shopHost = new URL(process.env.SHOP_URL ?? 'https://clicmoda.example').host;
+---
+
+<AdminLayout title="Imágenes" subtitle="Una foto, todos los formatos para compartir">
+  {allowed ? (
+    <MediaBoard client:load canWrite={allowed} host={shopHost} />
+  ) : (
+    <p class="text-muted">Solo el Gerente puede administrar las imágenes.</p>
+  )}
+</AdminLayout>

@@ -23,13 +23,20 @@ function resolve(handler: Handler, request: FakeRequest): unknown {
   return typeof handler === 'function' ? handler(request) : handler;
 }
 
+// Un formulario multipart (subida de archivos) se ve como objeto; el resto es JSON.
+function parseBody(body: BodyInit | null | undefined): unknown {
+  if (!body) return undefined;
+  if (body instanceof FormData) return Object.fromEntries(body.entries());
+  return JSON.parse(String(body));
+}
+
 function toRequest(input: string, init: RequestInit): FakeRequest {
   const url = new URL(input, 'http://panel.test');
   return {
     method: init.method ?? 'GET',
     path: url.pathname.replace(/^\/api\//, ''),
     query: url.searchParams,
-    body: init.body ? JSON.parse(String(init.body)) : undefined,
+    body: parseBody(init.body),
     headers: (init.headers ?? {}) as Record<string, string>,
   };
 }
