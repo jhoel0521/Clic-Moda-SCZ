@@ -25,10 +25,12 @@ async function productNamed(db: DataSource, name: string): Promise<string> {
     label,
     label,
   ]);
-  await db.query('INSERT INTO products (id, category_id, name) VALUES ($1, $2, $3)', [
+  // El slug es obligatorio y único: se deriva del id para no chocar entre productos del mismo nombre.
+  await db.query('INSERT INTO products (id, category_id, name, slug) VALUES ($1, $2, $3, $4)', [
     productId,
     categoryId,
     name,
+    `prod-${productId}`,
   ]);
   return productId;
 }

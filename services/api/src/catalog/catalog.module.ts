@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MediaModule } from '../media/media.module.js';
+import { PUBLIC_CATALOG_READER } from './domain/public-catalog.reader.port.js';
 import { CATALOG_MEDIA_REFERENCES } from './application/ports/media-references.port.js';
 import { VARIANT_HAS_MOVEMENTS } from './application/ports/variant-has-movements.port.js';
 import { AddVariantUseCase } from './application/use-cases/add-variant.use-case.js';
@@ -10,6 +11,10 @@ import { GetProductUseCase } from './application/use-cases/get-product.use-case.
 import { ListCategoriesUseCase } from './application/use-cases/list-categories.use-case.js';
 import { RegisterProductUseCase } from './application/use-cases/register-product.use-case.js';
 import { SearchProductsUseCase } from './application/use-cases/search-products.use-case.js';
+import { GetPublicProductUseCase } from './application/use-cases/get-public-product.use-case.js';
+import { ListPublicCatalogUseCase } from './application/use-cases/list-public-catalog.use-case.js';
+import { ListPublicFiltersUseCase } from './application/use-cases/list-public-filters.use-case.js';
+import { ListPublishedSlugsUseCase } from './application/use-cases/list-published-slugs.use-case.js';
 import { SetProductPhotosUseCase } from './application/use-cases/set-product-photos.use-case.js';
 import { SetProductPriceUseCase } from './application/use-cases/set-product-price.use-case.js';
 import { SetProductActiveUseCase } from './application/use-cases/set-product-active.use-case.js';
@@ -18,6 +23,7 @@ import { UpdateCategoryUseCase } from './application/use-cases/update-category.u
 import { UpdateProductUseCase } from './application/use-cases/update-product.use-case.js';
 import { UpdateVariantUseCase } from './application/use-cases/update-variant.use-case.js';
 import { CategoriesController } from './infrastructure/http/categories.controller.js';
+import { PublicCatalogController } from './infrastructure/http/public-catalog.controller.js';
 import { ProductsController } from './infrastructure/http/products.controller.js';
 import { VariantsController } from './infrastructure/http/variants.controller.js';
 import { CATEGORIES_REPOSITORY } from './domain/categories.repository.port.js';
@@ -27,6 +33,7 @@ import { ProductPhotoOrmEntity } from './infrastructure/persistence/product-phot
 import { CategoryOrmEntity } from './infrastructure/persistence/category.orm-entity.js';
 import { ProductOrmEntity } from './infrastructure/persistence/product.orm-entity.js';
 import { SqlVariantHasMovements } from './infrastructure/persistence/sql-variant-has-movements.js';
+import { SqlPublicCatalogReader } from './infrastructure/persistence/sql-public-catalog.reader.js';
 import { TypeOrmCategoriesRepository } from './infrastructure/persistence/typeorm-categories.repository.js';
 import { TypeOrmProductsRepository } from './infrastructure/persistence/typeorm-products.repository.js';
 import { VariantOrmEntity } from './infrastructure/persistence/variant.orm-entity.js';
@@ -46,6 +53,10 @@ const USE_CASES = [
   SearchProductsUseCase,
   GetProductUseCase,
   SetProductPhotosUseCase,
+  ListPublicCatalogUseCase,
+  GetPublicProductUseCase,
+  ListPublicFiltersUseCase,
+  ListPublishedSlugsUseCase,
 ];
 
 // Raíz de composición del contexto: enlaza cada puerto con su implementación.
@@ -59,12 +70,18 @@ const USE_CASES = [
     ]),
     MediaModule,
   ],
-  controllers: [CategoriesController, ProductsController, VariantsController],
+  controllers: [
+    CategoriesController,
+    ProductsController,
+    VariantsController,
+    PublicCatalogController,
+  ],
   providers: [
     { provide: CATEGORIES_REPOSITORY, useClass: TypeOrmCategoriesRepository },
     { provide: PRODUCTS_REPOSITORY, useClass: TypeOrmProductsRepository },
     { provide: VARIANT_HAS_MOVEMENTS, useClass: SqlVariantHasMovements },
     { provide: CATALOG_MEDIA_REFERENCES, useClass: CatalogMediaReferencesAdapter },
+    { provide: PUBLIC_CATALOG_READER, useClass: SqlPublicCatalogReader },
     ...USE_CASES,
   ],
   exports: [...USE_CASES, CATEGORIES_REPOSITORY, PRODUCTS_REPOSITORY],

@@ -15,12 +15,12 @@
 
 ## 3. Lectura publica (services/api)
 
-- [ ] 3.1 (application) Casos de uso `ListPublicCatalog` (filtros, orden, paginacion, solo disponible), `GetPublicProduct`, `ListPublicFilters` y `ListPublishedSlugs`; DTO publico por lista blanca
-- [ ] 3.2 (domain) Disponibilidad `in_stock` / `low` / `out` (umbral 3) y publicacion (producto, categoria y variante activos); pruebas
-- [ ] 3.3 (infrastructure) Consultas en SQL con fotos en lote (sin N+1), precio del modelo y orden por precio
-- [ ] 3.4 (infrastructure) `PublicCatalogController` en `/public/catalog` con `@Public()`, `ETag` fuerte, `Cache-Control: public, max-age=15` y 304
-- [ ] 3.5 e2e con Postgres real: inactivos (producto, categoria, variante), sin campos internos (comparacion de claves), estados de disponibilidad, filtros, tope de 48, 404, 304 y conteo de consultas del listado de 48 productos
-- [ ] 3.6 e2e del plazo: un movimiento procesado por la cola se ve como `out` en la lectura publica sin cache (la API no suma mas demora que su `max-age`)
+- [x] 3.1 (application) Casos de uso `ListPublicCatalog` (filtros, orden, paginacion, solo disponible), `GetPublicProduct`, `ListPublicFilters` y `ListPublishedSlugs`; DTO publico por lista blanca
+- [x] 3.2 (domain) Disponibilidad `in_stock` / `low` / `out` (umbral 3) y publicacion (producto, categoria y variante activos); pruebas
+- [x] 3.3 (infrastructure) Consultas en SQL con fotos en lote (sin N+1), precio del modelo y orden por precio
+- [x] 3.4 (infrastructure) `PublicCatalogController` en `/public/catalog` con `@Public()`, `ETag` fuerte, `Cache-Control: public, max-age=15` y 304
+- [x] 3.5 e2e con Postgres real: inactivos (producto, categoria, variante), sin campos internos (comparacion de claves), estados de disponibilidad, filtros, tope de 48, 404, 304 y conteo de consultas del listado de 48 productos
+- [x] 3.6 e2e del plazo: un movimiento procesado por la cola se ve como `out` en la lectura publica sin cache (la API no suma mas demora que su `max-age`)
 
 ## 4. Admin
 
