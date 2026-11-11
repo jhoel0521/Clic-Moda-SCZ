@@ -220,3 +220,19 @@ it('Historial — muestra los movimientos de la variante elegida', async () => {
   expect(await screen.findByText('+5')).toBeInTheDocument();
   expect(screen.getByText(/Compra a proveedor/)).toBeInTheDocument();
 });
+
+it('Estante — se ve junto a la categoría y se cambia para todo el modelo', async () => {
+  const calls = fakeApi(routes({ 'PATCH inventory/stock/v38/settings': {}, 'PATCH inventory/stock/v39/settings': {} }));
+  board();
+  await screen.findByText('Botas · Estante B6');
+  await openMatrix();
+
+  fireEvent.change(screen.getByLabelText('Estante del modelo'), { target: { value: 'Estante D4' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Guardar estante' }));
+
+  await waitFor(() => expect(calls.filter((c) => c.method === 'PATCH')).toHaveLength(2));
+  expect(calls.filter((c) => c.method === 'PATCH').map((c) => c.body)).toEqual([
+    { location: 'Estante D4', reorderLevel: 2 },
+    { location: 'Estante D4', reorderLevel: 2 },
+  ]);
+});

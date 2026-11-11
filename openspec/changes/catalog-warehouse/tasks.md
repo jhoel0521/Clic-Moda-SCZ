@@ -79,7 +79,7 @@
 - [x] 12.3 Formulario de producto con variantes dinámicas (agregar y quitar tallas y colores, SKU opcional), edición y activar o desactivar; pruebas de componentes, incluido el error de SKU duplicado junto al campo.
 - [x] 12.4 Celda de la matriz: ingresar, retirar y ajustar con motivo, estado "En cola" actualizado hasta el estado final, rechazo explicado, bloqueo del doble envío e historial de la variante; pruebas de componentes con una API simulada.
 - [x] 12.5 Interruptores de activo (modelo y variante) con cambio optimista que se revierte si falla, y precio único por modelo; pruebas de componentes.
-- [ ] 12.6 Estante: un solo texto opcional por modelo (se edita en el formulario del modelo y vale para todas sus variantes) y regla fija de stock bajo (2 pares o menos); quitar la pantalla de ajustes y el umbral configurable.
+- [x] 12.6 Estante: un solo texto opcional por modelo, que se ve junto a la categoría y se edita en la tarjeta del modelo (se aplica a todas sus variantes con la ruta de ajustes ya existente, sin cambios en la API); el umbral de stock bajo ya no se edita en el panel y cada variante conserva el que tiene; con pruebas.
 - [ ] 12.7 Instalar y configurar Playwright en `apps/admin` (versión fijada, proyectos de escritorio y móvil de 360 px, arranque de la API y Docker desde la prueba, datos de prueba por flujo); verificar con una prueba mínima que abre el inicio de sesión.
 - [ ] 12.8 Flujos e2e con Playwright contra la API real: el Gerente registra un producto, Despacho ingresa stock y ve "Aplicado", una salida mayor al stock se muestra rechazada, y Atención no ve los botones de modificar.
 

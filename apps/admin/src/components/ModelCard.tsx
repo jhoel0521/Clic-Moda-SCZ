@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { setProductPrice } from '../lib/active';
 import { uniformPrice } from '../lib/matrix';
+import { shelfOf } from '../lib/shelf';
 import { errorMessage, type Product, type Variant } from '../lib/types';
 import CellPanel, { type CellActions } from './CellPanel';
 import MatrixTable from './MatrixTable';
+import ShelfEditor from './ShelfEditor';
 import { Badge, Button, ErrorBanner, Field, Switch } from './ui';
 
 function StockBadge({ product }: { product: Product }) {
@@ -29,7 +31,7 @@ function Header({ product, categoryName, open, canDeactivate, onOpen, onToggle }
     <div className={`flex items-center gap-2 px-4 py-2 ${product.active ? '' : 'opacity-60'}`}>
       <button type="button" aria-expanded={open} onClick={onOpen} className="min-w-0 flex-1 py-2 text-left">
         <p className="truncate text-lg font-bold">{product.name}</p>
-        <p className="text-muted truncate text-sm">{categoryName}</p>
+        <p className="text-muted truncate text-sm">{[categoryName, shelfOf(product)].filter(Boolean).join(' · ')}</p>
         <div className="mt-1 flex items-center gap-2">
           <span className="text-xl font-bold">{product.available ?? 0}</span>
           <span className="text-muted text-sm">pares</span>
@@ -91,6 +93,7 @@ function Body({ product, onReload, ...actions }: BodyProps) {
       <MatrixTable product={product} selectedId={fresh?.id ?? null} onSelect={setSelected} />
       <p className="text-muted text-sm">Toca una celda para ingresar, retirar o ajustar esa talla y color.</p>
       {fresh && <CellPanel product={product} variant={fresh} {...actions} />}
+      {actions.canWrite && <ShelfEditor product={product} onSaved={onReload} />}
       {actions.canDeactivate && <PriceEditor product={product} onSaved={onReload} />}
       {actions.canDeactivate && (
         <a href={`/productos/${product.id}`} className="text-action font-semibold underline">
