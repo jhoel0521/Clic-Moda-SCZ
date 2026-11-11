@@ -5,9 +5,9 @@
 
 ## 2. Dominio (services/api, contexto media)
 
-- [ ] 2.1 (domain) Objetos de valor `MediaFormat`, `FocalPoint`, `AltText`, `ImageDimensions`, `Revision` con pruebas
-- [ ] 2.2 (domain) `computeCrop` puro (cover con enfoque y `contain`) con casos fijos de prueba
-- [ ] 2.3 (domain) Entidades `MediaAsset` y `MediaVariant` y puerto `MediaAssetRepository`
+- [x] 2.1 (domain) Objetos de valor `MediaFormat`, `FocalPoint`, `AltText`, `ImageDimensions`, `Revision` con pruebas
+- [x] 2.2 (domain) `computeCrop` puro (cover con enfoque y `contain`) con casos fijos de prueba
+- [x] 2.3 (domain) Entidades `MediaAsset` y `MediaVariant` y puerto `MediaAssetRepository`
 
 ## 3. Aplicacion
 
