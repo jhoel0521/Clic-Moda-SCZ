@@ -32,8 +32,8 @@
 
 ## 6. Tienda
 
-- [ ] 6.1 (apps/shop) Ruta `/m/[...path]` que reenvia a la API por red interna y conserva cabeceras de cache
-- [ ] 6.2 (apps/shop) Componente de etiquetas Open Graph y Twitter en el servidor con `og:image` completo y respaldo a la imagen de marca
+- [x] 6.1 (apps/shop) Ruta `/m/[...path]` que reenvia a la API por red interna y conserva cabeceras de cache
+- [x] 6.2 (apps/shop) Componente de etiquetas Open Graph y Twitter en el servidor con `og:image` completo y respaldo a la imagen de marca
 
 ## 7. Admin
 

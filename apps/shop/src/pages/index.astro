@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import SeoHead from '../components/SeoHead.astro';
 ---
 
 <html lang="es">
@@ -8,7 +9,12 @@ import '../styles/global.css';
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>Tienda</title>
+    <SeoHead
+      siteName="Clic Moda SC"
+      title="Tienda"
+      description="Calzado con envío a domicilio o recojo en el almacén. Compra por WhatsApp."
+      path="/"
+    />
   </head>
   <body class="bg-white text-neutral-900">
     <h1 class="p-6 text-3xl font-bold text-rose-700">Tienda</h1>
