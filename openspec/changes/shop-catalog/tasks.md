@@ -24,10 +24,10 @@
 
 ## 4. Admin
 
-- [ ] 4.1 (apps/admin) Componente nuevo `ProductPhotos`: seleccion multiple desde el modulo de imagenes, orden con botones de 48 px, quitar y etiqueta "Principal" en la primera; region `aria-live` que anuncia el orden, estado "Guardando...", aviso de que quitar no borra la imagen y error por imagen; fuera del `<form>` del producto y con su propio guardado `PUT`
-- [ ] 4.2 (apps/admin) Subida de una imagen nueva desde la seccion reutilizando `UploadForm`
-- [ ] 4.3 (apps/admin) Pruebas: sin `form form`, orden, maximo de 8, error de la API; flujo Playwright (escritorio y iPhone) con comprobacion de consola limpia
-- [ ] 4.4 (apps/admin) ux-check de la seccion de fotos
+- [x] 4.1 (apps/admin) Componente nuevo `ProductPhotos`: seleccion multiple desde el modulo de imagenes, orden con botones de 48 px, quitar y etiqueta "Principal" en la primera; region `aria-live` que anuncia el orden, estado "Guardando...", aviso de que quitar no borra la imagen y error por imagen; fuera del `<form>` del producto y con su propio guardado `PUT`
+- [x] 4.2 (apps/admin) Subida de una imagen nueva desde la seccion reutilizando `UploadForm`
+- [x] 4.3 (apps/admin) Pruebas: sin `form form`, orden, maximo de 8, error de la API; flujo Playwright (escritorio y iPhone) con comprobacion de consola limpia
+- [x] 4.4 (apps/admin) ux-check de la seccion de fotos
 
 ## 5. Tienda: datos y utilidades (apps/shop)
 
