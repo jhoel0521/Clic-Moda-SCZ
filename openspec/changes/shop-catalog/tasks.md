@@ -24,7 +24,7 @@
 
 ## 4. Admin
 
-- [ ] 4.1 (apps/admin) Componente nuevo `ProductPhotos`: seleccion multiple desde el modulo de imagenes, orden con botones de 48 px, quitar y marcar principal (la primera); fuera del `<form>` del producto y con su propio guardado `PUT`
+- [ ] 4.1 (apps/admin) Componente nuevo `ProductPhotos`: seleccion multiple desde el modulo de imagenes, orden con botones de 48 px, quitar y etiqueta "Principal" en la primera; region `aria-live` que anuncia el orden, estado "Guardando...", aviso de que quitar no borra la imagen y error por imagen; fuera del `<form>` del producto y con su propio guardado `PUT`
 - [ ] 4.2 (apps/admin) Subida de una imagen nueva desde la seccion reutilizando `UploadForm`
 - [ ] 4.3 (apps/admin) Pruebas: sin `form form`, orden, maximo de 8, error de la API; flujo Playwright (escritorio y iPhone) con comprobacion de consola limpia
 - [ ] 4.4 (apps/admin) ux-check de la seccion de fotos
@@ -38,14 +38,15 @@
 
 ## 6. Tienda: paginas (apps/shop)
 
-- [ ] 6.1 (apps/shop) Componentes: tarjeta de producto (foto 4:5 reservada, precio, aviso de disponibilidad), selector de talla y color como formulario GET, galeria con miniaturas y recuadro sin foto
-- [ ] 6.2 (apps/shop) `/catalogo` con filtros por URL (categoria, talla, solo disponibles, orden), paginacion, estado vacio y mensaje de reintento si la API falla
-- [ ] 6.3 (apps/shop) `/p/[slug]`: galeria, descripcion, precio en Bs, seleccion en la URL, boton de WhatsApp y barra inferior fija en telefono; 404 con enlace al catalogo
+- [ ] 6.1 (apps/shop) Componentes: tarjeta de producto (foto 4:5 reservada, precio "Bs 349,90", "Ultimas unidades"/"Agotada" con texto), selector de talla y color como `fieldset` con `legend` y opciones de 44 px (formulario GET), galeria con botones anterior/siguiente, miniaturas, `alt` y anuncio de posicion, y recuadro sin foto
+- [ ] 6.2 (apps/shop) `/catalogo` con filtros por URL (categoria, talla, solo disponibles, orden) en panel plegable "Filtrar (N)" con chips que se quitan, conteo de productos, paginacion con `rel=prev/next` que conserva filtros, estado vacio y mensaje de reintento si la API falla
+- [ ] 6.3 (apps/shop) `/p/[slug]`: galeria, descripcion, precio en Bs, seleccion en la URL, boton de WhatsApp ("Preguntar cuando vuelve" si todo esta agotado) y barra inferior fija en telefono con margen inferior y `scroll-padding-bottom`; ancla "Elige tu talla" que mueve el foco; 404 con enlace al catalogo
 - [ ] 6.4 (apps/shop) SEO por producto: titulo, descripcion de respaldo, canonical sin parametros, `og:image` `link`, JSON-LD `Product`
 - [ ] 6.5 (apps/shop) `/sitemap.xml` (con `ListPublishedSlugs`) y `/robots.txt`; portada con los productos mas nuevos y enlaces al catalogo en cabecera y pie
 - [ ] 6.6 (apps/shop) Pruebas de paginas con el contenedor de Astro (HTML del servidor, escape, canonical, JSON-LD) y revision en navegador real a 360 px con un nombre de 60 caracteres (sin desborde, objetivos de 44 px)
 
 ## 7. Cierre
 
+- [ ] 7.0 Completar un glosario minimo en `.ux/standard/users.md` (Modelo, Talla, Color, Agotada, Consultar) con ux-discover, solo la parte de usuarios, antes de escribir los textos de la tienda; linea de privacidad en el pie
 - [ ] 7.1 ux-check de la tienda (catalogo y detalle) y ux-plan-review del change antes de aplicar
 - [ ] 7.2 README, `ARCHITECTURE.md` de la API (patron de lectura publica y fotos), ROADMAP (carrito, favoritos y cuentas como decision registrada) y `.ux` si cambia algun token

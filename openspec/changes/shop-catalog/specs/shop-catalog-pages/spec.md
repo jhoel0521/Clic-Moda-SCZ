@@ -34,6 +34,45 @@ La tienda SHALL mostrar en `/p/<slug>` la galeria de fotos (la principal primero
 - **WHEN** el visitante no tiene JavaScript
 - **THEN** ve todas las fotos en columna y puede elegir talla con el formulario
 
+### Requirement: The size and color selector is accessible
+La tienda SHALL presentar la talla y el color como grupos con titulo ("Talla", "Color"), con opciones de al menos 44 px, nombrando cada color con texto, marcando la opcion elegida con borde y marca (no solo color) y mostrando "Agotada" con texto en las opciones sin stock. MUST mantener un foco visible y poder usarse solo con teclado.
+
+#### Scenario: Sold out option
+- **WHEN** una talla esta agotada
+- **THEN** dice "Agotada" con texto y no depende solo del color ni del tachado
+
+#### Scenario: Keyboard
+- **WHEN** el visitante usa solo el teclado
+- **THEN** puede recorrer las opciones, elegir una y ver el foco en todo momento
+
+### Requirement: Filters stay out of the way on a phone
+La tienda SHALL mostrar en un telefono los filtros dentro de un panel plegable con el resumen "Filtrar (N)", los filtros activos como chips que se quitan con un toque, la cantidad de productos y el orden, y MUST conservar los filtros en los enlaces de paginacion (`rel="prev"` y `rel="next"`).
+
+#### Scenario: Active filters
+- **WHEN** hay dos filtros activos
+- **THEN** el panel dice "Filtrar (2)" y cada filtro se ve como un chip que se quita con un toque
+
+### Requirement: The gallery has controls and text alternatives
+La tienda SHALL ofrecer en la galeria botones "Foto anterior" y "Foto siguiente" ademas de deslizar, miniaturas tocables, el texto alternativo de cada imagen (o "<producto>, foto N de M" si falta) y el anuncio de la posicion de la foto activa.
+
+#### Scenario: Without swiping
+- **WHEN** el visitante no puede deslizar
+- **THEN** cambia de foto con los botones o las miniaturas
+
+### Requirement: Availability and prices use clear words
+La tienda SHALL mostrar "Ultimas unidades" para `low` y "Agotada" para `out`, siempre con texto o icono ademas del color, y los precios como "Bs 349,90" con formato de Bolivia. MUST incluir en el pie una linea que diga que no se guardan datos personales.
+
+#### Scenario: Low stock wording
+- **WHEN** una talla tiene `low`
+- **THEN** se lee "Ultimas unidades" y no se muestra ninguna cantidad
+
+### Requirement: The fixed bar never hides focus
+La tienda SHALL dejar en el detalle un margen inferior igual a la altura de la barra fija y un `scroll-padding-bottom` equivalente para que el elemento enfocado nunca quede detras de ella, y el ancla "Elige tu talla" MUST llevar el foco al selector.
+
+#### Scenario: Tabbing to the end
+- **WHEN** el visitante tabula hasta el ultimo elemento del detalle
+- **THEN** el elemento enfocado queda visible por encima de la barra
+
 ### Requirement: Images are sized to avoid layout shifts
 La tienda SHALL declarar ancho y alto en cada imagen, cargar con carga diferida las que estan fuera de la primera pantalla y priorizar la foto principal del detalle, de modo que la pagina no se desplace al cargar.
 

@@ -39,3 +39,14 @@ El sistema SHALL omitir de un producto la foto cuya imagen se borro del modulo d
 #### Scenario: Main photo deleted
 - **WHEN** se borra la imagen principal de un producto que tiene otra foto
 - **THEN** el producto sigue disponible y la siguiente foto pasa a ser la principal
+
+### Requirement: The photo editor is clear and announces changes
+El panel de administracion SHALL marcar la foto principal con la etiqueta "Principal", anunciar cada cambio de orden (por ejemplo "Foto movida a la posicion 2"), mostrar "Guardando..." sin permitir doble envio, aclarar que quitar una foto del producto no borra la imagen del modulo de imagenes y mostrar el error de la imagen que falla.
+
+#### Scenario: Reordering
+- **WHEN** el Gerente mueve una foto con los botones
+- **THEN** el panel anuncia su nueva posicion y la etiqueta "Principal" sigue a la primera foto
+
+#### Scenario: Removing a photo
+- **WHEN** el Gerente quita una foto del producto
+- **THEN** la imagen sigue existiendo en el modulo de imagenes y se puede volver a elegir

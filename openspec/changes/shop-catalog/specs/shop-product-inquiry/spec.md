@@ -15,6 +15,10 @@ La tienda SHALL ofrecer en el detalle un boton que abre WhatsApp al numero de la
 - **WHEN** el visitante no ha elegido talla
 - **THEN** el boton esta deshabilitado y un texto explica que debe elegir una talla
 
+#### Scenario: Sold out product
+- **WHEN** todas las tallas del producto estan agotadas
+- **THEN** el boton dice "Preguntar cuando vuelve" y abre WhatsApp con el producto, sin talla
+
 #### Scenario: Shop without WhatsApp
 - **WHEN** la configuracion no tiene un numero de WhatsApp valido
 - **THEN** no se muestra el boton de consulta
