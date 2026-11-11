@@ -91,7 +91,10 @@ function Body({ product, onReload, ...actions }: BodyProps) {
   return (
     <div className="border-line flex flex-col gap-3 border-t p-4">
       <MatrixTable product={product} selectedId={fresh?.id ?? null} onSelect={setSelected} />
-      <p className="text-muted text-sm">Toca una celda para ingresar, retirar o ajustar esa talla y color.</p>
+      <p className="text-muted text-sm">
+        Toca una celda para ingresar, retirar o ajustar esa talla y color. Rojo: agotada · Ámbar: stock bajo · Gris
+        tachado: dada de baja.
+      </p>
       {fresh && <CellPanel product={product} variant={fresh} {...actions} />}
       {actions.canWrite && <ShelfEditor product={product} onSaved={onReload} />}
       {actions.canDeactivate && <PriceEditor product={product} onSaved={onReload} />}

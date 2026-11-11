@@ -101,7 +101,7 @@ it('Inventario: matriz — muestra una celda por color y talla con su disponible
   await openMatrix();
 
   expect(screen.getByRole('button', { name: 'Talla 39 Negro: 4 disponibles' })).toBeInTheDocument();
-  expect(screen.getByRole('button', { name: 'Talla 38 Negro: 0 disponibles' })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Talla 38 Negro: 0 disponibles, agotada' })).toBeInTheDocument();
 });
 
 it('Inventario: matriz — al tocar una celda aparecen ingresar, retirar y ajustar', async () => {

@@ -89,6 +89,6 @@
 
 ## 13. Cierre y verificación
 
-- [ ] 13.1 `ux-check` sobre todas las pantallas nuevas (contraste AA, objetivos táctiles de 44 px, foco, estados, 360 px sin desplazamiento horizontal) y corregir lo que reporte.
+- [x] 13.1 `ux-check` sobre las pantallas del admin: sin bloqueos; se corrigieron el botón de 40 px y el estado de la celda que dependía solo del color (informe en `.ux/reports/2026-11-11-ux-check-admin.md`).
 - [ ] 13.2 Ejecutar `pnpm check:full` con Docker levantado y comprobar que lint (incluidos los límites de capa y las funciones de 25 líneas), pruebas unitarias, e2e y build pasan en los tres proyectos.
 - [ ] 13.3 Recorrido manual del flujo con `pnpm dev`: registrar un producto, ingresar stock, ver "En cola" y luego "Aplicado", y comprobar en la base que la suma de movimientos coincide con el stock de cada variante.

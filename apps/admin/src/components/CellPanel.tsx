@@ -61,7 +61,7 @@ export default function CellPanel({ product, variant, ...actions }: Props) {
         )}
       </div>
       {actions.canWrite && variant.active && <Buttons variant={variant} onAction={actions.onAction} />}
-      <Button variant="ghost" className="min-h-10" aria-expanded={history} onClick={() => setHistory(!history)}>
+      <Button variant="ghost" className="min-h-12" aria-expanded={history} onClick={() => setHistory(!history)}>
         {history ? 'Ocultar historial' : 'Ver historial'}
       </Button>
       {history && <MovementsPanel variantId={toStockRow(product, variant).variantId} />}

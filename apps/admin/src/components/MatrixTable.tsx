@@ -8,6 +8,8 @@ const TONES: Record<Tone, string> = {
   off: 'border-line bg-bg-soft text-muted line-through',
 };
 
+const STATE_TEXT: Record<Tone, string> = { out: ', agotada', low: ', stock bajo', off: ', inactiva', ok: '' };
+
 interface CellProps {
   variant: Variant | undefined;
   selected: boolean;
@@ -22,7 +24,7 @@ function Cell({ variant, selected, onSelect }: CellProps) {
     <td className="p-1 text-center">
       <button
         type="button"
-        aria-label={`Talla ${variant.size} ${variant.color ?? ''}: ${variant.available ?? 0} disponibles`}
+        aria-label={`Talla ${variant.size} ${variant.color ?? ''}: ${variant.available ?? 0} disponibles${STATE_TEXT[toneOf(variant)]}`}
         aria-pressed={selected}
         onClick={() => onSelect(variant)}
         className={`min-h-12 w-full min-w-12 rounded-lg border text-base ${TONES[toneOf(variant)]} ${ring}`}
