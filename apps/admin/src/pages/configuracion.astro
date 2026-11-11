@@ -1,0 +1,24 @@
+---
+import SettingsBoard from '../components/SettingsBoard';
+import AdminLayout from '../layouts/AdminLayout.astro';
+import { callApi } from '../lib/api-server';
+import type { SettingsData } from '../lib/settings';
+import { can } from '../lib/session';
+
+// Solo el Gerente cambia la configuración. La lectura es pública, así que se pide sin token.
+const allowed = can(Astro.locals.session, 'catalog:write');
+const result = allowed ? await callApi('/store-settings') : null;
+const settings = result && result.status === 200 ? (result.body as SettingsData) : null;
+---
+
+<AdminLayout title="Configuración" subtitle="Marca, contacto y cómo se comparte la tienda">
+  {!allowed ? (
+    <p class="text-muted">Solo el Gerente puede cambiar la configuración de la tienda.</p>
+  ) : settings ? (
+    <SettingsBoard client:load initial={settings} canWrite={allowed} />
+  ) : (
+    <p role="alert" class="text-danger font-medium">
+      No se pudo cargar la configuración. Intenta de nuevo en un momento.
+    </p>
+  )}
+</AdminLayout>

@@ -18,8 +18,9 @@ const allLinks: { href: string; label: string; icon: IconName; managerOnly?: boo
   { href: '/categorias', label: 'Categorías', icon: 'tag' },
   { href: '/productos', label: 'Inventario', icon: 'warehouse' },
   { href: '/imagenes', label: 'Imágenes', icon: 'image', managerOnly: true },
+  { href: '/configuracion', label: 'Configuración', icon: 'settings', managerOnly: true },
 ];
-// Las imágenes las administra solo el Gerente: a los demás roles no se les muestra el enlace.
+// Imágenes y configuración las administra solo el Gerente: a los demás roles no se les muestra el enlace.
 const links = allLinks.filter((link) => !link.managerOnly || can(session, 'catalog:write'));
 const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 const readOnly = !can(session, 'catalog:write') && !can(session, 'stock:write');

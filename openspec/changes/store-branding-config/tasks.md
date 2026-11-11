@@ -26,11 +26,11 @@
 
 ## 5. Admin
 
-- [ ] 5.1 (apps/admin) Ruta `configuracion.astro` con entrada de navegacion solo para Gerente y pantalla: marca, SEO, contacto y redes
-- [ ] 5.2 (apps/admin) Selector de logo e imagen de compartir reutilizando la lista y la subida de `MediaBoard`/`media.ts`
-- [ ] 5.3 (apps/admin) Vista previa a 360 px y 1280 px y aviso de contraste (usa la misma funcion pura de la API)
-- [ ] 5.4 (apps/admin) Pruebas de componentes y de la funcion de paleta con casos fijos iguales a los de la API
-- [ ] 5.5 (apps/admin) Flujo Playwright (guardar, rechazo por contraste, permisos de Despacho y Atencion) y ux-check
+- [x] 5.1 (apps/admin) Ruta `configuracion.astro` con entrada de navegacion solo para Gerente y pantalla: marca, SEO, contacto y redes
+- [x] 5.2 (apps/admin) Selector de logo e imagen de compartir reutilizando la lista y la subida de `MediaBoard`/`media.ts`
+- [x] 5.3 (apps/admin) Vista previa a 360 px y 1280 px y aviso de contraste (usa la misma funcion pura de la API)
+- [x] 5.4 (apps/admin) Pruebas de componentes y de la funcion de paleta con casos fijos iguales a los de la API
+- [x] 5.5 (apps/admin) Flujo Playwright (guardar, rechazo por contraste, permisos de Despacho y Atencion) y ux-check
 
 ## 6. Tienda
 

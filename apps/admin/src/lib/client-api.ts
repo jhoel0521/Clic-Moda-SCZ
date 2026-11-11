@@ -1,15 +1,26 @@
 // Cliente del navegador: llama a las rutas /api/* del propio panel (que reenvían a la API con el token).
+export interface FieldIssue {
+  field: string;
+  message: string;
+}
+
 export class ApiError extends Error {
   constructor(
     readonly status: number,
-    message: string
+    message: string,
+    readonly issues: FieldIssue[] = []
   ) {
     super(message);
     this.name = 'ApiError';
   }
 }
 
-type Method = 'GET' | 'POST' | 'PATCH' | 'DELETE';
+type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+
+const issuesOf = (body: unknown): FieldIssue[] => {
+  const issues = (body as { issues?: unknown } | null)?.issues;
+  return Array.isArray(issues) ? (issues as FieldIssue[]) : [];
+};
 
 const messageOf = (body: unknown, fallback: string): string => {
   const message = (body as { message?: unknown } | null)?.message;
@@ -33,7 +44,9 @@ async function settle<T>(response: Response, path: string): Promise<T> {
   if (response.status === 401 && typeof window !== 'undefined' && path !== 'login') {
     window.location.assign(`/login?next=${encodeURIComponent(window.location.pathname)}`);
   }
-  if (!response.ok) throw new ApiError(response.status, messageOf(data, 'No se pudo completar la acción'));
+  if (!response.ok) {
+    throw new ApiError(response.status, messageOf(data, 'No se pudo completar la acción'), issuesOf(data));
+  }
   return data as T;
 }
 
