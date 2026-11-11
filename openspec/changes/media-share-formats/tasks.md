@@ -1,7 +1,7 @@
 ## 1. Infraestructura
 
-- [ ] 1.1 (shared) Agregar `seaweedfs` a `docker-compose.dev.yml` en red interna, bucket privado, puerto solo en 127.0.0.1:10002; actualizar `ports.json` y `.env.example` (credenciales generadas, nunca commiteadas)
-- [ ] 1.2 (shared) Variables de configuracion del almacenamiento (endpoint, bucket, claves, adaptador `s3|disk`) validadas al arrancar
+- [x] 1.1 (shared) Agregar `seaweedfs` a `docker-compose.dev.yml` en red interna, bucket privado, puerto solo en 127.0.0.1:10002; actualizar `ports.json` y `.env.example` (credenciales generadas, nunca commiteadas)
+- [x] 1.2 (shared) Variables de configuracion del almacenamiento (endpoint, bucket, claves, adaptador `s3|disk`) validadas al arrancar
 
 ## 2. Dominio (services/api, contexto media)
 

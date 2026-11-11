@@ -14,6 +14,10 @@ configs:
   init-test-db:
     content: |
       CREATE DATABASE clic_moda_test;
+  # Identidad S3 de SeaweedFS (las claves salen de services/api/.env). Solo la API las usa.
+  seaweedfs-s3:
+    content: |
+      {"identities":[{"name":"api","credentials":[{"accessKey":"${S3_ACCESS_KEY:?Define S3_ACCESS_KEY en services/api/.env}","secretKey":"${S3_SECRET_KEY:?Define S3_SECRET_KEY en services/api/.env}"}],"actions":["Admin","Read","Write","List","Tagging"]}]}
 
 services:
   postgres:
@@ -42,5 +46,26 @@ services:
       timeout: 3s
       retries: 20
 
+  # Almacenamiento de imágenes (S3). Aislado: solo la API lo consulta y el bucket es privado.
+  # En desarrollo se publica únicamente en 127.0.0.1; en producción NO se publica ningún puerto.
+  seaweedfs:
+    image: chrislusf/seaweedfs:latest
+    container_name: clic-moda-seaweedfs
+    restart: unless-stopped
+    command: server -dir=/data -master.volumeSizeLimitMB=256 -s3 -s3.config=/etc/seaweedfs/s3.json
+    ports:
+      - '127.0.0.1:${S3_PORT:-10002}:8333'
+    volumes:
+      - seaweeddata:/data
+    configs:
+      - source: seaweedfs-s3
+        target: /etc/seaweedfs/s3.json
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://$$(hostname -i):9333/cluster/status > /dev/null || exit 1']
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
 volumes:
   pgdata:
+  seaweeddata:

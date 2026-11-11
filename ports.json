@@ -5,7 +5,8 @@
     "apps": [10010, 10020]
   },
   "infra": {
-    "postgres": 10001
+    "postgres": 10001,
+    "seaweedfs": 10002
   },
   "apps": {
     "api": 10010,

@@ -31,6 +31,12 @@ export function loadPorts() {
 // Variables de entorno que recibe cada servicio, derivadas de ports.json.
 export function envFor(service, config = loadPorts()) {
   const api = `http://localhost:${config.apps.api}`;
-  const common = { DB_HOST: 'localhost', DB_PORT: String(config.infra.postgres), API_URL: api };
+  const s3 = `http://127.0.0.1:${config.infra.seaweedfs}`;
+  const common = {
+    DB_HOST: 'localhost',
+    DB_PORT: String(config.infra.postgres),
+    S3_ENDPOINT: s3,
+    API_URL: api,
+  };
   return service in config.apps ? { ...common, PORT: String(config.apps[service]) } : common;
 }
