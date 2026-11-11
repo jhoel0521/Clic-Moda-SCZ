@@ -90,5 +90,5 @@
 ## 13. Cierre y verificación
 
 - [x] 13.1 `ux-check` sobre las pantallas del admin: sin bloqueos; se corrigieron el botón de 40 px y el estado de la celda que dependía solo del color (informe en `.ux/reports/2026-11-11-ux-check-admin.md`).
-- [ ] 13.2 Ejecutar `pnpm check:full` con Docker levantado y comprobar que lint (incluidos los límites de capa y las funciones de 25 líneas), pruebas unitarias, e2e y build pasan en los tres proyectos.
-- [ ] 13.3 Recorrido manual del flujo con `pnpm dev`: registrar un producto, ingresar stock, ver "En cola" y luego "Aplicado", y comprobar en la base que la suma de movimientos coincide con el stock de cada variante.
+- [x] 13.2 `pnpm check:full` (ahora incluye los flujos del panel) con Docker levantado: contrato de proyectos, secretos, lint, 79 pruebas del admin, 356 unitarias y 155 e2e del API, build de los tres proyectos y 21 flujos de Playwright, todo en verde.
+- [x] 13.3 Recorrido comprobado: el registro de un modelo, el ingreso con "En cola" y luego "Listo" corren por la interfaz en los flujos de Playwright; en las bases de desarrollo y de flujos la suma de movimientos coincide con el stock de cada variante (0 descuadres) y no queda ningún comando pendiente.

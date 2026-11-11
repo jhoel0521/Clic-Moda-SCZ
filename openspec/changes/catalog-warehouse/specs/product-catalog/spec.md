@@ -91,6 +91,24 @@ El sistema SHALL permitir filtrar el listado de productos por stock («sin stock
 - **WHEN** un producto tiene una variante inactiva con unidades y una activa sin unidades
 - **THEN** el producto cuenta como «sin stock»
 
-#### Scenario: Deactivate all out-of-stock products
-- **WHEN** el Gerente usa «desactivar todos los agotados» y confirma
-- **THEN** todos los productos activos sin stock quedan inactivos, conservan sus variantes y se pueden reactivar
+#### Scenario: Deactivate an out-of-stock product
+- **WHEN** el Gerente desactiva un producto sin stock
+- **THEN** queda inactivo, conserva sus variantes y se puede reactivar
+
+### Requirement: A model has a single price
+El sistema SHALL permitir al Gerente fijar un solo precio para todas las variantes de un modelo en una operación atómica, con las mismas reglas de los precios exactos en bolivianos.
+
+#### Scenario: Set the model price
+- **WHEN** el Gerente fija 349,90 en un modelo con 6 variantes de distinto precio
+- **THEN** las 6 variantes quedan con 349,90
+
+#### Scenario: Invalid model price
+- **WHEN** el Gerente envía un precio de 0 o con tres decimales
+- **THEN** el sistema lo rechaza y ninguna variante cambia
+
+### Requirement: The product listing reports the stock of each variant
+El listado de productos SHALL informar, para cada variante, su disponible, su ubicación y su umbral de reposición, de modo que el panel pueda mostrar la matriz de un modelo sin consultas adicionales.
+
+#### Scenario: Variant stock in the listing
+- **WHEN** el personal lista los productos
+- **THEN** cada variante incluye su disponible, su ubicación (o ninguna) y su umbral

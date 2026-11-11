@@ -73,11 +73,18 @@ El sistema SHALL listar las variantes activas agotadas (disponible 0 o menos, in
 
 #### Scenario: Product with some variants sold out
 - **WHEN** un producto tiene 12 variantes, 7 en 0 y 5 con stock
-- **THEN** el listado de productos informa «7 de 12 variantes agotadas» con su disponible total, el filtro «alguna agotada» lo incluye, «todo agotado» no, y las 7 aparecen en la lista de agotadas del almacén
+- **THEN** el listado de productos informa «7 de 12 variantes agotadas» con su disponible total, el filtro «alguna agotada» lo incluye, «todo agotado» no, y la matriz del modelo marca esas 7 celdas como agotadas
 
 ### Requirement: Sold-out variants can be deactivated
-El Gerente SHALL poder desactivar una variante agotada o todas las agotadas de una vez, y el sistema MUST conservar su historial sin borrar nada.
+El Gerente SHALL poder desactivar una variante agotada, y el sistema MUST conservar su historial sin borrar nada. Desactivar todas las agotadas de una vez queda diferido.
 
 #### Scenario: Deactivate sold-out variants
-- **WHEN** el Gerente desactiva una variante agotada, o todas las agotadas, y confirma
-- **THEN** quedan inactivas, conservan su historial y dejan de aparecer como agotadas activas
+- **WHEN** el Gerente desactiva una variante agotada
+- **THEN** queda inactiva, conserva su historial y deja de contarse como agotada activa
+
+### Requirement: The inventory summary counts only what is active
+El sistema SHALL ofrecer un resumen con la cantidad de modelos con alguna variante activa, las unidades disponibles y las variantes agotadas y con stock bajo, contando solo variantes y modelos activos, y MUST dejarlo accesible a todo el personal.
+
+#### Scenario: Summary ignores inactive items
+- **WHEN** existen variantes inactivas con unidades y variantes activas con stock bajo
+- **THEN** el resumen no suma las unidades inactivas, no cuenta como modelo al que no tiene variantes activas y cuenta las variantes activas con stock bajo

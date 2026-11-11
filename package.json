@@ -46,7 +46,7 @@
     "load:down": "docker compose -f e2e/load/docker-compose.yml --profile run down -v --remove-orphans",
     "verify:projects": "node scripts/verify-projects.mjs",
     "check": "pnpm verify:projects && pnpm secrets:scan && pnpm lint:all && pnpm test:all && pnpm build:all",
-    "check:full": "pnpm check && pnpm test:e2e",
+    "check:full": "pnpm check && pnpm test:e2e && pnpm test:flows",
     "secrets:scan": "secretlint \"**/*\""
   },
   "devDependencies": {
