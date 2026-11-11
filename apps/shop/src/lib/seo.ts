@@ -75,3 +75,10 @@ export function buildSeo(input: SeoInput): SeoResult {
   const title = input.title === input.siteName ? input.title : `${input.title} · ${input.siteName}`;
   return { title, canonical, meta };
 }
+
+// Origen público de la tienda. Se lee en EJECUCIÓN (process.env): `import.meta.env` se fija al compilar y
+// en producción dejaría el origen interno (p. ej. http://localhost) en canonical, og:url y og:image.
+export const siteOrigin = (
+  fallback: string,
+  env: Record<string, string | undefined> = process.env
+): string => env.SITE_URL?.trim() || fallback;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { absoluteUrl, buildSeo, linkImage, type SeoInput } from './seo';
+import { absoluteUrl, buildSeo, linkImage, siteOrigin, type SeoInput } from './seo';
 
 const ID = '9f3a21b4-0c1d-4e5f-8a6b-7c8d9e0f1a2b';
 const base: SeoInput = {
@@ -67,5 +67,15 @@ describe('buildSeo: respaldo de imagen', () => {
 
   it('el título no repite el nombre cuando son iguales', () => {
     expect(buildSeo({ ...base, title: 'Clic Moda SC' }).title).toBe('Clic Moda SC');
+  });
+});
+
+describe('siteOrigin', () => {
+  it('usa SITE_URL de la ejecución y, si falta o está vacío, el origen de la petición', () => {
+    expect(siteOrigin('http://localhost:10012', { SITE_URL: 'https://tienda.test' })).toBe(
+      'https://tienda.test'
+    );
+    expect(siteOrigin('http://localhost:10012', {})).toBe('http://localhost:10012');
+    expect(siteOrigin('http://localhost:10012', { SITE_URL: '  ' })).toBe('http://localhost:10012');
   });
 });

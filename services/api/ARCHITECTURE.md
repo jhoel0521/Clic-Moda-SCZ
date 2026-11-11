@@ -170,3 +170,16 @@ Para otra escritura crítica con el mismo riesgo de carreras (por ejemplo, reser
 
 - **Flujos** (`apps/admin/e2e`, `pnpm test:flows`): Playwright contra la API real con su propia base `clic_moda_flows`.
 - **Carga** (`e2e/load`, `pnpm load`): k6 en Docker con cada servicio limitado a 0.5 CPU y 250 MB. Los umbrales (p95, p99, errores y que nunca se venda de más) hacen fallar la corrida; los números medidos están en el `design.md` de `catalog-warehouse`.
+
+## 14. Patrón: imágenes (contexto `media`)
+
+Una foto se sube una vez y la API genera, **al subirla**, los formatos que cada canal necesita (`link` 1200×630, `square`, `portrait`, `story`, y `thumb` y `card` en WebP para la tienda). No hay redimensionado bajo demanda.
+
+- **Dominio:** `MediaAsset`, `MediaVariant`; objetos de valor `MediaFormat`, `FocalPoint`, `Framing`, `AltText`, `ImageDimensions`, `Revision`; `computeCrop` (función pura que el admin copia en `apps/admin/src/lib/crop.ts` con los mismos casos de prueba). Puerto `MediaAssetsRepository`.
+- **Aplicación:** puertos `MediaStoragePort` (archivos) e `ImageProcessorPort` (sharp); casos de uso `UploadMedia`, `ChangeFocalPoint`, `DeleteMedia`, `ListMedia`, `GetMediaMaster`, `GetPublicVariant`, `PurgeObsoleteMedia`.
+- **Infraestructura:** `TypeOrmMediaAssetsRepository`, `SharpImageProcessor`, `S3MediaStorage` (SeaweedFS) y `DiskMediaStorage` (respaldo), elegidos con `MEDIA_STORAGE=s3|disk`; controladores `MediaAdminController` (`/media`, solo Gerente) y `MediaPublicController` (`/public/media/:id/:formato-:rev.:ext`).
+- **Privacidad:** se valida el tipo por los bytes, se corrige la orientación y se **quitan los metadatos (EXIF y GPS)**; la copia maestra nunca sale por la ruta pública.
+- **Revisiones inmutables:** cambiar el enfoque crea la revisión siguiente; la anterior se conserva 30 días y se depura sola. Las variantes se sirven con `Cache-Control: public, max-age=31536000, immutable` y `ETag`.
+- **Entrega:** navegador o rastreador → tienda `/m/*` (Astro) → API → SeaweedFS. SeaweedFS no publica puertos en producción (en desarrollo solo `127.0.0.1:10002`) y la API es su único cliente. Sin CORS y sin exponer el almacenamiento.
+- **Pruebas:** cada puerto tiene su contrato (fake, disco y SeaweedFS real para el almacenamiento; fake y Postgres para el repositorio); e2e con la API real; flujos del admin con Playwright. Las e2e de la API guardan en disco; el contrato de S3 y una e2e completa usan SeaweedFS si hay claves en `.env`.
+- **Variables:** `MEDIA_STORAGE`, `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`, `MEDIA_DISK_DIR` (API); `SITE_URL` (tienda, origen público para canonical y `og:image`; se lee al ejecutar) y `SHOP_URL` (admin, dominio de las vistas previas).

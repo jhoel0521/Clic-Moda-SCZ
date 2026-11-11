@@ -37,13 +37,13 @@
 
 ## 7. Admin
 
-- [ ] 7.1 (apps/admin) Funcion `computeCrop` copiada como modulo puro con las mismas pruebas que el API
-- [ ] 7.2 (apps/admin) Pantalla de imagenes: subir, texto alternativo, lista
-- [ ] 7.3 (apps/admin) Editor de encuadre: selector de formato, enfoque arrastrable y con teclado/botones, zonas seguras, avisos
-- [ ] 7.4 (apps/admin) Vista previa simulada de tarjetas de WhatsApp, Facebook y X y kit de descarga con Web Share
-- [ ] 7.5 (apps/admin) Pruebas de componentes y flujo Playwright (360 px y escritorio) y ux-check
+- [x] 7.1 (apps/admin) Funcion `computeCrop` copiada como modulo puro con las mismas pruebas que el API
+- [x] 7.2 (apps/admin) Pantalla de imagenes: subir, texto alternativo, lista
+- [x] 7.3 (apps/admin) Editor de encuadre: selector de formato, enfoque arrastrable y con teclado/botones, zonas seguras, avisos
+- [x] 7.4 (apps/admin) Vista previa simulada de tarjetas de WhatsApp, Facebook y X y kit de descarga con Web Share
+- [x] 7.5 (apps/admin) Pruebas de componentes y flujo Playwright (360 px y escritorio) y ux-check
 
 ## 8. Cierre
 
-- [ ] 8.1 Verificar una URL real con los depuradores de WhatsApp y Facebook y documentar el resultado
-- [ ] 8.2 Actualizar README, ARCHITECTURE y ROADMAP
+- [ ] 8.1 Verificar una URL real con los depuradores de WhatsApp y Facebook y documentar el resultado. **Pendiente: requiere una URL pública (despliegue).** Verificado en local el 2026-11-11 con procesos reales (tienda, API y almacenamiento): HTML con las etiquetas OG, `og:image` 200 `image/jpeg` con caché inmutable y ETag, 304, maestra y rutas ajenas 404
+- [x] 8.2 Actualizar README, ARCHITECTURE y ROADMAP

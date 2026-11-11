@@ -13,11 +13,14 @@ interface Props {
 const { title, subtitle } = Astro.props;
 const session = Astro.locals.session;
 const path = Astro.url.pathname;
-const links: { href: string; label: string; icon: IconName }[] = [
+const allLinks: { href: string; label: string; icon: IconName; managerOnly?: boolean }[] = [
   { href: '/', label: 'Inicio', icon: 'home' },
   { href: '/categorias', label: 'Categorías', icon: 'tag' },
   { href: '/productos', label: 'Inventario', icon: 'warehouse' },
+  { href: '/imagenes', label: 'Imágenes', icon: 'image', managerOnly: true },
 ];
+// Las imágenes las administra solo el Gerente: a los demás roles no se les muestra el enlace.
+const links = allLinks.filter((link) => !link.managerOnly || can(session, 'catalog:write'));
 const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 const readOnly = !can(session, 'catalog:write') && !can(session, 'stock:write');
 const role = session?.user.roles[0]?.toLowerCase() ?? '';
@@ -91,7 +94,7 @@ const role = session?.user.roles[0]?.toLowerCase() ?? '';
     </div>
 
     <nav aria-label="Principal" class="glass pb-safe fixed inset-x-0 bottom-0 z-30 border-t border-line md:hidden">
-      <ul class="mx-auto grid max-w-lg grid-cols-4">
+      <ul class="mx-auto grid max-w-lg" style={`grid-template-columns: repeat(${links.length}, minmax(0, 1fr))`}>
         {links.map((link) => (
           <li>
             <a

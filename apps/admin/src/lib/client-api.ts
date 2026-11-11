@@ -27,6 +27,21 @@ async function readBody(response: Response): Promise<unknown> {
   }
 }
 
+// Cierra una respuesta: sesión vencida lleva al inicio de sesión y un error se convierte en ApiError.
+async function settle<T>(response: Response, path: string): Promise<T> {
+  const data = await readBody(response);
+  if (response.status === 401 && typeof window !== 'undefined' && path !== 'login') {
+    window.location.assign(`/login?next=${encodeURIComponent(window.location.pathname)}`);
+  }
+  if (!response.ok) throw new ApiError(response.status, messageOf(data, 'No se pudo completar la acción'));
+  return data as T;
+}
+
+// Sube un formulario con archivos (multipart): el navegador pone el tipo y el límite del cuerpo.
+export async function apiUpload<T>(path: string, form: FormData): Promise<T> {
+  return settle<T>(await fetch(`/api/${path}`, { method: 'POST', body: form }), path);
+}
+
 export async function api<T>(
   method: Method,
   path: string,
@@ -38,10 +53,5 @@ export async function api<T>(
     headers: body === undefined ? extraHeaders : { 'Content-Type': 'application/json', ...extraHeaders },
     body: body === undefined ? undefined : JSON.stringify(body),
   });
-  const data = await readBody(response);
-  if (response.status === 401 && typeof window !== 'undefined' && path !== 'login') {
-    window.location.assign(`/login?next=${encodeURIComponent(window.location.pathname)}`);
-  }
-  if (!response.ok) throw new ApiError(response.status, messageOf(data, 'No se pudo completar la acción'));
-  return data as T;
+  return settle<T>(response, path);
 }

@@ -1,12 +1,12 @@
 ---
-import { buildSeo, type SeoInput } from '../lib/seo';
+import { buildSeo, siteOrigin, type SeoInput } from '../lib/seo';
 
 // Todo lo que va en <head> para buscadores y vistas previas de enlaces. Se pasa el origen público
 // (SITE_URL); sin él se usa el de la petición.
 type Props = Omit<SeoInput, 'origin'> & { origin?: string };
 
 const { origin, ...rest } = Astro.props;
-const seo = buildSeo({ ...rest, origin: origin ?? import.meta.env.SITE_URL ?? Astro.url.origin });
+const seo = buildSeo({ ...rest, origin: origin ?? siteOrigin(Astro.url.origin) });
 ---
 
 <title>{seo.title}</title>

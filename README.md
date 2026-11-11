@@ -36,7 +36,7 @@ Requiere Node 26, pnpm 12 y Docker para la base de datos. Copia `services/api/.e
 
 ```bash
 pnpm install:all       # instala cada proyecto por separado
-pnpm docker:up         # levanta la infraestructura (Postgres) y espera a que esté sana
+pnpm docker:up         # levanta la infraestructura (Postgres y SeaweedFS) y espera a que esté sana
 pnpm db:migrate        # aplica las migraciones
 pnpm db:seed           # crea el primer Gerente (si no hay contraseña configurada, genera una y la muestra una vez)
 pnpm dev               # levanta api, admin y shop en paralelo
@@ -62,11 +62,14 @@ pnpm dev               # levanta api, admin y shop en paralelo
 | Rango | Servicio | Puerto |
 |---|---|---|
 | Infraestructura `10001–10009` | PostgreSQL | `10001` |
+| | SeaweedFS (S3, imágenes; solo `127.0.0.1`) | `10002` |
 | Apps y servicios `10010–10020` | API (NestJS) | `10010` |
 | | Admin (Astro) | `10011` |
 | | Shop (Astro) | `10012` |
 
 Para añadir un servicio, agrégalo a `ports.json` en el rango que le toca: el orquestador valida que ningún puerto salga de su rango ni se repita.
+
+**Imágenes.** Las fotos se suben desde el panel (`/imagenes`, solo el Gerente): una foto genera los formatos para WhatsApp, Facebook, X, historias y la tienda. Se guardan en SeaweedFS, que corre solo dentro de la red de Docker (en desarrollo se publica únicamente en `127.0.0.1:10002`) y al que solo llega la API. El público las ve en `https://<tienda>/m/<id>/<formato>-<revisión>.jpg`: la tienda reenvía a la API y esta lee del almacenamiento (sin CORS). Las claves `S3_ACCESS_KEY` y `S3_SECRET_KEY` van en `services/api/.env` (nunca en git; hay un ejemplo en `.env.example`). En producción define `SITE_URL` en la tienda (origen público, para canonical y `og:image`) y `SHOP_URL` en el panel.
 
 **Roles:** `pnpm --dir services/api roles:assign` abre una pantalla interactiva para asignar roles (también acepta `--email --roles --yes`). Siempre debe quedar al menos un Gerente.
 
