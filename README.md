@@ -4,7 +4,7 @@ Plataforma de fast fashion pensada para venta ágil en Santa Cruz: una experienc
 
 ## Estado actual
 
-El prototipo universitario (Next.js con datos simulados) está conservado en el tag `demo-aprobada`. El producto real se **reconstruye desde cero** por rebanadas verticales, con un backend administrable (hoja de ruta: [`openspec/ROADMAP.md`](openspec/ROADMAP.md)). Hoy existe la base de plataforma: API con inicio de sesión del personal (Gerente, Despacho, Atención), base de datos, orquestador de desarrollo y controles de calidad.
+El prototipo universitario (Next.js con datos simulados) está conservado en el tag `demo-aprobada`. El producto real se **reconstruye desde cero** por rebanadas verticales, con un backend administrable (hoja de ruta: [`openspec/ROADMAP.md`](openspec/ROADMAP.md)). Hoy existe la base de plataforma (API con inicio de sesión del personal —Gerente, Despacho, Atención—, base de datos, orquestador y controles de calidad) y, encima, el **catálogo con inventario**: categorías, modelos con colores y tallas, un solo precio por modelo y stock que entra por una cola de movimientos. El **panel de administración** (móvil primero) tiene una pantalla de Inventario con la matriz color × talla de cada modelo.
 
 ## Stack
 
@@ -51,6 +51,8 @@ pnpm dev               # levanta api, admin y shop en paralelo
 | `pnpm docker:reset --yes` | Detiene y **borra los datos** de desarrollo (exige `--yes`) |
 | `pnpm db:migrate` / `db:revert` / `db:status` | Aplica / revierte la última / lista las migraciones |
 | `pnpm db:seed` | Crea el primer Gerente |
+| `pnpm db:seed:catalog` | Carga la demo de zapatos (categorías, modelos y stock; se puede repetir sin duplicar) |
+| `pnpm password:reset --email <correo> --password "<nueva>"` | Cambia la contraseña de una cuenta del personal (mínimo 12 caracteres) |
 | `pnpm db:fresh` / `db:fresh:seed` | Borra todo y migra (y siembra). Se niega fuera de desarrollo local |
 | `pnpm dev:api` / `dev:admin` / `dev:shop` | Levanta un solo servidor |
 | `pnpm ports` / `preflight` | Muestra el mapa de puertos / comprueba que Postgres responde y que los puertos están libres |
@@ -68,10 +70,21 @@ Para añadir un servicio, agrégalo a `ports.json` en el rango que le toca: el o
 
 **Roles:** `pnpm --dir services/api roles:assign` abre una pantalla interactiva para asignar roles (también acepta `--email --roles --yes`). Siempre debe quedar al menos un Gerente.
 
+## Pruebas de flujos y de carga
+
+| Comando | Qué hace |
+|---|---|
+| `pnpm test:e2e` | e2e del API contra Postgres real (base `clic_moda_test`) |
+| `pnpm test:flows` | Flujos del panel con Playwright (escritorio, iPhone y 360 px) contra la API real, con su propia base `clic_moda_flows`. Necesita `pnpm docker:up` y los navegadores (`pnpm --dir apps/admin exec playwright install chromium webkit`). Usa los puertos privados 10018 y 10019 |
+| `pnpm load [read\|write\|all]` | Laboratorio de carga con k6 **dentro de Docker** (base, API y k6, cada uno con 0.5 CPU y 250 MB; cambia `LOAD_CPUS` y `LOAD_MEM` para otros tamaños). Muestra p50, p90, p95 y p99 y el consumo de cada contenedor |
+| `pnpm load:down` | Borra los contenedores, la red y el volumen del laboratorio |
+
+Las pruebas que cruzan varias apps viven en [`e2e/`](e2e/) (hoy: `e2e/load`).
+
 ## Comprobaciones
 
 * `pnpm check`: contrato de proyectos, secretos, lint, pruebas unitarias y build de todo. Es lo que corre el hook de commit.
-* `pnpm check:full`: lo anterior más las pruebas e2e, que necesitan `pnpm docker:up`. Usan una base aparte (`clic_moda_test`) y se niegan a borrar cualquier otra.
+* `pnpm check:full`: lo anterior más las pruebas e2e del API y los flujos del panel, que necesitan `pnpm docker:up`. Usan bases aparte (`clic_moda_test` y `clic_moda_flows`) y se niegan a borrar cualquier otra.
 
 ## Docker en Windows con la unidad `J:`
 

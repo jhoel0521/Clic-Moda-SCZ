@@ -63,7 +63,7 @@
 ## 10. Datos de ejemplo y documentación (capas infrastructure y docs)
 
 - [x] 10.1 CLI `seed:catalog` idempotente con categorías y productos genéricos de calzado ingresados por la cola (`EnqueueStockCommand` + `drain`), script `pnpm db:seed:catalog` en la raíz; verificar ejecutándolo dos veces (la segunda no duplica) y listando el stock resultante.
-- [ ] 10.2 Actualizar `README`, `openspec/ROADMAP.md` (la rebanada 2 pasa antes que la 1, con su alcance real y lo diferido) y `services/api/ARCHITECTURE.md` con el patrón de cola de comandos; verificar que los comandos del README funcionan tal cual.
+- [x] 10.2 Documentación al día: README (estado, comandos de semilla, flujos y carga), ROADMAP (Paso 0 hecho, la rebanada 2 antes que la 1 con su alcance real y lo diferido) y ARCHITECTURE (patrón de cola de comandos y pruebas de flujos y de carga); comandos del README comprobados.
 
 ## 11. Admin — base (apps/admin)
 

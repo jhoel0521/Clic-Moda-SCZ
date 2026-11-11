@@ -152,3 +152,21 @@ cada pieza en su capa y cada tarea indica la suya.
 4. Adaptadores en `infrastructure` (repositorio, controlador, CLI) y **prueba de contrato** del puerto.
 5. Enlaza todo en el módulo del contexto.
 6. `pnpm lint && pnpm test && pnpm test:e2e` en `services/api`.
+
+## 12. Patrón: cola de comandos de escritura (inventario)
+
+Las escrituras de stock no cambian el stock en la petición: **entran a una cola** y un procesador las aplica en orden. Así nunca se vende de más aunque lleguen muchas a la vez.
+
+- **Entrada:** `POST /inventory/commands` valida, guarda un comando `PENDING` y responde **202** con `Location` y el cuerpo del comando. La cabecera `Idempotency-Key` (opcional; el panel siempre la envía) hace que un reintento con la misma clave y el mismo contenido devuelva el mismo comando; con la misma clave y otro contenido, conflicto. Sin clave no hay idempotencia.
+- **Estados:** `PENDING → APPLIED | REJECTED` (final e inmutable). Motivos de rechazo: `INSUFFICIENT_STOCK`, `BELOW_RESERVED`, `NO_CHANGE`, `PROCESSING_FAILED`.
+- **Procesamiento:** `StockCommandProcessor` (sondeo `STOCK_QUEUE_POLL_MS`, se apaga con `STOCK_QUEUE_WORKER=off`) llama a `StockCommandProcessingPort.processNext`: **una transacción por comando** (reclamo con bloqueo consultivo y `SKIP LOCKED`, decisión de `StockPolicy`, actualización condicional del nivel, movimiento inmutable y estado final). Solo el comando más antiguo de cada variante puede procesarse; uno en espera de reintento bloquea a los posteriores de su variante.
+- **Reintentos:** `attempts` se incrementa en su propia transacción antes de procesar; espera creciente, máximo 5 y luego `REJECTED` por `PROCESSING_FAILED`.
+- **Salida:** el cliente consulta `GET /inventory/commands/:id` hasta un estado final (el panel lo hace y muestra "En cola" → "Listo" o el motivo del rechazo).
+- **Capas:** `StockCommand`, `StockLevel`, `StockPolicy` y los objetos de valor en `domain`; casos de uso y puertos en `application`; adaptadores SQL, controladores y el procesador en `infrastructure`. Cada puerto tiene su prueba de contrato contra el fake y contra Postgres.
+
+Para otra escritura crítica con el mismo riesgo de carreras (por ejemplo, reservas), reutiliza este patrón en vez de inventar otro.
+
+## 13. Pruebas de flujos y de carga
+
+- **Flujos** (`apps/admin/e2e`, `pnpm test:flows`): Playwright contra la API real con su propia base `clic_moda_flows`.
+- **Carga** (`e2e/load`, `pnpm load`): k6 en Docker con cada servicio limitado a 0.5 CPU y 250 MB. Los umbrales (p95, p99, errores y que nunca se venda de más) hacen fallar la corrida; los números medidos están en el `design.md` de `catalog-warehouse`.

@@ -1,6 +1,6 @@
 # Roadmap — Clic Moda SCZ (del prototipo al primer cliente)
 
-> Documento vivo. Cada rebanada se convierte en un **change de OpenSpec** (`/opsx:propose <nombre>`): el roadmap dice *qué y en qué orden*, OpenSpec dice *cómo*. Última revisión: 2026-11-10.
+> Documento vivo. Cada rebanada se convierte en un **change de OpenSpec** (`/opsx:propose <nombre>`): el roadmap dice *qué y en qué orden*, OpenSpec dice *cómo*. Última revisión: 2026-11-11.
 
 ## Visión
 
@@ -8,7 +8,7 @@ Construir **desde cero** el producto real para un posible primer cliente al que 
 
 La demo es el **prototipo: inspiración, no base de código ni especificación**. Muestra qué le gustó al cliente, pero hay comportamiento que nunca se especificó y mucho por validar y mejorar. Nada se porta tal cual: cada funcionalidad se re-especifica, se mejora y se construye con **backend real y administrable desde el admin**.
 
-Tienda de moda cruceña, canal principal TikTok/Instagram, móvil-first. **Restricciones del cliente:** sin pasarela de pago por ahora (aún no factura); presupuesto acotado (~3000 en activos fijos). Nombre, logo y colores sin definir: "Verashoe" es provisional.
+Tienda de moda cruceña, canal principal TikTok/Instagram, móvil-first. **Restricciones del cliente:** sin pasarela de pago por ahora (aún no factura); presupuesto acotado (~3000 en activos fijos). Nombre, logo y colores sin definir (se configuran desde un módulo; semilla "Clic Moda SC"). Se vende en vivo y todo se cierra por WhatsApp (delivery o recojo en el almacén), con pago manual y 3 personas operando; se empieza solo con zapatos.
 
 ## Prototipos (referencia, solo lectura)
 
@@ -51,18 +51,18 @@ apps/shop      Astro 7.4.8 (SSR, adaptador Node), móvil-first         ← clien
 
 ## Paso 0 — Fundación (`platform-foundation`)
 
-Deja los tres proyectos vacíos pero vivos, con las herramientas ya exigidas. **Primer change a implementar.**
+Deja los tres proyectos vivos, con las herramientas ya exigidas. **Hecho y archivado (2026-11-10, `platform-foundation`, 35/35).**
 
-- [ ] 0.1 Preservar el prototipo: tag `demo-aprobada` sobre el commit actual y comprobar que `origin/demo/movil-first` y `origin/gh-pages` siguen intactas.
-- [ ] 0.2 **Borrar el contenido de `apps/shop`** (la app Next.js, `git rm`), conservando solo la carpeta; el prototipo queda consultable por el tag.
-- [ ] 0.3 **Chore inicial de `apps/shop` con Astro 7.4.8** (`create-astro --no-ai`, adaptador Node, TypeScript estricto, Tailwind v4, pnpm, regla de 25 líneas como `error`).
-- [ ] 0.4 Chore inicial de `apps/admin` con Astro 7.4.8 (mismas bases + islas React).
-- [ ] 0.5 Chore inicial de `services/api` con NestJS 12.4.2 (`nest new -p pnpm --skip-git`), endpoint de salud, OpenAPI, regla de 25 líneas como `error`.
-- [ ] 0.5b **Estándar hexagonal del API**: documento `ARCHITECTURE.md`, reglas de lint por capa, núcleo compartido (`DomainError`, `ValueObject`, `UseCase`, filtro HTTP) y reubicación del código existente.
-- [ ] 0.6 PostgreSQL en `docker compose` (desarrollo y pruebas), TypeORM con migraciones (sin `synchronize`), variables de entorno documentadas.
-- [ ] 0.7 Auth de personal con los paquetes oficiales de Nest (`@nestjs/authentication`, `@nestjs/throttler`): correo y contraseña, roles (Gerente, Despacho, Atención), límite de intentos por correo y Gerente de semilla; modelo de usuario preparado para más proveedores.
-- [ ] 0.8 Orquestador y hooks: scripts `dev:*`, `build:*`, `lint:*`, `test:*` de los 3 proyectos, `lint-staged` extendido, `.ux/` re-sincronizado (`ux-init`), Dockerfiles y README.
-- [ ] 0.9 Auditoría del prototipo: inventario de lo que hace la demo (con captura de pantallas y flujos) y decisión conservar / mejorar / descartar por funcionalidad; es la base de los specs de las rebanadas siguientes.
+- [x] 0.1 Preservar el prototipo: tag `demo-aprobada` sobre el commit actual y comprobar que `origin/demo/movil-first` y `origin/gh-pages` siguen intactas.
+- [x] 0.2 **Borrar el contenido de `apps/shop`** (la app Next.js, `git rm`), conservando solo la carpeta; el prototipo queda consultable por el tag.
+- [x] 0.3 **Chore inicial de `apps/shop` con Astro 7.4.8** (`create-astro --no-ai`, adaptador Node, TypeScript estricto, Tailwind v4, pnpm, regla de 25 líneas como `error`).
+- [x] 0.4 Chore inicial de `apps/admin` con Astro 7.4.8 (mismas bases + islas React).
+- [x] 0.5 Chore inicial de `services/api` con NestJS 12.4.2 (`nest new -p pnpm --skip-git`), endpoint de salud, OpenAPI, regla de 25 líneas como `error`.
+- [x] 0.5b **Estándar hexagonal del API**: documento `ARCHITECTURE.md`, reglas de lint por capa, núcleo compartido (`DomainError`, `ValueObject`, `UseCase`, filtro HTTP) y reubicación del código existente.
+- [x] 0.6 PostgreSQL en `docker compose` (desarrollo y pruebas), TypeORM con migraciones (sin `synchronize`), variables de entorno documentadas.
+- [x] 0.7 Auth de personal con los paquetes oficiales de Nest (`@nestjs/authentication`, `@nestjs/throttler`): correo y contraseña, roles (Gerente, Despacho, Atención), límite de intentos por correo y Gerente de semilla; modelo de usuario preparado para más proveedores.
+- [x] 0.8 Orquestador y hooks: scripts `dev:*`, `build:*`, `lint:*`, `test:*` de los 3 proyectos, `lint-staged` extendido, `.ux/` re-sincronizado (`ux-init`), Dockerfiles y README.
+- [x] 0.9 Auditoría del prototipo: inventario de lo que hace la demo (con captura de pantallas y flujos) y decisión conservar / mejorar / descartar por funcionalidad; es la base de los specs de las rebanadas siguientes.
 
 **Hecho cuando:** `pnpm dev:api`, `dev:admin` y `dev:shop` levantan; `pnpm build:all`, `lint:all` y `test:all` pasan; un Gerente puede iniciar sesión contra la API.
 
@@ -74,11 +74,13 @@ Nombre, logo, paleta, contacto y datos de cobro, editables por el Gerente. Specs
 - **Admin:** pantalla de configuración con vista previa y validación de contraste en vivo; pruebas.
 - **Shop:** esqueleto que consume la configuración y refleja nombre, logo, colores y contacto (≤ 60 s tras guardar); pruebas.
 
-## Rebanada 2 — Catálogo
+## Rebanada 2 — Catálogo y almacén (`catalog-warehouse`) — **va antes que la 1**
 
-Productos, categorías, etiquetas, tallas, stock por talla, medidas, imágenes. *Auditar:* qué filtros usa de verdad el cliente en móvil, cómo se cargan fotos desde el celular, qué pasa con el stock agotado.
+Se adelantó porque sin productos y stock reales no hay nada que vender ni que configurar. **Alcance real (en curso):**
 
-- **API:** CRUD y búsqueda/filtros, almacenamiento de imágenes. **Admin:** gestión de productos y stock. **Shop:** catálogo y detalle móvil-first.
+- **API:** categorías; modelos con variantes de color y talla (SKU generado); **un solo precio por modelo**; búsqueda y filtros; stock por variante que entra por una **cola de comandos** (ingreso, salida y ajuste, con idempotencia y orden por variante); resumen del inventario. Probado con unitarias, contratos, e2e con Postgres real y un laboratorio de carga.
+- **Admin (móvil primero):** categorías, formulario de modelo, y una sola pantalla de **Inventario** con la matriz color × talla de cada modelo (movimientos, historial, interruptores de activo, precio y estante por modelo). Flujos con Playwright.
+- **Diferido:** imágenes, etiquetas y medidas; catálogo y detalle en la **shop**; reservas de stock para el pago manual (rebanadas 4, 5 y 8); alta de personal desde el panel; modo oscuro; prueba de estrés hasta el punto de quiebre.
 
 ## Rebanada 3 — Identidad de cuentas (`account-identity`)
 
@@ -128,7 +130,7 @@ Catálogo con filtros y stock por talla; carrito persistente con cupones; checko
 
 ## Orden y camino crítico
 
-`Paso 0 → Rebanada 1 → 2 → 3 → 4 → 5 → 6 → 7 → (8)`. Las rebanadas 4 y 5 son el mínimo para vender; 6 y 7 pueden ir en paralelo a ellas. Para mostrar valor pronto al cliente: Paso 0 + Rebanada 1 + Rebanada 2 ya dan una tienda configurable con catálogo real.
+`Paso 0 (hecho) → Rebanada 2 (en curso) → 1 → 3 → 4 → 5 → 6 → 7 → (8)`. Las rebanadas 4 y 5 son el mínimo para vender; 6 y 7 pueden ir en paralelo a ellas. Para mostrar valor pronto al cliente: Paso 0 + Rebanada 1 + Rebanada 2 ya dan una tienda configurable con catálogo real.
 
 ## Decisiones abiertas
 
