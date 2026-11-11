@@ -68,6 +68,12 @@ describe('buildSeo: respaldo de imagen', () => {
   it('el título no repite el nombre cuando son iguales', () => {
     expect(buildSeo({ ...base, title: 'Clic Moda SC' }).title).toBe('Clic Moda SC');
   });
+
+  it('tampoco lo repite si el título ya lo incluye', () => {
+    const title = 'Clic Moda SC · Calzado de moda';
+
+    expect(buildSeo({ ...base, title }).title).toBe(title);
+  });
 });
 
 describe('siteOrigin', () => {

@@ -1,0 +1,45 @@
+---
+import '../styles/global.css';
+import SeoHead from '../components/SeoHead.astro';
+import StoreFooter from '../components/StoreFooter.astro';
+import StoreHeader from '../components/StoreHeader.astro';
+import { getSettings } from '../lib/settings';
+
+interface Props {
+  /** Título de la página; sin él se usa el título de búsqueda de la configuración. */
+  title?: string;
+  description?: string;
+  /** Ruta de la página (p. ej. /contacto). */
+  path: string;
+}
+
+const settings = await getSettings();
+const { title = settings.seo.title, description = settings.seo.description, path } = Astro.props;
+const { color } = settings;
+// Los colores de la marca como variables CSS: la tienda cambia de marca sin recompilar.
+const brandVars = `--brand:${color.primary};--brand-dark:${color.dark};--brand-light:${color.light};--brand-soft:${color.soft};--on-brand:${color.onPrimary}`;
+---
+
+<html lang="es-BO" style={brandVars}>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content={color.primary} />
+    <meta name="generator" content={Astro.generator} />
+    <SeoHead
+      siteName={settings.brandName}
+      title={title}
+      description={description}
+      path={path}
+      image={settings.seo.shareImage ?? undefined}
+    />
+  </head>
+  <body class="flex min-h-dvh flex-col bg-white text-ink">
+    <StoreHeader settings={settings} />
+    <main class="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
+      <slot />
+    </main>
+    <StoreFooter settings={settings} />
+  </body>
+</html>

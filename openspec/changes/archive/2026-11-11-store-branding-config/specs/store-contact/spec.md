@@ -1,7 +1,7 @@
 ## ADDED Requirements
 
 ### Requirement: WhatsApp is the single closing channel
-El sistema SHALL guardar un numero de WhatsApp en formato internacional (Bolivia +591) y MUST generar todos los enlaces de contacto `wa.me` desde ese unico dato, sin numeros literales en la tienda.
+El sistema SHALL guardar un numero de WhatsApp como solo digitos con codigo de pais, de 10 a 15 digitos y sin ceros a la izquierda (Bolivia empieza por 591), y MUST generar todos los enlaces de contacto `wa.me` desde ese unico dato, sin numeros literales en la tienda.
 
 #### Scenario: Valid number
 - **WHEN** el Gerente guarda 59171234567
@@ -12,7 +12,7 @@ El sistema SHALL guardar un numero de WhatsApp en formato internacional (Bolivia
 - **THEN** el sistema lo rechaza indicando el formato esperado
 
 ### Requirement: Warehouse and pickup information is configurable
-El sistema SHALL permitir configurar la direccion del almacen, el horario de recojo y un enlace opcional de mapa, y mostrarlos en el pie y en la pagina de contacto.
+El sistema SHALL permitir configurar la direccion del almacen, el horario de recojo y un enlace opcional de mapa (solo https, hasta 300 caracteres; direccion hasta 160 y horario hasta 120), y mostrarlos en el pie y en la pagina de contacto.
 
 #### Scenario: Pickup hours shown
 - **WHEN** el Gerente guarda direccion y horario de recojo

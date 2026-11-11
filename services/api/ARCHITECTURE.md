@@ -173,7 +173,7 @@ Para otra escritura crítica con el mismo riesgo de carreras (por ejemplo, reser
 
 ## 14. Patrón: imágenes (contexto `media`)
 
-Una foto se sube una vez y la API genera, **al subirla**, los formatos que cada canal necesita (`link` 1200×630, `square`, `portrait`, `story`, y `thumb` y `card` en WebP para la tienda). No hay redimensionado bajo demanda.
+Una foto se sube una vez y la API genera, **al subirla**, los formatos que cada canal necesita (`link` 1200×630, `square`, `portrait`, `story`, y `thumb`, `card` y `logo` en WebP para la tienda; `logo` conserva la transparencia y entra completo en 640×320). No hay redimensionado bajo demanda.
 
 - **Dominio:** `MediaAsset`, `MediaVariant`; objetos de valor `MediaFormat`, `FocalPoint`, `Framing`, `AltText`, `ImageDimensions`, `Revision`; `computeCrop` (función pura que el admin copia en `apps/admin/src/lib/crop.ts` con los mismos casos de prueba). Puerto `MediaAssetsRepository`.
 - **Aplicación:** puertos `MediaStoragePort` (archivos) e `ImageProcessorPort` (sharp); casos de uso `UploadMedia`, `ChangeFocalPoint`, `DeleteMedia`, `ListMedia`, `GetMediaMaster`, `GetPublicVariant`, `PurgeObsoleteMedia`.
@@ -183,3 +183,12 @@ Una foto se sube una vez y la API genera, **al subirla**, los formatos que cada 
 - **Entrega:** navegador o rastreador → tienda `/m/*` (Astro) → API → SeaweedFS. SeaweedFS no publica puertos en producción (en desarrollo solo `127.0.0.1:10002`) y la API es su único cliente. Sin CORS y sin exponer el almacenamiento.
 - **Pruebas:** cada puerto tiene su contrato (fake, disco y SeaweedFS real para el almacenamiento; fake y Postgres para el repositorio); e2e con la API real; flujos del admin con Playwright. Las e2e de la API guardan en disco; el contrato de S3 y una e2e completa usan SeaweedFS si hay claves en `.env`.
 - **Variables:** `MEDIA_STORAGE`, `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`, `MEDIA_DISK_DIR` (API); `SITE_URL` (tienda, origen público para canonical y `og:image`; se lee al ejecutar) y `SHOP_URL` (admin, dominio de las vistas previas).
+
+## 15. Patrón: configuración de la tienda (contexto `settings`)
+
+- **Una sola fila** (`store_settings`, `id = 1`): `StoreSettingsRepository` solo tiene `find` y `save`; el `PUT` reemplaza todo.
+- **Validación en el dominio:** cada campo es un objeto de valor (`BrandName`, `WhatsAppNumber`, `SocialUrl`, `BrandColor`…). `BrandColor` solo existe si cumple el contraste AA (`palette.ts`, función pura que el admin copia con los mismos casos fijos).
+- **Errores por campo:** `UpdateSettingsUseCase` junta todos los campos inválidos (`IssueCollector`) y lanza `FieldValidationError`; el filtro global lo traduce a HTTP 422 con `issues: [{ field, message }]`.
+- **Otro contexto por un puerto:** el logo y la imagen de compartir son solo identificadores; `MediaReferencesPort` (implementado en `infrastructure/media` sobre el repositorio de `media`) comprueba que existan y entrega la revisión para armar `/m/<id>/<formato>-<revisión>.<ext>`. `settings` no importa nada de `media` fuera de ese adaptador.
+- **Lectura pública:** `@Public()` en el `GET`, `ETag` fuerte (huella del cuerpo) y `Cache-Control: public, max-age=15`; sin datos de pago ni privados.
+

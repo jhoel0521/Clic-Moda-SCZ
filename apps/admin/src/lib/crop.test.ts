@@ -53,3 +53,18 @@ describe('computeCrop: contain y fracción visible', () => {
     expect(visibleFraction(computeCrop(photo, 'story', framing(0.5, 0.5, 'contain')), photo)).toBe(1);
   });
 });
+
+describe('computeCrop: logo (mismo caso que la API)', () => {
+  it('entra completo y centrado sobre fondo transparente, aunque el encuadre sea cover', () => {
+    const plan = computeCrop({ width: 1000, height: 1000 }, 'logo', framing());
+
+    expect(plan).toEqual({
+      fit: 'contain',
+      background: 'transparent',
+      left: 160,
+      top: 0,
+      width: 320,
+      height: 320,
+    });
+  });
+});

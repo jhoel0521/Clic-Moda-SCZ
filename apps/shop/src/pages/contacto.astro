@@ -1,0 +1,65 @@
+---
+import SocialIcon from '../components/SocialIcon.astro';
+import StoreLayout from '../layouts/StoreLayout.astro';
+import { getSettings } from '../lib/settings';
+import { mapEmbedUrl } from '../lib/maps';
+import { hasWhatsapp, whatsappLink } from '../lib/whatsapp';
+
+const { brandName, contact } = await getSettings();
+const whatsapp = hasWhatsapp(contact.whatsapp)
+  ? whatsappLink(contact.whatsapp, `Hola ${brandName}, quiero hacer una consulta`)
+  : null;
+const embed = await mapEmbedUrl(contact.mapUrl, contact.address);
+const button =
+  'inline-flex min-h-12 items-center rounded-xl bg-brand px-5 font-semibold text-on-brand';
+---
+
+<StoreLayout
+  title="Contacto"
+  description={`Cómo comprar y recoger en ${brandName}: WhatsApp, dirección y horario.`}
+  path="/contacto"
+>
+  <h1 class="text-3xl font-bold text-brand-dark">Contacto</h1>
+  <p class="mt-2 text-muted">
+    Cerramos tu compra por WhatsApp: entrega a domicilio o recojo en el almacén.
+  </p>
+  <div class="mt-6 flex flex-col items-start gap-4">
+    {whatsapp && (
+      <a href={whatsapp} rel="noreferrer" class={`${button} gap-2`}>
+        <SocialIcon network="whatsapp" />
+        Escribir por WhatsApp
+      </a>
+    )}
+    {contact.address && (
+      <section>
+        <h2 class="font-bold">Almacén</h2>
+        <p>{contact.address}</p>
+      </section>
+    )}
+    {contact.pickupHours && (
+      <section>
+        <h2 class="font-bold">Horario de recojo</h2>
+        <p>{contact.pickupHours}</p>
+      </section>
+    )}
+    {contact.mapUrl && (
+      <a
+        href={contact.mapUrl}
+        rel="noreferrer"
+        class="inline-flex min-h-12 items-center font-semibold text-brand-dark underline"
+      >
+        Abrir en Google Maps
+      </a>
+    )}
+    {embed && <iframe
+      src={embed}
+      title={`Mapa del almacén de ${brandName}`}
+      width="600"
+      height="450"
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+      sandbox="allow-scripts allow-same-origin allow-popups"
+      class="aspect-[4/3] w-full max-w-2xl rounded-xl border-0 bg-brand-soft"
+    ></iframe>}
+  </div>
+</StoreLayout>

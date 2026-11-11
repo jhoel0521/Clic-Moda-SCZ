@@ -9,6 +9,8 @@ interface FormatSpec {
   mime: MediaMime;
   /** Peso máximo recomendado en bytes (solo donde un canal lo exige). */
   maxBytes?: number;
+  /** La imagen entra completa (sin recortar) y el fondo queda transparente: logos. */
+  wholeOnTransparent?: true;
 }
 
 // Una sola foto, un formato por necesidad. JPEG para todo lo que sale a otros canales (WebP no está
@@ -20,6 +22,7 @@ const SPECS = {
   story: { width: 1080, height: 1920, mime: 'image/jpeg' },
   thumb: { width: 320, height: 320, mime: 'image/webp' },
   card: { width: 800, height: 1000, mime: 'image/webp' },
+  logo: { width: 640, height: 320, mime: 'image/webp', wholeOnTransparent: true },
 } as const satisfies Record<string, FormatSpec>;
 
 export type MediaFormatName = keyof typeof SPECS;
@@ -58,6 +61,10 @@ export class MediaFormat extends ValueObject<{ name: MediaFormatName }> {
 
   get extension(): 'jpg' | 'webp' {
     return this.spec.mime === 'image/jpeg' ? 'jpg' : 'webp';
+  }
+
+  get wholeOnTransparent(): boolean {
+    return this.spec.wholeOnTransparent === true;
   }
 
   get maxBytes(): number | undefined {

@@ -21,6 +21,11 @@ import {
 import { EnqueueStockCommandUseCase } from '../inventory/application/use-cases/enqueue-stock-command.use-case.js';
 import { ProcessNextStockCommandUseCase } from '../inventory/application/use-cases/process-next-stock-command.use-case.js';
 import { UpdateStockSettingsUseCase } from '../inventory/application/use-cases/update-stock-settings.use-case.js';
+import { StoreSettings } from '../settings/domain/entities/store-settings.entity.js';
+import {
+  STORE_SETTINGS_REPOSITORY,
+  type StoreSettingsRepository,
+} from '../settings/domain/store-settings.repository.port.js';
 import { DEMO_CATEGORIES, DEMO_PRODUCTS, type DemoProduct } from './demo-catalog.data.js';
 
 // Datos de demostración (los de la demo aprobada). Idempotente: se puede ejecutar varias veces sin
@@ -99,6 +104,14 @@ async function locate(
   }
 }
 
+// La tienda arranca con la marca provisional "Clic Moda SC"; si el Gerente ya guardó la suya, no se toca.
+async function ensureStoreSettings(app: INestApplicationContext): Promise<boolean> {
+  const repo = app.get<StoreSettingsRepository>(STORE_SETTINGS_REPOSITORY);
+  if (await repo.find()) return false;
+  await repo.save(StoreSettings.seed());
+  return true;
+}
+
 async function drain(app: INestApplicationContext): Promise<number> {
   let processed = 0;
   while (await app.get(ProcessNextStockCommandUseCase).execute()) processed += 1;
@@ -116,6 +129,10 @@ async function main(): Promise<void> {
       await receiveStock(app, demo, product);
     }
     const processed = await drain(app);
+    const created = await ensureStoreSettings(app);
+    console.log(
+      created ? 'Configuración inicial de la tienda creada.' : 'La tienda ya tenía configuración.'
+    );
     console.log(
       `Demo lista: ${DEMO_CATEGORIES.length} categorías, ${DEMO_PRODUCTS.length} productos, ${processed} movimientos de stock aplicados.`
     );

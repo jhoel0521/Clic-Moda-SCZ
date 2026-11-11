@@ -109,7 +109,7 @@ describe('GetMediaMasterUseCase, ListMediaUseCase y DeleteMediaUseCase', () => {
     const [item] = await world.list.execute();
 
     expect(item?.variants.every((v) => v.revision === 2)).toBe(true);
-    expect(item?.variants).toHaveLength(6);
+    expect(item?.variants).toHaveLength(7);
   });
 });
 
@@ -142,7 +142,7 @@ describe('PurgeObsoleteMediaUseCase', () => {
 
     const removed = await world.purge.execute(new PurgeObsoleteMediaCommand(later));
 
-    expect(removed).toBe(6);
+    expect(removed).toBe(7);
     expect(world.storage.keys().filter((k) => k.includes('-1.'))).toEqual([]);
     expect(world.storage.keys()).toContain(`m/${world.id}/link-2.jpg`);
   });

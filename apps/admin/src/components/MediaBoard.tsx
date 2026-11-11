@@ -80,7 +80,7 @@ function UploadFields({ form }: { form: UploadState }) {
   );
 }
 
-function UploadForm({ onUploaded }: { onUploaded: (item: MediaItem) => void }) {
+export function UploadForm({ onUploaded }: { onUploaded: (item: MediaItem) => void }) {
   const form = useUpload(onUploaded);
   return (
     <Card className="p-4">

@@ -73,6 +73,8 @@ Para añadir un servicio, agrégalo a `ports.json` en el rango que le toca: el o
 
 **Roles:** `pnpm --dir services/api roles:assign` abre una pantalla interactiva para asignar roles (también acepta `--email --roles --yes`). Siempre debe quedar al menos un Gerente.
 
+**Configuración de la tienda.** El Gerente cambia nombre, eslogan, color, logo, imagen de compartir, WhatsApp, almacén, horario y redes desde el panel (`/configuracion`). La API la sirve en `GET /store-settings` (público, con `ETag` y caché de 15 s) y la tienda la lee en el servidor con otra caché de 15 s, así que un cambio se ve en 30 s como máximo y sin volver a desplegar. El color se rechaza si el texto blanco encima no llega a 4,5:1 (AA) y se ofrece el color cercano que sí cumple. No se guardan datos de pago. Para dejar los datos de arranque ("Clic Moda SC") en la base: `pnpm --dir services/api seed:catalog`.
+
 ## Pruebas de flujos y de carga
 
 | Comando | Qué hace |

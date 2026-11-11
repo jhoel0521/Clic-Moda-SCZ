@@ -1,0 +1,49 @@
+---
+import type { StoreSettings } from '../lib/settings';
+import { hasWhatsapp, whatsappLink } from '../lib/whatsapp';
+import SocialIcon from './SocialIcon.astro';
+
+interface Props {
+  settings: StoreSettings;
+}
+
+const { settings } = Astro.props;
+const { brandName, contact, social } = settings;
+const networks = (
+  [
+    ['instagram', 'Instagram', social.instagram],
+    ['tiktok', 'TikTok', social.tiktok],
+    ['facebook', 'Facebook', social.facebook],
+  ] as const
+).filter((entry): entry is typeof entry & readonly [string, string, string] => !!entry[2]);
+const whatsapp = hasWhatsapp(contact.whatsapp)
+  ? whatsappLink(contact.whatsapp, `Hola ${brandName}`)
+  : null;
+const link = 'inline-flex min-h-12 items-center font-semibold text-brand-dark underline';
+---
+
+<footer class="mt-8 bg-brand-soft text-ink">
+  <div class="mx-auto flex w-full max-w-5xl flex-col gap-3 px-4 py-6 text-sm">
+    <p class="font-bold wrap-anywhere">{brandName}</p>
+    {contact.address && <p class="wrap-anywhere">{contact.address}</p>}
+    {contact.pickupHours && <p class="wrap-anywhere">Recojo: {contact.pickupHours}</p>}
+    <nav aria-label="Enlaces de la tienda" class="flex flex-wrap gap-x-5">
+      {whatsapp && (
+        <a href={whatsapp} rel="noreferrer" class={`${link} gap-2`}>
+          <SocialIcon network="whatsapp" />
+          WhatsApp
+        </a>
+      )}
+      <a href="/contacto" class={`${link} gap-2`}>
+        <SocialIcon network="contact" />
+        Contacto
+      </a>
+      {networks.map(([key, name, href]) => (
+        <a href={href} rel="noreferrer" class={`${link} gap-2`}>
+          <SocialIcon network={key} />
+          {name}
+        </a>
+      ))}
+    </nav>
+  </div>
+</footer>

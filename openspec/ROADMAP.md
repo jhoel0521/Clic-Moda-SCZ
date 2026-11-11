@@ -68,11 +68,11 @@ Deja los tres proyectos vivos, con las herramientas ya exigidas. **Hecho y archi
 
 ## Rebanada 1 — Marca y configuración de la tienda (`store-branding-config`)
 
-Nombre, logo, paleta, contacto y datos de cobro, editables por el Gerente. Specs ya escritas (`openspec/changes/store-branding-config/`).
+Nombre, logo, color, contacto y redes de la tienda, editables por el Gerente. **No se guardan datos de pago**: el cobro se coordina por WhatsApp. Specs en `openspec/specs/` cuando se archive (`store-branding-config`).
 
-- **API:** `GET` público y cacheado, `PUT` solo Gerente con validación y rechazo por contraste AA, proyección de pago autenticada, endpoint de validación para la vista previa; pruebas unitarias y e2e.
-- **Admin:** pantalla de configuración con vista previa y validación de contraste en vivo; pruebas.
-- **Shop:** esqueleto que consume la configuración y refleja nombre, logo, colores y contacto (≤ 60 s tras guardar); pruebas.
+- **API (`settings`):** `GET /store-settings` público (ETag y caché de 15 s), `PUT` solo Gerente con errores por campo (422) y rechazo por contraste AA con el color cercano que sí cumple; formato `logo` (WebP con transparencia) en el módulo de medios.
+- **Admin:** pantalla `/configuracion` con vista previa a 360 y 1280 px, contraste en vivo y selector de logo e imagen de compartir.
+- **Shop:** layout SSR con la marca como variables CSS, cabecera y pie, página de contacto, SEO y enlaces de WhatsApp desde la configuración; un cambio se ve en 30 s como máximo (requisito: menos de 60 s).
 
 ## Rebanada 2 — Catálogo y almacén (`catalog-warehouse`) — **va antes que la 1**
 

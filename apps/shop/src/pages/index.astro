@@ -1,22 +1,11 @@
 ---
-import '../styles/global.css';
-import SeoHead from '../components/SeoHead.astro';
+import StoreLayout from '../layouts/StoreLayout.astro';
+import { getSettings } from '../lib/settings';
+
+const { brandName, tagline } = await getSettings();
 ---
 
-<html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <SeoHead
-      siteName="Clic Moda SC"
-      title="Tienda"
-      description="Calzado con envío a domicilio o recojo en el almacén. Compra por WhatsApp."
-      path="/"
-    />
-  </head>
-  <body class="bg-white text-neutral-900">
-    <h1 class="p-6 text-3xl font-bold text-rose-700">Tienda</h1>
-  </body>
-</html>
+<StoreLayout path="/">
+  <h1 class="text-3xl font-bold wrap-anywhere text-brand-dark">{brandName}</h1>
+  {tagline && <p class="mt-2 text-lg text-muted">{tagline}</p>}
+</StoreLayout>
