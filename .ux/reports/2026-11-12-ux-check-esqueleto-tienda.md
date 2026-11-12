@@ -15,7 +15,7 @@ El esqueleto vuelve al de la demo aprobada (`demo-aprobada`: `StoreNavbar`, `Mob
 - **Barra superior fija** con difuminado, sombra y borde; enlaces centrales Inicio, Catálogo y Contacto con subrayado en la página activa (`aria-current="page"`); búsqueda y WhatsApp a la derecha. Marca en texto bicolor («CLIC» + «MODA SC» con el color de la marca) o el logo de la configuración.
 - **Sin menú en la cabecera**: en el teléfono la navegación es solo la barra inferior (el menú lateral se quitó: duplicaba la barra y dejaba la ficha del producto sin navegación).
 - **Barra inferior del teléfono** con 4 pestañas (Inicio, Catálogo, Contacto, WhatsApp), ícono relleno en la activa y margen de zona segura del iPhone. Siempre visible, también en el detalle del producto, donde la barra del botón de consulta va encima.
-- **Pie oscuro** de 4 columnas (marca, descubrir, cómo comprar, contacto directo) con una banda de WhatsApp. Sin boletín ni enlaces muertos: no se guardan datos personales.
+- **Pie en una sola superficie oscura** (marca y lema, «Descubrir» solo en escritorio porque en el teléfono ya está la barra inferior, contacto, línea de privacidad y redes). Sin franjas apiladas, sin banda de WhatsApp aparte y sin «Cómo comprar» (ahora cierra la portada). En la página de contacto no repite WhatsApp, dirección ni horario, que la página ya trae. Mide **584 px** en teléfono (antes 1.267; 392 en contacto). Reserva el alto de las barras fijas: 4,5 rem la de navegación, 9,5 rem en el producto (antes la barra de consulta tapaba la línea de privacidad y las redes al final).
 - Fondo `#fff9fb`, contenedor de 1200 px y la fuente del estándar (Inter con respaldo del sistema).
 
 ## Desvíos conscientes

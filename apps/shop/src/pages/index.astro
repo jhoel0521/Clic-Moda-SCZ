@@ -2,9 +2,19 @@
 import ProductCard from '../components/ProductCard.astro';
 import StoreLayout from '../layouts/StoreLayout.astro';
 import { CatalogUnavailableError, catalog, type CardProduct } from '../lib/catalog';
+import SocialIcon from '../components/SocialIcon.astro';
 import { getSettings } from '../lib/settings';
+import { hasWhatsapp, whatsappLink } from '../lib/whatsapp';
 
-const { brandName, tagline } = await getSettings();
+const { brandName, tagline, contact } = await getSettings();
+const whatsapp = hasWhatsapp(contact.whatsapp)
+  ? whatsappLink(contact.whatsapp, `Hola ${brandName}, quiero información`)
+  : null;
+const STEPS = [
+  'Elige tu modelo, talla y color.',
+  'Consúltanos por WhatsApp.',
+  'Pago manual y entrega a domicilio o recojo.',
+] as const;
 let newest: CardProduct[] = [];
 try {
   newest = (await catalog.list({ sort: 'new' })).items.slice(0, 4);
@@ -41,4 +51,35 @@ try {
       </a>
     </section>
   )}
+  <section
+    class="mt-14 rounded-3xl bg-white p-6 shadow-md ring-1 ring-black/5 md:p-8"
+    aria-labelledby="como-comprar"
+  >
+    <h2 id="como-comprar" class="text-xl font-bold">
+      Cómo comprar
+    </h2>
+    <ol class="mt-4 grid gap-4 md:grid-cols-3">
+      {STEPS.map((step, index) => (
+        <li class="flex items-start gap-3">
+          <span
+            class="flex size-8 shrink-0 items-center justify-center rounded-full bg-brand-soft font-bold text-brand-dark"
+            aria-hidden="true"
+          >
+            {index + 1}
+          </span>
+          <span class="pt-1">{step}</span>
+        </li>
+      ))}
+    </ol>
+    {whatsapp && (
+      <a
+        href={whatsapp}
+        rel="noreferrer"
+        class="mt-6 inline-flex min-h-12 items-center gap-2 rounded-xl bg-brand px-6 font-semibold text-on-brand"
+      >
+        <SocialIcon network="whatsapp" />
+        Escribir por WhatsApp
+      </a>
+    )}
+  </section>
 </StoreLayout>

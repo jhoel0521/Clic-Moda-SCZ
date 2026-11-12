@@ -18,6 +18,8 @@ interface Props {
   image?: SeoImage;
   /** Deja espacio para una barra fija inferior (detalle de producto en teléfono). */
   bar?: boolean;
+  /** Muestra el contacto en el pie; la página de contacto lo trae completo y lo omite. */
+  footerContact?: boolean;
 }
 
 const settings = await getSettings();
@@ -28,6 +30,7 @@ const {
   kind,
   image,
   bar = false,
+  footerContact = true,
 } = Astro.props;
 const { color } = settings;
 // Los colores de la marca como variables CSS: la tienda cambia de marca sin recompilar.
@@ -63,16 +66,10 @@ const brandVars = `--brand:${color.primary};--brand-dark:${color.dark};--brand-l
       Saltar al contenido
     </a>
     <StoreHeader settings={settings} pathname={path} />
-    <main
-      id="contenido"
-      class:list={[
-        'mx-auto w-full max-w-[1200px] flex-1 px-4 py-8 md:px-8',
-        bar && 'pb-44 md:pb-8',
-      ]}
-    >
+    <main id="contenido" class="mx-auto w-full max-w-[1200px] flex-1 px-4 py-8 md:px-8">
       <slot />
     </main>
-    <StoreFooter settings={settings} navSpace={true} />
+    <StoreFooter settings={settings} reserve={bar ? 'nav-bar' : 'nav'} contact={footerContact} />
     <MobileBottomNav settings={settings} pathname={path} />
     <slot name="bar" />
   </body>
