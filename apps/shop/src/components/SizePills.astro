@@ -1,0 +1,22 @@
+---
+import type { VariantOption } from '../lib/catalog';
+import SizePill from './SizePill.astro';
+
+interface Props {
+  slug: string;
+  /** Solo tallas disponibles: las agotadas no se muestran. */
+  chips: VariantOption[];
+  current: VariantOption;
+  showPrices: boolean;
+}
+
+const { slug, chips, current, showPrices } = Astro.props;
+---
+
+<ul class="flex flex-wrap gap-1.5" aria-label="Tallas">
+  {chips.map((chip) => (
+    <li>
+      <SizePill slug={slug} chip={chip} selected={chip === current} showPrice={showPrices} />
+    </li>
+  ))}
+</ul>

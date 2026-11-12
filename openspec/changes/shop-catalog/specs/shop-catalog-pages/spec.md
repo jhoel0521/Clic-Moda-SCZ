@@ -19,8 +19,8 @@ La tienda SHALL mostrar en `/catalogo` los productos publicados en tarjetas con 
 La tienda SHALL mostrar en `/p/<slug>` la galeria de fotos (la principal primero), el nombre, la descripcion, el precio en bolivianos de la variante elegida, el selector de talla y color con su disponibilidad y las tallas agotadas deshabilitadas. MUST responder 404 si el producto no esta publicado.
 
 #### Scenario: Sold out size
-- **WHEN** una talla esta agotada
-- **THEN** se muestra marcada como agotada y no se puede elegir
+- **WHEN** una talla esta agotada y el producto tiene otras tallas disponibles
+- **THEN** esa talla no se muestra (la consulta de reposicion se hace por WhatsApp)
 
 #### Scenario: Product without photos
 - **WHEN** el producto no tiene fotos
@@ -38,8 +38,8 @@ La tienda SHALL mostrar en `/p/<slug>` la galeria de fotos (la principal primero
 La tienda SHALL presentar la talla y el color como grupos con titulo ("Talla", "Color"), con opciones de al menos 44 px, nombrando cada color con texto, marcando la opcion elegida con borde y marca (no solo color) y mostrando "Agotada" con texto en las opciones sin stock. MUST mantener un foco visible y poder usarse solo con teclado.
 
 #### Scenario: Sold out option
-- **WHEN** una talla esta agotada
-- **THEN** dice "Agotada" con texto y no depende solo del color ni del tachado
+- **WHEN** todas las tallas del producto estan agotadas
+- **THEN** se muestran desactivadas con el texto "Agotada" (no dependen solo del color ni del tachado) y el boton pregunta cuando vuelve
 
 #### Scenario: Keyboard
 - **WHEN** el visitante usa solo el teclado
@@ -136,13 +136,13 @@ La tienda SHALL mostrar el precio junto a una nota que diga a que aplica, aunque
 - **THEN** ve el precio con la nota "El mismo precio en todas las tallas y colores"
 
 ### Requirement: Each card shows a concrete variant
-La tienda SHALL mostrar en cada tarjeta una variante concreta: su precio, su talla, su color y las tallas de ese color como enlaces al detalle con la talla y el color elegidos. MUST elegir la variante mas barata que se pueda comprar y marcar las tallas agotadas con texto ademas del tachado.
+La tienda SHALL mostrar en cada tarjeta una variante concreta: su precio, su talla, su color y las tallas de ese color como enlaces al detalle con la talla y el color elegidos. MUST elegir la variante mas barata que se pueda comprar y MUST NOT mostrar tallas ni colores agotados mientras haya otros disponibles.
 
 #### Scenario: Card content
 - **WHEN** un modelo tiene la sandalia roja talla 36 a 305 y la talla 37 a 350
 - **THEN** la tarjeta muestra "Bs 305,00 · Talla 36", "Color: Rojo" y las tallas 36 y 37, cada una con su enlace
 
 #### Scenario: Sold out size
-- **WHEN** una talla del color mostrado esta agotada
-- **THEN** su enlace lo dice con texto ("agotada") y no solo con el tachado
+- **WHEN** una talla o un color esta agotado y quedan otros disponibles
+- **THEN** la tarjeta no los muestra; si todo el modelo esta agotado, no ofrece tallas ni colores y lleva al detalle sin elegir
 

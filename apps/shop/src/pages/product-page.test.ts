@@ -53,15 +53,30 @@ describe('detalle: contenido', () => {
 });
 
 describe('detalle: talla y color', () => {
-  it('talla y color son grupos con título; las agotadas dicen "Agotada" y están desactivadas', async () => {
+  it('talla y color son grupos con título; las agotadas no se muestran si hay otras disponibles', async () => {
     world(detail());
 
     const page = await html();
 
     expect(page).toContain('<legend class="mb-1 font-semibold">Talla</legend>');
+    expect(page).toMatch(/value="39"/);
+    expect(page).not.toMatch(/value="40"/);
+    expect(page).toContain('Últimas');
+  });
+});
+
+describe('detalle: todo agotado', () => {
+  it('con todo agotado las tallas se ven desactivadas y se puede preguntar cuándo vuelve', async () => {
+    const variants = detail().variants.map((variant) => ({
+      ...variant,
+      availability: 'out' as const,
+    }));
+    world(detail({ availability: 'out', variants }));
+
+    const page = await html();
+
     expect(page).toMatch(/value="40"[^>]*disabled/);
     expect(page).toContain('Agotada');
-    expect(page).toContain('Últimas');
   });
 
   it('la elección viene de la URL: talla y color quedan marcados sin JavaScript', async () => {

@@ -1,0 +1,28 @@
+---
+import { variantPath } from '../lib/card-variants';
+import type { VariantOption } from '../lib/catalog';
+import { formatBs } from '../lib/format';
+
+interface Props {
+  slug: string;
+  chip: VariantOption;
+  selected: boolean;
+  /** Las tallas cuestan distinto: la píldora lleva su precio. */
+  showPrice: boolean;
+}
+
+const { slug, chip, selected, showPrice } = Astro.props;
+---
+
+<a
+  href={variantPath(slug, chip)}
+  title={`Talla ${chip.size}`}
+  aria-current={selected ? 'true' : undefined}
+  class:list={[
+    'inline-flex min-h-9 min-w-9 flex-col items-center justify-center rounded-full px-2.5 text-sm font-semibold leading-tight transition-colors',
+    selected ? 'bg-brand-dark text-white' : 'bg-neutral-100 text-ink hover:bg-brand-soft',
+  ]}
+>
+  <span>{chip.size}</span>
+  {showPrice && <span class="text-[11px] font-medium">{formatBs(chip.price)}</span>}
+</a>

@@ -1,13 +1,22 @@
 import type { VariantOption } from './catalog';
 import { productPath } from './inquiry';
 
+export interface Swatch {
+  color: string;
+  /** La variante a la que lleva este color: la más barata que se puede comprar (o la primera). */
+  variant: VariantOption;
+  active: boolean;
+}
+
 export interface CardView {
   /** La variante que muestra la tarjeta: la más barata que se puede comprar (o la primera si todo está agotado). */
   featured: VariantOption;
-  /** Tallas del color mostrado, ordenadas; cada una es un enlace a esa talla y color. */
+  /** Tallas DISPONIBLES del color mostrado, ordenadas; las agotadas no se muestran (eso se habla por WhatsApp). */
   chips: VariantOption[];
-  /** Cuántos colores más tiene el modelo, sin contar el mostrado. */
-  moreColors: number;
+  /** Un círculo por color que aún tenga alguna talla disponible, en el orden en que aparecen. */
+  swatches: Swatch[];
+  /** Todo el modelo está agotado: la tarjeta no ofrece tallas ni colores y lleva al detalle. */
+  soldOut: boolean;
   /** Las tallas del color mostrado cuestan distinto: cada una lleva su precio. */
   chipPrices: boolean;
 }
@@ -21,17 +30,37 @@ const bySize = (a: VariantOption, b: VariantOption): number => {
 const cheapest = (variants: VariantOption[]): VariantOption =>
   variants.reduce((best, next) => (Number(next.price) < Number(best.price) ? next : best));
 
+const isBuyable = (variant: VariantOption): boolean => variant.availability !== 'out';
+
+// La mejor variante de un grupo: la más barata que se puede comprar; si todo está agotado, la primera.
+function bestOf(variants: VariantOption[]): VariantOption {
+  const buyable = variants.filter(isBuyable);
+  return buyable.length > 0 ? cheapest(buyable) : (variants[0] as VariantOption);
+}
+
+function swatchesOf(variants: readonly VariantOption[], featured: VariantOption): Swatch[] {
+  const colors = [...new Set(variants.filter(isBuyable).map((variant) => variant.color))].filter(
+    (color): color is string => !!color
+  );
+  return colors.map((color) => ({
+    color,
+    variant: bestOf(variants.filter((variant) => variant.color === color)),
+    active: color === featured.color,
+  }));
+}
+
 export function cardView(variants: readonly VariantOption[]): CardView | null {
-  const first = variants[0];
-  if (!first) return null;
-  const buyable = variants.filter((variant) => variant.availability !== 'out');
-  const featured = buyable.length > 0 ? cheapest(buyable) : first;
-  const chips = variants.filter((variant) => variant.color === featured.color).sort(bySize);
-  const colors = new Set(variants.map((variant) => variant.color));
+  if (variants.length === 0) return null;
+  const featured = bestOf([...variants]);
+  const soldOut = !isBuyable(featured);
+  const chips = soldOut
+    ? []
+    : variants.filter((v) => v.color === featured.color && isBuyable(v)).sort(bySize);
   return {
     featured,
     chips,
-    moreColors: colors.size - 1,
+    soldOut,
+    swatches: soldOut ? [] : swatchesOf(variants, featured),
     chipPrices: chips.some((chip) => chip.price !== chips[0]?.price),
   };
 }

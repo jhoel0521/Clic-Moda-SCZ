@@ -13,14 +13,22 @@ const { product, size, color } = Astro.props;
 const unique = (values: (string | null)[]): string[] => [
   ...new Set(values.filter((v): v is string => !!v)),
 ];
-const sizes = unique(product.variants.map((v) => v.size));
-const colors = unique(product.variants.map((v) => v.color));
+const allSizes = unique(product.variants.map((v) => v.size));
+const allColors = unique(product.variants.map((v) => v.color));
 // Una opción está agotada solo si TODAS las variantes que la cumplen lo están.
 const allOut = (items: VariantOption[]): boolean => items.every((v) => v.availability === 'out');
 const sizeOut = (value: string): boolean =>
   allOut(product.variants.filter((v) => v.size === value && (!color || v.color === color)));
 const colorOut = (value: string): boolean =>
   allOut(product.variants.filter((v) => v.color === value && (!size || v.size === size)));
+// Las opciones agotadas no se muestran mientras haya otras disponibles (eso se habla por WhatsApp). Si TODO
+// está agotado se dejan a la vista, desactivadas, y el botón pregunta cuándo vuelve.
+const onlyAvailable = (values: string[], out: (value: string) => boolean): string[] => {
+  const available = values.filter((value) => !out(value));
+  return available.length > 0 ? available : values;
+};
+const sizes = onlyAvailable(allSizes, sizeOut);
+const colors = onlyAvailable(allColors, colorOut);
 const sizeLow = (value: string): boolean =>
   product.variants.some((v) => v.size === value && v.availability === 'low');
 const option =

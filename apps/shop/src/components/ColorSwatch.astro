@@ -1,0 +1,38 @@
+---
+import { variantPath } from '../lib/card-variants';
+import type { VariantOption } from '../lib/catalog';
+import { colorHex, initialOf, isPattern } from '../lib/colors';
+
+interface Props {
+  slug: string;
+  color: string;
+  variant: VariantOption;
+  active: boolean;
+}
+
+const { slug, color, variant, active } = Astro.props;
+const hex = colorHex(color);
+const pattern = isPattern(color);
+---
+
+<a
+  href={variantPath(slug, variant)}
+  title={color}
+  aria-label={`Color ${color}`}
+  aria-current={active ? 'true' : undefined}
+  class:list={[
+    'flex size-8 items-center justify-center rounded-full border-2 border-transparent',
+    active && 'border-brand-dark',
+  ]}
+>
+  <span
+    class:list={[
+      'flex size-5 items-center justify-center rounded-full text-[10px] font-bold text-white ring-1 ring-black/15',
+      !hex && !pattern && 'bg-neutral-500',
+      pattern && 'bg-[linear-gradient(135deg,#f08fb0,#b79ad8_50%,#7fb7e6)]',
+    ]}
+    style={hex ? `background:${hex}` : undefined}
+  >
+    {!hex && !pattern && initialOf(color)}
+  </span>
+</a>

@@ -30,7 +30,7 @@ describe('catálogo: tarjetas', () => {
       list: page([card(), card({ slug: 'taco-luna', name: 'Taco Luna', variants: [taco] })]),
     });
 
-    expect(out).toContain('href="/p/bota-andes"');
+    expect(out).toContain('href="/p/bota-andes?talla=38&amp;color=Negro"');
     expect(out).toContain('Bs 1.349,90');
     expect(out).toContain('width="800" height="1000"');
     expect(out).toContain('2 productos');
@@ -51,17 +51,48 @@ describe('catálogo: la tarjeta dice qué variante muestra', () => {
     const out = await html({ list: page([card()]) });
 
     expect(out).toContain('Bs 349,90');
-    expect(out).toContain('Talla 38');
-    expect(out).toContain('Color:');
-    expect(out).toContain('Negro');
+    expect(out).toContain('Negro · Talla 38');
     expect(out).toContain('href="/p/bota-andes?talla=39&amp;color=Negro"');
   });
 
-  it('una talla agotada se marca con texto y no solo con el tachado', async () => {
+  it('las tallas agotadas no se muestran si hay otras disponibles', async () => {
     const out = await html({ list: page([card()]) });
 
-    expect(out).toContain('Talla 40: agotada');
-    expect(out).toContain('(agotada)');
+    expect(out).toContain('aria-label="Tallas"');
+    expect(out).toContain('talla=39');
+    expect(out).not.toContain('talla=40');
+    expect(out).not.toContain('(agotada)');
+  });
+
+  it('con todo agotado no ofrece tallas y lleva al detalle sin elegir', async () => {
+    const variants = card().variants.map((variant) => ({
+      ...variant,
+      availability: 'out' as const,
+    }));
+
+    const out = await html({ list: page([card({ availability: 'out', variants })]) });
+
+    expect(out).not.toContain('aria-label="Tallas"');
+    expect(out).toContain('href="/p/bota-andes"');
+  });
+});
+
+describe('catálogo: colores de la tarjeta', () => {
+  const two = [
+    { size: '36', color: 'Rojo', sku: 'R36', price: '305.00', availability: 'in_stock' },
+    { size: '36', color: 'Azul marino', sku: 'A36', price: '320.00', availability: 'in_stock' },
+  ] as const;
+
+  it('con varios colores muestra un círculo por color con su nombre y enlace', async () => {
+    const out = await html({ list: page([card({ variants: [...two] })]) });
+
+    expect(out).toContain('aria-label="Color Rojo"');
+    expect(out).toContain('aria-label="Color Azul marino"');
+    expect(out).toContain('href="/p/bota-andes?talla=36&amp;color=Azul+marino"');
+  });
+
+  it('con un solo color no muestra círculos', async () => {
+    expect(await html({ list: page([card()]) })).not.toContain('aria-label="Colores"');
   });
 });
 

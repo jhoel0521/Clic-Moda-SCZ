@@ -4,6 +4,8 @@ import type { CardProduct } from '../lib/catalog';
 import { formatBs } from '../lib/format';
 import { productPath } from '../lib/inquiry';
 import AvailabilityBadge from './AvailabilityBadge.astro';
+import ColorSwatches from './ColorSwatches.astro';
+import SizePills from './SizePills.astro';
 
 interface Props {
   product: CardProduct;
@@ -15,83 +17,67 @@ const { product, priority = false } = Astro.props;
 const { photo } = product;
 const view = cardView(product.variants);
 const path = productPath(product.slug);
-const chip =
-  'inline-flex min-h-11 min-w-11 flex-col items-center justify-center rounded-lg border-2 px-2 text-sm font-semibold';
+const href = view && !view.soldOut ? variantPath(product.slug, view.featured) : path;
+// Qué combinación se está viendo: "Rojo · Talla 36".
+const scope =
+  view && !view.soldOut
+    ? [view.featured.color, `Talla ${view.featured.size}`].filter(Boolean).join(' · ')
+    : '';
 ---
 
-<li class="flex flex-col gap-2">
-  <a href={view ? variantPath(product.slug, view.featured) : path} class="group rounded-2xl">
-    <div class="relative aspect-[4/5] overflow-hidden rounded-2xl bg-brand-soft">
-      {photo ? (
-        <img
-          src={photo.card}
-          alt={photo.alt}
-          width="800"
-          height="1000"
-          loading={priority ? 'eager' : 'lazy'}
-          fetchpriority={priority ? 'high' : 'auto'}
-          decoding="async"
-          class="size-full object-cover transition duration-300 group-hover:scale-[1.03] motion-reduce:transition-none"
-        />
-      ) : (
-        <span class="flex size-full items-center justify-center p-4 text-center font-semibold text-brand-dark">
-          {product.name}
-        </span>
-      )}
-      <span class="absolute left-2 top-2">
-        <AvailabilityBadge availability={product.availability} quiet={true} />
-      </span>
-    </div>
-  </a>
-  <div class="flex flex-col gap-1">
-    <p class="text-sm text-muted">{product.category.name}</p>
-    <h3 class="line-clamp-2 font-semibold leading-snug wrap-anywhere">
-      <a href={path} class="underline-offset-2 hover:underline">
-        {product.name}
-      </a>
-    </h3>
-    {view ? (
-      <>
-        <p class="font-bold text-brand-dark">
-          {formatBs(view.featured.price)}
-          <span class="text-sm font-normal text-muted">· Talla {view.featured.size}</span>
-        </p>
-        {view.featured.color && (
-          <p class="text-sm text-muted">
-            Color: <span class="font-medium text-ink">{view.featured.color}</span>
-            {view.moreColors > 0 && ` y ${String(view.moreColors)} más`}
-          </p>
+<li class="group relative flex flex-col rounded-3xl bg-white p-1.5 shadow-[0_20px_30px_-22px_rgba(36,21,28,0.35)] ring-1 ring-black/5 transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_28px_36px_-22px_rgba(36,21,28,0.4)] motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+  <div class="relative">
+    <a href={href} class="block rounded-2xl rounded-tr-[3rem]" tabindex="-1" aria-hidden="true">
+      <div class="aspect-[4/5] overflow-hidden rounded-2xl rounded-tr-[3rem] bg-brand-soft">
+        {photo ? (
+          <img
+            src={photo.card}
+            alt=""
+            width="800"
+            height="1000"
+            loading={priority ? 'eager' : 'lazy'}
+            fetchpriority={priority ? 'high' : 'auto'}
+            decoding="async"
+            class="size-full object-cover transition duration-500 group-hover:scale-[1.04] motion-reduce:transition-none"
+          />
+        ) : (
+          <span class="flex size-full items-center justify-center p-4 text-center font-semibold text-brand-dark">
+            {product.name}
+          </span>
         )}
-        <ul class="mt-1 flex flex-wrap gap-1.5" aria-label="Tallas disponibles">
-          {view.chips.map((option) => {
-            const out = option.availability === 'out';
-            const current = option === view.featured;
-            return (
-              <li>
-                <a
-                  href={variantPath(product.slug, option)}
-                  title={out ? `Talla ${option.size}: agotada` : `Talla ${option.size}`}
-                  class:list={[
-                    chip,
-                    current ? 'border-brand-dark bg-brand-soft' : 'border-neutral-500',
-                    out && 'border-dashed text-muted line-through',
-                  ]}
-                >
-                  <span>
-                    {option.size}
-                    {out && <span class="sr-only"> (agotada)</span>}
-                  </span>
-                  {view.chipPrices && (
-                    <span class="text-xs font-medium no-underline">{formatBs(option.price)}</span>
-                  )}
-                </a>
-              </li>
-            );
-          })}
-        </ul>
-      </>
-    ) : (
-      <p class="font-bold text-brand-dark">{formatBs(product.price)}</p>
+      </div>
+    </a>
+    <span class="absolute left-2 top-2">
+      <AvailabilityBadge availability={product.availability} quiet={true} />
+    </span>
+    {view && (
+      <p class="absolute -bottom-4 right-3 rounded-2xl rounded-br-3xl bg-white px-3 py-1.5 text-base font-extrabold leading-none text-brand-dark shadow-[0_6px_18px_rgba(36,21,28,0.18)]">
+        {formatBs(view.featured.price)}
+      </p>
     )}
+  </div>
+  <div class="flex flex-1 flex-col gap-3 px-3 pb-3 pt-6">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-wide text-muted">{product.category.name}</p>
+      <h3 class="line-clamp-2 text-base font-bold leading-snug wrap-anywhere">
+        <a href={href} class="after:absolute after:inset-0 hover:underline">
+          {product.name}
+        </a>
+      </h3>
+      {scope && <p class="mt-0.5 text-sm text-muted">{scope}</p>}
+    </div>
+    {view && !view.soldOut ? (
+      <div class="relative z-10 flex flex-col gap-2">
+        {view.swatches.length > 1 && <ColorSwatches slug={product.slug} swatches={view.swatches} />}
+        <SizePills
+          slug={product.slug}
+          chips={view.chips}
+          current={view.featured}
+          showPrices={view.chipPrices}
+        />
+      </div>
+    ) : !view ? (
+      <p class="font-bold text-brand-dark">{formatBs(product.price)}</p>
+    ) : null}
   </div>
 </li>
