@@ -110,11 +110,14 @@ const view = product ? priceView(product, chosen) : null;
         )}
         <VariantPicker product={product} size={size} color={color} />
         {canAsk && (
+          <p class="text-sm text-muted">
+            Se abre el chat de WhatsApp con tu mensaje listo. Te respondemos ahí y coordinamos el
+            pago y la entrega a domicilio o el recojo en el almacén.
+          </p>
+        )}
+        {canAsk && (
           <div data-live="cta" class="hidden flex-col gap-2 md:flex">
             <InquiryCta state={state} href={href} />
-            <p class="text-sm text-muted">
-              Cerramos tu compra por WhatsApp: entrega a domicilio o recojo en el almacén.
-            </p>
           </div>
         )}
       </div>

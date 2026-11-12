@@ -1,68 +1,53 @@
 import type { VariantOption } from './catalog';
 import { productPath } from './inquiry';
 
-export interface Swatch {
-  color: string;
-  /** La variante a la que lleva este color: la más barata que se puede comprar (o la primera). */
-  variant: VariantOption;
-  active: boolean;
-}
-
+// La tarjeta del catálogo es UN solo objetivo táctil: abre el detalle con la variante más barata ya elegida.
+// Tallas y colores se eligen en el detalle (opciones de 44 px y 8 px de separación), no en la tarjeta.
 export interface CardView {
   /** La variante que muestra la tarjeta: la más barata que se puede comprar (o la primera si todo está agotado). */
   featured: VariantOption;
-  /** Tallas DISPONIBLES del color mostrado, ordenadas; las agotadas no se muestran (eso se habla por WhatsApp). */
-  chips: VariantOption[];
-  /** Un círculo por color que aún tenga alguna talla disponible, en el orden en que aparecen. */
-  swatches: Swatch[];
-  /** Todo el modelo está agotado: la tarjeta no ofrece tallas ni colores y lleva al detalle. */
+  /** Todo el modelo está agotado: la tarjeta lleva al detalle sin elegir nada. */
   soldOut: boolean;
-  /** Las tallas del color mostrado cuestan distinto: cada una lleva su precio. */
-  chipPrices: boolean;
+  /** Resumen en texto de lo disponible ("3 colores · 7 tallas, de 36 a 43"); vacío si no hay nada que sumar. */
+  summary: string;
 }
 
-const bySize = (a: VariantOption, b: VariantOption): number => {
-  const [na, nb] = [Number(a.size), Number(b.size)];
-  if (!Number.isNaN(na) && !Number.isNaN(nb)) return na - nb;
-  return a.size.localeCompare(b.size);
-};
+const isBuyable = (variant: VariantOption): boolean => variant.availability !== 'out';
 
 const cheapest = (variants: VariantOption[]): VariantOption =>
   variants.reduce((best, next) => (Number(next.price) < Number(best.price) ? next : best));
 
-const isBuyable = (variant: VariantOption): boolean => variant.availability !== 'out';
-
-// La mejor variante de un grupo: la más barata que se puede comprar; si todo está agotado, la primera.
+// La mejor variante: la más barata que se puede comprar; si todo está agotado, la primera.
 function bestOf(variants: VariantOption[]): VariantOption {
   const buyable = variants.filter(isBuyable);
   return buyable.length > 0 ? cheapest(buyable) : (variants[0] as VariantOption);
 }
 
-function swatchesOf(variants: readonly VariantOption[], featured: VariantOption): Swatch[] {
-  const colors = [...new Set(variants.filter(isBuyable).map((variant) => variant.color))].filter(
-    (color): color is string => !!color
-  );
-  return colors.map((color) => ({
-    color,
-    variant: bestOf(variants.filter((variant) => variant.color === color)),
-    active: color === featured.color,
-  }));
+const bySize = (a: string, b: string): number => {
+  const [na, nb] = [Number(a), Number(b)];
+  return !Number.isNaN(na) && !Number.isNaN(nb) ? na - nb : a.localeCompare(b);
+};
+
+// "Tallas 36, 37, 43" hasta 4; con más, cuántas hay y entre qué números.
+function sizesText(sizes: string[]): string {
+  if (sizes.length <= 1) return '';
+  if (sizes.length <= 4) return `Tallas ${sizes.join(', ')}`;
+  return `${String(sizes.length)} tallas, de ${sizes[0] ?? ''} a ${sizes[sizes.length - 1] ?? ''}`;
+}
+
+function summaryOf(variants: readonly VariantOption[]): string {
+  const buyable = variants.filter(isBuyable);
+  const colors = new Set(buyable.map((variant) => variant.color).filter(Boolean));
+  const sizes = [...new Set(buyable.map((variant) => variant.size))].sort(bySize);
+  const parts = [colors.size > 1 ? `${String(colors.size)} colores` : '', sizesText(sizes)];
+  return parts.filter(Boolean).join(' · ');
 }
 
 export function cardView(variants: readonly VariantOption[]): CardView | null {
   if (variants.length === 0) return null;
   const featured = bestOf([...variants]);
   const soldOut = !isBuyable(featured);
-  const chips = soldOut
-    ? []
-    : variants.filter((v) => v.color === featured.color && isBuyable(v)).sort(bySize);
-  return {
-    featured,
-    chips,
-    soldOut,
-    swatches: soldOut ? [] : swatchesOf(variants, featured),
-    chipPrices: chips.some((chip) => chip.price !== chips[0]?.price),
-  };
+  return { featured, soldOut, summary: soldOut ? '' : summaryOf(variants) };
 }
 
 // Enlace al detalle con esa talla y color ya elegidos.

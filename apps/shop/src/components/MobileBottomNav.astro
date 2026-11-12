@@ -22,7 +22,7 @@ const tab =
   aria-label="Navegación inferior"
   class="fixed inset-x-0 bottom-0 z-40 h-[calc(4.5rem+env(safe-area-inset-bottom))] border-t border-line bg-white/90 pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_12px_-4px_rgba(0,0,0,0.06)] backdrop-blur-md md:hidden"
 >
-  <div class="flex h-[4.5rem] items-center justify-around px-2">
+  <div class="flex h-[4.5rem] items-center justify-around gap-2 px-2">
     {NAV_LINKS.map((link) => {
       const active = isActive(pathname, link.href);
       return (

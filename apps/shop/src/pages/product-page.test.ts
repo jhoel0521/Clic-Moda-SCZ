@@ -252,3 +252,23 @@ describe('detalle: precio por variante', () => {
     expect(await html()).toContain('El mismo precio en todas las tallas y colores');
   });
 });
+
+describe('detalle: qué pasa tras tocar el botón', () => {
+  it('explica el final del flujo para todos los anchos, no solo en escritorio', async () => {
+    world(detail());
+
+    const page = await html('?talla=38&color=Negro');
+    const note = page.slice(page.indexOf('Se abre el chat de WhatsApp'));
+
+    expect(note.slice(0, 260)).toContain('coordinamos el pago y la entrega');
+    expect(page.slice(page.lastIndexOf('<p', page.indexOf('Se abre el chat')))).not.toMatch(
+      /^<p class="hidden/
+    );
+  });
+
+  it('sin número de WhatsApp no promete un chat', async () => {
+    world(detail(), '');
+
+    expect(await html('?talla=38&color=Negro')).not.toContain('Se abre el chat de WhatsApp');
+  });
+});

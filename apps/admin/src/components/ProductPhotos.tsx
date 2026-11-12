@@ -71,7 +71,7 @@ function PhotoActions({ item, index, total, state }: RowProps) {
         disabled={index === total - 1}
         onClick={() => shift(1)}
       />
-      <IconButton icon="trash" label={`Quitar la foto ${item.alt} del producto`} onClick={drop} />
+      <IconButton icon="trash" label={`Quitar la foto ${item.alt} del producto`} onClick={drop} className="ml-4" />
     </>
   );
 }

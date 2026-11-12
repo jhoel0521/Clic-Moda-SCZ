@@ -16,7 +16,7 @@ apps:                   # synced from code
     path: apps/shop
     stack: astro + tailwind-v4
     platforms: [web]     # uso real: movil-first (TikTok/Instagram); confirmar en ux-discover
-    theme: apps/shop/src/styles/global.css   # solo importa tailwindcss: aun no define valores
+    theme: apps/shop/src/styles/global.css   # define la marca (variables que llegan de la configuracion) y los tokens en @theme
     # users: pendiente (ux-discover)
   - name: admin
     path: apps/admin

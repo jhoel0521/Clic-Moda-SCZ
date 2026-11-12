@@ -4,8 +4,6 @@ import type { CardProduct } from '../lib/catalog';
 import { formatBs } from '../lib/format';
 import { productPath } from '../lib/inquiry';
 import AvailabilityBadge from './AvailabilityBadge.astro';
-import ColorSwatches from './ColorSwatches.astro';
-import SizePills from './SizePills.astro';
 
 interface Props {
   product: CardProduct;
@@ -56,28 +54,15 @@ const scope =
       </p>
     )}
   </div>
-  <div class="flex flex-1 flex-col gap-3 px-3 pb-3 pt-6">
-    <div>
-      <p class="text-xs font-bold uppercase tracking-wide text-muted">{product.category.name}</p>
-      <h3 class="line-clamp-2 text-base font-bold leading-snug wrap-anywhere">
-        <a href={href} class="after:absolute after:inset-0 hover:underline">
-          {product.name}
-        </a>
-      </h3>
-      {scope && <p class="mt-0.5 text-sm text-muted">{scope}</p>}
-    </div>
-    {view && !view.soldOut ? (
-      <div class="relative z-10 flex flex-col gap-2">
-        {view.swatches.length > 1 && <ColorSwatches slug={product.slug} swatches={view.swatches} />}
-        <SizePills
-          slug={product.slug}
-          chips={view.chips}
-          current={view.featured}
-          showPrices={view.chipPrices}
-        />
-      </div>
-    ) : !view ? (
-      <p class="font-bold text-brand-dark">{formatBs(product.price)}</p>
-    ) : null}
+  <div class="flex flex-1 flex-col gap-0.5 px-3 pb-3 pt-6">
+    <p class="text-xs font-bold uppercase tracking-wide text-muted">{product.category.name}</p>
+    <h3 class="line-clamp-2 text-base font-bold leading-snug wrap-anywhere">
+      <a href={href} class="after:absolute after:inset-0 hover:underline">
+        {product.name}
+      </a>
+    </h3>
+    {scope && <p class="text-sm text-muted">{scope}</p>}
+    {view?.summary && <p class="text-sm text-muted">{view.summary}</p>}
+    {!view && <p class="font-bold text-brand-dark">{formatBs(product.price)}</p>}
   </div>
 </li>

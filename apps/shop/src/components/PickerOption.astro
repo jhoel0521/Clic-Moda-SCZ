@@ -16,7 +16,7 @@ interface Props {
 const { name, value, checked, disabled, low, price } = Astro.props;
 ---
 
-<label class:list={[optionBase('lg'), optionRadio, price && 'flex-col gap-0']}>
+<label class:list={[optionBase, optionRadio, price && 'flex-col gap-0']}>
   <input
     type="radio"
     name={name}

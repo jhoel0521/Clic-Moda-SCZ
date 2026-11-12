@@ -209,6 +209,6 @@ describe('esqueleto de la tienda', () => {
     expect(html).not.toContain('Abrir menú');
     expect(html).toContain('bg-neutral-950');
     expect(html).toContain('aria-current="page"');
-    expect(html).toContain('+591 71234567');
+    expect(html).toContain('+591 7123 4567');
   });
 });

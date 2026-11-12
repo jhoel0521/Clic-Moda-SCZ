@@ -1,4 +1,9 @@
-## ADDED Requirements
+# product-photos Specification
+
+## Purpose
+TBD - created by archiving change shop-catalog. Update Purpose after archive.
+
+## Requirements
 
 ### Requirement: A product has ordered photos chosen from the media module
 El sistema SHALL permitir asociar a un producto hasta 8 fotos del modulo de imagenes, en un orden definido, donde la primera es la foto principal. MUST guardar solo la referencia a cada imagen (no copiarla) y rechazar una imagen que no exista o no este publicada.
@@ -50,3 +55,11 @@ El panel de administracion SHALL marcar la foto principal con la etiqueta "Princ
 #### Scenario: Removing a photo
 - **WHEN** el Gerente quita una foto del producto
 - **THEN** la imagen sigue existiendo en el modulo de imagenes y se puede volver a elegir
+
+#### Scenario: Opposite actions are separated
+- **WHEN** el Gerente ve los botones de una foto (subir, bajar, quitar)
+- **THEN** cada boton mide al menos 44 px, hay al menos 8 px entre ellos y 16 px entre mover y quitar
+
+#### Scenario: How the flow ends
+- **WHEN** el Gerente guarda las fotos
+- **THEN** el panel anuncia que se guardaron y que las fotos quitadas siguen disponibles en el modulo de imagenes
