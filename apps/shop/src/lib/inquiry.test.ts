@@ -48,6 +48,21 @@ describe('selectVariant', () => {
   });
 });
 
+describe('selectVariant: colores agotados', () => {
+  const sold = { ...v('44', 'Coñac'), availability: 'out' as const };
+  const variants = [sold, v('44', 'Verde musgo')];
+
+  it('sin color elige la única variante que se puede comprar de esa talla', () => {
+    expect(selectVariant(variants, '44', null)?.color).toBe('Verde musgo');
+  });
+
+  it('con todo agotado de esa talla y varios colores sigue sin elegir', () => {
+    const allOut = variants.map((variant) => ({ ...variant, availability: 'out' as const }));
+
+    expect(selectVariant(allOut, '44', null)).toBeNull();
+  });
+});
+
 describe('mensaje de consulta', () => {
   it('incluye producto, talla, color, código, enlace y referencia', () => {
     const message = inquiryMessage({

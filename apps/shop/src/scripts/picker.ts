@@ -1,24 +1,55 @@
-// Mejora progresiva del selector de talla y color: la elección vive en la URL (?talla=38&color=Negro), así que
-// aplicarla es enviar el formulario GET. Se conserva la posición de la página y el ancla "Elige tu talla"
-// mueve el foco al selector.
-const KEY = 'picker-scroll';
+// Mejora progresiva del selector de talla y color. La elección vive en la URL (?talla=38&color=Negro) y el
+// servidor arma precio, selector y botón de WhatsApp con ella; sin JavaScript el formulario GET recarga la página.
+// Con JavaScript se pide esa misma página por fetch y se reemplaza SOLO el contenido de los bloques marcados
+// con data-live, sin recargar: la pantalla no salta ni pierde la posición (en el teléfono se notaba mucho).
+const FALLBACK = 'No se pudo actualizar; se recarga la página';
 
-function restoreScroll(): void {
-  try {
-    const saved = sessionStorage.getItem(KEY);
-    if (saved === null) return;
-    sessionStorage.removeItem(KEY);
-    window.scrollTo(0, Number(saved));
-  } catch {
-    /* sin sessionStorage: la página simplemente empieza arriba */
+// URL de la elección: la talla y el color marcados, en el mismo orden que arma el formulario sin JavaScript.
+export function selectionUrl(action: string, data: FormData): string {
+  const query = new URLSearchParams();
+  for (const key of ['talla', 'color']) {
+    const value = data.get(key);
+    if (typeof value === 'string' && value) query.set(key, value);
   }
+  const text = query.toString();
+  return text ? `${action}?${text}` : action;
 }
 
-function rememberScroll(): void {
+// Copia el contenido de cada bloque data-live de la página nueva en el bloque de la actual (el contenedor
+// se conserva: así la región aria-live sigue siendo la misma y los lectores de pantalla anuncian el cambio).
+function swapLive(fresh: Document): void {
+  document.querySelectorAll<HTMLElement>('[data-live]').forEach((block) => {
+    const next = fresh.querySelector(`[data-live="${block.dataset.live ?? ''}"]`);
+    if (next) block.innerHTML = next.innerHTML;
+  });
+}
+
+// El foco vuelve a la opción que el visitante acababa de tocar (el reemplazo la recrea).
+function restoreFocus(name: string | null, value: string | null): void {
+  if (!name || value === null) return;
+  const same = document.querySelector<HTMLInputElement>(
+    `[data-variant-form] input[name="${name}"][value="${CSS.escape(value)}"]`
+  );
+  same?.focus({ preventScroll: true });
+}
+
+let pending: AbortController | null = null;
+
+async function apply(form: HTMLFormElement): Promise<void> {
+  const url = selectionUrl(form.getAttribute('action') ?? location.pathname, new FormData(form));
+  const active = document.activeElement as HTMLInputElement | null;
+  const [name, value] = [active?.name ?? null, active?.value ?? null];
+  pending?.abort();
+  pending = new AbortController();
   try {
-    sessionStorage.setItem(KEY, String(window.scrollY));
-  } catch {
-    /* igual */
+    const response = await fetch(url, { headers: { Accept: 'text/html' }, signal: pending.signal });
+    if (!response.ok) throw new Error(FALLBACK);
+    swapLive(new DOMParser().parseFromString(await response.text(), 'text/html'));
+    history.replaceState(null, '', url);
+    restoreFocus(name, value);
+  } catch (error) {
+    if ((error as Error).name === 'AbortError') return;
+    location.assign(url);
   }
 }
 
@@ -29,14 +60,19 @@ function focusSizes(event: Event): void {
   group?.querySelector<HTMLInputElement>('input:not(:disabled)')?.focus();
 }
 
+// Un solo grupo de escuchas en el documento: los bloques se reemplazan y las escuchas no se pierden.
 export function initPicker(): void {
-  const form = document.querySelector<HTMLFormElement>('[data-variant-form]');
-  form?.addEventListener('change', () => {
-    rememberScroll();
-    form.requestSubmit();
+  document.addEventListener('change', (event) => {
+    const form = (event.target as HTMLElement).closest<HTMLFormElement>('[data-variant-form]');
+    if (form) void apply(form);
   });
-  document
-    .querySelectorAll('[data-pick-size]')
-    .forEach((link) => link.addEventListener('click', focusSizes));
-  restoreScroll();
+  document.addEventListener('submit', (event) => {
+    const form = (event.target as HTMLElement).closest<HTMLFormElement>('[data-variant-form]');
+    if (!form) return;
+    event.preventDefault();
+    void apply(form);
+  });
+  document.addEventListener('click', (event) => {
+    if ((event.target as HTMLElement).closest('[data-pick-size]')) focusSizes(event);
+  });
 }

@@ -65,6 +65,17 @@ describe('detalle: talla y color', () => {
   });
 });
 
+describe('detalle: un solo color disponible', () => {
+  it('si el grupo de color se oculta, el color elegido viaja en el formulario', async () => {
+    world(detail());
+
+    const page = await html('?talla=38&color=Negro');
+
+    expect(page).not.toContain('<legend class="mb-1 font-semibold">Color</legend>');
+    expect(page).toMatch(/<input[^>]*type="hidden"[^>]*name="color"[^>]*value="Negro"/);
+  });
+});
+
 describe('detalle: todo agotado', () => {
   it('con todo agotado las tallas se ven desactivadas y se puede preguntar cuándo vuelve', async () => {
     const variants = detail().variants.map((variant) => ({

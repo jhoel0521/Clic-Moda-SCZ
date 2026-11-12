@@ -8,7 +8,8 @@ export const productPath = (slug: string): string => `/p/${encodeURIComponent(sl
 export const productUrl = (origin: string, slug: string): string =>
   new URL(productPath(slug), origin.endsWith('/') ? origin : `${origin}/`).toString();
 
-// La variante elegida con ?talla=…&color=…: la talla es obligatoria; el color solo si el producto tiene varios.
+// La variante elegida con ?talla=…&color=…: la talla es obligatoria. Sin color se elige la única variante de esa
+// talla que se puede comprar (los colores agotados no se muestran, así que el visitante no puede escogerlos).
 export function selectVariant(
   variants: readonly VariantOption[],
   size: string | null,
@@ -17,7 +18,9 @@ export function selectVariant(
   if (!size) return null;
   const sameSize = variants.filter((variant) => variant.size === size);
   if (color) return sameSize.find((variant) => variant.color === color) ?? null;
-  return sameSize.length === 1 ? (sameSize[0] as VariantOption) : null;
+  const buyable = sameSize.filter((variant) => variant.availability !== 'out');
+  const pool = buyable.length > 0 ? buyable : sameSize;
+  return pool.length === 1 ? (pool[0] as VariantOption) : null;
 }
 
 export interface InquiryInput {

@@ -144,5 +144,19 @@ La tienda SHALL mostrar en cada tarjeta una variante concreta: su precio, su tal
 
 #### Scenario: Sold out size
 - **WHEN** una talla o un color esta agotado y quedan otros disponibles
-- **THEN** la tarjeta no los muestra; si todo el modelo esta agotado, no ofrece tallas ni colores y lleva al detalle sin elegir
+- **THEN** la tarjeta no los muestra; si todo el modelo esta agotado, no ofrece tallas ni colores y lleva al detalle sin elegir
+
+### Requirement: Choosing a size or color does not reload the page
+Con JavaScript, la tienda SHALL aplicar la talla o el color elegidos sin recargar la pagina: actualiza el precio y su nota, el selector y los botones de consulta, y la URL con la eleccion, sin mover el desplazamiento ni perder el foco. Si la actualizacion falla, SHALL navegar a esa URL. Sin JavaScript, la eleccion SHALL aplicarse con el formulario GET. Si al cambiar de talla queda un solo color disponible y el grupo de color se oculta, la tienda MUST conservar el color elegido.
 
+#### Scenario: Change size on a phone
+- **WHEN** el visitante toca otra talla con la pagina desplazada hacia abajo
+- **THEN** el precio, la nota y el boton se actualizan, la URL cambia a `?talla=…` y la pantalla no salta
+
+#### Scenario: Update fails
+- **WHEN** la peticion de actualizacion falla
+- **THEN** la pagina navega a la URL de la eleccion (recarga normal)
+
+#### Scenario: Single remaining color
+- **WHEN** el color elegido es el unico disponible para la nueva talla
+- **THEN** el grupo de color se oculta pero la eleccion se conserva en la URL

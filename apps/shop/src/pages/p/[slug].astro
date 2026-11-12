@@ -93,8 +93,10 @@ const view = product ? priceView(product, chosen) : null;
         <h1 class="mt-1 text-2xl font-bold leading-tight wrap-anywhere md:text-3xl">
           {product.name}
         </h1>
-        <p class="mt-2 text-2xl font-bold text-brand-dark">{view?.text}</p>
-        <p class="text-sm text-muted">{view?.note}</p>
+        <div data-live="price" aria-live="polite" aria-atomic="true">
+          <p class="mt-2 text-2xl font-bold text-brand-dark">{view?.text}</p>
+          <p class="text-sm text-muted">{view?.note}</p>
+        </div>
         <div class="mt-2">
           <AvailabilityBadge availability={product.availability} />
         </div>
@@ -108,7 +110,7 @@ const view = product ? priceView(product, chosen) : null;
         )}
         <VariantPicker product={product} size={size} color={color} />
         {canAsk && (
-          <div class="hidden flex-col gap-2 md:flex">
+          <div data-live="cta" class="hidden flex-col gap-2 md:flex">
             <InquiryCta state={state} href={href} />
             <p class="text-sm text-muted">
               Cerramos tu compra por WhatsApp: entrega a domicilio o recojo en el almacén.
@@ -120,6 +122,7 @@ const view = product ? priceView(product, chosen) : null;
     {canAsk && (
       <div
         slot="bar"
+        data-live="bar"
         class="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-white p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] md:hidden"
       >
         <p class="mb-2 flex items-baseline justify-between gap-3 text-sm">
