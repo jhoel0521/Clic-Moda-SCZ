@@ -1,6 +1,7 @@
 ---
 import type { Product, VariantOption } from '../lib/catalog';
 import { productPath } from '../lib/inquiry';
+import { optionPrice } from '../lib/pricing';
 
 interface Props {
   product: Product;
@@ -41,6 +42,13 @@ const option =
             class="sr-only"
           />
           <span>{value}</span>
+          {product.priceVaries && (
+            <span class="text-xs font-medium text-muted">
+              {optionPrice(
+                product.variants.filter((v) => v.size === value && (!color || v.color === color))
+              )}
+            </span>
+          )}
           {sizeOut(value) && <span class="text-xs font-medium">Agotada</span>}
           {!sizeOut(value) && sizeLow(value) && (
             <span class="text-xs font-medium text-warning">Últimas</span>
@@ -64,6 +72,13 @@ const option =
               class="sr-only"
             />
             <span>{value}</span>
+            {product.priceVaries && (
+              <span class="text-xs font-medium text-muted">
+                {optionPrice(
+                  product.variants.filter((v) => v.color === value && (!size || v.size === size))
+                )}
+              </span>
+            )}
             {colorOut(value) && <span class="text-xs font-medium">Agotado</span>}
           </label>
         ))}

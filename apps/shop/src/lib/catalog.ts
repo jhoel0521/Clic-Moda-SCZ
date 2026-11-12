@@ -14,7 +14,8 @@ export interface CardProduct {
   slug: string;
   name: string;
   category: { name: string; slug: string };
-  price: string; // "349.90"
+  price: string; // "349.90": el menor de sus variantes
+  priceVaries: boolean; // true: las tallas o colores cuestan distinto ("Desde")
   availability: Availability;
   photo: Photo | null;
   updatedAt: string;
@@ -24,6 +25,7 @@ export interface VariantOption {
   size: string;
   color: string | null;
   sku: string;
+  price: string; // el precio de ESTA talla y color
   availability: Availability;
 }
 

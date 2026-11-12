@@ -148,6 +148,19 @@ describe('Catálogo público: nada interno', () => {
   });
 });
 
+const DETAIL_KEYS = [
+  'availability',
+  'category',
+  'description',
+  'name',
+  'photos',
+  'price',
+  'priceVaries',
+  'slug',
+  'updatedAt',
+  'variants',
+];
+
 describe('Catálogo público: claves permitidas', () => {
   it('las claves del detalle son exactamente las permitidas', async () => {
     const cat = await category();
@@ -155,20 +168,14 @@ describe('Catálogo público: claves permitidas', () => {
 
     const body = (await get('/products/bota-andes').expect(200)).body;
 
-    expect(Object.keys(body).sort()).toEqual(
-      [
-        'availability',
-        'category',
-        'description',
-        'name',
-        'photos',
-        'price',
-        'slug',
-        'updatedAt',
-        'variants',
-      ].sort()
-    );
-    expect(Object.keys(body.variants[0]).sort()).toEqual(['availability', 'color', 'size', 'sku']);
+    expect(Object.keys(body).sort()).toEqual([...DETAIL_KEYS].sort());
+    expect(Object.keys(body.variants[0]).sort()).toEqual([
+      'availability',
+      'color',
+      'price',
+      'size',
+      'sku',
+    ]);
   });
 });
 
@@ -186,6 +193,27 @@ describe('Catálogo público: disponibilidad', () => {
     );
     expect(bySize).toEqual({ '38': 'low', '39': 'in_stock', '40': 'out' });
     expect(detail.availability).toBe('in_stock');
+  });
+});
+
+describe('Catálogo público: precio por variante', () => {
+  it('cada talla muestra su precio y el producto sale "desde" el menor', async () => {
+    const cat = await category();
+    const variants = [
+      { size: '36', color: 'Rojo', price: '305' },
+      { size: '37', color: 'Rojo', price: '350' },
+    ];
+    await call(app, 'post', '/catalog/products', tokens.gerente, {
+      categoryId: cat.id,
+      name: 'Sandalia Roja',
+      variants,
+    }).expect(201);
+
+    const detail = (await get('/products/sandalia-roja').expect(200)).body;
+    const list = (await get('').expect(200)).body.items[0];
+
+    expect(detail.variants.map((v: { price: string }) => v.price)).toEqual(['305.00', '350.00']);
+    expect([list.price, list.priceVaries]).toEqual(['305.00', true]);
   });
 });
 

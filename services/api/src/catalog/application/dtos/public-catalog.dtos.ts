@@ -32,6 +32,7 @@ export interface PublicVariantResult {
   readonly size: string;
   readonly color: string | null;
   readonly sku: string;
+  readonly price: string;
   readonly availability: Availability;
 }
 
@@ -45,7 +46,9 @@ export interface PublicProductCardResult {
   readonly slug: string;
   readonly name: string;
   readonly category: PublicCategoryResult;
+  // El menor precio de sus variantes; si `priceVaries`, la tienda lo muestra como "Desde".
   readonly price: string;
+  readonly priceVaries: boolean;
   readonly availability: Availability;
   readonly photo: PublicPhotoResult | null;
   readonly updatedAt: string;

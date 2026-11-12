@@ -46,6 +46,7 @@ export const toCard = (
   name: product.name,
   category: { name: product.categoryName, slug: product.categorySlug },
   price: product.price.toDecimal(),
+  priceVaries: product.variants.some((variant) => variant.price.cents !== product.price.cents),
   availability: availabilityOfProduct(product),
   photo: photos[0] ?? null,
   updatedAt: product.updatedAt.toISOString(),
@@ -64,6 +65,7 @@ export const toDetail = (
       size: variant.size,
       color: variant.color,
       sku: variant.sku,
+      price: variant.price.toDecimal(),
       availability: availabilityOf(variant.available),
     })),
   };

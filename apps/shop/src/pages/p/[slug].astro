@@ -5,7 +5,6 @@ import ProductGallery from '../../components/ProductGallery.astro';
 import VariantPicker from '../../components/VariantPicker.astro';
 import StoreLayout from '../../layouts/StoreLayout.astro';
 import { CatalogUnavailableError, catalog, type Product } from '../../lib/catalog';
-import { formatBs } from '../../lib/format';
 import {
   inquiryLink,
   inquiryMessage,
@@ -14,6 +13,7 @@ import {
   selectVariant,
 } from '../../lib/inquiry';
 import { productJsonLd, safeJsonLd } from '../../lib/json-ld';
+import { cardPrice, priceView } from '../../lib/pricing';
 import { siteOrigin } from '../../lib/seo';
 import { getSettings } from '../../lib/settings';
 import { hasWhatsapp } from '../../lib/whatsapp';
@@ -51,8 +51,10 @@ const href = canAsk && state !== 'pick' ? inquiryLink(settings.contact.whatsapp,
 const mainPhoto = product?.photos[0];
 const description = product
   ? (product.description?.slice(0, 160) ??
-    `${product.name} en ${product.category.name} por ${formatBs(product.price)}.`)
+    `${product.name} en ${product.category.name}. ${cardPrice(product)}.`)
   : undefined;
+// El precio dice siempre a qué aplica (la talla y color elegidos, o todas las variantes).
+const view = product ? priceView(product, chosen) : null;
 ---
 
 {product ? (
@@ -91,7 +93,8 @@ const description = product
         <h1 class="mt-1 text-2xl font-bold leading-tight wrap-anywhere md:text-3xl">
           {product.name}
         </h1>
-        <p class="mt-2 text-2xl font-bold text-brand-dark">{formatBs(product.price)}</p>
+        <p class="mt-2 text-2xl font-bold text-brand-dark">{view?.text}</p>
+        <p class="text-sm text-muted">{view?.note}</p>
         <div class="mt-2">
           <AvailabilityBadge availability={product.availability} />
         </div>
@@ -119,6 +122,10 @@ const description = product
         slot="bar"
         class="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-white p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] md:hidden"
       >
+        <p class="mb-2 flex items-baseline justify-between gap-3 text-sm">
+          <span class="font-bold text-brand-dark">{view?.text}</span>
+          <span class="text-right text-muted">{view?.note}</span>
+        </p>
         <InquiryCta state={state} href={href} />
       </div>
     )}

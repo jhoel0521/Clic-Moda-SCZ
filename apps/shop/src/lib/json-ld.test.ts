@@ -7,6 +7,7 @@ const product = (over: Partial<Product> = {}): Product => ({
   name: 'Bota Andes',
   category: { name: 'Botas', slug: 'botas' },
   price: '349.90',
+  priceVaries: true,
   availability: 'in_stock',
   updatedAt: '2026-11-02T00:00:00.000Z',
   description: 'Cuero',
@@ -19,8 +20,8 @@ const product = (over: Partial<Product> = {}): Product => ({
     },
   ],
   variants: [
-    { size: '38', color: 'Negro', sku: 'BOT-38-NEG', availability: 'low' },
-    { size: '39', color: 'Negro', sku: 'BOT-39-NEG', availability: 'out' },
+    { size: '38', color: 'Negro', sku: 'BOT-38-NEG', price: '349.90', availability: 'low' },
+    { size: '39', color: 'Negro', sku: 'BOT-39-NEG', price: '380.00', availability: 'out' },
   ],
   ...over,
 });
@@ -67,6 +68,10 @@ describe('productJsonLd', () => {
       priceCurrency: 'BOB',
       url: 'https://tienda.test/p/bota-andes',
     });
+  });
+
+  it('cada oferta lleva el precio de su variante', () => {
+    expect(ld(product()).offers.map((o) => o.price)).toEqual(['349.90', '380.00']);
   });
 
   it('sin descripción omite el campo', () => {

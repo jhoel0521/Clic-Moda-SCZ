@@ -148,3 +148,41 @@ describe('product-page (3)', () => {
     expect(await html('?talla=38&color=Negro')).toContain('fixed inset-x-0 bottom-0 z-20');
   });
 });
+
+const mixedPrices = (): Product =>
+  detail({
+    price: '305.00',
+    priceVaries: true,
+    variants: [
+      { size: '36', color: 'Rojo', sku: 'SAN-36-ROJ', price: '305.00', availability: 'in_stock' },
+      { size: '37', color: 'Rojo', sku: 'SAN-37-ROJ', price: '350.00', availability: 'in_stock' },
+    ],
+  });
+
+describe('detalle: precio por variante', () => {
+  it('sin elegir dice "Desde" y pide elegir; cada talla muestra su precio', async () => {
+    world(mixedPrices());
+
+    const page = await html();
+
+    expect(page).toContain('Desde Bs 305,00');
+    expect(page).toContain('Elige talla y color para ver su precio');
+    expect(page).toContain('Bs 350,00');
+  });
+
+  it('con la talla elegida muestra su precio, dice cuál es y lo manda por WhatsApp', async () => {
+    world(mixedPrices());
+
+    const page = await html('?talla=37&color=Rojo');
+
+    expect(page).toContain('Talla 37 · Rojo');
+    expect(page).not.toContain('Desde Bs 305,00');
+    expect(productLink(page)).toContain('Precio: Bs 350,00');
+  });
+
+  it('con un solo precio aclara que vale para todas las tallas y colores', async () => {
+    world(detail());
+
+    expect(await html()).toContain('El mismo precio en todas las tallas y colores');
+  });
+});

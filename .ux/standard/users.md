@@ -15,7 +15,7 @@
 ## Glossary (one term per concept)
 | UI term | Meaning | Do not use |
 |---|---|---|
-| Modelo | Un zapato con todos sus colores y tallas (un solo precio por modelo) | Artículo, Ítem, Producto base |
+| Modelo | Un zapato con todos sus colores y tallas (cada talla y color puede tener su precio) | Artículo, Ítem, Producto base |
 | Talla | Número de calzado que elige quien compra | Medida, Número |
 | Color | Color de una variante del modelo, siempre con su nombre en texto | Tono, solo una muestra de color |
 | Agotada | La talla no tiene unidades disponibles (con texto, nunca solo color o tachado) | Sin stock, No hay |

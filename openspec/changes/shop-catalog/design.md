@@ -4,7 +4,7 @@
 
 Estado actual verificado en el codigo:
 
-- `catalog` (API) tiene `Product` (nombre, descripcion, activo, variantes) y `Category` (con `slug` y `active`). **El producto no tiene slug ni fotos.** Hay un solo precio por modelo (`set-product-price` lo fija en todas las variantes).
+- `catalog` (API) tiene `Product` (nombre, descripcion, activo, variantes) y `Category` (con `slug` y `active`). **El producto no tiene slug ni fotos.** Cada variante tiene su precio (el formulario del producto lo edita por variante); `set-product-price` es solo un atajo que iguala todas.
 - El disponible se calcula como `on_hand - reserved` en `stock_levels`; el stock cambia por una cola de comandos que la API procesa en segundo plano (`STOCK_QUEUE_POLL_MS`, 200 ms por omision).
 - `media` ya genera `card` (800x1000 WebP), `thumb` (320x320 WebP) y `link` (1200x630 JPEG) y expone `MediaAssetsRepository`; `settings` ya resolvio la misma necesidad con `MediaReferencesPort`.
 - La tienda (Astro SSR) ya tiene layout con la marca como variables CSS, `SeoHead`, `seo.ts`, proxy `/m/*`, `getSettings()` con cache en memoria y enlaces de WhatsApp.
@@ -27,7 +27,7 @@ Estado actual verificado en el codigo:
 
 **D4. Lectura publica separada de la administrativa.** Casos de uso nuevos `ListPublicCatalog`, `GetPublicProduct`, `ListPublicFilters` y `ListPublishedSlugs` en `catalog`, con sus propios DTO y un controlador `PublicCatalogController` en `/public/catalog` (`@Public()`). No se reutiliza el DTO del admin: el DTO publico se construye por lista blanca, de modo que un campo interno nuevo nunca se filtra por accidente (hay una prueba que compara las claves permitidas). La publicacion exige producto activo, categoria activa y al menos una variante activa.
 
-**D5. Disponibilidad como estado.** `in_stock` (4 o mas), `low` (1 a 3), `out` (0). El umbral 3 es una constante del dominio. El filtro "solo disponible" y el orden por precio usan el precio del modelo (el minimo de sus variantes activas, que en la practica es unico). La consulta calcula todo en SQL con indices existentes y se cubre con un e2e con Postgres real.
+**D5. Disponibilidad como estado.** `in_stock` (4 o mas), `low` (1 a 3), `out` (0). El umbral 3 es una constante del dominio. El filtro "solo disponible" y el orden por precio usan el menor precio de sus variantes activas. La API devuelve el precio de cada variante y `priceVaries`; la tienda muestra "Desde" en la tarjeta y el precio de la variante elegida en el detalle, siempre con una nota de a que aplica. La consulta calcula todo en SQL con indices existentes y se cubre con un e2e con Postgres real.
 
 **D6. Cache y plazo de 60 s.** La API responde con `ETag` fuerte (huella del cuerpo) y `Cache-Control: public, max-age=15`. La tienda agrega una cache en memoria de **15 s** por URL de API (mismo patron que `getSettings`) para no cargar la API cuando varios visitantes piden lo mismo, con respaldo al ultimo valor valido si la API falla. Peor caso entre "el stock cambia" y "el visitante lo ve" = demora de la cola (200 ms de sondeo mas el procesamiento) + 15 s + 15 s, es decir unos 30 s, dentro de los 60 s.
 

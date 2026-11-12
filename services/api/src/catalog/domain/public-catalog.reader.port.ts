@@ -7,6 +7,7 @@ export interface PublishedVariant {
   readonly sku: string;
   readonly size: string;
   readonly color: string | null;
+  readonly price: Money;
   readonly available: number;
 }
 
@@ -16,7 +17,7 @@ export interface PublishedProduct {
   readonly description: string | null;
   readonly categoryName: string;
   readonly categorySlug: string;
-  // Un solo precio por modelo: el menor de sus variantes activas.
+  // El menor precio entre sus variantes activas ("desde"); cada variante lleva el suyo.
   readonly price: Money;
   // Identificadores de imagen en orden (la primera es la principal); pueden incluir imágenes ya borradas.
   readonly photoIds: readonly string[];

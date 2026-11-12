@@ -15,6 +15,7 @@ const v = (size: string, color: string | null, sku = `S-${size}`): VariantOption
   size,
   color,
   sku,
+  price: '349.90',
   availability: 'in_stock',
 });
 
@@ -57,7 +58,7 @@ describe('mensaje de consulta', () => {
     });
 
     expect(message).toBe(
-      'Hola, me interesa: Bota Andes\nTalla: 38\nColor: Negro\nCódigo: BOT-38-NEG\nhttps://tienda.test/p/bota-andes\nRef: live-nov'
+      'Hola, me interesa: Bota Andes\nTalla: 38\nColor: Negro\nCódigo: BOT-38-NEG\nPrecio: Bs 349,90\nhttps://tienda.test/p/bota-andes\nRef: live-nov'
     );
   });
 });

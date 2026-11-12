@@ -16,7 +16,8 @@ export class SetProductPriceCommand {
   ) {}
 }
 
-// El negocio maneja un solo precio por modelo: se aplica a todas sus variantes en una sola operación atómica.
+// Atajo: aplica el MISMO precio a todas las variantes en una sola operación atómica. Cada variante puede
+// tener su propio precio (PATCH de la variante); la tienda lo muestra por variante.
 @Injectable()
 export class SetProductPriceUseCase implements UseCase<SetProductPriceCommand, ProductResult> {
   constructor(@Inject(PRODUCTS_REPOSITORY) private readonly products: ProductsRepository) {}

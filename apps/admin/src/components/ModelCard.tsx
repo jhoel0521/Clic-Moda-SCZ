@@ -56,7 +56,7 @@ function usePrice(product: Product, onSaved: () => void) {
   return { value, setValue, error, save };
 }
 
-// El negocio maneja un solo precio por modelo: se cambia una vez y vale para todas las tallas y colores.
+// Atajo: iguala el precio de todas las tallas y colores. Para precios distintos se edita cada variante en el formulario.
 function PriceEditor({ product, onSaved }: { product: Product; onSaved: () => void }) {
   const { value, setValue, error, save } = usePrice(product, onSaved);
   const mixed = uniformPrice(product) === null;
@@ -65,7 +65,7 @@ function PriceEditor({ product, onSaved }: { product: Product; onSaved: () => vo
       <div className="flex items-end gap-2">
         <div className="flex-1">
           <Field
-            label="Precio del modelo (Bs)"
+            label="Mismo precio para todas las variantes (Bs)"
             inputMode="decimal"
             value={value}
             onChange={(e) => setValue(e.target.value)}

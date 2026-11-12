@@ -38,7 +38,7 @@ export function productJsonLd(product: Product, origin: string): Record<string, 
     offers: product.variants.map((variant) => ({
       '@type': 'Offer',
       sku: variant.sku,
-      price: product.price,
+      price: variant.price,
       priceCurrency: 'BOB',
       availability: SCHEMA_AVAILABILITY[variant.availability],
       url,

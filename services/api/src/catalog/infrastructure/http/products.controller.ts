@@ -118,7 +118,7 @@ export class ProductsController {
     );
   }
 
-  // Un solo precio por modelo: se aplica a todas sus variantes a la vez.
+  // Atajo: el mismo precio para todas las variantes a la vez (cada variante tiene el suyo en su PATCH).
   @Roles('GERENTE')
   @Patch(':id/price')
   async price(

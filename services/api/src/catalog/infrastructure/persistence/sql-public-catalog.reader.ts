@@ -20,7 +20,7 @@ const PUBLISHED = `p.active AND c.active
 const AVAILABLE = `COALESCE((SELECT SUM(s.on_hand - s.reserved) FROM product_variants v
   JOIN stock_levels s ON s.variant_id = v.id WHERE v.product_id = p.id AND v.active), 0)`;
 
-// Precio del modelo: el menor de sus variantes activas (en la práctica es único).
+// Precio "desde" del modelo: el menor de sus variantes activas.
 const PRICE = `(SELECT MIN(v.price_cents) FROM product_variants v WHERE v.product_id = p.id AND v.active)`;
 
 const ORDER: Record<PublicSort, string> = {
@@ -147,28 +147,14 @@ export class SqlPublicCatalogReader implements PublicCatalogReader {
   }
 
   private async variantsOf(ids: string[]): Promise<Map<string, PublishedVariant[]>> {
-    const rows: {
-      product_id: string;
-      sku: string;
-      size: string;
-      color: string | null;
-      available: string;
-    }[] = await this.dataSource.query(
-      `SELECT v.product_id, v.sku, v.size, v.color, COALESCE(s.on_hand - s.reserved, 0) AS available
+    const rows: VariantRow[] = await this.dataSource.query(
+      `SELECT v.product_id, v.sku, v.size, v.color, v.price_cents,
+              COALESCE(s.on_hand - s.reserved, 0) AS available
            FROM product_variants v LEFT JOIN stock_levels s ON s.variant_id = v.id
           WHERE v.product_id = ANY($1) AND v.active ORDER BY v.created_at, v.sku`,
       [ids]
     );
-    return group(
-      rows,
-      (row) => row.product_id,
-      (row) => ({
-        sku: row.sku,
-        size: row.size,
-        color: row.color,
-        available: Number(row.available),
-      })
-    );
+    return group(rows, (row) => row.product_id, toPublishedVariant);
   }
 
   private async photosOf(ids: string[]): Promise<Map<string, string[]>> {
@@ -183,6 +169,23 @@ export class SqlPublicCatalogReader implements PublicCatalogReader {
     );
   }
 }
+
+interface VariantRow {
+  product_id: string;
+  sku: string;
+  size: string;
+  color: string | null;
+  price_cents: number;
+  available: string;
+}
+
+const toPublishedVariant = (row: VariantRow): PublishedVariant => ({
+  sku: row.sku,
+  size: row.size,
+  color: row.color,
+  price: Money.ofCents(Number(row.price_cents)),
+  available: Number(row.available),
+});
 
 function group<Row, Item>(
   rows: Row[],

@@ -53,6 +53,7 @@ export const card = (over: Partial<CardProduct> = {}): CardProduct => ({
   name: 'Bota Andes',
   category: { name: 'Botas', slug: 'botas' },
   price: '349.90',
+  priceVaries: false,
   availability: 'in_stock',
   photo: {
     alt: 'Frente',
@@ -69,6 +70,7 @@ export const detail = (over: Partial<Product> = {}): Product => ({
   name: 'Bota Andes',
   category: { name: 'Botas', slug: 'botas' },
   price: '349.90',
+  priceVaries: false,
   availability: 'in_stock',
   updatedAt: '2026-11-02T00:00:00.000Z',
   description: 'Cuero genuino, suela de goma.',
@@ -82,9 +84,9 @@ export const detail = (over: Partial<Product> = {}): Product => ({
     { alt: 'Lado', card: '/m/b/card-1.webp', thumb: '/m/b/thumb-1.webp', link: '/m/b/link-1.jpg' },
   ],
   variants: [
-    { size: '38', color: 'Negro', sku: 'BOT-38-NEG', availability: 'in_stock' },
-    { size: '39', color: 'Negro', sku: 'BOT-39-NEG', availability: 'low' },
-    { size: '40', color: 'Negro', sku: 'BOT-40-NEG', availability: 'out' },
+    { size: '38', color: 'Negro', sku: 'BOT-38-NEG', price: '349.90', availability: 'in_stock' },
+    { size: '39', color: 'Negro', sku: 'BOT-39-NEG', price: '349.90', availability: 'low' },
+    { size: '40', color: 'Negro', sku: 'BOT-40-NEG', price: '349.90', availability: 'out' },
   ],
   ...over,
 });

@@ -1,7 +1,7 @@
 ## ADDED Requirements
 
 ### Requirement: The shop lists products with filters
-La tienda SHALL mostrar en `/catalogo` los productos publicados en tarjetas con foto principal, nombre, precio y aviso de disponibilidad, con filtros por categoria, talla, solo disponibles y orden, y paginacion. MUST funcionar sin JavaScript (los filtros son enlaces y un formulario GET) y conservar los filtros en la URL.
+La tienda SHALL mostrar en `/catalogo` los productos publicados en tarjetas con foto principal, nombre, precio (con "Desde" si las tallas o colores cuestan distinto) y aviso de disponibilidad, con filtros por categoria, talla, solo disponibles y orden, y paginacion. MUST funcionar sin JavaScript (los filtros son enlaces y un formulario GET) y conservar los filtros en la URL.
 
 #### Scenario: Shareable filters
 - **WHEN** el visitante filtra por categoria y talla
@@ -16,7 +16,7 @@ La tienda SHALL mostrar en `/catalogo` los productos publicados en tarjetas con 
 - **THEN** la tienda muestra un mensaje de reintento y no una pagina rota
 
 ### Requirement: A product page shows photos, sizes and price
-La tienda SHALL mostrar en `/p/<slug>` la galeria de fotos (la principal primero), el nombre, la descripcion, el precio en bolivianos, el selector de talla y color con su disponibilidad y las tallas agotadas deshabilitadas. MUST responder 404 si el producto no esta publicado.
+La tienda SHALL mostrar en `/p/<slug>` la galeria de fotos (la principal primero), el nombre, la descripcion, el precio en bolivianos de la variante elegida, el selector de talla y color con su disponibilidad y las tallas agotadas deshabilitadas. MUST responder 404 si el producto no esta publicado.
 
 #### Scenario: Sold out size
 - **WHEN** una talla esta agotada
@@ -119,3 +119,19 @@ La tienda SHALL enlazar el catalogo desde la cabecera, el pie y la portada, y la
 #### Scenario: Home
 - **WHEN** el visitante abre la portada
 - **THEN** ve los productos mas nuevos y un enlace a todo el catalogo
+
+### Requirement: The price always says what it applies to
+La tienda SHALL mostrar el precio junto a una nota que diga a que aplica, aunque todas las variantes cuesten lo mismo. MUST mostrar el precio de cada opcion cuando los precios difieren, repetirlo en la barra fija del telefono e incluir en el mensaje de WhatsApp el de la variante elegida; los datos estructurados SHALL llevar el de cada variante.
+
+#### Scenario: Chosen variant
+- **WHEN** el visitante elige la talla 37 en rojo y esa variante cuesta 350
+- **THEN** ve "Bs 350,00" con la nota "Talla 37 · Rojo" y el mensaje de WhatsApp incluye "Precio: Bs 350,00"
+
+#### Scenario: Not chosen yet, prices differ
+- **WHEN** el visitante abre un producto cuyas tallas cuestan distinto y aun no elige
+- **THEN** ve "Desde Bs 305,00" y la invitacion a elegir talla y color
+
+#### Scenario: Same price everywhere
+- **WHEN** todas las variantes cuestan lo mismo
+- **THEN** ve el precio con la nota "El mismo precio en todas las tallas y colores"
+

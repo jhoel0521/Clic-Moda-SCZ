@@ -1,4 +1,5 @@
 import type { Product, VariantOption } from './catalog';
+import { formatBs } from './format';
 import { whatsappLink } from './whatsapp';
 
 // Dirección canónica de un producto: siempre /p/<slug>, sin talla, color ni ref (no hay páginas duplicadas).
@@ -31,7 +32,7 @@ export function inquiryMessage({ product, origin, variant, ref }: InquiryInput):
   const lines = [`Hola, me interesa: ${product.name}`];
   if (variant) lines.push(`Talla: ${variant.size}`);
   if (variant?.color) lines.push(`Color: ${variant.color}`);
-  if (variant) lines.push(`Código: ${variant.sku}`);
+  if (variant) lines.push(`Código: ${variant.sku}`, `Precio: ${formatBs(variant.price)}`);
   lines.push(productUrl(origin, product.slug));
   if (ref) lines.push(`Ref: ${ref}`);
   return lines.join('\n');

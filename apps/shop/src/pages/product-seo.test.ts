@@ -46,7 +46,7 @@ describe('detalle: etiquetas de búsqueda y compartir', () => {
   it('sin descripción arma la de búsqueda con nombre, categoría y precio', async () => {
     world(detail({ description: null }));
 
-    expect(await html()).toContain('Bota Andes en Botas por Bs 349,90.');
+    expect(await html()).toContain('Bota Andes en Botas. Bs 349,90.');
   });
 });
 

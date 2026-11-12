@@ -16,7 +16,7 @@ El sistema SHALL publicar sin sesion unicamente los productos activos que tengan
 - **THEN** la talla y el color de esa variante no se muestran
 
 ### Requirement: The public catalog never exposes internal data
-El sistema SHALL devolver al visitante solo nombre, slug, descripcion, categoria, fotos, el precio del modelo (un solo precio por modelo), variantes (talla, color, SKU y disponibilidad) y fechas de actualizacion. MUST NOT devolver costos, ubicaciones del almacen, niveles de reposicion, cantidades exactas de stock, movimientos ni identificadores internos de stock.
+El sistema SHALL devolver al visitante solo nombre, slug, descripcion, categoria, fotos, el precio de cada variante, el menor precio del modelo con un indicador de que varia, variantes (talla, color, SKU, precio y disponibilidad) y fechas de actualizacion. MUST NOT devolver costos, ubicaciones del almacen, niveles de reposicion, cantidades exactas de stock, movimientos ni identificadores internos de stock.
 
 #### Scenario: No internal fields
 - **WHEN** un visitante consulta el listado o el detalle
@@ -34,7 +34,7 @@ El sistema SHALL informar la disponibilidad de cada variante como `in_stock`, `l
 - **THEN** el producto sigue publicado con disponibilidad `out`
 
 ### Requirement: The catalog can be filtered, searched and sorted
-El sistema SHALL listar con paginacion (por omision 12, maximo 48) y permitir filtrar por categoria (slug), talla y texto en el nombre, y ordenar por novedad, precio ascendente o precio descendente (el precio del modelo). MUST permitir pedir solo lo disponible.
+El sistema SHALL listar con paginacion (por omision 12, maximo 48) y permitir filtrar por categoria (slug), talla y texto en el nombre, y ordenar por novedad, precio ascendente o precio descendente (por el menor precio del modelo). MUST permitir pedir solo lo disponible.
 
 #### Scenario: Filter by size
 - **WHEN** el visitante filtra por la talla 38
@@ -79,3 +79,15 @@ El sistema SHALL responder las lecturas publicas con `ETag` y una cache de 15 se
 #### Scenario: Stock changes
 - **WHEN** el personal registra una salida y la cola de stock la procesa
 - **THEN** la tienda muestra esa talla como `out` a mas tardar 30 segundos despues de procesada (cache de la API 15 s mas cache de la tienda 15 s)
+
+### Requirement: Every variant carries its own price
+El sistema SHALL devolver el precio propio de cada variante (talla y color) y, en cada producto, su menor precio y un indicador `priceVaries` que es verdadero cuando las variantes activas no cuestan lo mismo. MUST NOT dar por hecho un precio unico por modelo.
+
+#### Scenario: Different prices
+- **WHEN** la sandalia roja talla 36 cuesta 305 y la talla 37 cuesta 350
+- **THEN** cada variante informa su precio y el producto informa 305 con `priceVaries` verdadero
+
+#### Scenario: Same price
+- **WHEN** todas las variantes cuestan lo mismo
+- **THEN** `priceVaries` es falso
+
