@@ -6,7 +6,9 @@ import {
   VariantUnavailableError,
 } from '../../domain/errors/inventory.errors.js';
 import { CommandId, VariantId } from '../../domain/value-objects/ids.vo.js';
+import { InMemoryEventDeliveries } from '../../../shared/testing/in-memory-event-deliveries.js';
 import { FakeClock, InMemoryVariantLookup } from '../../testing/fakes.js';
+import { InMemoryMovementTypesRepository } from '../../testing/in-memory-movement-types.repository.js';
 import { InMemoryStockCommandsRepository } from '../../testing/in-memory-stock-commands.repository.js';
 import { InMemoryStockLevelsRepository } from '../../testing/in-memory-stock-levels.repository.js';
 import { InMemoryStockProcessing } from '../../testing/in-memory-stock-processing.js';
@@ -44,6 +46,7 @@ function setup() {
   const store = new InMemoryStockStore();
   const commands = new InMemoryStockCommandsRepository(store);
   const levels = new InMemoryStockLevelsRepository(store);
+  const types = InMemoryMovementTypesRepository.seeded();
   const variants = new InMemoryVariantLookup();
   const clock = new FakeClock();
   const variantId = registerVariant(store, variants);
@@ -52,10 +55,10 @@ function setup() {
     clock,
     variants,
     variantId,
-    enqueue: new EnqueueStockCommandUseCase(commands, variants, clock),
+    enqueue: new EnqueueStockCommandUseCase(commands, types, variants, clock),
     process: new ProcessNextStockCommandUseCase(new InMemoryStockProcessing(store), clock),
     get: new GetStockCommandUseCase(commands),
-    queue: new GetQueueStatusUseCase(commands, clock),
+    queue: new GetQueueStatusUseCase(commands, new InMemoryEventDeliveries(), clock),
     settings: new UpdateStockSettingsUseCase(levels, variants),
     list: new ListStockUseCase(new InMemoryStockQuery(store)),
     low: new ListLowStockUseCase(new InMemoryStockQuery(store)),
@@ -188,14 +191,21 @@ describe('GetStockCommandUseCase y GetQueueStatusUseCase', () => {
       world.get.execute(new GetStockCommandQuery(CommandId.generate().value))
     ).rejects.toThrow(CommandNotFoundError);
   });
+});
 
+describe('GetQueueStatusUseCase', () => {
   it('informa los pendientes y la antigüedad del más viejo', async () => {
     const world = setup();
-    expect(await world.queue.execute()).toEqual({ pending: 0, oldestPendingAgeSeconds: null });
+    const idle = { pending: 0, needsReview: 0, oldestPendingAgeSeconds: null };
+    expect(await world.queue.execute()).toEqual({
+      pending: 0,
+      oldestPendingAgeSeconds: null,
+      events: idle,
+    });
     await receive(world, 1);
     world.clock.advance(90_000);
 
-    expect(await world.queue.execute()).toEqual({ pending: 1, oldestPendingAgeSeconds: 90 });
+    expect(await world.queue.execute()).toMatchObject({ pending: 1, oldestPendingAgeSeconds: 90 });
   });
 });
 

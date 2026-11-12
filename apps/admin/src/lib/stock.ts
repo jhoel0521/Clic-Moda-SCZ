@@ -20,13 +20,17 @@ export interface StockCommand {
   id: string;
   status: 'PENDING' | 'APPLIED' | 'REJECTED';
   rejectReason: string | null;
-  type: MovementKind;
+  type: MovementKind; // la clase: decide cómo cambia el stock
+  typeCode: string; // el tipo (motivo): un dato administrable
   units: number;
 }
 
 export interface MovementItem {
   id: string;
   type: MovementKind;
+  typeCode: string;
+  typeName: string;
+  balanceAfter: number; // unidades físicas que quedaron después de este movimiento
   delta: number;
   reason: string;
   operator: string;
@@ -89,6 +93,7 @@ export const fetchCommand = (id: string): Promise<StockCommand> => api<StockComm
 interface SendInput {
   variantId: string;
   type: MovementKind;
+  typeCode?: string; // sin código: el tipo de sistema de la clase
   units: number;
   reason: string;
   key: string;

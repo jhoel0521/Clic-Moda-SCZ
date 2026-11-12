@@ -27,14 +27,20 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
       dependencies: ['setup'],
       testMatch:
-        /flujos\.spec\.ts|permisos\.spec\.ts|acceso\.spec\.ts|imagenes\.spec\.ts|configuracion\.spec\.ts|fotos-producto\.spec\.ts/,
+        /flujos\.spec\.ts|permisos\.spec\.ts|acceso\.spec\.ts|imagenes\.spec\.ts|configuracion\.spec\.ts|fotos-producto\.spec\.ts|tipos-movimiento\.spec\.ts/,
     },
     {
       name: 'iphone',
       use: { ...devices['iPhone 15'] },
       dependencies: ['setup'],
       testMatch:
-        /flujos\.spec\.ts|permisos\.spec\.ts|acceso\.spec\.ts|imagenes\.spec\.ts|configuracion\.spec\.ts|fotos-producto\.spec\.ts/,
+        /flujos\.spec\.ts|permisos\.spec\.ts|acceso\.spec\.ts|imagenes\.spec\.ts|configuracion\.spec\.ts|fotos-producto\.spec\.ts|tipos-movimiento\.spec\.ts/,
+    },
+    {
+      name: 'movil-390',
+      use: { ...devices['Pixel 5'], viewport: { width: 390, height: 780 } },
+      dependencies: ['setup'],
+      testMatch: /fitts-tipos\.spec\.ts/,
     },
     {
       name: 'movil-360',

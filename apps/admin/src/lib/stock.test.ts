@@ -6,6 +6,7 @@ const command = (status: StockCommand['status']): StockCommand => ({
   status,
   rejectReason: status === 'REJECTED' ? 'INSUFFICIENT_STOCK' : null,
   type: 'WITHDRAW',
+  typeCode: 'WITHDRAW',
   units: 1,
 });
 

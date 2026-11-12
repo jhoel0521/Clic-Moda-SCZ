@@ -65,7 +65,8 @@ export class InventoryCommandsController {
       body.units,
       body.reason,
       user.id.value,
-      key
+      key,
+      body.typeCode
     );
     const result = await this.enqueue.execute(command);
     res.setHeader('Location', `/inventory/commands/${result.command.id}`);

@@ -27,6 +27,9 @@ export const envSchema = z.object({
   // Procesador de la cola de stock: "off" lo desactiva (otro proceso o pruebas) y POLL_MS es la espera sin trabajo.
   STOCK_QUEUE_WORKER: z.enum(['on', 'off']).default('on'),
   STOCK_QUEUE_POLL_MS: z.coerce.number().int().min(20).max(10000).default(200),
+  // Despachador de eventos: "off" lo apaga (los eventos quedan guardados y se entregan al encenderlo).
+  EVENT_DISPATCHER: z.enum(['on', 'off']).default('on'),
+  EVENT_DISPATCH_POLL_MS: z.coerce.number().int().min(20).max(10000).default(500),
 });
 
 export type Env = z.infer<typeof envSchema>;

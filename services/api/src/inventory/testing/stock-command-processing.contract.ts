@@ -17,6 +17,8 @@ export interface ProcessingWorld {
   processing: StockCommandProcessingPort;
   newVariant(): Promise<VariantId>;
   movementsOf(variantId: VariantId): Promise<StockMovement[]>;
+  // Los eventos que el procesamiento guardó para esa variante, en orden.
+  eventsOf(variantId: VariantId): Promise<{ type: string; payload: Record<string, unknown> }[]>;
 }
 type Factory = () => Promise<ProcessingWorld> | ProcessingWorld;
 
@@ -232,6 +234,67 @@ function retryCases3(make: Factory): void {
   });
 }
 
+function eventCases(make: Factory): void {
+  it('aplicar un comando guarda un evento con el estado resultante; rechazarlo no guarda ninguno', async () => {
+    const world = await make();
+    const variantId = await world.newVariant();
+    await enqueue(world, variantId, 'RECEIVE', 12);
+    await enqueue(world, variantId, 'WITHDRAW', 5);
+    await enqueue(world, variantId, 'WITHDRAW', 99);
+
+    await drain(world);
+    const events = await world.eventsOf(variantId);
+
+    expect(events.map((e) => e.type)).toEqual(['stock.applied', 'stock.applied']);
+    expect(
+      events.map((e) => [e.payload.delta, e.payload.onHandAfter, e.payload.availableAfter])
+    ).toEqual([
+      [12, 12, 12],
+      [-5, 7, 7],
+    ]);
+  });
+}
+
+// Secuencia pseudoaleatoria fija (siempre la misma): ingresos, salidas y ajustes mezclados en varias variantes.
+function mixedCommands(count: number): { variant: number; type: CommandType; units: number }[] {
+  let seed = 12345;
+  const next = (limit: number): number => {
+    seed = (seed * 1103515245 + 12345) % 2147483648;
+    return seed % limit;
+  };
+  const kinds: CommandType[] = ['RECEIVE', 'WITHDRAW', 'ADJUST'];
+  return Array.from({ length: count }, () => ({
+    variant: next(3),
+    type: kinds[next(3)] as CommandType,
+    units: 1 + next(8),
+  }));
+}
+
+function balanceCases(make: Factory): void {
+  it('cada movimiento guarda el saldo que quedó, y el último es igual al stock de la variante', async () => {
+    const world = await make();
+    const variants = [await world.newVariant(), await world.newVariant(), await world.newVariant()];
+    for (const { variant, type, units } of mixedCommands(60)) {
+      await enqueue(world, variants[variant] as VariantId, type, units);
+    }
+    const running = new Map<string, number>();
+
+    for (const result of await drain(world)) {
+      if (!result.movement) continue;
+      const key = result.movement.variantId.value;
+      const balance = (running.get(key) ?? 0) + result.movement.delta;
+      running.set(key, balance);
+      expect(result.movement.balanceAfter).toBe(balance);
+    }
+
+    expect(running.size).toBeGreaterThan(0);
+    for (const variantId of variants) {
+      const level = await world.levels.findByVariantId(variantId);
+      expect(running.get(variantId.value) ?? 0).toBe(level?.onHand ?? 0);
+    }
+  });
+}
+
 // Suite de contrato: toda implementación del puerto (fake en memoria y TypeORM) debe pasarla.
 export function stockCommandProcessingContract(label: string, make: Factory): void {
   describe(`StockCommandProcessingPort: ${label}`, () => {
@@ -243,5 +306,7 @@ export function stockCommandProcessingContract(label: string, make: Factory): vo
     retryCases(make);
     retryCases2(make);
     retryCases3(make);
+    balanceCases(make);
+    eventCases(make);
   });
 }

@@ -8,6 +8,7 @@ import {
   VariantId,
 } from '../../src/inventory/domain/value-objects/ids.vo.js';
 import { Operator, Reason } from '../../src/inventory/domain/value-objects/stock-values.vo.js';
+import { TypeCode } from '../../src/inventory/domain/value-objects/type-values.vo.js';
 import type { VariantInfo } from '../../src/inventory/testing/stock-query.contract.js';
 
 // Devuelve el producto con ese nombre (lo crea con su categoría si no existe): varias variantes del mismo
@@ -49,8 +50,22 @@ export async function insertVariant(db: DataSource, info: VariantInfo): Promise<
 
 interface MovementInput {
   type: string;
+  typeCode?: string;
+  balanceAfter?: number;
   delta: number;
   occurredAt: Date;
+}
+
+async function insertResolvedCommand(
+  db: DataSource,
+  [commandId, variantId]: [string, string],
+  movement: MovementInput
+): Promise<void> {
+  await db.query(
+    `INSERT INTO stock_commands (id, variant_id, type, quantity, reason, operator, request_hash, status, resolved_at, movement_id, type_code)
+     VALUES ($1, $2, $3, 1, 'Prueba de contrato', 'u-1', repeat('a', 64), 'APPLIED', $4, NULL, $5)`,
+    [commandId, variantId, movement.type, movement.occurredAt, movement.typeCode ?? movement.type]
+  );
 }
 
 // Un movimiento real exige un comando (clave foránea): se crea uno ya resuelto y su movimiento.
@@ -59,16 +74,15 @@ export async function insertCommandRow(
   variantId: VariantId,
   movement: MovementInput
 ): Promise<void> {
-  const [commandId, movementId] = [randomUUID(), randomUUID()];
+  const commandId = randomUUID();
+  await insertResolvedCommand(db, [commandId, variantId.value], movement);
   await db.query(
-    `INSERT INTO stock_commands (id, variant_id, type, quantity, reason, operator, request_hash, status, resolved_at, movement_id)
-     VALUES ($1, $2, $3, 1, 'Prueba de contrato', 'u-1', repeat('a', 64), 'APPLIED', $4, NULL)`,
-    [commandId, variantId.value, movement.type, movement.occurredAt]
-  );
-  await db.query(
-    `INSERT INTO stock_movements (id, variant_id, command_id, type, delta, reason, operator, occurred_at)
-     VALUES ($1, $2, $3, $4, $5, 'Prueba de contrato', 'u-1', $6)`,
-    [movementId, variantId.value, commandId, movement.type, movement.delta, movement.occurredAt]
+    `INSERT INTO stock_movements (id, variant_id, command_id, type, delta, reason, operator, occurred_at, type_code, balance_after)
+     VALUES ($1, $2, $3, $4, $5, 'Prueba de contrato', 'u-1', $6, $7, $8)`,
+    [
+      ...[randomUUID(), variantId.value, commandId, movement.type, movement.delta],
+      ...[movement.occurredAt, movement.typeCode ?? movement.type, movement.balanceAfter ?? 0],
+    ]
   );
 }
 
@@ -86,10 +100,21 @@ export async function readMovements(
       variantId,
       commandId: CommandId.of(row.command_id as string),
       type: parseCommandType(row.type as string),
+      typeCode: TypeCode.of(row.type_code as string),
       delta: row.delta as number,
+      balanceAfter: row.balance_after as number,
       reason: Reason.of(row.reason as string),
       operator: Operator.of(row.operator as string),
       occurredAt: row.occurred_at as Date,
     })
   );
+}
+
+export async function readEvents(
+  db: DataSource,
+  variantId: VariantId
+): Promise<{ type: string; payload: Record<string, unknown> }[]> {
+  return db.query('SELECT type, payload FROM domain_events WHERE aggregate_id = $1 ORDER BY seq', [
+    variantId.value,
+  ]);
 }

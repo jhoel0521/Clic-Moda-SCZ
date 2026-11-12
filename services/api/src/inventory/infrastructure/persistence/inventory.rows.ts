@@ -7,6 +7,7 @@ import {
   type RejectReason,
 } from '../../domain/value-objects/command-values.js';
 import { CommandId, MovementId, VariantId } from '../../domain/value-objects/ids.vo.js';
+import { TypeCode } from '../../domain/value-objects/type-values.vo.js';
 import {
   IdempotencyKey,
   Location,
@@ -22,6 +23,7 @@ export interface CommandRow {
   seq: string; // bigint llega como texto
   variant_id: string;
   type: string;
+  type_code: string;
   quantity: number;
   reason: string;
   operator: string;
@@ -49,6 +51,8 @@ export interface MovementRow {
   variant_id: string;
   command_id: string;
   type: string;
+  type_code: string;
+  balance_after: number;
   delta: number;
   reason: string;
   operator: string;
@@ -61,6 +65,7 @@ export const toCommand = (row: CommandRow): StockCommand =>
     seq: Number(row.seq),
     variantId: VariantId.of(row.variant_id),
     type: parseCommandType(row.type),
+    typeCode: TypeCode.of(row.type_code),
     quantity: Quantity.count(row.quantity),
     reason: Reason.of(row.reason),
     operator: Operator.of(row.operator),
@@ -90,6 +95,8 @@ export const toMovement = (row: MovementRow): StockMovement =>
     variantId: VariantId.of(row.variant_id),
     commandId: CommandId.of(row.command_id),
     type: parseCommandType(row.type),
+    typeCode: TypeCode.of(row.type_code),
+    balanceAfter: row.balance_after,
     delta: row.delta,
     reason: Reason.of(row.reason),
     operator: Operator.of(row.operator),

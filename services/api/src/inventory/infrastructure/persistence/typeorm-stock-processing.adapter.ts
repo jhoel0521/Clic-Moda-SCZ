@@ -6,6 +6,8 @@ import type {
   StockDecider,
 } from '../../application/ports/inventory.ports.js';
 import type { StockCommand } from '../../domain/entities/stock-command.entity.js';
+import { EventOutbox } from '../../../shared/infrastructure/events/event-outbox.js';
+import { StockApplied } from '../../domain/events/stock-applied.event.js';
 import { StockLevel } from '../../domain/entities/stock-level.entity.js';
 import { StockMovement } from '../../domain/entities/stock-movement.entity.js';
 import { RETRY_POLICY, type RejectReason } from '../../domain/value-objects/command-values.js';
@@ -42,7 +44,10 @@ const CLAIM = `
 
 @Injectable()
 export class TypeOrmStockProcessingAdapter implements StockCommandProcessingPort {
-  constructor(private readonly dataSource: DataSource) {}
+  constructor(
+    private readonly dataSource: DataSource,
+    private readonly outbox: EventOutbox
+  ) {}
 
   async processNext(decide: StockDecider, now: Date): Promise<ProcessedCommand | null> {
     const candidates: Candidate[] = await this.dataSource.query(CANDIDATES, [now]);
@@ -127,9 +132,10 @@ export class TypeOrmStockProcessingAdapter implements StockCommandProcessingPort
     delta: number,
     now: Date
   ): Promise<ProcessedCommand> {
-    await this.changeStock(manager, command, delta, now);
-    const movement = this.movementFor(command, delta, now);
+    const level = await this.changeStock(manager, command, delta, now);
+    const movement = this.movementFor(command, delta, now, level.onHand);
     await this.writeMovement(manager, movement);
+    await this.recordEvent(manager, movement, level.reserved);
     await manager.query(
       `UPDATE stock_commands SET status = 'APPLIED', movement_id = $2, resolved_at = $3
        WHERE id = $1 AND status = 'PENDING'`,
@@ -139,10 +145,25 @@ export class TypeOrmStockProcessingAdapter implements StockCommandProcessingPort
     return { command, movement, outcome: 'APPLIED' };
   }
 
+  // El hecho se guarda en la MISMA transacción que el cambio: existen los dos o ninguno.
+  private async recordEvent(
+    manager: EntityManager,
+    movement: StockMovement,
+    reserved: number
+  ): Promise<void> {
+    const event = StockApplied.of(movement, reserved);
+    await this.outbox.publish(manager, {
+      type: event.type,
+      aggregateId: event.aggregateId,
+      payload: event.toPayload() as unknown as Record<string, unknown>,
+      occurredAt: movement.occurredAt,
+    });
+  }
+
   private async writeMovement(manager: EntityManager, movement: StockMovement): Promise<void> {
     await manager.query(
-      `INSERT INTO stock_movements (id, variant_id, command_id, type, delta, reason, operator, occurred_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+      `INSERT INTO stock_movements (id, variant_id, command_id, type, delta, reason, operator, occurred_at, type_code, balance_after)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
       [
         movement.id.value,
         movement.variantId.value,
@@ -152,6 +173,8 @@ export class TypeOrmStockProcessingAdapter implements StockCommandProcessingPort
         movement.reason.value,
         movement.operator.value,
         movement.occurredAt,
+        movement.typeCode.value,
+        movement.balanceAfter,
       ]
     );
   }
@@ -162,7 +185,7 @@ export class TypeOrmStockProcessingAdapter implements StockCommandProcessingPort
     command: StockCommand,
     delta: number,
     now: Date
-  ): Promise<void> {
+  ): Promise<{ onHand: number; reserved: number }> {
     const id = command.variantId.value;
     await manager.query(
       'INSERT INTO stock_levels (variant_id) VALUES ($1) ON CONFLICT DO NOTHING',
@@ -171,20 +194,29 @@ export class TypeOrmStockProcessingAdapter implements StockCommandProcessingPort
     const updated = rowsOf(
       await manager.query(
         `UPDATE stock_levels SET on_hand = on_hand + $2::int, updated_at = $3
-       WHERE variant_id = $1 AND on_hand + $2::int >= reserved RETURNING on_hand`,
+       WHERE variant_id = $1 AND on_hand + $2::int >= reserved RETURNING on_hand, reserved`,
         [id, delta, now]
       )
     );
     if (updated.length === 0) throw new Error('El cambio rompería una invariante de stock');
+    const row = updated[0] as { on_hand: number; reserved: number };
+    return { onHand: row.on_hand, reserved: row.reserved };
   }
 
-  private movementFor(command: StockCommand, delta: number, now: Date): StockMovement {
+  private movementFor(
+    command: StockCommand,
+    delta: number,
+    now: Date,
+    balanceAfter: number
+  ): StockMovement {
     return StockMovement.restore({
       id: MovementId.generate(),
       variantId: command.variantId,
       commandId: command.id,
       type: command.type,
+      typeCode: command.typeCode,
       delta,
+      balanceAfter,
       reason: command.reason,
       operator: command.operator,
       occurredAt: now,

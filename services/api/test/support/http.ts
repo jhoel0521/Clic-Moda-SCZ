@@ -5,6 +5,7 @@ import { DataSource } from 'typeorm';
 import type { App } from 'supertest/types.js';
 import { AppModule } from '../../src/app.module.js';
 import { Role } from '../../src/identity/domain/value-objects/role.vo.js';
+import { reseedMovementTypes } from './db.js';
 import { resetDatabase, seedStaff, STAFF_PASSWORD } from './identity.js';
 
 export interface StaffTokens {
@@ -56,6 +57,8 @@ export function call(
 }
 
 const CATALOG_TABLES = [
+  'domain_events', // los eventos y sus entregas (CASCADE) también son del inventario
+  'event_subscribers',
   'stock_movements',
   'stock_commands',
   'stock_levels',
@@ -73,4 +76,6 @@ export async function resetCatalog(app: INestApplication<App>): Promise<void> {
     throw new Error('Se niega a limpiar una base que no es de pruebas');
   const tables = CATALOG_TABLES.map((table) => `"${table}"`).join(', ');
   await dataSource.query(`TRUNCATE ${tables} CASCADE`);
+  await dataSource.query('TRUNCATE "movement_types" CASCADE');
+  await reseedMovementTypes(dataSource);
 }

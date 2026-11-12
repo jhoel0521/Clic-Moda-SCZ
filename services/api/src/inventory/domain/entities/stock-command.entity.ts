@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { IllegalCommandTransitionError } from '../errors/inventory.errors.js';
 import type { CommandStatus, CommandType, RejectReason } from '../value-objects/command-values.js';
 import { CommandId, MovementId, type VariantId } from '../value-objects/ids.vo.js';
+import { TypeCode } from '../value-objects/type-values.vo.js';
 import type {
   IdempotencyKey,
   Operator,
@@ -14,6 +15,7 @@ export interface StockCommandProps {
   seq: number | null; // orden de llegada; lo asigna la cola al aceptar
   variantId: VariantId;
   type: CommandType;
+  typeCode: TypeCode; // el motivo (dato administrable); `type` es la clase y decide cómo cambia el stock
   quantity: Quantity;
   reason: Reason;
   operator: Operator;
@@ -31,6 +33,7 @@ export interface StockCommandProps {
 export interface AcceptInput {
   variantId: VariantId;
   type: CommandType;
+  typeCode?: TypeCode; // sin código: el tipo de sistema de la clase (su código es el de la clase)
   quantity: Quantity;
   reason: Reason;
   operator: Operator;
@@ -38,25 +41,33 @@ export interface AcceptInput {
 }
 
 // Huella del contenido: sirve para distinguir un reintento legítimo de una clave reutilizada.
+// El código del tipo solo entra en la huella cuando NO es el de sistema de la clase: así la huella de todo
+// comando aceptado antes de los tipos (y la de los de sistema) es exactamente la de siempre.
 export const fingerprintOf = (
-  input: Pick<AcceptInput, 'variantId' | 'type' | 'quantity' | 'reason'>
-): string =>
-  createHash('sha256')
-    .update(
-      JSON.stringify([input.type, input.variantId.value, input.quantity.units, input.reason.value])
-    )
-    .digest('hex');
+  input: Pick<AcceptInput, 'variantId' | 'type' | 'quantity' | 'reason' | 'typeCode'>
+): string => {
+  const parts: (string | number)[] = [
+    input.type,
+    input.variantId.value,
+    input.quantity.units,
+    input.reason.value,
+  ];
+  if (input.typeCode && input.typeCode.value !== input.type) parts.push(input.typeCode.value);
+  return createHash('sha256').update(JSON.stringify(parts)).digest('hex');
+};
 
 // Comando de stock. Máquina de estados: PENDING → APPLIED | REJECTED; los dos finales son inmutables.
 export class StockCommand {
   private constructor(private props: StockCommandProps) {}
 
   static accept(input: AcceptInput, now: Date): StockCommand {
+    const typeCode = input.typeCode ?? TypeCode.of(input.type);
     return new StockCommand({
       ...input,
+      typeCode,
       id: CommandId.generate(),
       seq: null,
-      requestHash: fingerprintOf(input),
+      requestHash: fingerprintOf({ ...input, typeCode }),
       status: 'PENDING',
       rejectReason: null,
       attempts: 0,
@@ -110,6 +121,10 @@ export class StockCommand {
 
   get type(): CommandType {
     return this.props.type;
+  }
+
+  get typeCode(): TypeCode {
+    return this.props.typeCode;
   }
 
   get quantity(): Quantity {

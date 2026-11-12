@@ -7,7 +7,8 @@ export class EnqueueStockCommand {
     readonly units: number,
     readonly reason: string,
     readonly operator: string,
-    readonly idempotencyKey?: string | null
+    readonly idempotencyKey?: string | null,
+    readonly typeCode?: string | null
   ) {}
 }
 
@@ -28,6 +29,7 @@ export interface StockCommandResult {
   readonly seq: number | null;
   readonly variantId: string;
   readonly type: string;
+  readonly typeCode: string;
   readonly units: number;
   readonly reason: string;
   readonly operator: string;
@@ -49,6 +51,7 @@ export const toCommandResult = (command: StockCommand): StockCommandResult => ({
   seq: command.seq,
   variantId: command.variantId.value,
   type: command.type,
+  typeCode: command.typeCode.value,
   units: command.quantity.units,
   reason: command.reason.value,
   operator: command.operator.value,
@@ -99,14 +102,18 @@ export interface MovementsQuery {
   readonly page: number;
   readonly pageSize: number;
   readonly type?: string;
+  readonly typeCode?: string; // filtra por el tipo (motivo), además de la clase
   readonly from?: Date;
   readonly to?: Date;
 }
 
 export interface MovementRow {
   readonly id: string;
-  readonly type: string;
+  readonly type: string; // la clase: RECEIVE, WITHDRAW o ADJUST
+  readonly typeCode: string;
+  readonly typeName: string; // el nombre actual del tipo (si se renombra, el historial lo muestra)
   readonly delta: number;
+  readonly balanceAfter: number; // unidades físicas que quedaron después de este movimiento
   readonly reason: string;
   readonly operator: string;
   readonly occurredAt: string;
@@ -127,7 +134,14 @@ export interface InventorySummary {
   readonly lowStockVariants: number;
 }
 
+export interface EventQueueStatus {
+  readonly pending: number; // entregas de eventos que esperan
+  readonly needsReview: number; // agotaron sus intentos: el Gerente las reintenta
+  readonly oldestPendingAgeSeconds: number | null;
+}
+
 export interface QueueStatusResult {
   readonly pending: number;
   readonly oldestPendingAgeSeconds: number | null;
+  readonly events: EventQueueStatus;
 }

@@ -207,6 +207,9 @@ it('Historial — muestra los movimientos de la variante elegida', async () => {
   const movement = {
     id: 'm1',
     type: 'RECEIVE',
+    typeCode: 'PURCHASE',
+    typeName: 'Ingreso por compra',
+    balanceAfter: 9,
     delta: 5,
     reason: 'Compra a proveedor',
     operator: 'u',
@@ -220,6 +223,8 @@ it('Historial — muestra los movimientos de la variante elegida', async () => {
   fireEvent.click(screen.getByRole('button', { name: 'Ver historial' }));
 
   expect(await screen.findByText('+5')).toBeInTheDocument();
+  expect(screen.getByText('Ingreso por compra')).toBeInTheDocument();
+  expect(screen.getByText('Saldo 9')).toBeInTheDocument();
   expect(screen.getByText(/Compra a proveedor/)).toBeInTheDocument();
 });
 
