@@ -55,6 +55,11 @@ export const card = (over: Partial<CardProduct> = {}): CardProduct => ({
   price: '349.90',
   priceVaries: false,
   availability: 'in_stock',
+  variants: [
+    { size: '38', color: 'Negro', sku: 'BOT-38-NEG', price: '349.90', availability: 'in_stock' },
+    { size: '39', color: 'Negro', sku: 'BOT-39-NEG', price: '349.90', availability: 'low' },
+    { size: '40', color: 'Negro', sku: 'BOT-40-NEG', price: '349.90', availability: 'out' },
+  ],
   photo: {
     alt: 'Frente',
     card: '/m/a/card-1.webp',

@@ -50,11 +50,13 @@ export interface PublicProductCardResult {
   readonly price: string;
   readonly priceVaries: boolean;
   readonly availability: Availability;
+  // Variantes para pintar color, tallas y su precio en la tarjeta.
+  readonly variants: readonly PublicVariantResult[];
   readonly photo: PublicPhotoResult | null;
   readonly updatedAt: string;
 }
 
-export interface PublicProductResult extends Omit<PublicProductCardResult, 'photo'> {
+export interface PublicProductResult extends Omit<PublicProductCardResult, 'photo' | 'variants'> {
   readonly description: string | null;
   readonly photos: readonly PublicPhotoResult[];
   readonly variants: readonly PublicVariantResult[];

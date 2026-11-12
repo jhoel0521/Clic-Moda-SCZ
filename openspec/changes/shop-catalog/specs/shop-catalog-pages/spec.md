@@ -135,3 +135,14 @@ La tienda SHALL mostrar el precio junto a una nota que diga a que aplica, aunque
 - **WHEN** todas las variantes cuestan lo mismo
 - **THEN** ve el precio con la nota "El mismo precio en todas las tallas y colores"
 
+### Requirement: Each card shows a concrete variant
+La tienda SHALL mostrar en cada tarjeta una variante concreta: su precio, su talla, su color y las tallas de ese color como enlaces al detalle con la talla y el color elegidos. MUST elegir la variante mas barata que se pueda comprar y marcar las tallas agotadas con texto ademas del tachado.
+
+#### Scenario: Card content
+- **WHEN** un modelo tiene la sandalia roja talla 36 a 305 y la talla 37 a 350
+- **THEN** la tarjeta muestra "Bs 305,00 · Talla 36", "Color: Rojo" y las tallas 36 y 37, cada una con su enlace
+
+#### Scenario: Sold out size
+- **WHEN** una talla del color mostrado esta agotada
+- **THEN** su enlace lo dice con texto ("agotada") y no solo con el tachado
+

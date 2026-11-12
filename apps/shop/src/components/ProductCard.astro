@@ -1,7 +1,8 @@
 ---
+import { cardView, variantPath } from '../lib/card-variants';
 import type { CardProduct } from '../lib/catalog';
+import { formatBs } from '../lib/format';
 import { productPath } from '../lib/inquiry';
-import { cardPrice } from '../lib/pricing';
 import AvailabilityBadge from './AvailabilityBadge.astro';
 
 interface Props {
@@ -12,10 +13,14 @@ interface Props {
 
 const { product, priority = false } = Astro.props;
 const { photo } = product;
+const view = cardView(product.variants);
+const path = productPath(product.slug);
+const chip =
+  'inline-flex min-h-11 min-w-11 flex-col items-center justify-center rounded-lg border-2 px-2 text-sm font-semibold';
 ---
 
-<li>
-  <a href={productPath(product.slug)} class="group flex flex-col gap-2 rounded-2xl">
+<li class="flex flex-col gap-2">
+  <a href={view ? variantPath(product.slug, view.featured) : path} class="group rounded-2xl">
     <div class="relative aspect-[4/5] overflow-hidden rounded-2xl bg-brand-soft">
       {photo ? (
         <img
@@ -37,10 +42,56 @@ const { photo } = product;
         <AvailabilityBadge availability={product.availability} quiet={true} />
       </span>
     </div>
-    <div class="flex flex-col gap-0.5">
-      <p class="text-sm text-muted">{product.category.name}</p>
-      <h3 class="line-clamp-2 font-semibold leading-snug wrap-anywhere">{product.name}</h3>
-      <p class="font-bold text-brand-dark">{cardPrice(product)}</p>
-    </div>
   </a>
+  <div class="flex flex-col gap-1">
+    <p class="text-sm text-muted">{product.category.name}</p>
+    <h3 class="line-clamp-2 font-semibold leading-snug wrap-anywhere">
+      <a href={path} class="underline-offset-2 hover:underline">
+        {product.name}
+      </a>
+    </h3>
+    {view ? (
+      <>
+        <p class="font-bold text-brand-dark">
+          {formatBs(view.featured.price)}
+          <span class="text-sm font-normal text-muted">· Talla {view.featured.size}</span>
+        </p>
+        {view.featured.color && (
+          <p class="text-sm text-muted">
+            Color: <span class="font-medium text-ink">{view.featured.color}</span>
+            {view.moreColors > 0 && ` y ${String(view.moreColors)} más`}
+          </p>
+        )}
+        <ul class="mt-1 flex flex-wrap gap-1.5" aria-label="Tallas disponibles">
+          {view.chips.map((option) => {
+            const out = option.availability === 'out';
+            const current = option === view.featured;
+            return (
+              <li>
+                <a
+                  href={variantPath(product.slug, option)}
+                  title={out ? `Talla ${option.size}: agotada` : `Talla ${option.size}`}
+                  class:list={[
+                    chip,
+                    current ? 'border-brand-dark bg-brand-soft' : 'border-neutral-500',
+                    out && 'border-dashed text-muted line-through',
+                  ]}
+                >
+                  <span>
+                    {option.size}
+                    {out && <span class="sr-only"> (agotada)</span>}
+                  </span>
+                  {view.chipPrices && (
+                    <span class="text-xs font-medium no-underline">{formatBs(option.price)}</span>
+                  )}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </>
+    ) : (
+      <p class="font-bold text-brand-dark">{formatBs(product.price)}</p>
+    )}
+  </div>
 </li>

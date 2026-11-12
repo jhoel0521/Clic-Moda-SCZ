@@ -4,6 +4,7 @@ import type {
   PublicPhotoResult,
   PublicProductCardResult,
   PublicProductResult,
+  PublicVariantResult,
 } from '../dtos/public-catalog.dtos.js';
 import type { MediaReference, MediaReferencesPort } from '../ports/media-references.port.js';
 
@@ -38,6 +39,15 @@ export async function resolvePhotos(
 const availabilityOfProduct = (product: PublishedProduct) =>
   aggregateAvailability(product.variants.map((variant) => availabilityOf(variant.available)));
 
+const toVariants = (product: PublishedProduct): PublicVariantResult[] =>
+  product.variants.map((variant) => ({
+    size: variant.size,
+    color: variant.color,
+    sku: variant.sku,
+    price: variant.price.toDecimal(),
+    availability: availabilityOf(variant.available),
+  }));
+
 export const toCard = (
   product: PublishedProduct,
   photos: readonly PublicPhotoResult[]
@@ -48,6 +58,7 @@ export const toCard = (
   price: product.price.toDecimal(),
   priceVaries: product.variants.some((variant) => variant.price.cents !== product.price.cents),
   availability: availabilityOfProduct(product),
+  variants: toVariants(product),
   photo: photos[0] ?? null,
   updatedAt: product.updatedAt.toISOString(),
 });
@@ -61,12 +72,6 @@ export const toDetail = (
     ...card,
     description: product.description,
     photos,
-    variants: product.variants.map((variant) => ({
-      size: variant.size,
-      color: variant.color,
-      sku: variant.sku,
-      price: variant.price.toDecimal(),
-      availability: availabilityOf(variant.available),
-    })),
+    variants: toVariants(product),
   };
 };

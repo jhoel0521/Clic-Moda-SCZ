@@ -214,6 +214,7 @@ describe('Catálogo público: precio por variante', () => {
 
     expect(detail.variants.map((v: { price: string }) => v.price)).toEqual(['305.00', '350.00']);
     expect([list.price, list.priceVaries]).toEqual(['305.00', true]);
+    expect(list.variants.map((v: { price: string }) => v.price)).toEqual(['305.00', '350.00']);
   });
 });
 

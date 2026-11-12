@@ -118,6 +118,7 @@ describe('lectura pública: precio por variante', () => {
     );
 
     expect(page.items[0]?.priceVaries).toBe(false);
+    expect(page.items[0]?.variants.map((v) => v.size)).toEqual(['38']);
   });
 });
 

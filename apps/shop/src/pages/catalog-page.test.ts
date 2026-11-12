@@ -16,10 +16,18 @@ const run = async (world: ApiWorld, query = '') => {
 };
 const html = async (world: ApiWorld, query = '') => (await run(world, query)).text();
 
+const taco = {
+  size: '36',
+  color: 'Rojo',
+  sku: 'T-36',
+  price: '1349.90',
+  availability: 'in_stock',
+} as const;
+
 describe('catálogo: tarjetas', () => {
   it('cada tarjeta lleva foto con medidas, nombre, precio en Bs y enlace por slug', async () => {
     const out = await html({
-      list: page([card(), card({ slug: 'taco-luna', name: 'Taco Luna', price: '1349.90' })]),
+      list: page([card(), card({ slug: 'taco-luna', name: 'Taco Luna', variants: [taco] })]),
     });
 
     expect(out).toContain('href="/p/bota-andes"');
@@ -35,6 +43,25 @@ describe('catálogo: tarjetas', () => {
 
     expect(out.match(/loading="eager"/g)).toHaveLength(2);
     expect(out.match(/loading="lazy"/g)).toHaveLength(1);
+  });
+});
+
+describe('catálogo: la tarjeta dice qué variante muestra', () => {
+  it('muestra el color, la talla y el precio de esa combinación, y las tallas como enlaces', async () => {
+    const out = await html({ list: page([card()]) });
+
+    expect(out).toContain('Bs 349,90');
+    expect(out).toContain('Talla 38');
+    expect(out).toContain('Color:');
+    expect(out).toContain('Negro');
+    expect(out).toContain('href="/p/bota-andes?talla=39&amp;color=Negro"');
+  });
+
+  it('una talla agotada se marca con texto y no solo con el tachado', async () => {
+    const out = await html({ list: page([card()]) });
+
+    expect(out).toContain('Talla 40: agotada');
+    expect(out).toContain('(agotada)');
   });
 });
 

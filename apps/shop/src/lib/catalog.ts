@@ -17,6 +17,7 @@ export interface CardProduct {
   price: string; // "349.90": el menor de sus variantes
   priceVaries: boolean; // true: las tallas o colores cuestan distinto ("Desde")
   availability: Availability;
+  variants: VariantOption[]; // para pintar color, tallas y su precio en la tarjeta
   photo: Photo | null;
   updatedAt: string;
 }
@@ -32,7 +33,6 @@ export interface VariantOption {
 export interface Product extends Omit<CardProduct, 'photo'> {
   description: string | null;
   photos: Photo[];
-  variants: VariantOption[];
 }
 
 export interface CatalogPage {
