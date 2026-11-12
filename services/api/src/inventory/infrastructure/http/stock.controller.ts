@@ -62,7 +62,8 @@ export class StockController {
       q.pageSize,
       q.type,
       parseDate(q.from),
-      parseDate(q.to)
+      parseDate(q.to),
+      q.typeCode
     );
     return toMovementPageResponse(await this.listMovements.execute(query));
   }

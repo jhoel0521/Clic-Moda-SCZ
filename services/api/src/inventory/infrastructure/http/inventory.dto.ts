@@ -12,6 +12,7 @@ import type {
 export const enqueueSchema = z.object({
   variantId: z.string().max(60),
   type: z.enum(['RECEIVE', 'WITHDRAW', 'ADJUST']),
+  typeCode: z.string().max(40).optional(),
   units: z.number().int(),
   reason: z.string().max(500),
 });
@@ -45,6 +46,7 @@ export type StockQueryDto = z.infer<typeof stockQuerySchema>;
 export const movementsQuerySchema = z.object({
   ...paging,
   type: z.string().max(20).optional(),
+  typeCode: z.string().max(30).optional(),
   // Fechas ISO como texto (un Date no se puede describir en la documentación OpenAPI); se convierten abajo.
   from: z.string().max(40).optional(),
   to: z.string().max(40).optional(),

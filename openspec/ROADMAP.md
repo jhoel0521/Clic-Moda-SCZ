@@ -78,8 +78,9 @@ Nombre, logo, color, contacto y redes de la tienda, editables por el Gerente. **
 
 Se adelantó porque sin productos y stock reales no hay nada que vender ni que configurar. **Alcance real (en curso):**
 
-- **API:** categorías; modelos con variantes de color y talla (SKU generado); **un solo precio por modelo**; búsqueda y filtros; stock por variante que entra por una **cola de comandos** (ingreso, salida y ajuste, con idempotencia y orden por variante); resumen del inventario. Probado con unitarias, contratos, e2e con Postgres real y un laboratorio de carga.
+- **API:** categorías; modelos con variantes de color y talla (SKU generado); **precio por variante (con un atajo para igualarlos)**; búsqueda y filtros; stock por variante que entra por una **cola de comandos** (ingreso, salida y ajuste, con idempotencia y orden por variante); resumen del inventario. Probado con unitarias, contratos, e2e con Postgres real y un laboratorio de carga.
 - **Admin (móvil primero):** categorías, formulario de modelo, y una sola pantalla de **Inventario** con la matriz color × talla de cada modelo (movimientos, historial, interruptores de activo, precio y estante por modelo). Flujos con Playwright.
+- **Hecho después (change `stock-movements-events`):** tipos de movimiento como datos (compra, venta, merma…), historial con saldo y eventos de dominio con entregas por suscriptor (base de reservas, página de estado y libro diario); en el admin, el campo «Tipo» al registrar y la pantalla de tipos bajo Inventario.
 - **Hecho después (change `shop-catalog`):** fotos del producto, lectura pública del catálogo y catálogo y detalle en la **shop** con consulta por WhatsApp y SEO por producto.
 - **Diferido:** etiquetas y medidas; reservas de stock para el pago manual (rebanadas 4, 5 y 8); alta de personal desde el panel; modo oscuro; prueba de estrés hasta el punto de quiebre.
 - **Verificación al desplegar (viene de `media-share-formats`):** con una URL pública, comprobar una imagen y una página de la tienda con los depuradores de WhatsApp y Facebook; probar «Compartir» (Web Share) en un celular real.

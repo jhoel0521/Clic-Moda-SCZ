@@ -8,6 +8,7 @@ import { InventoryModule } from './inventory/inventory.module.js';
 import { HealthModule } from './health/infrastructure/http/health.module.js';
 import { IdentityModule } from './identity/identity.module.js';
 import { envSchema } from './shared/infrastructure/config/env.schema.js';
+import { EventsModule } from './shared/infrastructure/events/events.module.js';
 import { DatabaseModule } from './shared/infrastructure/database/database.module.js';
 import { DomainErrorFilter } from './shared/infrastructure/http/domain-error.filter.js';
 
@@ -15,6 +16,7 @@ import { DomainErrorFilter } from './shared/infrastructure/http/domain-error.fil
   imports: [
     ConfigModule.forRoot({ isGlobal: true, validationSchema: envSchema }),
     DatabaseModule,
+    EventsModule,
     IdentityModule,
     CatalogModule,
     InventoryModule,

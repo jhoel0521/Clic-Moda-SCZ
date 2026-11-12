@@ -1,5 +1,6 @@
 import type { StockCommand } from '../domain/entities/stock-command.entity.js';
 import type { StockLevel } from '../domain/entities/stock-level.entity.js';
+import type { StockApplied } from '../domain/events/stock-applied.event.js';
 import type { StockMovement } from '../domain/entities/stock-movement.entity.js';
 
 // Estado compartido de los fakes en memoria del inventario: los repositorios, el procesamiento y las
@@ -8,6 +9,8 @@ export class InMemoryStockStore {
   readonly commands = new Map<string, StockCommand>();
   readonly levels = new Map<string, StockLevel>();
   readonly movements: StockMovement[] = [];
+  // Eventos que el procesamiento habría guardado en el outbox (el fake los junta aquí).
+  readonly published: StockApplied[] = [];
   // Directorio de variantes (lo que `catalog` conoce): lo usa el modelo de lectura para unir datos.
   readonly variants = new Map<
     string,

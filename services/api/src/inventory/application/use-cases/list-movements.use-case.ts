@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import type { UseCase } from '../../../shared/application/use-case.js';
 import { assertPagination } from '../../../shared/application/pagination.js';
 import { parseCommandType } from '../../domain/value-objects/command-values.js';
+import { TypeCode } from '../../domain/value-objects/type-values.vo.js';
 import { VariantId } from '../../domain/value-objects/ids.vo.js';
 import type { MovementPage, MovementsQuery } from '../dtos/stock.dtos.js';
 import { STOCK_QUERY, type StockQueryPort } from '../ports/inventory.ports.js';
@@ -13,7 +14,8 @@ export class ListMovementsQuery {
     readonly pageSize: number,
     readonly type?: string,
     readonly from?: Date,
-    readonly to?: Date
+    readonly to?: Date,
+    readonly typeCode?: string
   ) {}
 }
 
@@ -28,6 +30,7 @@ export class ListMovementsUseCase implements UseCase<ListMovementsQuery, Movemen
       page: query.page,
       pageSize: query.pageSize,
       type: query.type ? parseCommandType(query.type) : undefined,
+      typeCode: query.typeCode ? TypeCode.of(query.typeCode).value : undefined,
       from: query.from,
       to: query.to,
     };

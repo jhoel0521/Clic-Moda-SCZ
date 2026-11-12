@@ -1,0 +1,14 @@
+---
+import MovementTypesBoard from '../../components/MovementTypesBoard';
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { can } from '../../lib/session';
+
+const canWrite = can(Astro.locals.session, 'catalog:write');
+---
+
+<AdminLayout title="Tipos de movimiento" subtitle="El motivo de cada cambio de stock: compra, venta, merma…">
+  <a href="/productos" class="text-action mb-4 inline-flex min-h-12 items-center font-semibold">
+    ← Volver al inventario
+  </a>
+  <MovementTypesBoard client:load canWrite={canWrite} />
+</AdminLayout>

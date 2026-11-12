@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { api } from '../lib/client-api';
-import { KIND_LABELS, type MovementItem } from '../lib/stock';
+import type { MovementItem } from '../lib/stock';
 import { errorMessage, type Page } from '../lib/types';
 
 const dateTime = new Intl.DateTimeFormat('es-BO', { dateStyle: 'short', timeStyle: 'short' });
@@ -10,15 +10,18 @@ function Movement({ item }: { item: MovementItem }) {
   return (
     <li className="flex items-center justify-between gap-3 py-2">
       <div className="min-w-0">
-        <p className="font-medium">{KIND_LABELS[item.type]}</p>
+        <p className="font-medium">{item.typeName}</p>
         <p className="text-muted truncate text-sm">
           {item.reason} · {dateTime.format(new Date(item.occurredAt))}
         </p>
       </div>
-      <span className={`shrink-0 text-lg font-bold ${up ? 'text-success' : 'text-danger'}`}>
-        {up ? '+' : ''}
-        {item.delta}
-      </span>
+      <div className="shrink-0 text-right">
+        <p className={`text-lg font-bold ${up ? 'text-success' : 'text-danger'}`}>
+          {up ? '+' : ''}
+          {item.delta}
+        </p>
+        <p className="text-muted text-sm">Saldo {item.balanceAfter}</p>
+      </div>
     </li>
   );
 }

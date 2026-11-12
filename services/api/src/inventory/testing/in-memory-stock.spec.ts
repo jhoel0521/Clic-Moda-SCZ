@@ -7,6 +7,7 @@ import {
   Reason,
   ReorderLevel,
 } from '../domain/value-objects/stock-values.vo.js';
+import { TypeCode } from '../domain/value-objects/type-values.vo.js';
 import { InMemoryVariantLookup } from './fakes.js';
 import { InMemoryStockQuery } from './in-memory-stock-query.js';
 import { stockQueryContract, type QueryWorld, type VariantInfo } from './stock-query.contract.js';
@@ -40,6 +41,10 @@ stockCommandProcessingContract('fake en memoria', () => {
     newVariant,
     movementsOf: async (variantId) =>
       store.movements.filter((movement) => movement.variantId.equals(variantId)),
+    eventsOf: async (variantId) =>
+      store.published
+        .filter((event) => event.aggregateId === variantId.value)
+        .map((event) => ({ type: event.type, payload: { ...event.toPayload() } })),
   };
 });
 
@@ -91,7 +96,9 @@ const addMovement = (store: Store, variantId: VariantId, movement: MovementInput
       variantId,
       commandId: CommandId.generate(),
       type: movement.type,
+      typeCode: TypeCode.of(movement.typeCode ?? movement.type),
       delta: movement.delta,
+      balanceAfter: movement.balanceAfter ?? 0,
       reason: Reason.of('Prueba de contrato'),
       operator: Operator.of('u-1'),
       occurredAt: movement.occurredAt,

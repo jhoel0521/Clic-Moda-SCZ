@@ -4,6 +4,7 @@ import type {
   InventorySummary,
   LowStockQuery,
   MovementPage,
+  MovementRow,
   MovementsQuery,
   StockPage,
   StockQuery,
@@ -53,6 +54,23 @@ const toRow = (raw: Raw): StockRow => ({
 });
 
 // Modelo de lectura del almacén: une el inventario con los datos del producto mediante SQL.
+// Filtro del historial de una variante: clase, fechas y el código del tipo (todos opcionales).
+const MOVEMENT_FILTER = `m.variant_id = $1 AND ($2::text IS NULL OR m.type = $2)
+  AND ($3::timestamptz IS NULL OR m.occurred_at >= $3) AND ($4::timestamptz IS NULL OR m.occurred_at <= $4)
+  AND ($5::text IS NULL OR m.type_code = $5)`;
+
+const toMovementItem = (r: Record<string, unknown>): MovementRow => ({
+  id: r.id as string,
+  type: r.type as string,
+  typeCode: r.type_code as string,
+  typeName: r.type_name as string,
+  delta: r.delta as number,
+  balanceAfter: r.balance_after as number,
+  reason: r.reason as string,
+  operator: r.operator as string,
+  occurredAt: (r.occurred_at as Date).toISOString(),
+});
+
 @Injectable()
 export class TypeOrmStockQueries implements StockQueryPort {
   constructor(private readonly dataSource: DataSource) {}
@@ -84,27 +102,24 @@ export class TypeOrmStockQueries implements StockQueryPort {
   }
 
   async listMovements(variantId: VariantId, query: MovementsQuery): Promise<MovementPage> {
-    const where = `variant_id = $1 AND ($2::text IS NULL OR type = $2)
-      AND ($3::timestamptz IS NULL OR occurred_at >= $3) AND ($4::timestamptz IS NULL OR occurred_at <= $4)`;
-    const params = [variantId.value, query.type ?? null, query.from ?? null, query.to ?? null];
+    const params = [
+      variantId.value,
+      query.type ?? null,
+      query.from ?? null,
+      query.to ?? null,
+      query.typeCode ?? null,
+    ];
     const [{ total }] = await this.dataSource.query(
-      `SELECT count(*)::int AS total FROM stock_movements WHERE ${where}`,
+      `SELECT count(*)::int AS total FROM stock_movements m WHERE ${MOVEMENT_FILTER}`,
       params
     );
     const rows: Record<string, unknown>[] = await this.dataSource.query(
-      `SELECT id, type, delta, reason, operator, occurred_at FROM stock_movements WHERE ${where}
-       ORDER BY occurred_at DESC, id DESC LIMIT $5 OFFSET $6`,
+      `SELECT m.id, m.type, m.type_code, t.name AS type_name, m.delta, m.balance_after, m.reason, m.operator, m.occurred_at
+       FROM stock_movements m JOIN movement_types t ON t.code = m.type_code WHERE ${MOVEMENT_FILTER}
+       ORDER BY m.occurred_at DESC, m.id DESC LIMIT $6 OFFSET $7`,
       [...params, query.pageSize, (query.page - 1) * query.pageSize]
     );
-    const items = rows.map((r) => ({
-      id: r.id as string,
-      type: r.type as string,
-      delta: r.delta as number,
-      reason: r.reason as string,
-      operator: r.operator as string,
-      occurredAt: (r.occurred_at as Date).toISOString(),
-    }));
-    return { items, total, page: query.page, pageSize: query.pageSize };
+    return { items: rows.map(toMovementItem), total, page: query.page, pageSize: query.pageSize };
   }
 
   private async stock(query: StockQuery, extra: string, order: string): Promise<StockPage> {

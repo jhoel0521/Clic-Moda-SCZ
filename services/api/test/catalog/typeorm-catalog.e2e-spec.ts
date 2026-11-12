@@ -23,8 +23,8 @@ import { truncateAll } from '../support/db.js';
 
 async function insertCommand(dataSource: DataSource, variantId: string): Promise<void> {
   await dataSource.query(
-    `INSERT INTO stock_commands (id, variant_id, type, quantity, reason, operator, request_hash)
-     VALUES (gen_random_uuid(), $1, 'RECEIVE', 5, 'prueba', 'op', repeat('a', 64))`,
+    `INSERT INTO stock_commands (id, variant_id, type, quantity, reason, operator, request_hash, type_code)
+     VALUES (gen_random_uuid(), $1, 'RECEIVE', 5, 'prueba', 'op', repeat('a', 64), 'RECEIVE')`,
     [variantId]
   );
 }

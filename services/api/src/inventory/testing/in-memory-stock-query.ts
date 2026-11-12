@@ -8,8 +8,12 @@ import type {
   StockQuery,
   StockRow,
 } from '../application/dtos/stock.dtos.js';
+import { SEED_TYPES } from '../domain/movement-type-seed.js';
 import type { VariantId } from '../domain/value-objects/ids.vo.js';
 import { InMemoryStockStore } from './in-memory-stock-store.js';
+
+// Nombres de los tipos con los que nace el sistema (el fake no administra tipos nuevos).
+const SEED_NAMES = new Map(SEED_TYPES.map((seed) => [seed.code, seed.name]));
 
 const page = <T>(all: T[], query: { page: number; pageSize: number }) => ({
   items: all.slice((query.page - 1) * query.pageSize, query.page * query.pageSize),
@@ -75,13 +79,17 @@ export class InMemoryStockQuery implements StockQueryPort {
     const rows = this.store.movements
       .filter((m) => m.variantId.equals(variantId))
       .filter((m) => !query.type || m.type === query.type)
+      .filter((m) => !query.typeCode || m.typeCode.value === query.typeCode)
       .filter((m) => !query.from || m.occurredAt >= query.from)
       .filter((m) => !query.to || m.occurredAt <= query.to)
       .sort((a, b) => b.occurredAt.getTime() - a.occurredAt.getTime())
       .map((m) => ({
         id: m.id.value,
         type: m.type,
+        typeCode: m.typeCode.value,
+        typeName: SEED_NAMES.get(m.typeCode.value) ?? m.typeCode.value,
         delta: m.delta,
+        balanceAfter: m.balanceAfter,
         reason: m.reason.value,
         operator: m.operator.value,
         occurredAt: m.occurredAt.toISOString(),

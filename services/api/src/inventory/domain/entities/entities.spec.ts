@@ -1,4 +1,5 @@
 import { IllegalCommandTransitionError, StockInvariantError } from '../errors/inventory.errors.js';
+import { TypeCode } from '../value-objects/type-values.vo.js';
 import { MovementId, VariantId } from '../value-objects/ids.vo.js';
 import {
   IdempotencyKey,
@@ -94,6 +95,37 @@ describe('fingerprintOf', () => {
     expect(fingerprintOf(base(5))).not.toBe(fingerprintOf(base(6)));
     expect(fingerprintOf(base(5))).not.toBe(fingerprintOf(base(5, 'Otro motivo')));
     expect(fingerprintOf(base(5))).toMatch(/^[0-9a-f]{64}$/);
+  });
+
+  // Valor calculado ANTES de que existieran los tipos: un comando aceptado entonces (o uno de sistema
+  // ahora) debe seguir dando exactamente esta huella, o sus reintentos con clave se verían como conflicto.
+  it('la huella de un comando sin tipo o con el tipo de sistema no cambió', () => {
+    const OLD = '6b9ee0803a44729907cd068d1b44fdf933a0b7281f601ecb46fd0a9c22c5a040';
+
+    expect(fingerprintOf(base(5))).toBe(OLD);
+    expect(fingerprintOf({ ...base(5), typeCode: TypeCode.of('RECEIVE') })).toBe(OLD);
+  });
+});
+
+describe('fingerprintOf: tipos', () => {
+  const base = (units: number) => ({
+    variantId: VariantId.of('00000000-0000-4000-8000-000000000001'),
+    type: 'RECEIVE' as const,
+    quantity: Quantity.positive(units),
+    reason: Reason.of('Compra proveedor'),
+  });
+
+  it('un tipo distinto del de sistema cambia la huella', () => {
+    const purchase = { ...base(5), typeCode: TypeCode.of('PURCHASE') };
+
+    expect(fingerprintOf(purchase)).not.toBe(fingerprintOf(base(5)));
+    expect(fingerprintOf(purchase)).toBe(
+      fingerprintOf({ ...base(5), typeCode: TypeCode.of('PURCHASE') })
+    );
+  });
+
+  it('un comando sin código de tipo usa el de sistema de su clase', () => {
+    expect(accept('WITHDRAW').typeCode.value).toBe('WITHDRAW');
   });
 });
 

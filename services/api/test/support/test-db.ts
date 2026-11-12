@@ -13,6 +13,8 @@ export function useTestDatabase(): void {
   process.env.AUTH_SCRYPT_LOG_N = '10';
   // Las pruebas invocan el procesamiento de la cola de forma determinista, no con el temporizador.
   process.env.STOCK_QUEUE_WORKER = 'off';
+  // Igual con el despachador de eventos: las pruebas lo invocan a mano (dispatchOnce).
+  process.env.EVENT_DISPATCHER = 'off';
   // Las e2e de la API guardan imágenes en disco; el contrato de S3 usa SeaweedFS con su propio bucket.
   process.env.MEDIA_STORAGE = 'disk';
   process.env.MEDIA_DISK_DIR = '.media-test';

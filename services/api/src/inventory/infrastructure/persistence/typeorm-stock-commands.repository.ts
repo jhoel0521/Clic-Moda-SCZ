@@ -13,8 +13,8 @@ import { type CommandRow, NS_ENQUEUE, toCommand } from './inventory.rows.js';
 const INSERT = `
   INSERT INTO stock_commands
     (id, variant_id, type, quantity, reason, operator, idempotency_key, request_hash,
-     status, attempts, available_at, accepted_at)
-  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'PENDING', 0, $9, $9)
+     status, attempts, available_at, accepted_at, type_code)
+  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'PENDING', 0, $9, $9, $10)
   ON CONFLICT (idempotency_key) DO NOTHING
   RETURNING *`;
 
@@ -73,6 +73,7 @@ export class TypeOrmStockCommandsRepository implements StockCommandsRepository {
       command.idempotencyKey?.value ?? null,
       command.requestHash,
       command.acceptedAt,
+      command.typeCode.value,
     ];
   }
 }

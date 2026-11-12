@@ -111,7 +111,8 @@ Table stock_commands {
   id uuid [pk]
   seq bigint [unique, not null, note: 'orden de llegada (identidad de PostgreSQL)']
   variant_id uuid [not null]
-  type varchar(10) [not null, note: 'RECEIVE | WITHDRAW | ADJUST']
+  type varchar(10) [not null, note: 'la clase: RECEIVE | WITHDRAW | ADJUST (decide cómo cambia el stock)']
+  type_code varchar(30) [not null, note: 'el tipo (motivo) de movement_types; los comandos anteriores quedaron con el de sistema de su clase']
   quantity integer [not null]
   reason varchar(200) [not null]
   operator text [not null]
@@ -132,13 +133,60 @@ Table stock_movements {
   variant_id uuid [not null]
   command_id uuid [unique, not null]
   type varchar(10) [not null]
+  type_code varchar(30) [not null]
   delta integer [not null, note: 'distinto de cero']
+  balance_after integer [not null, note: 'unidades físicas que quedaron después de aplicarlo (kardex); el último saldo de una variante = su stock']
   reason varchar(200) [not null]
   operator text [not null]
   occurred_at timestamptz [not null]
   Note: 'Inmutable: un disparador impide UPDATE y DELETE'
 }
 
+Table movement_types {
+  code varchar(30) [pk, note: 'generado del nombre; nunca cambia']
+  name varchar(60) [not null]
+  kind varchar(10) [not null, note: 'RECEIVE | WITHDRAW | ADJUST; nunca cambia']
+  active boolean [not null, default: true]
+  system boolean [not null, default: false, note: 'un tipo de sistema por clase (código = clase); siempre activo']
+  created_at timestamptz [not null]
+  Note: 'Tipos de movimiento como datos. Un disparador impide cambiar código, clase y tipo de sistema, y borrar'
+}
+
+Table domain_events {
+  id uuid [pk]
+  seq bigint [unique, not null, note: 'se asigna al insertar; solo ordena dentro de una variante']
+  type varchar(60) [not null, note: 'stock.applied']
+  aggregate_id uuid [not null, note: 'la variante']
+  payload jsonb [not null, note: 'sin motivo, operador ni datos de personas']
+  occurred_at timestamptz [not null]
+  Note: 'Outbox: se guarda en la misma transacción que el cambio de stock. Inmutable (UPDATE no)'
+}
+
+Table event_subscribers {
+  name varchar(60) [pk]
+  registered_at timestamptz [not null]
+  Note: 'Un suscriptor nuevo empieza en su registro: no recibe los eventos anteriores'
+}
+
+Table event_deliveries {
+  id uuid [pk]
+  event_id uuid [not null]
+  subscriber varchar(60) [not null]
+  status varchar(14) [not null, default: 'pending', note: 'pending | executed | needs_review']
+  attempts smallint [not null, default: 0]
+  last_error text
+  available_at timestamptz [not null]
+  executed_at timestamptz
+  deduplicated boolean [not null, default: false]
+  Indexes {
+    (event_id, subscriber) [unique]
+  }
+  Note: 'Una por suscriptor, creada con el evento. Al menos una vez; a 5 intentos pasa a needs_review'
+}
+
+Ref: movement_types.code < stock_commands.type_code
+Ref: movement_types.code < stock_movements.type_code
+Ref: domain_events.id < event_deliveries.event_id [delete: cascade]
 Ref: categories.id < products.category_id
 Ref: products.id < product_variants.product_id [delete: cascade]
 Ref: product_variants.id - stock_levels.variant_id

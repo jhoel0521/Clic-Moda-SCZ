@@ -12,8 +12,10 @@ import {
   type StockCommand,
   type StockRow,
 } from '../lib/stock';
+import { defaultTypeCode } from '../lib/movement-types';
 import { errorMessage } from '../lib/types';
 import Icon from './Icon';
+import MovementTypeSelect from './MovementTypeSelect';
 import { Button, ErrorBanner, Field } from './ui';
 
 type Phase = { tag: 'form' } | { tag: 'sending' } | { tag: 'done'; command: StockCommand | null };
@@ -24,11 +26,11 @@ function useMovement(row: StockRow, kind: MovementKind, onDone: () => void) {
   const [error, setError] = useState<string | null>(null);
   const key = useRef(newIdempotencyKey()).current; // misma clave si se toca dos veces: no se duplica
 
-  const submit = async (units: number, reason: string) => {
+  const submit = async (units: number, reason: string, typeCode: string) => {
     setPhase({ tag: 'sending' });
     setError(null);
     try {
-      const accepted = await sendMovement({ variantId: row.variantId, type: kind, units, reason, key });
+      const accepted = await sendMovement({ variantId: row.variantId, type: kind, typeCode, units, reason, key });
       setPhase({ tag: 'done', command: await waitForCommand(accepted.id, { fetchCommand }) });
       onDone();
     } catch (failure) {
@@ -58,26 +60,40 @@ const isValid = (kind: MovementKind, units: string, reason: string): boolean =>
 interface FormProps {
   kind: MovementKind;
   busy: boolean;
-  onSubmit: (units: number, reason: string) => void;
+  onSubmit: (units: number, reason: string, typeCode: string) => void;
+}
+
+interface UnitsProps {
+  kind: MovementKind;
+  value: string;
+  onChange: (value: string) => void;
+}
+
+function UnitsField({ kind, value, onChange }: UnitsProps) {
+  return (
+    <Field
+      label={KIND_UNITS_LABEL[kind]}
+      inputMode="numeric"
+      autoFocus
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+    />
+  );
 }
 
 function SheetForm({ kind, busy, onSubmit }: FormProps) {
   const [units, setUnits] = useState('');
   const [reason, setReason] = useState(DEFAULT_REASON[kind]);
+  const [typeCode, setTypeCode] = useState(defaultTypeCode(kind));
   const valid = isValid(kind, units, reason);
   const submit = (event: { preventDefault: () => void }) => {
     event.preventDefault();
-    if (valid && !busy) onSubmit(Number(units), reason.trim());
+    if (valid && !busy) onSubmit(Number(units), reason.trim(), typeCode);
   };
   return (
     <form className="flex flex-col gap-4" onSubmit={submit}>
-      <Field
-        label={KIND_UNITS_LABEL[kind]}
-        inputMode="numeric"
-        autoFocus
-        value={units}
-        onChange={(e) => setUnits(e.target.value)}
-      />
+      <UnitsField kind={kind} value={units} onChange={setUnits} />
+      <MovementTypeSelect kind={kind} value={typeCode} onChange={setTypeCode} />
       <Field label="Motivo" value={reason} maxLength={200} onChange={(e) => setReason(e.target.value)} />
       <Button type="submit" block disabled={!valid || busy}>
         {busy ? 'Enviando…' : 'Registrar'}
@@ -129,7 +145,7 @@ function SheetBody({ row, kind, onClose, onDone }: Props) {
       {phase.tag === 'done' ? (
         <SheetResult command={phase.command} onClose={onClose} />
       ) : (
-        <SheetForm kind={kind} busy={phase.tag === 'sending'} onSubmit={(u, r) => void submit(u, r)} />
+        <SheetForm kind={kind} busy={phase.tag === 'sending'} onSubmit={(u, r, t) => void submit(u, r, t)} />
       )}
       {phase.tag === 'sending' && (
         <p role="status" className="text-muted text-center">

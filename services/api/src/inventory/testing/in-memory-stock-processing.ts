@@ -5,6 +5,7 @@ import type {
 } from '../application/ports/inventory.ports.js';
 import type { StockCommand } from '../domain/entities/stock-command.entity.js';
 import { StockLevel } from '../domain/entities/stock-level.entity.js';
+import { StockApplied } from '../domain/events/stock-applied.event.js';
 import { StockMovement } from '../domain/entities/stock-movement.entity.js';
 import { RETRY_POLICY } from '../domain/value-objects/command-values.js';
 import { MovementId } from '../domain/value-objects/ids.vo.js';
@@ -50,20 +51,32 @@ export class InMemoryStockProcessing implements StockCommandProcessingPort {
       return { command: copyCommand(command), movement: null, outcome: 'REJECTED' };
     }
     level.applyDelta(decision.delta);
-    const movement = StockMovement.restore({
+    const movement = this.movementFor(command, decision.delta, level.onHand, now);
+    command.apply(movement.id, now);
+    this.store.levels.set(command.variantId.value, level);
+    this.store.movements.push(movement);
+    this.store.published.push(StockApplied.of(movement, level.reserved));
+    return { command: copyCommand(command), movement, outcome: 'APPLIED' };
+  }
+
+  private movementFor(
+    command: StockCommand,
+    delta: number,
+    balanceAfter: number,
+    now: Date
+  ): StockMovement {
+    return StockMovement.restore({
       id: MovementId.generate(),
       variantId: command.variantId,
       commandId: command.id,
       type: command.type,
-      delta: decision.delta,
+      typeCode: command.typeCode,
+      delta,
+      balanceAfter,
       reason: command.reason,
       operator: command.operator,
       occurredAt: now,
     });
-    command.apply(movement.id, now);
-    this.store.levels.set(command.variantId.value, level);
-    this.store.movements.push(movement);
-    return { command: copyCommand(command), movement, outcome: 'APPLIED' };
   }
 
   private failed(command: StockCommand, now: Date): ProcessedCommand {

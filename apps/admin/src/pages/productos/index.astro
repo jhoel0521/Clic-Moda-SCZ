@@ -9,13 +9,21 @@ const canDeactivate = can(Astro.locals.session, 'catalog:write');
 ---
 
 <AdminLayout title="Inventario" subtitle="Cada modelo con sus colores y tallas en una sola matriz">
-  {canDeactivate && (
+  <div class="mb-4 flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
+    {canDeactivate && (
+      <a
+        href="/productos/nuevo"
+        class="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-action px-5 font-semibold text-on-action shadow-brand md:w-auto"
+      >
+        <Icon name="plus" class="size-5" /> Registrar modelo
+      </a>
+    )}
     <a
-      href="/productos/nuevo"
-      class="mb-4 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-action px-5 font-semibold text-on-action shadow-brand md:w-auto"
+      href="/productos/tipos"
+      class="inline-flex min-h-12 items-center justify-center font-semibold text-action md:justify-start"
     >
-      <Icon name="plus" class="size-5" /> Registrar modelo
+      Tipos de movimiento
     </a>
-  )}
+  </div>
   <InventoryBoard client:load canWrite={canWrite} canDeactivate={canDeactivate} />
 </AdminLayout>

@@ -19,7 +19,13 @@ export interface QueryWorld {
   ): Promise<void>;
   addMovement(
     variantId: VariantId,
-    movement: { type: CommandType; delta: number; occurredAt: Date }
+    movement: {
+      type: CommandType;
+      delta: number;
+      occurredAt: Date;
+      typeCode?: string;
+      balanceAfter?: number;
+    }
   ): Promise<void>;
 }
 type Factory = () => Promise<QueryWorld> | QueryWorld;
@@ -141,6 +147,29 @@ function movementCases(make: Factory): void {
   });
 }
 
+async function addTyped(world: QueryWorld, boot: VariantId, codes: string[]): Promise<void> {
+  for (const [index, typeCode] of codes.entries()) {
+    const occurredAt = new Date(`2026-11-10T${10 + index}:00:00Z`);
+    await world.addMovement(boot, { type: 'WITHDRAW', delta: -(index + 1), occurredAt, typeCode });
+  }
+}
+
+function movementTypeCases(make: Factory): void {
+  it('el historial trae el tipo y su nombre y filtra por el código del tipo', async () => {
+    const world = await make();
+    const { boot } = await seed(world);
+    await addTyped(world, boot, ['SHRINKAGE', 'SALE']);
+
+    const shrinkage = await world.query.listMovements(boot, { ...paging, typeCode: 'SHRINKAGE' });
+    const all = await world.query.listMovements(boot, paging);
+
+    expect(shrinkage.items.map((m) => [m.typeCode, m.typeName, m.type])).toEqual([
+      ['SHRINKAGE', 'Merma o daño', 'WITHDRAW'],
+    ]);
+    expect(all.items.map((m) => m.typeCode)).toEqual(['SALE', 'SHRINKAGE']);
+  });
+}
+
 function movementCases2(make: Factory): void {
   it('pagina el historial y no mezcla variantes', async () => {
     const world = await make();
@@ -232,6 +261,7 @@ export function stockQueryContract(label: string, make: Factory): void {
     stockCases3(make);
     lowStockCases(make);
     movementCases(make);
+    movementTypeCases(make);
     soldOutCases(make);
     byProductCases(make);
     summaryCases(make);

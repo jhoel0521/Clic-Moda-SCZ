@@ -1,5 +1,6 @@
 import type { CommandType } from '../value-objects/command-values.js';
 import type { CommandId, MovementId, VariantId } from '../value-objects/ids.vo.js';
+import type { TypeCode } from '../value-objects/type-values.vo.js';
 import type { Operator, Reason } from '../value-objects/stock-values.vo.js';
 
 export interface StockMovementProps {
@@ -7,7 +8,9 @@ export interface StockMovementProps {
   readonly variantId: VariantId;
   readonly commandId: CommandId;
   readonly type: CommandType;
+  readonly typeCode: TypeCode;
   readonly delta: number; // distinto de cero: positivo ingresa, negativo retira
+  readonly balanceAfter: number; // unidades físicas que quedaron DESPUÉS de aplicarlo (nunca negativo)
   readonly reason: Reason;
   readonly operator: Operator;
   readonly occurredAt: Date;
@@ -37,8 +40,16 @@ export class StockMovement {
     return this.props.type;
   }
 
+  get typeCode(): TypeCode {
+    return this.props.typeCode;
+  }
+
   get delta(): number {
     return this.props.delta;
+  }
+
+  get balanceAfter(): number {
+    return this.props.balanceAfter;
   }
 
   get reason(): Reason {
