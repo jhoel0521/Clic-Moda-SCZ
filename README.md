@@ -87,6 +87,8 @@ Para añadir un servicio, agrégalo a `ports.json` en el rango que le toca: el o
 
 Las pruebas que cruzan varias apps viven en [`e2e/`](e2e/) (hoy: `e2e/load`).
 
+**Fotos de desarrollo.** Para ver la tienda con fotos sin subirlas una por una desde el panel: pon las imágenes en una carpeta con el nombre `<slug>-<n>.jpg|png|webp` (`bota-andes-1.jpg`, `bota-andes-2.jpg`; la 1 es la principal) y ejecuta `PHOTOS_EMAIL=… PHOTOS_PASSWORD=… pnpm db:seed:photos -- <carpeta>`. El script usa la API como el panel (sube cada archivo a `POST /media`, que lo guarda en SeaweedFS y registra su enlace en la base, y asigna las fotos con `PUT /catalog/products/:id/photos`). No toca los productos que ya tienen fotos salvo con `--force`; `--dry` solo muestra el plan. Pruebas del script: `node --test scripts/lib/seed-photos.test.mjs`.
+
 ## Comprobaciones
 
 * `pnpm check`: contrato de proyectos, secretos, lint, pruebas unitarias y build de todo. Es lo que corre el hook de commit.
