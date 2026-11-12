@@ -33,6 +33,14 @@ function restoreFocus(name: string | null, value: string | null): void {
   same?.focus({ preventScroll: true });
 }
 
+// Mientras llega la página nueva los bloques se atenúan y se marcan ocupados (la opción tocada ya se ve elegida).
+function setBusy(busy: boolean): void {
+  document.querySelectorAll('[data-live]').forEach((block) => {
+    if (busy) block.setAttribute('aria-busy', 'true');
+    else block.removeAttribute('aria-busy');
+  });
+}
+
 let pending: AbortController | null = null;
 
 async function apply(form: HTMLFormElement): Promise<void> {
@@ -41,14 +49,17 @@ async function apply(form: HTMLFormElement): Promise<void> {
   const [name, value] = [active?.name ?? null, active?.value ?? null];
   pending?.abort();
   pending = new AbortController();
+  setBusy(true);
   try {
     const response = await fetch(url, { headers: { Accept: 'text/html' }, signal: pending.signal });
     if (!response.ok) throw new Error(FALLBACK);
     swapLive(new DOMParser().parseFromString(await response.text(), 'text/html'));
     history.replaceState(null, '', url);
     restoreFocus(name, value);
+    setBusy(false);
   } catch (error) {
     if ((error as Error).name === 'AbortError') return;
+    setBusy(false);
     location.assign(url);
   }
 }

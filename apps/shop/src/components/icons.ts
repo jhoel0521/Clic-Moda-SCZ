@@ -7,7 +7,5 @@ export type IconName =
   | 'home'
   | 'catalog'
   | 'search'
-  | 'menu'
-  | 'close'
   | 'pin'
   | 'clock';

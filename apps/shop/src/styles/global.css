@@ -69,13 +69,10 @@
   display: none;
 }
 
-/* El botón del menú del teléfono solo existe con JavaScript (sin él, la barra inferior navega). */
-.js-only {
-  display: none;
-}
-
-@media (max-width: 47.99rem) {
-  .js .js-only {
-    display: inline-flex;
+/* Bloques que se actualizan sin recargar: se atenúan mientras llega la página nueva. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-live][aria-busy='true'] {
+    opacity: 0.6;
+    transition: opacity 150ms;
   }
 }

@@ -191,7 +191,7 @@ describe('contacto', () => {
 });
 
 describe('esqueleto de la tienda', () => {
-  it('lleva barra superior con enlaces, barra inferior del teléfono, menú y pie oscuro', async () => {
+  it('lleva barra superior con enlaces, barra inferior del teléfono (sin menú en la cabecera) y pie oscuro', async () => {
     withApi({
       contact: {
         whatsapp: '59171234567',
@@ -205,7 +205,8 @@ describe('esqueleto de la tienda', () => {
 
     expect(html).toContain('aria-label="Principal"');
     expect(html).toContain('aria-label="Navegación inferior"');
-    expect(html).toContain('id="menu"');
+    expect(html).not.toContain('id="menu"');
+    expect(html).not.toContain('Abrir menú');
     expect(html).toContain('bg-neutral-950');
     expect(html).toContain('aria-current="page"');
     expect(html).toContain('+591 71234567');

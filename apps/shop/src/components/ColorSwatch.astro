@@ -1,7 +1,7 @@
 ---
 import { variantPath } from '../lib/card-variants';
 import type { VariantOption } from '../lib/catalog';
-import { colorHex, initialOf, isPattern } from '../lib/colors';
+import SwatchDot from './SwatchDot.astro';
 
 interface Props {
   slug: string;
@@ -11,8 +11,6 @@ interface Props {
 }
 
 const { slug, color, variant, active } = Astro.props;
-const hex = colorHex(color);
-const pattern = isPattern(color);
 ---
 
 <a
@@ -25,14 +23,5 @@ const pattern = isPattern(color);
     active && 'border-brand-dark',
   ]}
 >
-  <span
-    class:list={[
-      'flex size-5 items-center justify-center rounded-full text-xs font-bold text-white ring-1 ring-black/15',
-      !hex && !pattern && 'bg-neutral-500',
-      pattern && 'bg-[linear-gradient(135deg,#f08fb0,#b79ad8_50%,#7fb7e6)]',
-    ]}
-    style={hex ? `background:${hex}` : undefined}
-  >
-    {!hex && !pattern && initialOf(color)}
-  </span>
+  <SwatchDot color={color} />
 </a>

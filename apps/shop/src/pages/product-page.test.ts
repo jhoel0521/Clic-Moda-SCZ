@@ -168,10 +168,50 @@ describe('product-page (3)', () => {
     expect(page).not.toContain('fixed inset-x-0 bottom-0 z-20');
   });
 
-  it('en teléfono hay una barra fija inferior con el botón', async () => {
+  it('en teléfono la barra del botón va encima de la barra de navegación, que sigue visible', async () => {
     world(detail());
 
-    expect(await html('?talla=38&color=Negro')).toContain('fixed inset-x-0 bottom-0 z-20');
+    const page = await html('?talla=38&color=Negro');
+
+    expect(page).toContain('bottom-[calc(4.5rem+env(safe-area-inset-bottom))] z-30');
+    expect(page).toContain('aria-label="Navegación inferior"');
+  });
+});
+
+describe('detalle: coherencia con la tarjeta', () => {
+  it('las opciones son píldoras redondas del mismo estilo y ninguna lleva texto de estado dentro', async () => {
+    world(detail());
+
+    const page = await html('?talla=38&color=Negro');
+    const picker = page.slice(page.indexOf('data-variant-form'), page.indexOf('type="submit"'));
+
+    expect(picker).toContain('rounded-full');
+    expect(picker).toContain('has-[:checked]:bg-brand-dark');
+    expect(picker).not.toContain('rounded-xl border-2');
+    expect(picker).not.toMatch(/<span class="text-xs font-medium text-warning">/);
+  });
+
+  it('"Últimas unidades" es un punto con leyenda, no texto dentro de la opción', async () => {
+    world(detail());
+
+    const picker = (await html('?talla=38&color=Negro')).split('data-variant-form')[1] ?? '';
+
+    expect(picker).toContain('bg-warning ring-2 ring-white');
+    expect(picker).toContain('<span class="sr-only">, últimas unidades</span>');
+    expect(picker).toMatch(/Últimas unidades\s*<\/p>/);
+  });
+});
+
+describe('detalle: disponibilidad de la variante elegida', () => {
+  it('la disponibilidad que se ve es la de la variante elegida y va en el bloque que se actualiza', async () => {
+    world(detail());
+
+    const block = (await html('?talla=39&color=Negro')).split('data-live="price"')[1] ?? '';
+
+    expect(block.slice(0, block.indexOf('data-variant-form'))).toContain('Últimas unidades');
+    expect((await html('?talla=38&color=Negro')).split('data-live="price"')[1]).toContain(
+      'Disponible'
+    );
   });
 });
 

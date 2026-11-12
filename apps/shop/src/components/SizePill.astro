@@ -2,6 +2,7 @@
 import { variantPath } from '../lib/card-variants';
 import type { VariantOption } from '../lib/catalog';
 import { formatBs } from '../lib/format';
+import { optionBase, optionLink } from '../lib/option-styles';
 
 interface Props {
   slug: string;
@@ -18,10 +19,7 @@ const { slug, chip, selected, showPrice } = Astro.props;
   href={variantPath(slug, chip)}
   title={`Talla ${chip.size}`}
   aria-current={selected ? 'true' : undefined}
-  class:list={[
-    'inline-flex min-h-9 min-w-9 flex-col items-center justify-center rounded-full px-2.5 text-sm font-semibold leading-tight transition-colors',
-    selected ? 'bg-brand-dark text-white' : 'bg-neutral-100 text-ink hover:bg-brand-soft',
-  ]}
+  class:list={[optionBase('sm'), optionLink(selected), showPrice && 'flex-col gap-0']}
 >
   <span>{chip.size}</span>
   {showPrice && <span class="text-xs font-medium">{formatBs(chip.price)}</span>}

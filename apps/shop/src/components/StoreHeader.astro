@@ -2,7 +2,6 @@
 import { NAV_LINKS, isActive } from '../lib/nav';
 import type { StoreSettings } from '../lib/settings';
 import { hasWhatsapp, whatsappLink } from '../lib/whatsapp';
-import MobileMenu from './MobileMenu.astro';
 import SocialIcon from './SocialIcon.astro';
 import StoreBrand from './StoreBrand.astro';
 
@@ -24,15 +23,6 @@ const iconButton =
 <header class="sticky top-0 z-40 w-full border-b border-line bg-white/90 shadow-md backdrop-blur-md">
   <div class="mx-auto flex h-14 w-full max-w-[1200px] items-center justify-between gap-3 px-4 md:px-8 lg:h-16">
     <div class="flex min-w-0 items-center gap-1">
-      <button
-        type="button"
-        data-menu-open
-        aria-label="Abrir menú"
-        aria-haspopup="dialog"
-        class={`js-only ${iconButton} -ml-2 md:hidden`}
-      >
-        <SocialIcon network="menu" class="size-6" />
-      </button>
       <StoreBrand settings={settings} />
     </div>
     <nav
@@ -70,13 +60,12 @@ const iconButton =
           href={whatsapp}
           rel="noreferrer"
           aria-label="WhatsApp"
-          class="inline-flex size-11 shrink-0 items-center justify-center gap-2 rounded-full bg-brand text-on-brand shadow-brand sm:w-auto sm:px-5"
+          class="hidden h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-brand px-5 text-on-brand shadow-brand md:inline-flex"
         >
           <SocialIcon network="whatsapp" class="size-5" />
-          <span class="hidden font-bold sm:inline">WhatsApp</span>
+          <span class="font-bold">WhatsApp</span>
         </a>
       )}
     </div>
   </div>
-  <MobileMenu settings={settings} pathname={pathname} />
 </header>

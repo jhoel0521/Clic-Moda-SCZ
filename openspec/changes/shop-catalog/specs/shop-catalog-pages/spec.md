@@ -35,7 +35,7 @@ La tienda SHALL mostrar en `/p/<slug>` la galeria de fotos (la principal primero
 - **THEN** ve todas las fotos en columna y puede elegir talla con el formulario
 
 ### Requirement: The size and color selector is accessible
-La tienda SHALL presentar la talla y el color como grupos con titulo ("Talla", "Color"), con opciones de al menos 44 px, nombrando cada color con texto, marcando la opcion elegida con borde y marca (no solo color) y mostrando "Agotada" con texto en las opciones sin stock. MUST mantener un foco visible y poder usarse solo con teclado.
+La tienda SHALL presentar la talla y el color como grupos con titulo, con opciones de al menos 44 px, del mismo tamano y estilo (pildoras) que las de la tarjeta, y MUST poder usarse solo con teclado con foco visible.
 
 #### Scenario: Sold out option
 - **WHEN** todas las tallas del producto estan agotadas
@@ -44,6 +44,14 @@ La tienda SHALL presentar la talla y el color como grupos con titulo ("Talla", "
 #### Scenario: Keyboard
 - **WHEN** el visitante usa solo el teclado
 - **THEN** puede recorrer las opciones, elegir una y ver el foco en todo momento
+
+#### Scenario: Selected option is filled
+- **WHEN** el visitante elige una talla o un color
+- **THEN** la opcion elegida se rellena (no solo cambia de color) y cada color lleva su nombre en texto junto a su circulo
+
+#### Scenario: Status never changes an option
+- **WHEN** una talla esta en ultimas unidades
+- **THEN** la opcion mantiene su tamano y lo indica con un punto en la esquina y una leyenda "Ultimas unidades"; la disponibilidad de la variante elegida se lee junto al precio
 
 ### Requirement: Filters stay out of the way on a phone
 La tienda SHALL mostrar en un telefono los filtros dentro de un panel plegable con el resumen "Filtrar (N)", los filtros activos como chips que se quitan con un toque, la cantidad de productos y el orden, y MUST conservar los filtros en los enlaces de paginacion (`rel="prev"` y `rel="next"`).
@@ -111,7 +119,7 @@ La tienda SHALL poder usarse con una mano en 360 px sin desplazamiento horizonta
 
 #### Scenario: Call to action always reachable on a phone
 - **WHEN** el visitante esta en el detalle en un telefono
-- **THEN** una barra inferior fija muestra el boton de consulta (o "Elige tu talla", que lleva al selector) sin tapar el contenido
+- **THEN** una barra fija de una sola fila, encima de la barra de navegacion inferior, muestra el precio con su nota y el boton de consulta (o "Elige tu talla", que lleva al selector) sin tapar el contenido
 
 ### Requirement: Navigation reaches the catalog
 La tienda SHALL enlazar el catalogo desde la cabecera, el pie y la portada, y la portada MUST mostrar los productos mas nuevos.

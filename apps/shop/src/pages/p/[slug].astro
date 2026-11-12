@@ -86,7 +86,7 @@ const view = product ? priceView(product, chosen) : null;
       <div class="order-1 md:col-start-2 md:row-start-1">
         <a
           href={`/catalogo?categoria=${encodeURIComponent(product.category.slug)}`}
-          class="text-sm font-medium text-muted underline"
+          class="text-xs font-bold uppercase tracking-wide text-muted hover:underline"
         >
           {product.category.name}
         </a>
@@ -96,9 +96,9 @@ const view = product ? priceView(product, chosen) : null;
         <div data-live="price" aria-live="polite" aria-atomic="true">
           <p class="mt-2 text-2xl font-bold text-brand-dark">{view?.text}</p>
           <p class="text-sm text-muted">{view?.note}</p>
-        </div>
-        <div class="mt-2">
-          <AvailabilityBadge availability={product.availability} />
+          <div class="mt-2">
+            <AvailabilityBadge availability={chosen?.availability ?? product.availability} />
+          </div>
         </div>
       </div>
       <div class="order-2 md:col-start-1 md:row-span-2 md:row-start-1">
@@ -123,13 +123,13 @@ const view = product ? priceView(product, chosen) : null;
       <div
         slot="bar"
         data-live="bar"
-        class="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-white p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] md:hidden"
+        class="fixed inset-x-0 bottom-[calc(4.5rem+env(safe-area-inset-bottom))] z-30 flex items-center gap-3 border-t border-line bg-white/95 px-4 py-2.5 backdrop-blur-md md:hidden"
       >
-        <p class="mb-2 flex items-baseline justify-between gap-3 text-sm">
-          <span class="font-bold text-brand-dark">{view?.text}</span>
-          <span class="text-right text-muted">{view?.note}</span>
-        </p>
-        <InquiryCta state={state} href={href} />
+        <div class="min-w-0 flex-1">
+          <p class="font-bold leading-tight text-brand-dark">{view?.text}</p>
+          <p class="line-clamp-2 text-xs leading-tight text-muted">{view?.note}</p>
+        </div>
+        <InquiryCta state={state} href={href} compact={true} />
       </div>
     )}
   </StoreLayout>
