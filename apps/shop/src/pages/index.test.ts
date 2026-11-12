@@ -53,7 +53,7 @@ describe('inicio: marca desde la configuración', () => {
 
   it('sin logo muestra el nombre como texto y con logo muestra la imagen de la tienda', async () => {
     withApi();
-    expect(await render(Index)).toContain('truncate text-lg font-bold');
+    expect(await render(Index)).toContain('font-black tracking-tight');
 
     settingsStore.reset();
     withApi({ logo: { mediaId: LOGO, path: `/m/${LOGO}/logo-2.webp`, alt: 'Logo' } });
@@ -151,9 +151,9 @@ describe('redes sociales', () => {
 
     const html = await render(Index);
 
-    // WhatsApp y Contacto también llevan ícono: 3 redes + WhatsApp (cabecera y pie) + Contacto.
-    expect(html.match(/<svg[^>]*aria-hidden="true"/g)?.length).toBe(6);
-    for (const name of ['Instagram', 'TikTok', 'Facebook']) expect(html).toContain(name);
+    const footer = html.slice(html.indexOf('<footer'));
+    expect(footer.match(/<svg[^>]*aria-hidden="true"/g)?.length).toBeGreaterThanOrEqual(3);
+    for (const name of ['Instagram', 'TikTok', 'Facebook']) expect(footer).toContain(name);
   });
 });
 
@@ -187,5 +187,27 @@ describe('contacto', () => {
     ]) {
       expect(html).toContain(text);
     }
+  });
+});
+
+describe('esqueleto de la tienda', () => {
+  it('lleva barra superior con enlaces, barra inferior del teléfono, menú y pie oscuro', async () => {
+    withApi({
+      contact: {
+        whatsapp: '59171234567',
+        address: 'Av. Banzer 123',
+        pickupHours: '9 a 18',
+        mapUrl: null,
+      },
+    });
+
+    const html = await render(Index);
+
+    expect(html).toContain('aria-label="Principal"');
+    expect(html).toContain('aria-label="Navegación inferior"');
+    expect(html).toContain('id="menu"');
+    expect(html).toContain('bg-neutral-950');
+    expect(html).toContain('aria-current="page"');
+    expect(html).toContain('+591 71234567');
   });
 });

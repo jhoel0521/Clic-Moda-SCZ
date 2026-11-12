@@ -154,7 +154,7 @@ describe('product-page (3)', () => {
     const page = await html('?talla=38&color=Negro');
 
     expect(page).not.toContain('Consultar por WhatsApp');
-    expect(page).not.toContain('fixed inset-x-0 bottom-0');
+    expect(page).not.toContain('fixed inset-x-0 bottom-0 z-20');
   });
 
   it('en teléfono hay una barra fija inferior con el botón', async () => {

@@ -1,0 +1,73 @@
+---
+import { NAV_LINKS, isActive } from '../lib/nav';
+import type { StoreSettings } from '../lib/settings';
+import { hasWhatsapp, whatsappLink } from '../lib/whatsapp';
+import SocialIcon from './SocialIcon.astro';
+import StoreBrand from './StoreBrand.astro';
+
+interface Props {
+  settings: StoreSettings;
+  pathname: string;
+}
+
+const { settings, pathname } = Astro.props;
+const { brandName, contact } = settings;
+const whatsapp = hasWhatsapp(contact.whatsapp)
+  ? whatsappLink(contact.whatsapp, `Hola ${brandName}`)
+  : null;
+---
+
+<!-- Menú lateral del teléfono: un <dialog> modal (foco atrapado, Esc cierra). Sin JavaScript no se muestra el botón. -->
+<dialog
+  id="menu"
+  aria-label="Menú"
+  class="m-0 h-dvh max-h-none w-3/4 max-w-sm bg-white p-0 text-ink shadow-2xl backdrop:bg-black/50 md:hidden"
+>
+  <div class="flex h-full flex-col">
+    <div class="flex items-center justify-between border-b border-line px-5 py-3">
+      <StoreBrand settings={settings} />
+      <button
+        type="button"
+        data-menu-close
+        aria-label="Cerrar menú"
+        class="inline-flex size-11 items-center justify-center rounded-xl text-neutral-600 hover:text-ink"
+      >
+        <SocialIcon network="close" class="size-6" />
+      </button>
+    </div>
+    <nav aria-label="Menú" class="flex flex-1 flex-col gap-1 px-4 py-6">
+      {NAV_LINKS.map((link) => {
+        const active = isActive(pathname, link.href);
+        return (
+          <a
+            href={link.href}
+            aria-current={active ? 'page' : undefined}
+            class:list={[
+              'flex min-h-12 items-center gap-3 rounded-xl px-4 text-lg font-bold transition-colors',
+              active ? 'bg-brand-soft text-brand-dark' : 'text-ink hover:bg-neutral-100',
+            ]}
+          >
+            <SocialIcon network={link.icon} class="size-5" />
+            {link.label}
+          </a>
+        );
+      })}
+    </nav>
+    {whatsapp && (
+      <div class="border-t border-line px-4 py-6">
+        <a
+          href={whatsapp}
+          rel="noreferrer"
+          class="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-brand font-bold text-on-brand"
+        >
+          <SocialIcon network="whatsapp" />
+          Escribir por WhatsApp
+        </a>
+      </div>
+    )}
+  </div>
+</dialog>
+<script>
+  import { initMenu } from '../scripts/menu';
+  initMenu();
+</script>

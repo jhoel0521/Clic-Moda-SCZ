@@ -27,7 +27,7 @@ const pattern = isPattern(color);
 >
   <span
     class:list={[
-      'flex size-5 items-center justify-center rounded-full text-[10px] font-bold text-white ring-1 ring-black/15',
+      'flex size-5 items-center justify-center rounded-full text-xs font-bold text-white ring-1 ring-black/15',
       !hex && !pattern && 'bg-neutral-500',
       pattern && 'bg-[linear-gradient(135deg,#f08fb0,#b79ad8_50%,#7fb7e6)]',
     ]}

@@ -1,52 +1,82 @@
 ---
-import { hasWhatsapp, whatsappLink } from '../lib/whatsapp';
-import SocialIcon from './SocialIcon.astro';
+import { NAV_LINKS, isActive } from '../lib/nav';
 import type { StoreSettings } from '../lib/settings';
+import { hasWhatsapp, whatsappLink } from '../lib/whatsapp';
+import MobileMenu from './MobileMenu.astro';
+import SocialIcon from './SocialIcon.astro';
+import StoreBrand from './StoreBrand.astro';
 
 interface Props {
   settings: StoreSettings;
+  /** Ruta de la página actual, para marcar el enlace activo. */
+  pathname: string;
 }
 
-const { settings } = Astro.props;
-const { logo, brandName, contact } = settings;
+const { settings, pathname } = Astro.props;
+const { brandName, contact } = settings;
 const whatsapp = hasWhatsapp(contact.whatsapp)
   ? whatsappLink(contact.whatsapp, `Hola ${brandName}, quiero información`)
   : null;
+const iconButton =
+  'inline-flex size-11 items-center justify-center rounded-xl text-ink transition-colors hover:text-brand-dark';
 ---
 
-<header class="border-b border-brand-soft bg-white">
-  <div class="mx-auto flex w-full max-w-5xl items-center gap-2 px-4 py-3">
-    <a href="/" class="mr-auto min-w-0" aria-label={`${brandName}, ir al inicio`}>
-      {logo ? (
-        <img
-          src={logo.path}
-          alt={brandName}
-          width="160"
-          height="80"
-          class="h-10 w-auto max-w-[45vw] object-contain"
-        />
-      ) : (
-        <span class="block truncate text-lg font-bold text-brand-dark">{brandName}</span>
-      )}
-    </a>
-    <nav aria-label="Principal">
-      <a
-        href="/catalogo"
-        class="inline-flex min-h-12 items-center rounded-xl px-3 font-semibold text-brand-dark hover:bg-brand-soft"
+<header class="sticky top-0 z-40 w-full border-b border-line bg-white/90 shadow-md backdrop-blur-md">
+  <div class="mx-auto flex h-14 w-full max-w-[1200px] items-center justify-between gap-3 px-4 md:px-8 lg:h-16">
+    <div class="flex min-w-0 items-center gap-1">
+      <button
+        type="button"
+        data-menu-open
+        aria-label="Abrir menú"
+        aria-haspopup="dialog"
+        class={`js-only ${iconButton} -ml-2 md:hidden`}
       >
-        Catálogo
-      </a>
+        <SocialIcon network="menu" class="size-6" />
+      </button>
+      <StoreBrand settings={settings} />
+    </div>
+    <nav
+      aria-label="Principal"
+      class="hidden items-center gap-6 text-base font-bold md:flex lg:gap-8"
+    >
+      {NAV_LINKS.map((link) => {
+        const active = isActive(pathname, link.href);
+        return (
+          <a
+            href={link.href}
+            aria-current={active ? 'page' : undefined}
+            class:list={[
+              'relative inline-flex min-h-11 items-center px-1 transition-colors hover:text-brand-dark',
+              active ? 'text-brand-dark' : 'text-neutral-600',
+            ]}
+          >
+            {link.label}
+            {active && (
+              <span
+                class="absolute inset-x-0 bottom-1.5 h-0.5 rounded-full bg-brand"
+                aria-hidden="true"
+              />
+            )}
+          </a>
+        );
+      })}
     </nav>
-    {whatsapp && (
-      <a
-        href={whatsapp}
-        rel="noreferrer"
-        aria-label="WhatsApp"
-        class="inline-flex min-h-12 min-w-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-brand px-3 font-semibold text-on-brand sm:px-4"
-      >
-        <SocialIcon network="whatsapp" class="size-5" />
-        <span class="hidden sm:inline">WhatsApp</span>
+    <div class="flex shrink-0 items-center gap-1 sm:gap-2">
+      <a href="/catalogo" aria-label="Buscar en el catálogo" class={iconButton}>
+        <SocialIcon network="search" class="size-5 lg:size-6" />
       </a>
-    )}
+      {whatsapp && (
+        <a
+          href={whatsapp}
+          rel="noreferrer"
+          aria-label="WhatsApp"
+          class="inline-flex size-11 shrink-0 items-center justify-center gap-2 rounded-full bg-brand text-on-brand shadow-brand sm:w-auto sm:px-5"
+        >
+          <SocialIcon network="whatsapp" class="size-5" />
+          <span class="hidden font-bold sm:inline">WhatsApp</span>
+        </a>
+      )}
+    </div>
   </div>
+  <MobileMenu settings={settings} pathname={pathname} />
 </header>
