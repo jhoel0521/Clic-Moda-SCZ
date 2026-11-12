@@ -76,6 +76,8 @@ export interface ProductResponseDto {
   id: string;
   categoryId: string;
   name: string;
+  slug: string;
+  photos: string[];
   description: string | null;
   active: boolean;
   variants: VariantResponseDto[];
@@ -99,6 +101,8 @@ export const toProductResponse = (product: ProductResult): ProductResponseDto =>
   id: product.id,
   categoryId: product.categoryId,
   name: product.name,
+  slug: product.slug,
+  photos: [...product.photos],
   description: product.description,
   active: product.active,
   variants: product.variants.map(toVariantResponse),
@@ -114,3 +118,9 @@ export const toProductPageResponse = (page: ProductPageResult): ProductPageRespo
   page: page.page,
   pageSize: page.pageSize,
 });
+
+// Las fotos se reemplazan completas: la lista de identificadores de imagen, en orden (la primera es la principal).
+export const photosSchema = z.object({
+  mediaIds: z.array(z.string().max(64)).max(20),
+});
+export type PhotosDto = z.infer<typeof photosSchema>;

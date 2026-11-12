@@ -6,7 +6,8 @@ import {
   VariantNotFoundError,
 } from '../errors/catalog.errors.js';
 import { CategoryId, ProductId, VariantId } from '../value-objects/ids.vo.js';
-import { ProductName } from '../value-objects/names.vo.js';
+import { ProductName, Slug } from '../value-objects/names.vo.js';
+import { ProductPhotos } from '../value-objects/product-photos.vo.js';
 import { Sku } from '../value-objects/variant-attributes.vo.js';
 import { Variant, VariantChanges, variantProps, VariantProps } from './variant.entity.js';
 
@@ -16,6 +17,10 @@ export interface ProductProps {
   id: ProductId;
   categoryId: CategoryId;
   name: ProductName;
+  // Identificador de URL: se fija al registrar y NO cambia al renombrar (los enlaces compartidos no se rompen).
+  slug: Slug;
+  // Fotos del módulo de imágenes, en orden (la primera es la principal).
+  photos: ProductPhotos;
   description: string | null;
   active: boolean;
   variants: Variant[];
@@ -48,7 +53,7 @@ export class Product {
   private constructor(private props: ProductProps) {}
 
   static register(
-    input: { categoryId: CategoryId; name: ProductName; description?: string | null },
+    input: { categoryId: CategoryId; name: ProductName; description?: string | null; slug?: Slug },
     variants: Variant[],
     now: Date = new Date()
   ): Product {
@@ -56,6 +61,8 @@ export class Product {
       id: ProductId.generate(),
       categoryId: input.categoryId,
       name: input.name,
+      slug: input.slug ?? Slug.fromTextOrDefault(input.name.value),
+      photos: ProductPhotos.empty(),
       description: cleanDescription(input.description),
       active: true,
       variants: [],
@@ -94,6 +101,11 @@ export class Product {
           : cleanDescription(details.description),
       updatedAt: now,
     };
+  }
+
+  // Reemplaza la lista completa de fotos (no hay cambios parciales).
+  setPhotos(photos: ProductPhotos, now: Date = new Date()): void {
+    this.props = { ...this.props, photos, updatedAt: now };
   }
 
   setActive(active: boolean, now: Date = new Date()): void {
@@ -135,6 +147,14 @@ export class Product {
 
   get name(): ProductName {
     return this.props.name;
+  }
+
+  get slug(): Slug {
+    return this.props.slug;
+  }
+
+  get photos(): ProductPhotos {
+    return this.props.photos;
   }
 
   get description(): string | null {

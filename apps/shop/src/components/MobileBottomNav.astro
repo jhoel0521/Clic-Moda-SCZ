@@ -1,0 +1,46 @@
+---
+import { NAV_LINKS, isActive } from '../lib/nav';
+import type { StoreSettings } from '../lib/settings';
+import { hasWhatsapp, whatsappLink } from '../lib/whatsapp';
+import SocialIcon from './SocialIcon.astro';
+
+interface Props {
+  settings: StoreSettings;
+  pathname: string;
+}
+
+const { settings, pathname } = Astro.props;
+const { brandName, contact } = settings;
+const whatsapp = hasWhatsapp(contact.whatsapp)
+  ? whatsappLink(contact.whatsapp, `Hola ${brandName}`)
+  : null;
+const tab =
+  'flex min-h-12 flex-1 flex-col items-center justify-center gap-1 py-1 text-xs font-semibold transition-colors';
+---
+
+<nav
+  aria-label="Navegación inferior"
+  class="fixed inset-x-0 bottom-0 z-40 h-[calc(4.5rem+env(safe-area-inset-bottom))] border-t border-line bg-white/90 pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_12px_-4px_rgba(0,0,0,0.06)] backdrop-blur-md md:hidden"
+>
+  <div class="flex h-[4.5rem] items-center justify-around gap-2 px-2">
+    {NAV_LINKS.map((link) => {
+      const active = isActive(pathname, link.href);
+      return (
+        <a
+          href={link.href}
+          aria-current={active ? 'page' : undefined}
+          class:list={[tab, active ? 'text-brand-dark' : 'text-neutral-600 hover:text-ink']}
+        >
+          <SocialIcon network={link.icon} class={active ? 'size-6 stroke-[2.6]' : 'size-6'} />
+          <span>{link.label}</span>
+        </a>
+      );
+    })}
+    {whatsapp && (
+      <a href={whatsapp} rel="noreferrer" class:list={[tab, 'text-brand-dark']}>
+        <SocialIcon network="whatsapp" class="size-6" />
+        <span>WhatsApp</span>
+      </a>
+    )}
+  </div>
+</nav>

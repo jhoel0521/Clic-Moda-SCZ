@@ -1,0 +1,103 @@
+---
+import CatalogFilters from '../components/CatalogFilters.astro';
+import Pagination from '../components/Pagination.astro';
+import ProductCard from '../components/ProductCard.astro';
+import StoreLayout from '../layouts/StoreLayout.astro';
+import { CatalogUnavailableError, catalog, type CatalogPage, type Filters } from '../lib/catalog';
+import {
+  activeChips,
+  catalogHref,
+  parseCatalogState,
+  totalPages,
+  toListParams,
+  withFilter,
+} from '../lib/catalog-url';
+import { getSettings } from '../lib/settings';
+
+const state = parseCatalogState(Astro.url.searchParams);
+const { brandName } = await getSettings();
+let result: CatalogPage | null = null;
+let filters: Filters | null = null;
+try {
+  [result, filters] = await Promise.all([catalog.list(toListParams(state)), catalog.filters()]);
+} catch (error) {
+  if (!(error instanceof CatalogUnavailableError)) throw error;
+  Astro.response.status = 503;
+}
+const pages = result ? totalPages(result.total, result.pageSize) : 1;
+const chips = result && filters ? activeChips(state, filters) : [];
+const prevHref = state.page > 1 ? catalogHref(withFilter(state, { page: state.page - 1 })) : null;
+const nextHref =
+  state.page < pages ? catalogHref(withFilter(state, { page: state.page + 1 })) : null;
+// La dirección canónica ignora los filtros (son vistas del mismo catálogo) y conserva solo la página.
+const path = state.page > 1 ? `/catalogo?pagina=${state.page}` : '/catalogo';
+---
+
+<StoreLayout
+  title="Catálogo"
+  description={`Mira todo el catálogo de ${brandName}: calzado con entrega a domicilio o recojo. Compra por WhatsApp.`}
+  path={path}
+>
+  <Fragment slot="head">
+    {prevHref && <link rel="prev" href={prevHref} />}
+    {nextHref && <link rel="next" href={nextHref} />}
+  </Fragment>
+  <h1 class="text-3xl font-bold text-brand-dark">Catálogo</h1>
+  {!result || !filters ? (
+    <div role="alert" class="mt-6 rounded-2xl border border-line p-6">
+      <p class="font-semibold">No pudimos cargar el catálogo por ahora.</p>
+      <p class="mt-1 text-muted">Es algo momentáneo. Intenta de nuevo en un minuto.</p>
+      <a
+        href={Astro.url.pathname + Astro.url.search}
+        class="mt-4 inline-flex min-h-12 items-center rounded-xl bg-brand px-5 font-semibold text-on-brand"
+      >
+        Reintentar
+      </a>
+    </div>
+  ) : (
+    <div class="mt-6 grid gap-6 md:grid-cols-[14rem_minmax(0,1fr)] md:gap-8">
+      <div class="flex flex-col gap-3 md:contents">
+        <CatalogFilters state={state} filters={filters} active={chips.length} />
+      </div>
+      <section aria-label="Productos">
+        <p class="text-sm text-muted" role="status">
+          {result.total === 1 ? '1 producto' : `${result.total} productos`}
+        </p>
+        {chips.length > 0 && (
+          <ul class="mt-2 flex flex-wrap gap-2" aria-label="Filtros activos">
+            {chips.map((chip) => (
+              <li>
+                <a
+                  href={chip.href}
+                  aria-label={`Quitar el filtro ${chip.label}`}
+                  class="inline-flex min-h-11 items-center gap-2 rounded-full bg-brand-soft px-4 text-sm font-semibold text-brand-dark"
+                >
+                  {chip.label}
+                  <span aria-hidden="true">✕</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+        {result.items.length === 0 ? (
+          <div class="mt-6 rounded-2xl border border-line p-6">
+            <p class="font-semibold">No encontramos productos con esos filtros.</p>
+            <a
+              href="/catalogo"
+              class="mt-4 inline-flex min-h-12 items-center rounded-xl border-2 border-brand-dark px-5 font-semibold text-brand-dark"
+            >
+              Quitar los filtros
+            </a>
+          </div>
+        ) : (
+          <ul class="mt-4 grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-3 lg:grid-cols-3">
+            {result.items.map((product, index) => (
+              <ProductCard product={product} priority={index < 2} />
+            ))}
+          </ul>
+        )}
+        <Pagination page={state.page} pages={pages} prevHref={prevHref} nextHref={nextHref} />
+      </section>
+    </div>
+  )}
+</StoreLayout>

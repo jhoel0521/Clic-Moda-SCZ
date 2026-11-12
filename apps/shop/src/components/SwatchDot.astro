@@ -1,0 +1,27 @@
+---
+import { colorHex, initialOf, isPattern } from '../lib/colors';
+
+interface Props {
+  color: string;
+  /** Tamaño del círculo (clases de Tailwind). */
+  class?: string;
+}
+
+const { color, class: className = 'size-5' } = Astro.props;
+const hex = colorHex(color);
+const pattern = isPattern(color);
+---
+
+<!-- Círculo de color. Es solo apoyo visual: el nombre del color siempre va en texto junto a él. -->
+<span
+  aria-hidden="true"
+  class:list={[
+    'flex shrink-0 items-center justify-center rounded-full text-xs font-bold text-white ring-1 ring-black/15',
+    className,
+    !hex && !pattern && 'bg-neutral-500',
+    pattern && 'bg-[linear-gradient(135deg,#f08fb0,#b79ad8_50%,#7fb7e6)]',
+  ]}
+  style={hex ? `background:${hex}` : undefined}
+>
+  {!hex && !pattern && initialOf(color)}
+</span>

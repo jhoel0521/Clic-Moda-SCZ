@@ -1,0 +1,42 @@
+---
+import { optionBase, optionRadio } from '../lib/option-styles';
+import SwatchDot from './SwatchDot.astro';
+
+interface Props {
+  name: 'talla' | 'color';
+  value: string;
+  checked: boolean;
+  disabled: boolean;
+  /** Últimas unidades: un punto en la esquina (no cambia el tamaño de la opción) con texto solo para lectores. */
+  low: boolean;
+  /** Precio de la opción cuando los precios del modelo difieren; si no, null. */
+  price: string | null;
+}
+
+const { name, value, checked, disabled, low, price } = Astro.props;
+---
+
+<label class:list={[optionBase, optionRadio, price && 'flex-col gap-0']}>
+  <input
+    type="radio"
+    name={name}
+    value={value}
+    checked={checked}
+    disabled={disabled}
+    class="sr-only"
+  />
+  <span class="inline-flex items-center gap-2">
+    {name === 'color' && <SwatchDot color={value} class="size-5" />}
+    {value}
+  </span>
+  {price && <span class="text-xs font-medium">{price}</span>}
+  {low && (
+    <>
+      <span
+        aria-hidden="true"
+        class="absolute -right-0.5 -top-0.5 size-3 rounded-full bg-warning ring-2 ring-white"
+      />
+      <span class="sr-only">, últimas unidades</span>
+    </>
+  )}
+</label>

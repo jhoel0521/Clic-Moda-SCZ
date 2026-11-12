@@ -195,7 +195,9 @@ it('Inventario: precio único — guarda un solo precio para todo el modelo', as
   board();
   await openMatrix();
 
-  fireEvent.change(screen.getByLabelText('Precio del modelo (Bs)'), { target: { value: '349.90' } });
+  fireEvent.change(screen.getByLabelText('Mismo precio para todas las variantes (Bs)'), {
+    target: { value: '349.90' },
+  });
   fireEvent.click(screen.getByRole('button', { name: 'Guardar' }));
 
   await waitFor(() => expect(calls.find((c) => c.method === 'PATCH')?.body).toEqual({ price: '349.90' }));

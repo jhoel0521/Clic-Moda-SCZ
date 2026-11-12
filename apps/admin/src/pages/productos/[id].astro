@@ -1,5 +1,6 @@
 ---
 import ProductForm from '../../components/ProductForm';
+import ProductPhotos from '../../components/ProductPhotos';
 import AdminLayout from '../../layouts/AdminLayout.astro';
 import { can } from '../../lib/session';
 
@@ -9,4 +10,8 @@ const { id } = Astro.params;
 
 <AdminLayout title="Editar producto">
   <ProductForm client:load productId={id} />
+  <!-- Las fotos van fuera del <form> del producto: su subida trae otro formulario y no se pueden anidar. -->
+  <div class="mt-5">
+    <ProductPhotos client:load productId={id as string} />
+  </div>
 </AdminLayout>

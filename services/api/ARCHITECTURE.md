@@ -192,3 +192,12 @@ Una foto se sube una vez y la API genera, **al subirla**, los formatos que cada 
 - **Otro contexto por un puerto:** el logo y la imagen de compartir son solo identificadores; `MediaReferencesPort` (implementado en `infrastructure/media` sobre el repositorio de `media`) comprueba que existan y entrega la revisión para armar `/m/<id>/<formato>-<revisión>.<ext>`. `settings` no importa nada de `media` fuera de ese adaptador.
 - **Lectura pública:** `@Public()` en el `GET`, `ETag` fuerte (huella del cuerpo) y `Cache-Control: public, max-age=15`; sin datos de pago ni privados.
 
+## 16. Patrón: lectura pública del catálogo (contexto `catalog`)
+
+- **Slug estable del producto:** se fija al registrar (`Slug.fromTextOrDefault` + `allocateSlug`, con sufijo `-2`, `-3`…) y no cambia al renombrar, para que los enlaces compartidos sigan valiendo. La migración rellena los existentes en TypeScript (autocontenida: una migración no importa código del proyecto) y una prueba comprueba que da lo mismo que el dominio.
+- **Fotos en el agregado:** `Product.photos` (`ProductPhotos`: 0 a 8, sin repetidos, la primera es la principal) y la tabla `product_photos` sin clave foránea hacia `media_assets` (borrar una imagen no falla; el lector la omite). `PUT /catalog/products/:id/photos` solo Gerente.
+- **Otro contexto por un puerto, sin N+1:** `MediaReferencesPort` (adaptador único `CatalogMediaReferencesAdapter` sobre `MediaAssetsRepository.findByIds`) resuelve las fotos de TODA la página con una consulta. Una e2e comprueba que el listado de 48 productos hace las mismas consultas que el de 3.
+- **Modelo de lectura separado del de escritura:** `PublicCatalogReader` (SQL) devuelve `PublishedProduct`; los casos de uso `ListPublicCatalog`, `GetPublicProduct`, `ListPublicFilters` y `ListPublishedSlugs` arman un DTO público **por lista blanca** (una prueba compara las claves permitidas) para que un campo interno nuevo nunca se filtre. La definición de «publicado» es una sola y la usan el listado, el detalle, los filtros y el sitemap.
+- **Disponibilidad como estado:** `availabilityOf` (`in_stock`, `low` de 1 a 3, `out`) y `aggregateAvailability` son funciones puras del dominio; nunca sale la cantidad.
+- **Caché:** `sendCacheableJson` (`ETag` fuerte y `Cache-Control: public, max-age=15`) lo comparten la configuración y el catálogo. Peor caso entre un movimiento de stock y lo que ve el visitante: cola (200 ms) + 15 s de la API + 15 s de la tienda ≈ 30 s.
+

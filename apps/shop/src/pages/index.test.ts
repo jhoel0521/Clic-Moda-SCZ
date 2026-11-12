@@ -1,13 +1,15 @@
+import { catalog } from '../lib/catalog';
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { FALLBACK_SETTINGS, settingsStore, type StoreSettings } from '../lib/settings';
+import { card, page, stubApi } from '../test/api-stub';
 import Contacto from './contacto.astro';
 import Index from './index.astro';
 
 const LOGO = '0a1b2c3d-0000-4000-8000-000000000001';
 
 const withApi = (over: Partial<StoreSettings> = {}) => {
-  const body: StoreSettings = {
+  const settings: StoreSettings = {
     ...FALLBACK_SETTINGS,
     brandName: 'Verashoe',
     color: {
@@ -25,15 +27,15 @@ const withApi = (over: Partial<StoreSettings> = {}) => {
     },
     ...over,
   };
-  vi.stubGlobal(
-    'fetch',
-    vi.fn(() => Promise.resolve(Response.json(body)))
-  );
+  stubApi({ settings, list: page([card()]) });
 };
 
 const render = async (page: typeof Index) => (await AstroContainer.create()).renderToString(page);
 
-beforeEach(() => settingsStore.reset());
+beforeEach(() => {
+  settingsStore.reset();
+  catalog.reset();
+});
 afterEach(() => vi.unstubAllGlobals());
 
 describe('inicio: marca desde la configuración', () => {
@@ -51,7 +53,7 @@ describe('inicio: marca desde la configuración', () => {
 
   it('sin logo muestra el nombre como texto y con logo muestra la imagen de la tienda', async () => {
     withApi();
-    expect(await render(Index)).toContain('truncate text-lg font-bold');
+    expect(await render(Index)).toContain('font-black tracking-tight');
 
     settingsStore.reset();
     withApi({ logo: { mediaId: LOGO, path: `/m/${LOGO}/logo-2.webp`, alt: 'Logo' } });
@@ -149,9 +151,22 @@ describe('redes sociales', () => {
 
     const html = await render(Index);
 
-    // WhatsApp y Contacto también llevan ícono: 3 redes + WhatsApp (cabecera y pie) + Contacto.
-    expect(html.match(/<svg[^>]*aria-hidden="true"/g)?.length).toBe(6);
-    for (const name of ['Instagram', 'TikTok', 'Facebook']) expect(html).toContain(name);
+    const footer = html.slice(html.indexOf('<footer'));
+    expect(footer.match(/<svg[^>]*aria-hidden="true"/g)?.length).toBeGreaterThanOrEqual(3);
+    for (const name of ['Instagram', 'TikTok', 'Facebook']) expect(footer).toContain(name);
+  });
+});
+
+describe('accesibilidad de la estructura', () => {
+  it('ofrece "Saltar al contenido" y el contenido principal tiene su ancla', async () => {
+    withApi();
+
+    const html = await render(Index);
+
+    expect(html).toContain('href="#contenido"');
+    expect(html).toContain('id="contenido"');
+    expect(html).toContain('<main');
+    expect(html).toContain('aria-label="Principal"');
   });
 });
 
@@ -172,5 +187,28 @@ describe('contacto', () => {
     ]) {
       expect(html).toContain(text);
     }
+  });
+});
+
+describe('esqueleto de la tienda', () => {
+  it('lleva barra superior con enlaces, barra inferior del teléfono (sin menú en la cabecera) y pie oscuro', async () => {
+    withApi({
+      contact: {
+        whatsapp: '59171234567',
+        address: 'Av. Banzer 123',
+        pickupHours: '9 a 18',
+        mapUrl: null,
+      },
+    });
+
+    const html = await render(Index);
+
+    expect(html).toContain('aria-label="Principal"');
+    expect(html).toContain('aria-label="Navegación inferior"');
+    expect(html).not.toContain('id="menu"');
+    expect(html).not.toContain('Abrir menú');
+    expect(html).toContain('bg-neutral-950');
+    expect(html).toContain('aria-current="page"');
+    expect(html).toContain('+591 7123 4567');
   });
 });

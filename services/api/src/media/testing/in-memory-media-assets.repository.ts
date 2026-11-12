@@ -14,6 +14,11 @@ export class InMemoryMediaAssetsRepository implements MediaAssetsRepository {
     return Promise.resolve(this.assets.get(id.value) ?? null);
   }
 
+  findByIds(ids: MediaId[]): Promise<MediaAsset[]> {
+    const found = ids.flatMap((id) => this.assets.get(id.value) ?? []);
+    return Promise.resolve(found);
+  }
+
   list(): Promise<MediaAsset[]> {
     const all = [...this.assets.values()];
     return Promise.resolve(all.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()));

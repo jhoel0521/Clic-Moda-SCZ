@@ -45,3 +45,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Fotos de stock solo para la demo local (no se suben al repositorio)
+.demo-fotos/

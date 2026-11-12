@@ -1,0 +1,29 @@
+---
+import type { Filters } from '../lib/catalog';
+import type { CatalogState } from '../lib/catalog-url';
+import FilterFields from './FilterFields.astro';
+
+interface Props {
+  state: CatalogState;
+  filters: Filters;
+  /** Cantidad de filtros activos (para "Filtrar (N)"). */
+  active: number;
+}
+
+const { state, filters, active } = Astro.props;
+---
+
+<!-- Teléfono: panel plegable con el resumen "Filtrar (N)". -->
+<details class="rounded-2xl border border-line md:hidden" open={active > 0 ? undefined : undefined}>
+  <summary class="flex min-h-12 cursor-pointer items-center justify-between px-4 font-semibold">
+    <span>Filtrar{active > 0 ? ` (${active})` : ''}</span>
+  </summary>
+  <div class="border-t border-line p-4">
+    <FilterFields state={state} filters={filters} id="m" />
+  </div>
+</details>
+
+<!-- Escritorio: siempre visible a un lado. -->
+<aside class="hidden md:block" aria-label="Filtros">
+  <FilterFields state={state} filters={filters} id="d" />
+</aside>

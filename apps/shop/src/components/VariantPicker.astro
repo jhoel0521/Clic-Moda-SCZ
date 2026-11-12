@@ -1,0 +1,90 @@
+---
+import type { Product, VariantOption } from '../lib/catalog';
+import { productPath } from '../lib/inquiry';
+import { allOut, lowOnly, onlyAvailable } from '../lib/options';
+import { optionPrice } from '../lib/pricing';
+import PickerOption from './PickerOption.astro';
+
+interface Props {
+  product: Product;
+  size: string | null;
+  color: string | null;
+}
+
+const { product, size, color } = Astro.props;
+const unique = (values: (string | null)[]): string[] => [
+  ...new Set(values.filter((v): v is string => !!v)),
+];
+// Las variantes de una talla (con el color elegido, si lo hay) y las de un color (con la talla elegida).
+const ofSize = (value: string): VariantOption[] =>
+  product.variants.filter((v) => v.size === value && (!color || v.color === color));
+const ofColor = (value: string): VariantOption[] =>
+  product.variants.filter((v) => v.color === value && (!size || v.size === size));
+const sizes = onlyAvailable(unique(product.variants.map((v) => v.size)), (v) => allOut(ofSize(v)));
+const colors = onlyAvailable(unique(product.variants.map((v) => v.color)), (v) =>
+  allOut(ofColor(v))
+);
+const showPrice = (group: VariantOption[]): string | null =>
+  product.priceVaries ? optionPrice(group) : null;
+const anyLow = sizes.some((v) => lowOnly(ofSize(v))) || colors.some((v) => lowOnly(ofColor(v)));
+---
+
+<form
+  method="get"
+  action={productPath(product.slug)}
+  data-variant-form
+  data-live="picker"
+  class="flex flex-col gap-5"
+>
+  <fieldset id="talla" tabindex="-1" class="flex flex-col gap-2">
+    <legend class="mb-1 font-semibold">Talla</legend>
+    <div class="flex flex-wrap gap-2">
+      {sizes.map((value) => (
+        <PickerOption
+          name="talla"
+          value={value}
+          checked={value === size}
+          disabled={allOut(ofSize(value))}
+          low={lowOnly(ofSize(value))}
+          price={showPrice(ofSize(value))}
+        />
+      ))}
+    </div>
+  </fieldset>
+  {colors.length > 1 && (
+    <fieldset class="flex flex-col gap-2">
+      <legend class="mb-1 font-semibold">Color</legend>
+      <div class="flex flex-wrap gap-2">
+        {colors.map((value) => (
+          <PickerOption
+            name="color"
+            value={value}
+            checked={value === color}
+            disabled={allOut(ofColor(value))}
+            low={lowOnly(ofColor(value))}
+            price={showPrice(ofColor(value))}
+          />
+        ))}
+      </div>
+    </fieldset>
+  )}
+  {anyLow && (
+    <p class="flex items-center gap-2 text-sm text-muted">
+      <span aria-hidden="true" class="size-3 rounded-full bg-warning"></span>
+      Últimas unidades
+    </p>
+  )}
+  {/* Si queda un solo color disponible el grupo se oculta, pero la elección se conserva al cambiar de talla. */}
+  {colors.length <= 1 && color && <input type="hidden" name="color" value={color} />}
+  <!-- Sin JavaScript hace falta un botón; con JavaScript la elección se aplica al tocarla. -->
+  <button
+    type="submit"
+    class="no-js-only inline-flex min-h-12 items-center justify-center rounded-xl border-2 border-brand-dark px-5 font-semibold text-brand-dark"
+  >
+    Elegir
+  </button>
+</form>
+<script>
+  import { initPicker } from '../scripts/picker';
+  initPicker();
+</script>

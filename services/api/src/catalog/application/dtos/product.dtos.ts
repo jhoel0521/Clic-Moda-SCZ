@@ -25,6 +25,13 @@ export class UpdateProductCommand {
   ) {}
 }
 
+export class SetProductPhotosCommand {
+  constructor(
+    readonly productId: string,
+    readonly mediaIds: readonly string[]
+  ) {}
+}
+
 export class SetProductActiveCommand {
   constructor(
     readonly id: string,
@@ -90,6 +97,9 @@ export interface ProductResult {
   readonly id: string;
   readonly categoryId: string;
   readonly name: string;
+  readonly slug: string;
+  // Identificadores de las fotos (módulo de imágenes), en orden; la primera es la principal.
+  readonly photos: readonly string[];
   readonly description: string | null;
   readonly active: boolean;
   readonly variants: readonly VariantResult[];
@@ -117,10 +127,15 @@ export const toVariantResult = (variant: Variant): VariantResult => ({
   active: variant.active,
 });
 
-export const toProductResult = (product: Product): ProductResult => ({
+export const toProductResult = (
+  product: Product,
+  photos: readonly string[] = product.photos.ids
+): ProductResult => ({
   id: product.id.value,
   categoryId: product.categoryId.value,
   name: product.name.value,
+  slug: product.slug.value,
+  photos,
   description: product.description,
   active: product.active,
   variants: product.variants.map(toVariantResult),

@@ -17,8 +17,15 @@
   --color-brand-light: var(--brand-light);
   --color-brand-soft: var(--brand-soft);
   --color-on-brand: var(--on-brand);
+  --font-sans: Inter, ui-sans-serif, system-ui, 'Segoe UI', sans-serif;
+  --color-page: #fff9fb;
+  --shadow-brand: 0 12px 26px color-mix(in srgb, var(--brand) 28%, transparent);
   --color-ink: #24151c;
   --color-muted: #6b5a64;
+  --color-line: #ece4e8;
+  --color-warning: #92400e;
+  --color-danger: #b91c1c;
+  --color-success: #15803d;
 }
 
 @layer base {
@@ -31,9 +38,41 @@
     overflow-x: hidden;
   }
 
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
   /* Foco visible en todo lo interactivo (WCAG 2.4.7), con el color de la marca. */
   :focus-visible {
     outline: 3px solid var(--brand-dark);
     outline-offset: 2px;
+  }
+}
+
+/* Galería: con JavaScript las fotos pasan de columna a carrusel con desplazamiento por foto. */
+.is-carousel [data-track] {
+  flex-direction: row;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.is-carousel [data-slide] {
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+}
+
+/* Controles de mejora progresiva: el botón "Elegir" solo se ve sin JavaScript. */
+.js .no-js-only {
+  display: none;
+}
+
+/* Bloques que se actualizan sin recargar: se atenúan mientras llega la página nueva. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-live][aria-busy='true'] {
+    opacity: 0.6;
+    transition: opacity 150ms;
   }
 }

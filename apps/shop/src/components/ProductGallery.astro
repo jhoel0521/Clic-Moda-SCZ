@@ -1,0 +1,79 @@
+---
+import type { Photo } from '../lib/catalog';
+
+interface Props {
+  photos: Photo[];
+  name: string;
+}
+
+const { photos, name } = Astro.props;
+const total = photos.length;
+const arrow =
+  'inline-flex size-12 items-center justify-center rounded-full border border-neutral-500 bg-white text-ink shadow disabled:opacity-40';
+---
+
+{total === 0 ? (
+  <div class="flex aspect-[4/5] items-center justify-center rounded-2xl bg-brand-soft p-6 text-center text-xl font-bold text-brand-dark wrap-anywhere">
+    {name}
+  </div>
+) : (
+  <div data-gallery class="flex flex-col gap-3">
+    <!-- Sin JavaScript: todas las fotos en columna. Con JavaScript se vuelve un carrusel (global.css). -->
+    <ol data-track class="flex flex-col gap-3" aria-label={`Fotos de ${name}`}>
+      {photos.map((photo, index) => (
+        <li data-slide class="overflow-hidden rounded-2xl bg-brand-soft">
+          <img
+            src={photo.card}
+            alt={photo.alt || `${name}, foto ${index + 1} de ${total}`}
+            width="800"
+            height="1000"
+            loading={index === 0 ? 'eager' : 'lazy'}
+            fetchpriority={index === 0 ? 'high' : 'auto'}
+            decoding="async"
+            class="aspect-[4/5] max-h-[48svh] w-full object-cover md:max-h-none"
+          />
+        </li>
+      ))}
+    </ol>
+    {total > 1 && (
+      <div data-controls hidden class="flex flex-col gap-3">
+        <div class="flex items-center justify-between gap-3">
+          <button type="button" data-prev class={arrow} aria-label="Foto anterior">
+            ‹
+          </button>
+          <p data-status role="status" aria-live="polite" class="text-sm font-medium text-muted">
+            Foto 1 de {total}
+          </p>
+          <button type="button" data-next class={arrow} aria-label="Foto siguiente">
+            ›
+          </button>
+        </div>
+        <ul class="flex gap-2 overflow-x-auto pb-1">
+          {photos.map((photo, index) => (
+            <li class="shrink-0">
+              <button
+                type="button"
+                data-thumb={index}
+                aria-label={`Ver foto ${index + 1} de ${total}`}
+                class="block min-h-12 min-w-12 overflow-hidden rounded-xl border-2 border-transparent aria-[current=true]:border-brand-dark"
+              >
+                <img
+                  src={photo.thumb}
+                  alt=""
+                  width="320"
+                  height="320"
+                  loading="lazy"
+                  class="size-16 object-cover"
+                />
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </div>
+)}
+<script>
+  import { initGalleries } from '../scripts/gallery';
+  initGalleries();
+</script>

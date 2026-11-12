@@ -18,7 +18,7 @@ test('Atención solo consulta: no ve botones de modificar', async ({ browser }) 
   await openModel(page, name);
 
   await expect(page.getByRole('button', { name: 'Ingresar' })).toHaveCount(0);
-  await expect(page.getByLabel('Precio del modelo (Bs)')).toHaveCount(0);
+  await expect(page.getByLabel('Mismo precio para todas las variantes (Bs)')).toHaveCount(0);
   await expect(page.getByRole('link', { name: /Registrar modelo/ })).toHaveCount(0);
   await context.close();
 });
@@ -32,7 +32,7 @@ test('Despacho mueve el stock pero no cambia precios ni registra modelos', async
   await openModel(page, name);
 
   await expect(page.getByRole('button', { name: 'Ingresar' })).toBeVisible();
-  await expect(page.getByLabel('Precio del modelo (Bs)')).toHaveCount(0);
+  await expect(page.getByLabel('Mismo precio para todas las variantes (Bs)')).toHaveCount(0);
   await expect(page.getByRole('link', { name: /Registrar modelo/ })).toHaveCount(0);
   await context.close();
 });

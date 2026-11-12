@@ -26,13 +26,15 @@ export default defineConfig({
       name: 'escritorio',
       use: { ...devices['Desktop Chrome'] },
       dependencies: ['setup'],
-      testMatch: /flujos\.spec\.ts|permisos\.spec\.ts|acceso\.spec\.ts|imagenes\.spec\.ts|configuracion\.spec\.ts/,
+      testMatch:
+        /flujos\.spec\.ts|permisos\.spec\.ts|acceso\.spec\.ts|imagenes\.spec\.ts|configuracion\.spec\.ts|fotos-producto\.spec\.ts/,
     },
     {
       name: 'iphone',
       use: { ...devices['iPhone 15'] },
       dependencies: ['setup'],
-      testMatch: /flujos\.spec\.ts|permisos\.spec\.ts|acceso\.spec\.ts|imagenes\.spec\.ts|configuracion\.spec\.ts/,
+      testMatch:
+        /flujos\.spec\.ts|permisos\.spec\.ts|acceso\.spec\.ts|imagenes\.spec\.ts|configuracion\.spec\.ts|fotos-producto\.spec\.ts/,
     },
     {
       name: 'movil-360',

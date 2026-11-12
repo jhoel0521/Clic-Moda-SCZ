@@ -10,7 +10,7 @@ export const AUTH = {
 
 export type Role = keyof typeof AUTH;
 
-// Nombre único por corrida: la base de flujos se conserva entre corridas.
+// Nombre único dentro de la corrida (la base de flujos se recrea limpia en cada corrida).
 export const unique = (prefix: string): string => `${prefix} ${Date.now().toString(36)}`;
 
 // Cliente HTTP ya autenticado (cookie del rol) contra el panel, para preparar datos sin pasar por la pantalla.

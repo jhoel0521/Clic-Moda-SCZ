@@ -1,14 +1,19 @@
 ---
+import { NAV_LINKS } from '../lib/nav';
 import type { StoreSettings } from '../lib/settings';
-import { hasWhatsapp, whatsappLink } from '../lib/whatsapp';
+import { displayWhatsapp, hasWhatsapp, whatsappLink } from '../lib/whatsapp';
 import SocialIcon from './SocialIcon.astro';
 
 interface Props {
   settings: StoreSettings;
+  /** Espacio que reservan las barras fijas del teléfono: solo la de navegación, o también la de consulta. */
+  reserve?: 'nav' | 'nav-bar';
+  /** Muestra el bloque de contacto (WhatsApp, dirección, horario). La página de contacto ya lo trae completo. */
+  contact?: boolean;
 }
 
-const { settings } = Astro.props;
-const { brandName, contact, social } = settings;
+const { settings, reserve = 'nav', contact: showContact = true } = Astro.props;
+const { brandName, tagline, contact, social } = settings;
 const networks = (
   [
     ['instagram', 'Instagram', social.instagram],
@@ -19,31 +24,79 @@ const networks = (
 const whatsapp = hasWhatsapp(contact.whatsapp)
   ? whatsappLink(contact.whatsapp, `Hola ${brandName}`)
   : null;
-const link = 'inline-flex min-h-12 items-center font-semibold text-brand-dark underline';
+const hasContact = showContact && (whatsapp || contact.address || contact.pickupHours);
+const heading = 'text-sm font-bold uppercase tracking-widest text-white';
+const link =
+  'inline-flex min-h-11 items-center gap-2 text-neutral-300 transition-colors hover:text-white';
+// Las barras fijas del teléfono tapan el final de la página: el pie reserva su altura (4,5 rem la de
+// navegación; la de consulta del producto suma otros 5 rem). En escritorio no hay barras fijas.
+const RESERVE = {
+  nav: 'pb-[calc(4.5rem+env(safe-area-inset-bottom))] md:pb-0',
+  'nav-bar': 'pb-[calc(9.5rem+env(safe-area-inset-bottom))] md:pb-0',
+} as const;
 ---
 
-<footer class="mt-8 bg-brand-soft text-ink">
-  <div class="mx-auto flex w-full max-w-5xl flex-col gap-3 px-4 py-6 text-sm">
-    <p class="font-bold wrap-anywhere">{brandName}</p>
-    {contact.address && <p class="wrap-anywhere">{contact.address}</p>}
-    {contact.pickupHours && <p class="wrap-anywhere">Recojo: {contact.pickupHours}</p>}
-    <nav aria-label="Enlaces de la tienda" class="flex flex-wrap gap-x-5">
-      {whatsapp && (
-        <a href={whatsapp} rel="noreferrer" class={`${link} gap-2`}>
-          <SocialIcon network="whatsapp" />
-          WhatsApp
-        </a>
+<footer class:list={['mt-16 w-full bg-neutral-950 text-neutral-400', RESERVE[reserve]]}>
+  <div class="mx-auto w-full max-w-[1200px] px-4 py-12 md:px-8">
+    <div class="grid grid-cols-1 gap-10 md:grid-cols-[1.4fr_1fr_1.4fr]">
+      <div class="flex flex-col gap-3">
+        <span class="text-2xl font-black tracking-tighter text-white">
+          {brandName.toUpperCase()}
+        </span>
+        {tagline && <p class="max-w-xs text-sm leading-relaxed wrap-anywhere">{tagline}</p>}
+      </div>
+      <nav aria-label="Descubrir" class="hidden flex-col gap-2 md:flex">
+        <h2 class={heading}>Descubrir</h2>
+        <ul class="flex flex-col text-sm">
+          {NAV_LINKS.map((item) => (
+            <li>
+              <a href={item.href} class={link}>
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      {hasContact && (
+        <div class="flex flex-col gap-3">
+          <h2 class={heading}>Contacto</h2>
+          <ul class="flex flex-col gap-1 text-sm">
+            {whatsapp && (
+              <li>
+                <a href={whatsapp} rel="noreferrer" class={link}>
+                  <SocialIcon network="whatsapp" class="size-5 shrink-0" />
+                  <span class="font-bold text-white">{displayWhatsapp(contact.whatsapp)}</span>
+                </a>
+              </li>
+            )}
+            {contact.address && (
+              <li class="flex items-start gap-2 py-1.5">
+                <SocialIcon network="pin" class="mt-0.5 size-5 shrink-0 text-neutral-300" />
+                <span class="wrap-anywhere">{contact.address}</span>
+              </li>
+            )}
+            {contact.pickupHours && (
+              <li class="flex items-start gap-2 py-1.5">
+                <SocialIcon network="clock" class="mt-0.5 size-5 shrink-0 text-neutral-300" />
+                <span class="wrap-anywhere">Recojo: {contact.pickupHours}</span>
+              </li>
+            )}
+          </ul>
+        </div>
       )}
-      <a href="/contacto" class={`${link} gap-2`}>
-        <SocialIcon network="contact" />
-        Contacto
-      </a>
-      {networks.map(([key, name, href]) => (
-        <a href={href} rel="noreferrer" class={`${link} gap-2`}>
-          <SocialIcon network={key} />
-          {name}
-        </a>
-      ))}
-    </nav>
+    </div>
+    <div class="mt-10 flex flex-col items-center justify-between gap-2 border-t border-neutral-800 pt-6 text-sm md:flex-row">
+      <p>
+        © {new Date().getFullYear()} {brandName}. No guardamos datos personales.
+      </p>
+      <nav aria-label="Redes sociales" class="flex flex-wrap justify-center gap-x-5">
+        {networks.map(([key, name, href]) => (
+          <a href={href} rel="noreferrer" class={link}>
+            <SocialIcon network={key} class="size-4" />
+            {name}
+          </a>
+        ))}
+      </nav>
+    </div>
   </div>
 </footer>

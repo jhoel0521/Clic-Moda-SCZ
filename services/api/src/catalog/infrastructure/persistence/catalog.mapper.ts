@@ -4,8 +4,10 @@ import { Variant, variantProps } from '../../domain/entities/variant.entity.js';
 import { CategoryId, ProductId, VariantId } from '../../domain/value-objects/ids.vo.js';
 import { Money } from '../../domain/value-objects/money.vo.js';
 import { CategoryName, ProductName, Slug } from '../../domain/value-objects/names.vo.js';
+import { PhotoRef, ProductPhotos } from '../../domain/value-objects/product-photos.vo.js';
 import { Color, Size, Sku } from '../../domain/value-objects/variant-attributes.vo.js';
 import { CategoryOrmEntity } from './category.orm-entity.js';
+import { ProductPhotoOrmEntity } from './product-photo.orm-entity.js';
 import { ProductOrmEntity } from './product.orm-entity.js';
 import { VariantOrmEntity } from './variant.orm-entity.js';
 
@@ -59,12 +61,24 @@ const variantToRow = (productId: string, variant: Variant): VariantOrmEntity => 
 const byCreation = (a: VariantOrmEntity, b: VariantOrmEntity): number =>
   (a.createdAt?.getTime() ?? 0) - (b.createdAt?.getTime() ?? 0) || a.sku.localeCompare(b.sku);
 
+const photosToDomain = (rows: ProductPhotoOrmEntity[]): ProductPhotos =>
+  ProductPhotos.of(
+    [...rows].sort((a, b) => a.position - b.position).map((row) => PhotoRef.of(row.mediaId))
+  );
+
+const photosToRows = (product: Product): ProductPhotoOrmEntity[] =>
+  product.photos.ids.map((mediaId, position) =>
+    Object.assign(new ProductPhotoOrmEntity(), { productId: product.id.value, position, mediaId })
+  );
+
 export const ProductMapper = {
   toDomain: (row: ProductOrmEntity): Product =>
     Product.restore({
       id: ProductId.of(row.id),
       categoryId: CategoryId.of(row.categoryId),
       name: ProductName.of(row.name),
+      slug: Slug.of(row.slug),
+      photos: photosToDomain(row.photos ?? []),
       description: row.description,
       active: row.active,
       variants: [...row.variants].sort(byCreation).map(variantToDomain),
@@ -72,16 +86,24 @@ export const ProductMapper = {
       updatedAt: row.updatedAt,
     }),
 
-  toRows: (product: Product): { product: ProductOrmEntity; variants: VariantOrmEntity[] } => ({
+  toRows: (
+    product: Product
+  ): {
+    product: ProductOrmEntity;
+    variants: VariantOrmEntity[];
+    photos: ProductPhotoOrmEntity[];
+  } => ({
     product: Object.assign(new ProductOrmEntity(), {
       id: product.id.value,
       categoryId: product.categoryId.value,
       name: product.name.value,
+      slug: product.slug.value,
       description: product.description,
       active: product.active,
       createdAt: product.createdAt,
       updatedAt: product.updatedAt,
     }),
     variants: product.variants.map((variant) => variantToRow(product.id.value, variant)),
+    photos: photosToRows(product),
   }),
 };
